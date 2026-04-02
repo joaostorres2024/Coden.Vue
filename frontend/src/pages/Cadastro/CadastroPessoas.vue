@@ -6,7 +6,7 @@
         <q-select
           class="col-3"
           v-model="tipoPessoa"
-          :options="opcoesTipoPessoa"
+          :options="this.opcoesTipoPessoa"
           label="Tipo de Pessoa"
           outlined
           dense
@@ -20,16 +20,68 @@
         </div>
         <div class="row q-gutter-md">
           <q-btn color="white" icon="search" class="text-black" />
-          <q-btn color="white" icon="add" class="text-black" />
+          <q-btn
+            color="white"
+            icon="add"
+            class="text-black"
+            @click="mostrarFormulario()"
+          />
         </div>
       </div>
+
+      <div v-if="mostrarFormCadastroGeral">
+        <div class="row col-12 q-mt-md">
+          <div class="q-pb-md q-mt-md">
+            <q-title class="text-h6">Dados Gerais</q-title>
+          </div>
+          <div class="row col-12 q-gutter-md">
+            <q-input class="col-2" label="RG" outlined dense />
+            <q-input
+              class="col-2"
+              label="Data de Nascimento"
+              type="date"
+              outlined
+              dense
+            />
+            <q-select
+              class="col-2"
+              v-model="sexo"
+              :options="this.tipoSexo"
+              label="Sexo"
+              outlined
+              dense
+            />
+            <q-input class="col-3" label="Nome Social" outlined dense />
+            <q-select
+              class="col-3"
+              v-model="ativoInativo"
+              :options="this.ativo_inativo"
+              label="Ativo/Inativo"
+              outlined
+              dense
+            />
+          </div>
+        </div>
+
+        <div class="row col-12 q-mt-md">
+          <div class="q-pb-md q-mt-md">
+            <q-title class="text-h6">Dados de Contato</q-title>
+          </div>
+          <div class="row col-12 q-gutter-md">
+            <q-input class="col-3" label="Telefone 1" outlined dense />
+            <q-input class="col-3" label="Telefone 2" outlined dense />
+            <q-input class="col-3" label="E-mail" outlined dense />
+          </div>
+        </div>
+      </div>
+
       <div>
         <q-table
-          :rows="this.rows"
-          :columns="colunasCadastroPessoas"
+          :columns="this.colunasCadastroPessoas"
           row-key="codigo"
           flat
           bordered
+          class="q-mt-lg"
         >
           <!-- Coluna Ações -->
           <template v-slot:body-cell-acoes="props">
@@ -79,10 +131,28 @@ export default class ModuleComponent extends Vue {
   // ===== data =====
 
   colunasCadastroPessoas = listCadastroPessoas.columns
+  tipoPessoa: string | null = null
+  sexo: string | null = null
+  ativoInativo: string | null = null
+  mostrarFormCadastroGeral = false
+
   opcoesTipoPessoa = [
       { label: 'Pessoa Física', value: 'PF' },
       { label: 'Pessoa Jurídica', value: 'PJ' }
     ]
+  tipoSexo = [
+    { label: 'Masculino', value: 'M' },
+    { label: 'Feminino', value: 'F' },
+    { label: 'Não informado', value: 'NI' }
+  ]
+  ativo_inativo = [
+    { label: 'Ativo', value: 'A' },
+    { label: 'Inativo', value: 'I' }
+  ]
+
+  mostrarFormulario() {
+    this.mostrarFormCadastroGeral = true
+  }
 }
 </script>
 
