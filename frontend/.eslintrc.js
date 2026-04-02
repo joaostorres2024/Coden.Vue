@@ -69,7 +69,10 @@ module.exports = {
 
   // add your custom rules here
   rules: {
-    
+    'indent': 'off',
+    'no-multiple-spaces': 'off',
+    'vue/html-ident': 'off',
+    'no-trailing-spaces': 'off',
     // allow async-await
     'generator-star-spacing': 'off',
     // allow paren-less arrow functions
