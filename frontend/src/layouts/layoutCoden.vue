@@ -24,7 +24,7 @@
             header-class="menu-header b-r-10"
             expand-separator
           >
-            <q-item class="b-r-10 q-my-xs q-pl-lg" clickable v-ripple to="">
+            <q-item class="b-r-10 q-my-xs q-pl-lg" clickable v-ripple to="../../Cadastro/CadastroPessoas.vue">
               <q-item-section avatar>
                 <q-icon name="groups" />
               </q-item-section>
