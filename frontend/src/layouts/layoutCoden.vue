@@ -24,7 +24,12 @@
             header-class="menu-header b-r-10"
             expand-separator
           >
-            <q-item class="b-r-10 q-my-xs q-pl-lg" clickable v-ripple to="../../Cadastro/CadastroPessoas.vue">
+            <q-item
+              class="b-r-10 q-my-xs q-pl-lg"
+              clickable
+              v-ripple
+              @click="$router.push('/CadastroPessoas')"
+            >
               <q-item-section avatar>
                 <q-icon name="groups" />
               </q-item-section>
@@ -32,7 +37,12 @@
               <q-item-section> Cadastro Pessoas </q-item-section>
             </q-item>
 
-            <q-item class="b-r-10 q-my-xs q-pl-lg" clickable v-ripple to="">
+            <q-item
+              class="b-r-10 q-my-xs q-pl-lg"
+              clickable
+              v-ripple
+              @click="$router.push('/CadastroProdutos')"
+            >
               <q-item-section avatar>
                 <q-icon name="shelves" />
               </q-item-section>
@@ -47,7 +57,12 @@
             header-class="menu-header b-r-10"
             expand-separator
           >
-            <q-item class="b-r-10 q-my-xs q-pl-lg" clickable v-ripple to="">
+            <q-item
+              class="b-r-10 q-my-xs q-pl-lg"
+              clickable
+              v-ripple
+              @click="$router.push('/NotaFiscalEntrada')"
+            >
               <q-item-section avatar>
                 <q-icon name="trending_up" />
               </q-item-section>
@@ -55,7 +70,12 @@
               <q-item-section> NF Entrada </q-item-section>
             </q-item>
 
-            <q-item class="b-r-10 q-my-xs q-pl-lg" clickable v-ripple to="">
+            <q-item
+              class="b-r-10 q-my-xs q-pl-lg"
+              clickable
+              v-ripple
+              @click="$router.push('/NotaFiscalSaida')"
+            >
               <q-item-section avatar>
                 <q-icon name="trending_down" />
               </q-item-section>
@@ -70,7 +90,12 @@
             header-class="menu-header b-r-10"
             expand-separator
           >
-            <q-item class="b-r-10 q-my-xs q-pl-lg" clickable v-ripple to="">
+            <q-item
+              class="b-r-10 q-my-xs q-pl-lg"
+              clickable
+              v-ripple
+              @click="$router.push('/RelatorioEstoque')"
+            >
               <q-item-section avatar>
                 <q-icon name="inventory" />
               </q-item-section>
@@ -78,7 +103,12 @@
               <q-item-section> Relatório Estoque </q-item-section>
             </q-item>
 
-            <q-item class="b-r-10 q-my-xs q-pl-lg" clickable v-ripple to="">
+            <q-item
+              class="b-r-10 q-my-xs q-pl-lg"
+              clickable
+              v-ripple
+              @click="$router.push('/RelatorioVendas')"
+            >
               <q-item-section avatar>
                 <q-icon name="sell" />
               </q-item-section>
@@ -86,7 +116,12 @@
               <q-item-section> Relatório Vendas </q-item-section>
             </q-item>
 
-            <q-item class="b-r-10 q-my-xs q-pl-lg" clickable v-ripple to="">
+            <q-item
+              class="b-r-10 q-my-xs q-pl-lg"
+              clickable
+              v-ripple
+              @click="$router.push('/RelatorioCompras')"
+            >
               <q-item-section avatar>
                 <q-icon name="shopping_cart" />
               </q-item-section>
@@ -101,7 +136,12 @@
             header-class="menu-header b-r-10"
             expand-separator
           >
-            <q-item class="b-r-10 q-my-xs q-pl-lg" clickable v-ripple to="">
+            <q-item
+              class="b-r-10 q-my-xs q-pl-lg"
+              clickable
+              v-ripple
+              @click="$router.push('/VendaBalcao')"
+            >
               <q-item-section avatar>
                 <q-icon name="point_of_sale" />
               </q-item-section>
@@ -109,7 +149,12 @@
               <q-item-section> Venda Balcão </q-item-section>
             </q-item>
 
-            <q-item class="b-r-10 q-my-xs q-pl-lg" clickable v-ripple to="">
+            <q-item
+              class="b-r-10 q-my-xs q-pl-lg"
+              clickable
+              v-ripple
+              @click="$router.push('/NotaFiscalVenda')"
+            >
               <q-item-section avatar>
                 <q-icon name="receipt" />
               </q-item-section>
@@ -126,14 +171,24 @@
 
             <q-item-section>Modo Escuro/Claro</q-item-section>
           </q-item>
-          <q-item class="b-r-10 q-mx-xs q-my-sm" clickable v-ripple to="">
+          <q-item
+            class="b-r-10 q-mx-xs q-my-sm"
+            clickable
+            v-ripple
+            @click="$router.push('/Configuracoes')"
+          >
             <q-item-section avatar>
               <q-icon name="settings" />
             </q-item-section>
 
             <q-item-section>Configurações</q-item-section>
           </q-item>
-          <q-item class="b-r-10 q-mx-xs" clickable v-ripple to="">
+          <q-item
+            class="b-r-10 q-mx-xs"
+            clickable
+            v-ripple
+            @click="$router.push('/Perfil')"
+          >
             <q-item-section avatar>
               <q-icon name="account_circle" />
             </q-item-section>

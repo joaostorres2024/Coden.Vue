@@ -1,10 +1,10 @@
 <template>
-  <div>Cadastro Pessoas</div>
+  <div>NF Saída</div>
 </template>
 
 <script lang="ts">
 export default {
-  name: 'CadastroPessoas'
+  name: 'NotaFiscalSaida'
 }
 </script>
 
