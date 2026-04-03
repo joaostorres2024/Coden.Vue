@@ -8,7 +8,7 @@
       content-class="bg-grey-1"
     >
       <div class="col-12 column bg-grey-1 no-wrap full-height q-pa-sm">
-        <q-item class="q-pt-md b-r-10" to="/">
+        <q-item class="q-pt-md b-r-10 no-wrap" to="/">
           <img
             class="q-mb-sm justify-center"
             style="width: 120px"
@@ -208,7 +208,7 @@
 
     <!-- FOOTER -->
     <q-footer bordered>
-      <div class="row justify-center bg-grey-6">
+      <div class="row justify-center bg-verde">
         © 2026 Coden —
         <a href="" style="text-decoration: underline; color: white"
           >Todos os direitos reservados</a
@@ -232,5 +232,9 @@ const leftDrawerOpen = ref(true)
 
 .margin-auto {
   margin-top: auto;
+}
+
+.bg-verde {
+  background-color: #11b69a;
 }
 </style>
