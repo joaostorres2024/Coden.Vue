@@ -1,6 +1,6 @@
 <template>
   <div class="text-h5 text-bold">
-    <div class="q-py-md">CADASTRO PESSOAS</div>
+    <div class="q-py-md">CADASTRO DE PESSOAS</div>
     <div class="col-12">
       <div class="row col-3">
         <q-select
@@ -33,7 +33,8 @@
         </div>
       </div>
 
-      <div v-if="mostrarFormCadastroPF">
+      <form action="">
+        <div v-if="mostrarFormCadastroPF">
         <div class="row col-12 q-mt-md">
           <div class="q-pb-md q-mt-md">
             <q-title class="text-h6">Dados Gerais</q-title>
@@ -129,8 +130,10 @@
           <q-btn class="bg-red text-white text-bold" @click="abrirDialogCancelar()">Cancelar</q-btn>
         </div>
       </div>
+      </form>
 
-      <div v-if="mostrarFormCadastroPJ">
+      <form action="">
+        <div v-if="mostrarFormCadastroPJ">
         <div class="row col-12 q-mt-md">
           <div class="q-pb-md q-mt-md">
             <q-title class="text-h6">Dados Gerais</q-title>
@@ -221,6 +224,7 @@
         </div>
 
       </div>
+      </form>
 
       <div>
         <q-table
