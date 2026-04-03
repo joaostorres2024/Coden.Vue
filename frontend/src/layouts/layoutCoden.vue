@@ -208,7 +208,7 @@
 
     <!-- FOOTER -->
     <q-footer bordered>
-      <div class="row justify-center bg-verde">
+      <div class="row justify-center bg-grey-8">
         © 2026 Coden —
         <a href="" style="text-decoration: underline; color: white"
           >Todos os direitos reservados</a
@@ -232,9 +232,5 @@ const leftDrawerOpen = ref(true)
 
 .margin-auto {
   margin-top: auto;
-}
-
-.bg-verde {
-  background-color: #11b69a;
 }
 </style>

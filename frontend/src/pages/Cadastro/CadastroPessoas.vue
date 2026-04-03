@@ -4,7 +4,7 @@
     <div class="col-12">
       <div class="row col-3">
         <q-select
-          class="col-3 verde"
+          class="col-3"
           v-model="tipoPessoa"
           :options="this.opcoesTipoPessoa"
           label="Tipo de Pessoa"
@@ -23,11 +23,11 @@
           <q-input class="col-2" label="Código do Cliente" outlined dense />
         </div>
         <div class="row q-gutter-md">
-          <q-btn color="white" icon="search" class="text-black" />
+          <q-btn icon="search" class="text-white verde" rounded />
           <q-btn
-            color="white"
+            rounded
             icon="add"
-            class="text-black"
+            class="text-white verde"
             @click="mostrarFormulario()"
           />
         </div>
@@ -35,195 +35,208 @@
 
       <form action="">
         <div v-if="mostrarFormCadastroPF">
-        <div class="row col-12 q-mt-md">
-          <div class="q-pb-md q-mt-md">
-            <q-title class="text-h6">Dados Gerais</q-title>
+          <div class="row col-12 q-mt-md">
+            <div class="q-pb-md q-mt-md">
+              <q-title class="text-h6">Dados Gerais</q-title>
+            </div>
+            <div class="row col-12 q-gutter-md">
+              <q-input
+                class="col-2"
+                label="Data de Nascimento"
+                type="date"
+                outlined
+                dense
+              />
+              <q-input class="col-3" label="Nome Social" outlined dense />
+              <q-select
+                class="col-2"
+                v-model="ativoInativo"
+                :options="this.ativo_inativo"
+                label="Ativo/Inativo"
+                outlined
+                dense
+              />
+            </div>
           </div>
-          <div class="row col-12 q-gutter-md">
-            <q-input
-              class="col-2"
-              label="Data de Nascimento"
-              type="date"
-              outlined
-              dense
-            />
-            <q-input class="col-3" label="Nome Social" outlined dense />
-            <q-select
-              class="col-2"
-              v-model="ativoInativo"
-              :options="this.ativo_inativo"
-              label="Ativo/Inativo"
-              outlined
-              dense
-            />
-          </div>
-        </div>
 
-        <div class="row col-12 q-mt-md">
-          <div class="q-pb-md q-mt-md">
-            <q-title class="text-h6">Dados de Contato</q-title>
+          <div class="row col-12 q-mt-md">
+            <div class="q-pb-md q-mt-md">
+              <q-title class="text-h6">Dados de Contato</q-title>
+            </div>
+            <div class="row col-12 q-gutter-md">
+              <q-input
+                class="col-3"
+                label="Telefone 1"
+                mask="(##) #####-####"
+                outlined
+                dense
+              />
+              <q-input
+                class="col-3"
+                label="Telefone 2"
+                mask="(##) #####-####"
+                outlined
+                dense
+              />
+              <q-input class="col-3" label="E-mail" outlined dense />
+            </div>
           </div>
-          <div class="row col-12 q-gutter-md">
-            <q-input
-              class="col-3"
-              label="Telefone 1"
-              mask="(##) #####-####"
-              outlined
-              dense
-            />
-            <q-input
-              class="col-3"
-              label="Telefone 2"
-              mask="(##) #####-####"
-              outlined
-              dense
-            />
-            <q-input class="col-3" label="E-mail" outlined dense />
-          </div>
-        </div>
 
-        <div class="row col-12 q-mt-md">
-          <div class="q-pb-md q-mt-md">
-            <q-title class="text-h6">Dados de Endereço</q-title>
+          <div class="row col-12 q-mt-md">
+            <div class="q-pb-md q-mt-md">
+              <q-title class="text-h6">Dados de Endereço</q-title>
+            </div>
+            <div class="row col-12 q-gutter-md">
+              <q-input
+                class="col-3"
+                label="CEP"
+                mask="#####-###"
+                outlined
+                dense
+              />
+              <q-input class="col-3" label="Endereço" outlined dense />
+              <q-input class="col-3" label="Número" outlined dense />
+              <q-input class="col-3" label="Bairro" outlined dense />
+              <q-input class="col-3" label="Cidade" outlined dense />
+              <q-select
+                class="col-2"
+                v-model="ufSelect"
+                :options="this.uf_select"
+                label="UF"
+                outlined
+                dense
+              />
+            </div>
           </div>
-          <div class="row col-12 q-gutter-md">
-            <q-input
-              class="col-3"
-              label="CEP"
-              mask="#####-###"
-              outlined
-              dense
-            />
-            <q-input class="col-3" label="Endereço" outlined dense />
-            <q-input class="col-3" label="Número" outlined dense />
-            <q-input class="col-3" label="Bairro" outlined dense />
-            <q-input class="col-3" label="Cidade" outlined dense />
-            <q-select
-              class="col-2"
-              v-model="ufSelect"
-              :options="this.uf_select"
-              label="UF"
-              outlined
-              dense
-            />
-          </div>
-        </div>
 
-        <div class="row col-12 q-mt-md">
-          <div class="q-pb-md q-mt-md">
-            <q-title class="text-h6">Observações</q-title>
+          <div class="row col-12 q-mt-md">
+            <div class="q-pb-md q-mt-md">
+              <q-title class="text-h6">Observações</q-title>
+            </div>
+            <div class="row col-12 q-gutter-md">
+              <q-input
+                class="row col-10"
+                v-model="text"
+                outlined
+                dense
+                type="textarea"
+                input-style="resize: none;"
+              />
+            </div>
           </div>
-          <div class="row col-12 q-gutter-md">
-            <q-input
-              class="row col-10"
-              v-model="text"
-              outlined
-              dense
-              type="textarea"
-              input-style="resize: none;"
-            />
-          </div>
-        </div>
 
-        <div class="row col-12 q-mt-lg q-gutter-md">
-          <q-btn class="bg-green text-white text-bold">Salvar</q-btn>
-          <q-btn class="bg-red text-white text-bold" @click="abrirDialogCancelar()">Cancelar</q-btn>
+          <div class="row col-12 q-mt-lg q-gutter-md">
+            <q-btn class="bg-green text-white text-bold">Salvar</q-btn>
+            <q-btn
+              class="bg-red text-white text-bold"
+              @click="abrirDialogCancelar()"
+              >Cancelar</q-btn
+            >
+          </div>
         </div>
-      </div>
       </form>
 
       <form action="">
         <div v-if="mostrarFormCadastroPJ">
-        <div class="row col-12 q-mt-md">
-          <div class="q-pb-md q-mt-md">
-            <q-title class="text-h6">Dados Gerais</q-title>
+          <div class="row col-12 q-mt-md">
+            <div class="q-pb-md q-mt-md">
+              <q-title class="text-h6">Dados Gerais</q-title>
+            </div>
+            <div class="row col-12 q-gutter-md">
+              <q-input class="col-3" label="Razão Social" outlined dense />
+              <q-input
+                class="col-3"
+                label="Nome do responsável"
+                outlined
+                dense
+              />
+              <q-select
+                class="col-2"
+                v-model="ativoInativo"
+                :options="this.ativo_inativo"
+                label="Ativo/Inativo"
+                outlined
+                dense
+              />
+            </div>
           </div>
-          <div class="row col-12 q-gutter-md">
-            <q-input class="col-3" label="Razão Social" outlined dense />
-            <q-input class="col-3" label="Nome do responsável" outlined dense />
-            <q-select
-              class="col-2"
-              v-model="ativoInativo"
-              :options="this.ativo_inativo"
-              label="Ativo/Inativo"
-              outlined
-              dense
-            />
+
+          <div class="row col-12 q-mt-md">
+            <div class="q-pb-md q-mt-md">
+              <q-title class="text-h6">Dados de Contato</q-title>
+            </div>
+            <div class="row col-12 q-gutter-md">
+              <q-input
+                class="col-3"
+                label="Telefone 1"
+                mask="(##) #####-####"
+                outlined
+                dense
+              />
+              <q-input
+                class="col-3"
+                label="Telefone 2"
+                mask="(##) #####-####"
+                outlined
+                dense
+              />
+              <q-input class="col-3" label="E-mail" outlined dense />
+            </div>
+          </div>
+
+          <div class="row col-12 q-mt-md">
+            <div class="q-pb-md q-mt-md">
+              <q-title class="text-h6">Dados de Endereço</q-title>
+            </div>
+            <div class="row col-12 q-gutter-md">
+              <q-input
+                class="col-3"
+                label="CEP"
+                mask="#####-###"
+                outlined
+                dense
+              />
+              <q-input class="col-3" label="Endereço" outlined dense />
+              <q-input class="col-3" label="Número" outlined dense />
+              <q-input class="col-3" label="Bairro" outlined dense />
+              <q-input class="col-3" label="Cidade" outlined dense />
+              <q-select
+                class="col-2"
+                v-model="ufSelect"
+                :options="this.uf_select"
+                label="Ativo/Inativo"
+                outlined
+                dense
+              />
+            </div>
+          </div>
+
+          <div class="row col-12 q-mt-md">
+            <div class="q-pb-md q-mt-md">
+              <q-title class="text-h6">Observações</q-title>
+            </div>
+            <div class="row col-12 q-gutter-md">
+              <q-input
+                class="row col-10"
+                v-model="text"
+                outlined
+                dense
+                type="textarea"
+                input-style="resize: none;"
+              />
+            </div>
+          </div>
+
+          <div class="row col-12 q-mt-lg q-gutter-md">
+            <q-btn class="bg-green text-white text-bold" rounded>Salvar</q-btn>
+            <q-btn
+              class="bg-red text-white text-bold"
+              rounded
+              @click="abrirDialogCancelar()"
+              >Cancelar</q-btn
+            >
           </div>
         </div>
-
-        <div class="row col-12 q-mt-md">
-          <div class="q-pb-md q-mt-md">
-            <q-title class="text-h6">Dados de Contato</q-title>
-          </div>
-          <div class="row col-12 q-gutter-md">
-            <q-input
-              class="col-3"
-              label="Telefone 1"
-              mask="(##) #####-####"
-              outlined
-              dense
-            />
-            <q-input
-              class="col-3"
-              label="Telefone 2"
-              mask="(##) #####-####"
-              outlined
-              dense
-            />
-            <q-input class="col-3" label="E-mail" outlined dense />
-          </div>
-        </div>
-
-        <div class="row col-12 q-mt-md">
-          <div class="q-pb-md q-mt-md">
-            <q-title class="text-h6">Dados de Endereço</q-title>
-          </div>
-          <div class="row col-12 q-gutter-md">
-            <q-input
-              class="col-3"
-              label="CEP"
-              mask="#####-###"
-              outlined
-              dense
-            />
-            <q-input class="col-3" label="Endereço" outlined dense />
-            <q-input class="col-3" label="Número" outlined dense />
-            <q-input class="col-3" label="Bairro" outlined dense />
-            <q-input class="col-3" label="Cidade" outlined dense />
-            <q-select
-              class="col-2"
-              v-model="ufSelect"
-              :options="this.uf_select"
-              label="Ativo/Inativo"
-              outlined
-              dense
-            />
-          </div>
-        </div>
-
-        <div class="row col-12 q-mt-md">
-          <div class="q-pb-md q-mt-md">
-            <q-title class="text-h6">Observações</q-title>
-          </div>
-          <div class="row col-12 q-gutter-md">
-            <q-input
-              class="row col-10"
-              v-model="text"
-              outlined
-              dense
-              type="textarea"
-              input-style="resize: none;"
-            />
-          </div>
-        </div>
-
-        <div class="row col-12 q-mt-lg q-gutter-md">
-          <q-btn class="bg-green text-white text-bold">Salvar</q-btn>
-          <q-btn class="bg-red text-white text-bold" @click="abrirDialogCancelar()">Cancelar</q-btn>
-        </div>
-
-      </div>
       </form>
 
       <div>
@@ -271,26 +284,27 @@
       </div>
 
       <q-dialog v-model="dialogCancelar">
-          <q-card style="min-width: 300px">
-            <q-card-section class="text-h6">
-              Confirmar Cancelamento
-            </q-card-section>
+        <q-card style="min-width: 300px">
+          <q-card-section class="text-h6">
+            Confirmar Cancelamento
+          </q-card-section>
 
-            <q-card-section>
-              Você tem certeza que deseja cancelar? Os dados não salvos serão perdidos.
-            </q-card-section>
+          <q-card-section>
+            Você tem certeza que deseja cancelar? Os dados não salvos serão
+            perdidos.
+          </q-card-section>
 
-            <q-card-actions align="right">
-              <q-btn flat label="Não" color="primary" v-close-popup />
-              <q-btn
-                flat
-                label="Sim, cancelar"
-                color="negative"
-                @click="confirmarCancelamento()"
-              />
-            </q-card-actions>
-          </q-card>
-        </q-dialog>
+          <q-card-actions align="right">
+            <q-btn flat label="Não" color="primary" v-close-popup />
+            <q-btn
+              flat
+              label="Sim, cancelar"
+              color="negative"
+              @click="confirmarCancelamento()"
+            />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
     </div>
   </div>
 </template>
@@ -369,5 +383,7 @@ export default class ModuleComponent extends Vue {
 </script>
 
 <style scoped>
-
+.verde {
+  background-color: #11b69a;
+}
 </style>
