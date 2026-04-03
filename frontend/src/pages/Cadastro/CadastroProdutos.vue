@@ -2,18 +2,22 @@
   <div class="text-h5 text-bold">
     <div class="q-py-md">CADASTRO DE PRODUTOS</div>
     <div class="col-12">
-
       <div class="col-12 row justify-between items-center">
         <div class="row col-9 q-mt-md">
           <q-input class="col-4" label="Nome do Produto" outlined dense />
-          <q-input class="col-4 q-px-md" label="Código do Produto" outlined dense />
+          <q-input
+            class="col-4 q-px-md"
+            label="Código do Produto"
+            outlined
+            dense
+          />
         </div>
         <div class="row q-gutter-md">
-          <q-btn color="white" icon="search" class="text-black" />
+          <q-btn icon="search" class="text-white verde" rounded />
           <q-btn
-            color="white"
+            rounded
             icon="add"
-            class="text-black"
+            class="text-white verde"
             @click="mostrarFormulario()"
           />
         </div>
@@ -26,24 +30,9 @@
           </div>
           <div class="row col-12 q-gutter-md">
             <q-input class="col-6" label="Código de Barras" outlined dense />
-            <q-select
-              class="col-3"
-              label="Categoria"
-              outlined
-              dense
-            />
-            <q-select
-              class="col-3"
-              label="Subcategoria"
-              outlined
-              dense
-            />
-            <q-select
-              class="col-3"
-              label="Marca"
-              outlined
-              dense
-            />
+            <q-select class="col-3" label="Categoria" outlined dense />
+            <q-select class="col-3" label="Subcategoria" outlined dense />
+            <q-select class="col-3" label="Marca" outlined dense />
           </div>
         </div>
 
@@ -67,7 +56,14 @@
               outlined
               dense
             />
-            <q-input class="col-2" label="Margem (%)" outlined dense  :value="margemCalculada" readonly />
+            <q-input
+              class="col-2"
+              label="Margem (%)"
+              outlined
+              dense
+              :value="margemCalculada"
+              readonly
+            />
           </div>
         </div>
 
@@ -76,12 +72,7 @@
             <q-title class="text-h6">Estoque</q-title>
           </div>
           <div class="row col-12 q-gutter-md">
-            <q-input
-              class="col-3"
-              label="Estoque Atual"
-              outlined
-              dense
-            />
+            <q-input class="col-3" label="Estoque Atual" outlined dense />
             <q-input
               type="money"
               class="col-3"
@@ -105,18 +96,8 @@
             <q-title class="text-h6">Dados do Fornecedor</q-title>
           </div>
           <div class="row col-12 q-gutter-md">
-            <q-input
-              class="col-3"
-              label="Nome do Fornecedor"
-              outlined
-              dense
-            />
-            <q-input
-              class="col-3"
-              label="Garantia"
-              outlined
-              dense
-            />
+            <q-input class="col-3" label="Nome do Fornecedor" outlined dense />
+            <q-input class="col-3" label="Garantia" outlined dense />
           </div>
         </div>
 
@@ -137,8 +118,13 @@
         </div>
 
         <div class="row col-12 q-mt-lg q-gutter-md">
-          <q-btn class="bg-green text-white text-bold">Salvar</q-btn>
-          <q-btn class="bg-red text-white text-bold" @click="abrirDialogCancelar()">Cancelar</q-btn>
+          <q-btn class="bg-green text-white text-bold" rounded>Salvar</q-btn>
+          <q-btn
+            class="bg-red text-white text-bold"
+            rounded
+            @click="abrirDialogCancelar()"
+            >Cancelar</q-btn
+          >
         </div>
       </div>
 
@@ -188,26 +174,27 @@
     </div>
 
     <q-dialog v-model="dialogCancelar">
-          <q-card style="min-width: 300px">
-            <q-card-section class="text-h6">
-              Confirmar Cancelamento
-            </q-card-section>
+      <q-card style="min-width: 300px">
+        <q-card-section class="text-h6">
+          Confirmar Cancelamento
+        </q-card-section>
 
-            <q-card-section>
-              Você tem certeza que deseja cancelar? Os dados não salvos serão perdidos.
-            </q-card-section>
+        <q-card-section>
+          Você tem certeza que deseja cancelar? Os dados não salvos serão
+          perdidos.
+        </q-card-section>
 
-            <q-card-actions align="right">
-              <q-btn flat label="Não" color="primary" v-close-popup />
-              <q-btn
-                flat
-                label="Sim, cancelar"
-                color="negative"
-                @click="confirmarCancelamento()"
-              />
-            </q-card-actions>
-          </q-card>
-        </q-dialog>
+        <q-card-actions align="right">
+          <q-btn flat label="Não" color="primary" v-close-popup />
+          <q-btn
+            flat
+            label="Sim, cancelar"
+            color="negative"
+            @click="confirmarCancelamento()"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
@@ -257,4 +244,8 @@ export default class ModuleComponent extends Vue {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.verde {
+  background-color: #11b69a;
+}
+</style>
