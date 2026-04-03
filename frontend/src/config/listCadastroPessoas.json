@@ -1,0 +1,55 @@
+{
+  "columns": [
+    {
+      "name": "codigo",
+      "label": "Código",
+      "field": "codigo",
+      "align": "left",
+      "sortable": true
+    },
+    {
+      "name": "tipo",
+      "label": "Tipo",
+      "field": "tipo",
+      "align": "left",
+      "sortable": true
+    },
+    {
+      "name": "nome",
+      "label": "Nome",
+      "field": "nome",
+      "align": "left",
+      "sortable": true
+    },
+    {
+      "name": "documento",
+      "label": "CPF/CNPJ",
+      "field": "documento",
+      "align": "left"
+    },
+    {
+      "name": "telefone",
+      "label": "Telefone",
+      "field": "telefone",
+      "align": "left"
+    },
+    {
+      "name": "email",
+      "label": "E-mail",
+      "field": "email",
+      "align": "left"
+    },
+    {
+      "name": "status",
+      "label": "Status",
+      "field": "status",
+      "align": "center"
+    },
+    {
+      "name": "acoes",
+      "label": "Ações",
+      "field": "acoes",
+      "align": "center"
+    }
+  ]
+}
