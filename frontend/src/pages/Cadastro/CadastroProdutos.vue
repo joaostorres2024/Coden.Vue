@@ -129,6 +129,7 @@
 
       <div>
         <q-table
+          :data="this.rowsCadastroProdutos"
           :columns="this.colunasCadastroProdutos"
           row-key="codigo"
           flat

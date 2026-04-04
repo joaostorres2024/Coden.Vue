@@ -47,6 +47,12 @@
       "label": "Status",
       "field": "status",
       "align": "center"
+    },
+    {
+      "name": "acoes",
+      "label": "Ações",
+      "field": "acoes",
+      "align": "center"
     }
   ]
 }
