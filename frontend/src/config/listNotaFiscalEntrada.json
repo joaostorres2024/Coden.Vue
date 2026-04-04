@@ -1,0 +1,51 @@
+{
+  "columns": [
+    {
+      "name": "codigo",
+      "label": "Código",
+      "field": "codigo",
+      "align": "left",
+      "sortable": true
+    },
+    {
+      "name": "produto",
+      "label": "Produto",
+      "field": "produto",
+      "align": "left",
+      "sortable": true
+    },
+    {
+      "name": "quantidade",
+      "label": "Qtd",
+      "field": "quantidade",
+      "align": "right",
+      "sortable": true
+    },
+    {
+      "name": "valorUnitario",
+      "label": "Vlr Unitário",
+      "field": "valorUnitario",
+      "align": "right",
+      "sortable": true
+    },
+    {
+      "name": "valorTotal",
+      "label": "Vlr Total",
+      "field": "valorTotal",
+      "align": "right",
+      "sortable": true
+    },
+    {
+      "name": "icms",
+      "label": "ICMS",
+      "field": "icms",
+      "align": "right"
+    },
+    {
+      "name": "acoes",
+      "label": "Ações",
+      "field": "acoes",
+      "align": "center"
+    }
+  ]
+}
