@@ -4,42 +4,42 @@
       "name": "codigo",
       "label": "Código",
       "field": "codigo",
-      "align": "left",
+      "align": "center",
       "sortable": true
     },
     {
       "name": "produto",
       "label": "Produto",
       "field": "produto",
-      "align": "left",
+      "align": "center",
       "sortable": true
     },
     {
       "name": "quantidade",
       "label": "Qtd",
       "field": "quantidade",
-      "align": "right",
+      "align": "center",
       "sortable": true
     },
     {
       "name": "valorUnitario",
       "label": "Vlr Unitário",
       "field": "valorUnitario",
-      "align": "right",
+      "align": "center",
       "sortable": true
     },
     {
       "name": "valorTotal",
       "label": "Vlr Total",
       "field": "valorTotal",
-      "align": "right",
+      "align": "center",
       "sortable": true
     },
     {
       "name": "icms",
       "label": "ICMS",
       "field": "icms",
-      "align": "right"
+      "align": "center"
     },
     {
       "name": "acoes",

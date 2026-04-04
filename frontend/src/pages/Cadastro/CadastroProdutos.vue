@@ -5,16 +5,36 @@
     <div class="col-12">
       <div class="col-12 row justify-between items-center">
         <div class="row col-9 q-mt-md">
-          <q-input class="col-4" label="Nome do Produto" outlined dense />
           <q-input
+            class="col-4"
+            label="Nome do Produto"
+            v-model="nome"
+            outlined
+            dense
+          />
+          <q-input
+            v-model="codigo"
             class="col-4 q-px-md"
             label="Código do Produto"
             outlined
             dense
           />
+          <q-btn
+            rounded
+            icon="cleaning_services"
+            class="text-white q-mx-md"
+            color="warning"
+            @click="refreshTable()"
+            v-if="!mostrarFormCadastroPF && !mostrarFormCadastroPJ"
+          />
         </div>
         <div class="row q-gutter-md">
-          <q-btn icon="search" class="text-white verde-escuro" rounded />
+          <q-btn
+            icon="search"
+            class="text-white verde-escuro"
+            @click="pesquisar()"
+            rounded
+          />
           <q-btn
             rounded
             icon="add"
@@ -31,7 +51,13 @@
           </div>
           <div class="row col-12 q-gutter-md">
             <q-input class="col-6" label="Código de Barras" outlined dense />
-            <q-select class="col-3" label="Grupo" outlined dense />
+            <q-select
+              class="col-3"
+              label="Grupo"
+              v-model="grupo"
+              outlined
+              dense
+            />
           </div>
         </div>
 
@@ -49,7 +75,7 @@
             />
             <q-input
               type="money"
-              v-model="precoVenda"
+              v-model="precoVendaTable"
               class="col-3"
               label="Preço de Venda"
               outlined
@@ -71,7 +97,13 @@
             <q-title class="text-h6">Estoque</q-title>
           </div>
           <div class="row col-12 q-gutter-md">
-            <q-input class="col-3" label="Estoque Atual" outlined dense />
+            <q-input
+              class="col-3"
+              label="Estoque Atual"
+              v-model="estoque"
+              outlined
+              dense
+            />
             <q-input
               type="money"
               class="col-3"
@@ -95,7 +127,13 @@
             <q-title class="text-h6">Dados do Fornecedor</q-title>
           </div>
           <div class="row col-12 q-gutter-md">
-            <q-input class="col-3" label="Nome do Fornecedor" outlined dense />
+            <q-input
+              class="col-3"
+              label="Nome do Fornecedor"
+              v-model="fornecedor"
+              outlined
+              dense
+            />
             <q-input class="col-3" label="Garantia" outlined dense />
           </div>
         </div>
@@ -129,7 +167,7 @@
 
       <div>
         <q-table
-          :data="this.rowsCadastroProdutos"
+          :data="this.rowsFiltradas"
           :columns="this.colunasCadastroProdutos"
           row-key="codigo"
           flat
@@ -154,7 +192,7 @@
                 color="negative"
                 flat
                 round
-                @click="excluir(props.row)"
+                @click="confirmarExcluir(props.row)"
               />
             </q-td>
           </template>
@@ -195,6 +233,24 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+
+    <q-dialog v-model="dialogExcluir">
+      <q-card style="min-width: 300px">
+        <q-card-section class="text-h6"> Deseja mesmo excluir? </q-card-section>
+
+        <q-card-section> Você tem certeza que deseja excluir? </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="Não" color="primary" v-close-popup />
+          <q-btn
+            flat
+            label="Sim, excluir"
+            color="negative"
+            @click="confirmarExcluir()"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
@@ -213,9 +269,55 @@ export default class ModuleComponent extends Vue {
   cadastroProdutoForm = false
   dialogCancelar = false
 
+  rowsFiltradas: any[] = []
+
+    // Dados Gerais
+  nome = ''
+  codigo = ''
+  grupo = ''
+  estoque = ''
+  fornecedor = ''
+  status = ''
+  precoVendaTable: number | null = null
+  dialogExcluir = false
+
+  created(){
+    this.rowsFiltradas = this.rowsProdutos
+  }
+
   ativo_inativo = [
     { label: 'Ativo', value: 'A' },
     { label: 'Inativo', value: 'I' }
+  ]
+
+  rowsProdutos = [
+    {
+      codigo: '1SB807221CGRU',
+      nome: 'Parachoque',
+      grupo: 'Lanternagem',
+      precoVendaTable: '1200',
+      estoque: '20',
+      fornecedor: 'Volkswagen',
+      status: 'Ativo'
+    },
+    {
+      codigo: '5Z0807221ADGRU',
+      nome: 'Parachoque',
+      grupo: 'Lanternagem',
+      precoVendaTable: '1200',
+      estoque: '20',
+      fornecedor: 'Volkswagen',
+      status: 'Ativo'
+    },
+    {
+      codigo: '2G5601025041',
+      nome: 'Roda',
+      grupo: 'Lanternagem',
+      precoVendaTable: '1200',
+      estoque: '20',
+      fornecedor: 'Volkswagen',
+      status: 'Inativo'
+    }
   ]
 
   get margemCalculada(): string {
@@ -240,6 +342,44 @@ export default class ModuleComponent extends Vue {
 
     // volta pra tabela
     this.cadastroProdutoForm = false
+}
+
+pesquisar() {
+  this.rowsFiltradas = this.rowsProdutos.filter((row: any) => {
+    const nomeMatch =
+      !this.nome ||
+      row.nome.toLowerCase().includes(this.nome.toLowerCase())
+
+    const codigoMatch =
+      !this.codigo ||
+      row.codigo.toLowerCase().includes(this.codigo.toLowerCase())
+
+      return nomeMatch && codigoMatch
+  });
+}
+
+editar(row: any) {
+  // Preenche os campos do formulário com os dados do usuário
+  this.codigo = row.codigo
+  this.nome = row.nome
+  this.grupo = row.grupo
+  this.estoque = row.estoque
+  this.fornecedor = row.fornecedor
+  this.precoVendaTable = row.precoVendaTable
+  this.ativoInativo = row.status === 'Ativo' ? 'Ativo' : 'Inativo'
+
+  this.cadastroProdutoForm = true
+}
+
+confirmarExcluir() {
+  this.dialogExcluir = true
+}
+
+refreshTable(){
+  this.codigo = ""
+  this.nome = ""
+
+  this.rowsFiltradas = this.rowsProdutos
 }
 }
 </script>

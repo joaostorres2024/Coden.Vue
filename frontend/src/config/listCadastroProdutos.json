@@ -4,42 +4,42 @@
       "name": "codigo",
       "label": "Código do Produto",
       "field": "codigo",
-      "align": "left",
+      "align": "center",
       "sortable": true
     },
     {
       "name": "nome",
       "label": "Nome do Produto",
       "field": "nome",
-      "align": "left",
+      "align": "center",
       "sortable": true
     },
     {
-      "name": "categoria",
-      "label": "Categoria",
-      "field": "categoria",
-      "align": "left",
+      "name": "grupo",
+      "label": "Grupo",
+      "field": "grupo",
+      "align": "center",
       "sortable": true
     },
     {
       "name": "precoVenda",
       "label": "Preço Venda",
-      "field": "precoVenda",
-      "align": "right",
+      "field": "precoVendaTable",
+      "align": "center",
       "sortable": true
     },
     {
       "name": "estoque",
       "label": "Estoque",
       "field": "estoque",
-      "align": "right",
+      "align": "center",
       "sortable": true
     },
     {
       "name": "fornecedor",
       "label": "Fornecedor",
       "field": "fornecedor",
-      "align": "left"
+      "align": "center"
     },
     {
       "name": "status",
