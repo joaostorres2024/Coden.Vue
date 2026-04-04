@@ -4,31 +4,31 @@
       "name": "numeroNF",
       "label": "Número NF",
       "field": "numeroNF",
-      "align": "left"
+      "align": "center"
     },
     {
       "name": "dataInicio",
       "label": "Período De",
       "field": "dataInicio",
-      "align": "left"
+      "align": "center"
     },
     {
       "name": "dataFim",
       "label": "Período Até",
       "field": "dataFim",
-      "align": "left"
+      "align": "center"
     },
     {
       "name": "nomeCliente",
       "label": "Nome Completo",
       "field": "nomeCliente",
-      "align": "left"
+      "align": "center"
     },
     {
       "name": "documento",
       "label": "CNPJ/CPF",
       "field": "documento",
-      "align": "left"
+      "align": "center"
     },
     {
       "name": "acoes",

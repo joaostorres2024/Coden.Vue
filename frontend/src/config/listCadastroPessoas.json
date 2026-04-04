@@ -4,40 +4,40 @@
       "name": "codigo",
       "label": "Código",
       "field": "codigo",
-      "align": "left",
+      "align": "center",
       "sortable": true
     },
     {
       "name": "tipo",
       "label": "Tipo",
       "field": "tipo",
-      "align": "left",
+      "align": "center",
       "sortable": true
     },
     {
       "name": "nome",
       "label": "Nome",
       "field": "nome",
-      "align": "left",
+      "align": "center",
       "sortable": true
     },
     {
       "name": "documento",
       "label": "CPF/CNPJ",
       "field": "documento",
-      "align": "left"
+      "align": "center"
     },
     {
       "name": "telefone",
       "label": "Telefone",
       "field": "telefone",
-      "align": "left"
+      "align": "center"
     },
     {
       "name": "email",
       "label": "E-mail",
       "field": "email",
-      "align": "left"
+      "align": "center"
     },
     {
       "name": "status",

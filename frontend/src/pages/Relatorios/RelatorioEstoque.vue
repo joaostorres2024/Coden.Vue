@@ -25,6 +25,7 @@
 
       <div>
         <q-table
+          :data="rowsEstoque"
           :columns="this.colunasRelatorioEstoque"
           row-key="codigo"
           flat
@@ -35,17 +36,17 @@
           <template v-slot:body-cell-acoes="props">
             <q-td align="center">
               <q-btn
-                icon="edit"
+                icon="picture_as_pdf"
                 size="sm"
-                color="primary"
+                color="red"
                 flat
                 round
                 @click="editar(props.row)"
               />
               <q-btn
-                icon="delete"
+                icon="description"
                 size="sm"
-                color="negative"
+                color="green"
                 flat
                 round
                 @click="excluir(props.row)"
@@ -79,6 +80,37 @@ export default class ModuleComponent extends Vue {
    // ===== data =====
 
   colunasRelatorioEstoque = listRelatorioEstoque.columns
+
+  // ===== dados de tabela fictícios =====
+  rowsEstoque = [
+    {
+      codigo: '001',
+      nomeProduto: 'Notebook',
+      nome: 'Antônio Carlos',
+      documento: '123-456-789-10',
+      telefone: '(61) 981590-8038',
+      email: 'antonio@gmail.com',
+      status: 'Ativo'
+    },
+    {
+      codigo: '002',
+      tipoPessoa: 'PJ',
+      nome: 'Matheus',
+      documento: '123-422-789-10',
+      telefone: '(61) 981120-8038',
+      email: 'matheus@gmail.com',
+      status: 'Inativo'
+    },
+    {
+      codigo: '003',
+      tipoPessoa: 'PF',
+      nome: 'Uma tal de Brunna',
+      documento: '677-886-080-21',
+      telefone: '(61) 98999-9999',
+      email: 'brunna@gmail.com',
+      status: 'Inativo'
+    }
+  ]
 }
 </script>
 
