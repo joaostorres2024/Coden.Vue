@@ -1,0 +1,40 @@
+{
+  "columns": [
+    {
+      "name": "numeroNF",
+      "label": "Número NF",
+      "field": "numeroNF",
+      "align": "left"
+    },
+    {
+      "name": "dataInicio",
+      "label": "Período De",
+      "field": "dataInicio",
+      "align": "left"
+    },
+    {
+      "name": "dataFim",
+      "label": "Período Até",
+      "field": "dataFim",
+      "align": "left"
+    },
+    {
+      "name": "nomeCliente",
+      "label": "Nome Completo",
+      "field": "nomeCliente",
+      "align": "left"
+    },
+    {
+      "name": "documento",
+      "label": "CNPJ/CPF",
+      "field": "documento",
+      "align": "left"
+    },
+    {
+      "name": "acoes",
+      "label": "Ações",
+      "field": "acoes",
+      "align": "center"
+    }
+  ]
+}

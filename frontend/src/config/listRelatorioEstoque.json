@@ -1,0 +1,52 @@
+{
+  "columns": [
+    {
+      "name": "codigo",
+      "label": "Código",
+      "field": "codigo",
+      "align": "left"
+    },
+    {
+      "name": "nomeProduto",
+      "label": "Produto",
+      "field": "nomeProduto",
+      "align": "left"
+    },
+    {
+      "name": "categoria",
+      "label": "Categoria",
+      "field": "categoria",
+      "align": "left"
+    },
+    {
+      "name": "quantidade",
+      "label": "Qtd. Estoque",
+      "field": "quantidade",
+      "align": "right"
+    },
+    {
+      "name": "valorCusto",
+      "label": "Valor Custo",
+      "field": "valorCusto",
+      "align": "right"
+    },
+    {
+      "name": "valorVenda",
+      "label": "Valor Venda",
+      "field": "valorVenda",
+      "align": "right"
+    },
+    {
+      "name": "valorTotal",
+      "label": "Valor Total",
+      "field": "valorTotal",
+      "align": "right"
+    },
+    {
+      "name": "status",
+      "label": "Status",
+      "field": "status",
+      "align": "center"
+    }
+  ]
+}

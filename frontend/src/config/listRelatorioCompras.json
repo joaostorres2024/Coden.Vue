@@ -1,0 +1,70 @@
+{
+  "columns": [
+    {
+      "name": "numeroCompra",
+      "label": "Nº Compra",
+      "field": "numeroCompra",
+      "align": "left"
+    },
+    {
+      "name": "dataCompra",
+      "label": "Data",
+      "field": "dataCompra",
+      "align": "left"
+    },
+    {
+      "name": "codigoProduto",
+      "label": "Código Produto",
+      "field": "codigoProduto",
+      "align": "left"
+    },
+    {
+      "name": "nomeProduto",
+      "label": "Produto",
+      "field": "nomeProduto",
+      "align": "left"
+    },
+    {
+      "name": "fornecedor",
+      "label": "Fornecedor",
+      "field": "fornecedor",
+      "align": "left"
+    },
+    {
+      "name": "cpfCnpj",
+      "label": "CPF/CNPJ",
+      "field": "cpfCnpj",
+      "align": "left"
+    },
+    {
+      "name": "quantidade",
+      "label": "Qtd.",
+      "field": "quantidade",
+      "align": "right"
+    },
+    {
+      "name": "valorUnitario",
+      "label": "Valor Unit.",
+      "field": "valorUnitario",
+      "align": "right"
+    },
+    {
+      "name": "valorTotal",
+      "label": "Valor Total",
+      "field": "valorTotal",
+      "align": "right"
+    },
+    {
+      "name": "status",
+      "label": "Status",
+      "field": "status",
+      "align": "center"
+    },
+    {
+      "name": "acoes",
+      "label": "Ações",
+      "field": "acoes",
+      "align": "center"
+    }
+  ]
+}

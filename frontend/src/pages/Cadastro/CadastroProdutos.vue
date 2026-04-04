@@ -31,9 +31,7 @@
           </div>
           <div class="row col-12 q-gutter-md">
             <q-input class="col-6" label="Código de Barras" outlined dense />
-            <q-select class="col-3" label="Categoria" outlined dense />
-            <q-select class="col-3" label="Subcategoria" outlined dense />
-            <q-select class="col-3" label="Marca" outlined dense />
+            <q-select class="col-3" label="Grupo" outlined dense />
           </div>
         </div>
 
@@ -250,7 +248,7 @@ export default class ModuleComponent extends Vue {
   background-color: #11b69a;
 }
 
-.verde-escuro{
-  background-color: #00725F;
+.verde-escuro {
+  background-color: #00725f;
 }
 </style>
