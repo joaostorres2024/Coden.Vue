@@ -1,6 +1,7 @@
 <template>
   <div class="text-h5 text-bold">
     <div class="q-py-md">CADASTRO DE PRODUTOS</div>
+
     <div class="col-12">
       <div class="col-12 row justify-between items-center">
         <div class="row col-9 q-mt-md">
@@ -13,7 +14,7 @@
           />
         </div>
         <div class="row q-gutter-md">
-          <q-btn icon="search" class="text-white verde" rounded />
+          <q-btn icon="search" class="text-white verde-escuro" rounded />
           <q-btn
             rounded
             icon="add"
@@ -247,5 +248,9 @@ export default class ModuleComponent extends Vue {
 <style scoped>
 .verde {
   background-color: #11b69a;
+}
+
+.verde-escuro{
+  background-color: #00725F;
 }
 </style>
