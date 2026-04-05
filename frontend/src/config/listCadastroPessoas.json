@@ -8,9 +8,9 @@
       "sortable": true
     },
     {
-      "name": "tipo",
+      "name": "tipoPessoa",
       "label": "Tipo",
-      "field": "tipo",
+      "field": "tipoPessoa",
       "align": "center",
       "sortable": true
     },

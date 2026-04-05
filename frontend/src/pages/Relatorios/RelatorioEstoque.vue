@@ -3,29 +3,71 @@
     <div class="q-py-md">RELATÓRIO DE ESTOQUE</div>
     <div class="col-12">
       <div class="row col-2 q-mt-md">
-        <q-input class="col-2" label="Código do Produto" outlined dense />
-        <q-input class="col-3 q-px-md" label="Nome do Produto" outlined dense />
-        <q-select class="col-3" label="Grupo" outlined dense />
+        <q-input
+          class="col-2"
+          label="Código do Produto"
+          v-model="codigo"
+          outlined
+          dense
+        />
+        <q-input
+          class="col-3 q-px-md"
+          label="Nome do Produto"
+          v-model="nomeProduto"
+          outlined
+          dense
+        />
+        <q-select class="col-3" label="Grupo" v-model="grupo" outlined dense />
       </div>
       <div class="col-12 row justify-between items-center">
         <div class="row col-9 q-mt-md">
-          <q-select class="col-3" label="Status Estoque" outlined dense />
-          <q-input
-            class="col-4 q-px-md"
-            label="Valor de Custo"
+          <q-select
+            class="col-3"
+            label="Status Estoque"
+            v-model="status"
+            :options="this.ativo_inativo"
+            option-label="label"
+            option-value="value"
+            emit-value
+            map-options
             outlined
             dense
           />
-          <q-input class="col-4" label="Valor de Venda" outlined dense />
+          <q-input
+            class="col-3 q-px-md"
+            label="Valor de Custo"
+            v-model="valorCusto"
+            outlined
+            dense
+          />
+          <q-input
+            class="col-3"
+            label="Valor de Venda"
+            v-model="valorVenda"
+            outlined
+            dense
+          />
+          <q-btn
+            rounded
+            icon="cleaning_services"
+            class="text-white q-mx-md"
+            color="warning"
+            @click="refreshTable()"
+          />
         </div>
         <div class="row q-gutter-md">
-          <q-btn icon="search" class="text-white verde-escuro" rounded />
+          <q-btn
+            icon="search"
+            class="text-white verde-escuro"
+            @click="pesquisar()"
+            rounded
+          />
         </div>
       </div>
 
       <div>
         <q-table
-          :data="rowsEstoque"
+          :data="this.rowsFiltradas"
           :columns="this.colunasRelatorioEstoque"
           row-key="codigo"
           flat
@@ -80,37 +122,112 @@ export default class ModuleComponent extends Vue {
    // ===== data =====
 
   colunasRelatorioEstoque = listRelatorioEstoque.columns
+  codigo = ''
+  nomeProduto = ''
+  grupo = ''
+  quantidade = ''
+  valorCusto = ''
+  valorVenda = ''
+  status = ''
+
+  rowsFiltradas: any[] = []
 
   // ===== dados de tabela fictícios =====
   rowsEstoque = [
-    {
-      codigo: '001',
-      nomeProduto: 'Notebook',
-      nome: 'Antônio Carlos',
-      documento: '123-456-789-10',
-      telefone: '(61) 981590-8038',
-      email: 'antonio@gmail.com',
-      status: 'Ativo'
-    },
-    {
-      codigo: '002',
-      tipoPessoa: 'PJ',
-      nome: 'Matheus',
-      documento: '123-422-789-10',
-      telefone: '(61) 981120-8038',
-      email: 'matheus@gmail.com',
-      status: 'Inativo'
-    },
-    {
-      codigo: '003',
-      tipoPessoa: 'PF',
-      nome: 'Uma tal de Brunna',
-      documento: '677-886-080-21',
-      telefone: '(61) 98999-9999',
-      email: 'brunna@gmail.com',
-      status: 'Inativo'
-    }
+  {
+    codigo: '001',
+    nomeProduto: 'Notebook',
+    grupo: 'Tecnologia',
+    quantidade: '8',
+    valorCusto: '2300',
+    valorVenda: '2990',
+    status: 'Ativo'
+  },
+  {
+    codigo: '002',
+    nomeProduto: 'Mouse Gamer',
+    grupo: 'Periféricos',
+    quantidade: '25',
+    valorCusto: '80',
+    valorVenda: '149',
+    status: 'Ativo'
+  },
+  {
+    codigo: '003',
+    nomeProduto: 'Teclado Mecânico',
+    grupo: 'Periféricos',
+    quantidade: '15',
+    valorCusto: '200',
+    valorVenda: '350',
+    status: 'Inativo'
+  },
+  {
+    codigo: '004',
+    nomeProduto: 'Monitor 24"',
+    grupo: 'Tecnologia',
+    quantidade: '12',
+    valorCusto: '900',
+    valorVenda: '1299',
+    status: 'Ativo'
+  },
+  {
+    codigo: '005',
+    nomeProduto: 'Headset',
+    grupo: 'Áudio',
+    quantidade: '18',
+    valorCusto: '120',
+    valorVenda: '199',
+    status: 'Ativo'
+  }
+]
+
+ativo_inativo = [
+    { label: 'Ativo', value: 'Ativo' },
+    { label: 'Inativo', value: 'Inativo' }
   ]
+
+created(){
+    this.rowsFiltradas = this.rowsEstoque
+  }
+
+pesquisar() {
+  this.rowsFiltradas = this.rowsEstoque.filter((row: any) => {
+
+    const codigoMatch =
+      !this.codigo ||
+      row.codigo.toLowerCase().includes(this.codigo.toLowerCase())
+
+    const nomeMatch =
+      !this.nomeProduto ||
+      row.nomeProduto.toLowerCase().includes(this.nomeProduto.toLowerCase())
+
+    const custoMatch =
+      !this.valorCusto ||
+      row.valorCusto.toLowerCase().includes(this.valorCusto.toLowerCase())
+
+    const vendaMatch =
+      !this.valorVenda ||
+      row.valorVenda.toLowerCase().includes(this.valorVenda.toLowerCase())
+
+      const statusMatch =
+      !this.status ||
+      row.status === this.status
+
+      return nomeMatch && codigoMatch && custoMatch && statusMatch && vendaMatch
+  });
+}
+
+refreshTable(){
+  this.codigo = ""
+  this.nomeProduto = ""
+  this.grupo = ""
+  this.quantidade = ""
+  this.valorCusto = ""
+  this.valorVenda = ""
+  this.status = ""
+
+  this.rowsFiltradas = this.rowsEstoque
+}
 }
 </script>
 

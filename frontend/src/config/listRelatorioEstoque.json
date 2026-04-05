@@ -13,9 +13,9 @@
       "align": "center"
     },
     {
-      "name": "categoria",
-      "label": "Categoria",
-      "field": "categoria",
+      "name": "grupo",
+      "label": "Grupo",
+      "field": "grupo",
       "align": "center"
     },
     {
@@ -34,12 +34,6 @@
       "name": "valorVenda",
       "label": "Valor Venda",
       "field": "valorVenda",
-      "align": "center"
-    },
-    {
-      "name": "valorTotal",
-      "label": "Valor Total",
-      "field": "valorTotal",
       "align": "center"
     },
     {
