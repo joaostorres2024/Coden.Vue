@@ -5,7 +5,7 @@
       <div class="row col-2 q-mt-md">
         <q-input class="col-2" label="Código do Produto" outlined dense />
         <q-input class="col-3 q-px-md" label="Cliente" outlined dense />
-        <q-input class="col-3 q-px-md" label="CPF/CNPJ" outlined dense />
+        <q-input class="col-3" label="CPF/CNPJ" outlined dense />
       </div>
       <div class="col-12 row justify-between items-center">
         <div class="row col-9 q-mt-md">
