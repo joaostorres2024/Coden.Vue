@@ -34,10 +34,6 @@ const routes: RouteConfig[] = [
         component: () => import('../pages/Relatorios/RelatorioVendas.vue')
       },
       {
-        path: 'RelatorioCompras',
-        component: () => import('../pages/Relatorios/RelatorioCompras.vue')
-      },
-      {
         path: 'VendaBalcao',
         component: () => import('../pages/Vendas/VendaBalcao.vue')
       },

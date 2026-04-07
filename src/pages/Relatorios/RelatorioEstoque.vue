@@ -19,8 +19,8 @@
         />
         <q-select class="col-3" label="Grupo" v-model="grupo" outlined dense />
       </div>
-      <div class="col-12 row justify-between items-center">
-        <div class="row col-9 q-mt-md">
+      <div class="col-12 q-mt-md row items-center justify-between">
+        <div class="row col-9">
           <q-select
             class="col-3"
             label="Status Estoque"
@@ -47,13 +47,6 @@
             outlined
             dense
           />
-          <q-btn
-            rounded
-            icon="cleaning_services"
-            class="text-white q-mx-md"
-            color="warning"
-            @click="refreshTable()"
-          />
         </div>
         <div class="row q-gutter-md">
           <q-btn
@@ -61,6 +54,13 @@
             class="text-white verde-escuro"
             @click="pesquisar()"
             rounded
+          />
+          <q-btn
+            rounded
+            icon="cleaning_services"
+            class="text-white q-mx-md"
+            color="warning"
+            @click="refreshTable()"
           />
         </div>
       </div>

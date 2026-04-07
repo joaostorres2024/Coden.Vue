@@ -115,19 +115,6 @@
 
               <q-item-section> Relatório Vendas </q-item-section>
             </q-item>
-
-            <q-item
-              class="b-r-10 q-my-xs q-pl-lg"
-              clickable
-              v-ripple
-              @click="$router.push('/RelatorioCompras')"
-            >
-              <q-item-section avatar>
-                <q-icon name="shopping_cart" />
-              </q-item-section>
-
-              <q-item-section> Relatório Compras </q-item-section>
-            </q-item>
           </q-expansion-item>
 
           <q-expansion-item

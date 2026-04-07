@@ -19,8 +19,8 @@
           dense
         />
       </div>
-      <div class="col-12 row justify-between items-center">
-        <div class="row col-9 q-mt-md">
+      <div class="col-12 row justify-between items-center q-mt-md">
+        <div class="row col-9">
           <q-input class="col-6" label="Nome Completo" outlined dense />
           <q-input class="col-4 q-px-md" label="CNPJ/CPF" outlined dense />
         </div>

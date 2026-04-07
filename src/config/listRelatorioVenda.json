@@ -1,15 +1,10 @@
 {
   "columns": [
     {
-      "name": "numeroVenda",
-      "label": "Nº Venda",
-      "field": "numeroVenda",
-      "align": "center"
-    },
-    {
       "name": "dataVenda",
       "label": "Data",
       "field": "dataVenda",
+      "type": "date",
       "align": "center"
     },
     {
@@ -25,21 +20,15 @@
       "align": "center"
     },
     {
-      "name": "cpfCnpj",
-      "label": "CPF/CNPJ",
-      "field": "cpfCnpj",
-      "align": "center"
-    },
-    {
       "name": "nomeCliente",
       "label": "Cliente",
       "field": "nomeCliente",
       "align": "center"
     },
     {
-      "name": "quantidade",
-      "label": "Qtd.",
-      "field": "quantidade",
+      "name": "cpfCnpj",
+      "label": "CPF/CNPJ",
+      "field": "cpfCnpj",
       "align": "center"
     },
     {
@@ -52,12 +41,6 @@
       "name": "valorTotal",
       "label": "Valor Total",
       "field": "valorTotal",
-      "align": "center"
-    },
-    {
-      "name": "status",
-      "label": "Status",
-      "field": "status",
       "align": "center"
     },
     {

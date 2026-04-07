@@ -1,9 +1,9 @@
 {
   "columns": [
     {
-      "name": "codigo",
-      "label": "Código",
-      "field": "codigo",
+      "name": "numeroNF",
+      "label": "Número NF",
+      "field": "numeroNF",
       "align": "center",
       "sortable": true
     },

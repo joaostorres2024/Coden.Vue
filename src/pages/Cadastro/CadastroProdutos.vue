@@ -3,8 +3,8 @@
     <div class="q-py-md">CADASTRO DE PRODUTOS</div>
 
     <div class="col-12">
-      <div class="col-12 row justify-between items-center">
-        <div class="row col-9 q-mt-md">
+      <div class="col-12 row justify-between items-center q-mt-md">
+        <div class="row col-9">
           <q-input
             class="col-4"
             label="Nome do Produto"
@@ -19,16 +19,14 @@
             outlined
             dense
           />
+        </div>
+        <div class="row q-gutter-md" v-if="!cadastroProdutoForm">
           <q-btn
             rounded
-            icon="cleaning_services"
-            class="text-white q-mx-md"
-            color="warning"
-            @click="refreshTable()"
-            v-if="!mostrarFormCadastroPF && !mostrarFormCadastroPJ"
+            icon="add"
+            class="text-white verde"
+            @click="mostrarFormulario()"
           />
-        </div>
-        <div class="row q-gutter-md">
           <q-btn
             icon="search"
             class="text-white verde-escuro"
@@ -37,9 +35,10 @@
           />
           <q-btn
             rounded
-            icon="add"
-            class="text-white verde"
-            @click="mostrarFormulario()"
+            icon="cleaning_services"
+            class="text-white"
+            color="warning"
+            @click="refreshTable()"
           />
         </div>
       </div>

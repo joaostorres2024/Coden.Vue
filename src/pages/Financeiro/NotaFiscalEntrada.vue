@@ -1,29 +1,74 @@
+v
 <template>
   <div class="text-h5 text-bold">
     <div class="q-py-md">NF ENTRADA</div>
     <div class="col-12">
       <div class="row col-2 q-mt-md">
-        <q-input class="col-4" label="Número NF" outlined dense />
+        <q-input
+          class="col-2"
+          label="Número NF"
+          v-model="numeroNF"
+          outlined
+          dense
+        />
       </div>
-      <div class="col-12 row justify-between items-center">
-        <div class="row col-9 q-mt-md">
-          <q-input class="col-4" label="Nome Completo" outlined dense />
-          <q-input class="col-4 q-px-md" label="CNPJ/CPF" outlined dense />
-          <q-input class="col-2" label="Código do Cliente" outlined dense />
+      <div class="col-12 row justify-between items-center q-mt-md">
+        <div class="row col-9">
+          <q-input
+            class="col-4"
+            label="Produto"
+            v-model="produto"
+            outlined
+            dense
+          />
+          <q-input
+            class="col-2 q-px-md"
+            label="Quantidade"
+            v-model="quantidade"
+            outlined
+            dense
+          />
+          <q-input
+            class="col-2"
+            label="Valor Unitário"
+            v-model="valorUnitario"
+            outlined
+            dense
+          />
+          <q-input
+            class="col-2 q-px-md"
+            label="Valor Total"
+            v-model="valorTotal"
+            outlined
+            dense
+          />
         </div>
-        <div class="row q-gutter-md">
-          <q-btn icon="search" class="text-white verde-escuro" rounded />
+        <div class="row q-gutter-md" v-if="!formNotaFiscalEntrada">
           <q-btn
             rounded
             icon="add"
             class="text-white verde"
             @click="mostrarFormulario()"
           />
+          <q-btn
+            icon="search"
+            class="text-white verde-escuro"
+            rounded
+            @click="pesquisar()"
+          />
+          <q-btn
+            rounded
+            icon="cleaning_services"
+            class="text-white q-mx-md"
+            color="warning"
+            @click="refreshTable()"
+          />
         </div>
       </div>
 
       <div>
         <q-table
+          :data="this.rowsFiltradas"
           :columns="this.colunasNotaFiscalEntrada"
           row-key="codigo"
           flat
@@ -35,17 +80,17 @@
           <template v-slot:body-cell-acoes="props">
             <q-td align="center">
               <q-btn
-                icon="edit"
+                icon="picture_as_pdf"
                 size="sm"
-                color="primary"
+                color="red"
                 flat
                 round
                 @click="editar(props.row)"
               />
               <q-btn
-                icon="delete"
+                icon="description"
                 size="sm"
-                color="negative"
+                color="green"
                 flat
                 round
                 @click="excluir(props.row)"
@@ -91,9 +136,10 @@
           </div>
 
           <div class="row col-12 q-mt-lg q-gutter-md">
-            <q-btn class="bg-green text-white text-bold">Salvar</q-btn>
+            <q-btn class="bg-green text-white text-bold" rounded>Salvar</q-btn>
             <q-btn
               class="bg-red text-white text-bold"
+              rounded
               @click="abrirDialogCancelar()"
               >Cancelar</q-btn
             >
@@ -137,14 +183,126 @@ import listNotaFiscalEntrada from '../../config/listNotaFiscalEntrada.json'
 export default class ModuleComponent extends Vue {
    // ===== data =====
 
-   colunasNotaFiscalEntrada = listNotaFiscalEntrada.columns
+  colunasNotaFiscalEntrada = listNotaFiscalEntrada.columns
   formNotaFiscalEntrada = false
   dataHoje = moment().format('YYYY-MM-DD')
   dialogCancelar = false
+  numeroNF = ''
+  produto = ''
+  quantidade = ''
+  valorUnitario = ''
+  valorTotal = ''
+  icms = ''
 
-  created(){
-    console.log(this.dataHoje)
+  rowsFiltradas: any[] = []
+
+  rowsNfEntrada = [
+  {
+    numeroNF: '001',
+    produto: 'GTA 5',
+    quantidade: '2',
+    valorUnitario: '179.90',
+    valorTotal: '359.80',
+    icms: '17'
+  },
+  {
+    numeroNF: '002',
+    produto: 'Teclado Mecânico RGB',
+    quantidade: '1',
+    valorUnitario: '350.00',
+    valorTotal: '350.00',
+    icms: '17'
+  },
+  {
+    numeroNF: '003',
+    produto: 'Mouse Gamer Pro',
+    quantidade: '3',
+    valorUnitario: '149.90',
+    valorTotal: '449.70',
+    icms: '17'
+  },
+  {
+    numeroNF: '004',
+    produto: 'Monitor 24"',
+    quantidade: '1',
+    valorUnitario: '1299.00',
+    valorTotal: '1299.00',
+    icms: '17'
+  },
+  {
+    numeroNF: '005',
+    produto: 'Headset Gamer',
+    quantidade: '2',
+    valorUnitario: '199.90',
+    valorTotal: '399.80',
+    icms: '17'
   }
+]
+
+  created() {
+  this.rowsFiltradas = this.rowsNfEntrada
+}
+
+pesquisar() {
+  this.rowsFiltradas = this.rowsNfEntrada.filter((row: any) => {
+
+    const numeroNFMatch =
+      !this.numeroNF ||
+      row.numeroNF
+        .toLowerCase()
+        .includes(this.numeroNF.toLowerCase())
+
+    const produtoMatch =
+      !this.produto ||
+      row.produto
+        .toLowerCase()
+        .includes(this.produto.toLowerCase())
+
+    const quantidadeMatch =
+      !this.quantidade ||
+      row.quantidade
+        .toLowerCase()
+        .includes(this.quantidade.toLowerCase())
+
+    const valorUnitarioMatch =
+      !this.valorUnitario ||
+      row.valorUnitario
+        .toLowerCase()
+        .includes(this.valorUnitario.toLowerCase())
+
+    const valorTotalMatch =
+      !this.valorTotal ||
+      row.valorTotal
+        .toLowerCase()
+        .includes(this.valorTotal.toLowerCase())
+
+    const icmsMatch =
+      !this.icms ||
+      row.icms
+        .toLowerCase()
+        .includes(this.icms.toLowerCase())
+
+    return (
+      numeroNFMatch &&
+      produtoMatch &&
+      quantidadeMatch &&
+      valorUnitarioMatch &&
+      valorTotalMatch &&
+      icmsMatch
+    )
+  })
+}
+
+refreshTable() {
+  this.numeroNF = ''
+  this.produto = ''
+  this.quantidade = ''
+  this.valorUnitario = ''
+  this.valorTotal = ''
+  this.icms = ''
+
+  this.rowsFiltradas = this.rowsNfEntrada
+}
 
   mostrarFormulario(){
     this.formNotaFiscalEntrada = true
