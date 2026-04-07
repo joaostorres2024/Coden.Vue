@@ -2,8 +2,8 @@
   <div class="text-h5 text-bold">
     <div class="q-py-md">RELATÓRIO DE VENDAS</div>
 
-    <div class="col-12">
-      <div class="row col-12 q-mt-md">
+    <div class="col-8">
+      <div class="row q-mt-md">
         <q-input
           class="col-2"
           label="Código do Produto"
@@ -38,7 +38,7 @@
       </div>
 
       <div class="col-12 row justify-between items-center q-mt-md">
-        <div class="row col-10">
+        <div class="row col-8">
           <q-input
             class="col-2"
             label="Valor Unitário"
@@ -76,17 +76,16 @@
 
         <div class="row q-gutter-md">
           <q-btn
-            icon="search"
-            class="text-white verde-escuro"
-            rounded
-            @click="pesquisar()"
+            icon="delete"
+            class="text-black"
+            label="Limpar"
+            @click="refreshTable()"
           />
           <q-btn
-            rounded
-            icon="cleaning_services"
-            class="text-white"
-            color="warning"
-            @click="refreshTable()"
+            icon="search"
+            class="text-white verde-escuro"
+            label="Pesquisar"
+            @click="pesquisar()"
           />
         </div>
       </div>

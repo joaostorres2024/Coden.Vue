@@ -50,17 +50,16 @@
         </div>
         <div class="row q-gutter-md">
           <q-btn
-            icon="search"
-            class="text-white verde-escuro"
-            @click="pesquisar()"
-            rounded
+            icon="delete"
+            class="text-black"
+            label="Limpar"
+            @click="refreshTable()"
           />
           <q-btn
-            rounded
-            icon="cleaning_services"
-            class="text-white q-mx-md"
-            color="warning"
-            @click="refreshTable()"
+            icon="search"
+            class="text-white verde-escuro"
+            label="Pesquisar"
+            @click="pesquisar()"
           />
         </div>
       </div>

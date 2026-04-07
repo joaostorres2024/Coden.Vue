@@ -3,65 +3,48 @@ v
   <div class="text-h5 text-bold">
     <div class="q-py-md">NF ENTRADA</div>
     <div class="col-12">
-      <div class="row col-2 q-mt-md">
-        <q-input
-          class="col-2"
-          label="Número NF"
-          v-model="numeroNF"
-          outlined
-          dense
-        />
-      </div>
       <div class="col-12 row justify-between items-center q-mt-md">
-        <div class="row col-9">
-          <q-input
-            class="col-4"
-            label="Produto"
-            v-model="produto"
-            outlined
-            dense
-          />
-          <q-input
-            class="col-2 q-px-md"
-            label="Quantidade"
-            v-model="quantidade"
-            outlined
-            dense
-          />
+        <div class="row col-8" v-if="!formNotaFiscalEntrada">
           <q-input
             class="col-2"
-            label="Valor Unitário"
-            v-model="valorUnitario"
+            label="Número NF"
+            v-model="numeroNF"
             outlined
             dense
           />
           <q-input
-            class="col-2 q-px-md"
-            label="Valor Total"
-            v-model="valorTotal"
+            class="col-3 q-px-md"
+            label="Código do Produto"
+            v-model="codigo"
+            outlined
+            dense
+          />
+          <q-input
+            class="col-3"
+            label="Nome do Produto"
+            v-model="produto"
             outlined
             dense
           />
         </div>
         <div class="row q-gutter-md" v-if="!formNotaFiscalEntrada">
           <q-btn
-            rounded
+            icon="delete"
+            class="text-black"
+            label="Limpar"
+            @click="refreshTable()"
+          />
+          <q-btn
             icon="add"
-            class="text-white verde"
+            label="Cadastrar"
+            class="text-black"
             @click="mostrarFormulario()"
           />
           <q-btn
             icon="search"
             class="text-white verde-escuro"
-            rounded
+            label="Pesquisar"
             @click="pesquisar()"
-          />
-          <q-btn
-            rounded
-            icon="cleaning_services"
-            class="text-white q-mx-md"
-            color="warning"
-            @click="refreshTable()"
           />
         </div>
       </div>
@@ -113,24 +96,127 @@ v
 
       <form action="">
         <div v-if="formNotaFiscalEntrada">
-          <div class="row col-12 q-mt-md">
+          <div class="row col-12">
+            <div class="row q-gutter-md items-center q-pb-md">
+              <q-title class="text-h6">Dados da Nota</q-title>
+              <q-btn>Importar XML</q-btn>
+            </div>
+            <div class="row col-12 q-gutter-md">
+              <q-input class="col-2" label="Número NF" outlined dense />
+              <q-input class="col-2" label="Série" outlined dense />
+              <q-input
+                class="col-2"
+                label="Data Emissão"
+                type="date"
+                outlined
+                dense
+              />
+              <q-input
+                class="col-1"
+                label="Data Entrada"
+                type="date"
+                v-model="dataHoje"
+                outlined
+                dense
+                readonly
+              />
+            </div>
+            <div class="q-pb-md q-mt-md">
+              <q-title class="text-h6">Produto</q-title>
+            </div>
+            <div class="column col-12 q-gutter-md">
+              <div class="row">
+                <q-input
+                  class="col-3"
+                  label="Código do Produto"
+                  outlined
+                  dense
+                />
+                <q-input
+                  class="col-3 q-px-md"
+                  label="Nome do Produto"
+                  outlined
+                  dense
+                />
+                <q-input class="col-2" label="Quantidade" outlined dense />
+              </div>
+              <div class="row">
+                <q-input
+                  class="col-6"
+                  label="Código de Barras"
+                  outlined
+                  dense
+                />
+                <q-btn icon="add" label="Gerar" class="text-black q-mx-md" />
+              </div>
+              <div class="row">
+                <q-input class="col-2" label="Valor Unitário" outlined dense />
+                <q-input
+                  class="col-2 q-px-md"
+                  label="Valor Total"
+                  outlined
+                  dense
+                />
+                <q-input class="col-2" label="Valor de Venda" outlined dense />
+                <q-input
+                  class="col-2 q-px-md"
+                  label="Margem"
+                  outlined
+                  dense
+                  readonly
+                />
+              </div>
+              <div class="row">
+                <q-select class="col-2" label="Grupo" outlined dense />
+                <q-btn icon="add" label="Criar" class="text-black q-mx-md" />
+              </div>
+            </div>
             <div class="q-pb-md q-mt-md">
               <q-title class="text-h6">Origem</q-title>
             </div>
+            <div class="column col-12 q-gutter-md">
+              <div class="row">
+                <q-input class="col-3" label="Fornecedor" outlined dense />
+                <q-input
+                  class="col-2 q-px-md"
+                  label="CNPJ/CPF"
+                  outlined
+                  dense
+                />
+                <q-input
+                  class="col-2"
+                  label="Inscrição Estadual"
+                  outlined
+                  dense
+                />
+                <q-select class="col-1 q-px-md" label="UF" outlined dense />
+              </div>
+            </div>
+            <div class="q-pb-md q-mt-md">
+              <q-title class="text-h6">Tributação</q-title>
+            </div>
+            <div class="column col-12 q-gutter-md">
+              <div class="row">
+                <q-input class="col-3" label="Origem" outlined dense />
+              </div>
+              <div class="row">
+                <q-input class="col-2" label="ICMS" outlined dense />
+                <q-input class="col-2 q-px-md" label="IPI" outlined dense />
+                <q-input class="col-2" label="PIS" outlined dense />
+                <q-input class="col-2 q-px-md" label="COFINS" outlined dense />
+              </div>
+            </div>
+            <div class="q-pb-md q-mt-md">
+              <q-title class="text-h6">Observações</q-title>
+            </div>
             <div class="row col-12 q-gutter-md">
-              <q-input class="col-3" label="Fornecedor" outlined dense />
-              <q-input class="col-3" label="CNPJ Fornecedor" outlined dense />
-              <q-input class="col-3" label="ICMS" outlined dense />
-              <q-input class="col-3" label="IPI" outlined dense />
-              <q-input class="col-3" label="PIS/COFINS" outlined dense />
-              <q-input class="col-3" label="Frete" outlined dense />
-              <q-input class="col-3" label="Desconto" outlined dense />
-              <q-input class="col-3" label="Valor Total" outlined dense />
               <q-input
-                class="col-3"
-                label="Natureza da Operação"
+                class="row col-10"
+                v-model="text"
                 outlined
                 dense
+                type="textarea"
+                input-style="resize: none;"
               />
             </div>
           </div>

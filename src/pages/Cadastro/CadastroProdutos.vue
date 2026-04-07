@@ -4,7 +4,7 @@
 
     <div class="col-12">
       <div class="col-12 row justify-between items-center q-mt-md">
-        <div class="row col-9">
+        <div class="row col-8">
           <q-input
             class="col-4"
             label="Nome do Produto"
@@ -22,23 +22,22 @@
         </div>
         <div class="row q-gutter-md" v-if="!cadastroProdutoForm">
           <q-btn
-            rounded
+            icon="delete"
+            class="text-black"
+            label="Limpar"
+            @click="refreshTable()"
+          />
+          <q-btn
             icon="add"
-            class="text-white verde"
+            label="Cadastrar"
+            class="text-black"
             @click="mostrarFormulario()"
           />
           <q-btn
             icon="search"
             class="text-white verde-escuro"
+            label="Pesquisar"
             @click="pesquisar()"
-            rounded
-          />
-          <q-btn
-            rounded
-            icon="cleaning_services"
-            class="text-white"
-            color="warning"
-            @click="refreshTable()"
           />
         </div>
       </div>

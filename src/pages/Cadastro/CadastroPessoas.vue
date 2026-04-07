@@ -4,7 +4,7 @@
     <div class="col-12">
       <div class="row col-3 q-mt-md">
         <q-select
-          class="col-3"
+          class="col-2"
           v-model="tipoPessoa"
           :options="this.opcoesTipoPessoa"
           label="Tipo de Pessoa"
@@ -17,17 +17,17 @@
         />
       </div>
       <div class="col-12 row justify-between items-center q-mt-md">
-        <div class="row col-9">
+        <div class="row col-8">
           <q-input
             v-model="nome"
-            class="col-4"
+            class="col-3"
             label="Nome Completo"
             outlined
             dense
           />
           <q-input
             v-model="documento"
-            class="col-4 q-px-md"
+            class="col-3 q-px-md"
             label="CNPJ/CPF"
             outlined
             dense
@@ -45,23 +45,22 @@
           v-if="!mostrarFormCadastroPF && !mostrarFormCadastroPJ"
         >
           <q-btn
-            rounded
+            icon="delete"
+            class="text-black"
+            label="Limpar"
+            @click="refreshTable()"
+          />
+          <q-btn
             icon="add"
-            class="text-white verde"
+            label="Cadastrar"
+            class="text-black"
             @click="mostrarFormulario()"
           />
           <q-btn
             icon="search"
             class="text-white verde-escuro"
+            label="Pesquisar"
             @click="pesquisar()"
-            rounded
-          />
-          <q-btn
-            rounded
-            icon="cleaning_services"
-            class="text-white"
-            color="warning"
-            @click="refreshTable()"
           />
         </div>
       </div>

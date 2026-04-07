@@ -25,7 +25,12 @@
           <q-input class="col-4 q-px-md" label="CNPJ/CPF" outlined dense />
         </div>
         <div class="row q-gutter-md">
-          <q-btn icon="search" class="text-white verde-escuro" rounded />
+          <q-btn
+            icon="search"
+            class="text-white verde-escuro"
+            label="Pesquisar"
+            @click="pesquisar()"
+          />
         </div>
       </div>
 
