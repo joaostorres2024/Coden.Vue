@@ -4,18 +4,18 @@
 
     <div class="col-12">
       <div class="col-12 row justify-between items-center q-mt-md">
-        <div class="row col-8">
+        <div class="row col-7 ">
           <q-input
+            v-model="codigo"
             class="col-4"
-            label="Nome do Produto"
-            v-model="nome"
+            label="Código do Produto"
             outlined
             dense
           />
           <q-input
-            v-model="codigo"
             class="col-4 q-px-md"
-            label="Código do Produto"
+            label="Nome do Produto"
+            v-model="nome"
             outlined
             dense
           />

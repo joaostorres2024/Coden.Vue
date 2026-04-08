@@ -4,7 +4,7 @@ v
     <div class="q-py-md">NF ENTRADA</div>
     <div class="col-12">
       <div class="col-12 row justify-between items-center q-mt-md">
-        <div class="row col-8" v-if="!formNotaFiscalEntrada">
+        <div class="row col-7" v-if="!formNotaFiscalEntrada">
           <q-input
             class="col-2"
             label="Número NF"

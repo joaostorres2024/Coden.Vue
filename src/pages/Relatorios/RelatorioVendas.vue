@@ -21,7 +21,7 @@
         />
 
         <q-input
-          class="col-3"
+          class="col-2"
           label="Cliente"
           v-model="nomeCliente"
           outlined

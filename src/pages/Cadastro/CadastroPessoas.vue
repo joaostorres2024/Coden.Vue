@@ -17,7 +17,7 @@
         />
       </div>
       <div class="col-12 row justify-between items-center q-mt-md">
-        <div class="row col-8">
+        <div class="row col-7">
           <q-input
             v-model="nome"
             class="col-3"
@@ -34,7 +34,7 @@
           />
           <q-input
             v-model="codigo"
-            class="col-2"
+            class="col-3"
             label="Código do Cliente"
             outlined
             dense
