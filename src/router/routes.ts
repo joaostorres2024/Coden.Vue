@@ -38,10 +38,6 @@ const routes: RouteConfig[] = [
         component: () => import('../pages/Vendas/VendaBalcao.vue')
       },
       {
-        path: 'NotaFiscalVenda',
-        component: () => import('../pages/Vendas/NotaFiscalVenda.vue')
-      },
-      {
         path: 'Configuracoes',
         component: () => import('../pages/Configuracoes.vue')
       },

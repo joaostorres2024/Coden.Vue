@@ -99,7 +99,7 @@ v
           <div class="row col-12">
             <div class="row q-gutter-md items-center q-pb-md">
               <q-title class="text-h6">Dados da Nota</q-title>
-              <q-btn>Importar XML</q-btn>
+              <q-btn icon="code" class="text-black" @click="refreshTable()" />
             </div>
             <div class="row col-12 q-gutter-md">
               <q-input class="col-2" label="Número NF" outlined dense />
@@ -284,11 +284,11 @@ export default class ModuleComponent extends Vue {
 
   rowsNfEntrada = [
   {
-    numeroNF: '001',
-    produto: 'GTA 5',
-    quantidade: '2',
-    valorUnitario: '179.90',
-    valorTotal: '359.80',
+    numeroNF: '002',
+    produto: 'Teclado Mecânico RGB',
+    quantidade: '1',
+    valorUnitario: '350.00',
+    valorTotal: '350.00',
     icms: '17'
   },
   {

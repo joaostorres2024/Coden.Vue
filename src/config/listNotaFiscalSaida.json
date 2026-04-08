@@ -7,27 +7,27 @@
       "align": "center"
     },
     {
-      "name": "dataInicio",
-      "label": "Período De",
-      "field": "dataInicio",
-      "align": "center"
-    },
-    {
-      "name": "dataFim",
-      "label": "Período Até",
-      "field": "dataFim",
+      "name": "dataSaida",
+      "label": "Data de Saída",
+      "field": "dataSaida",
       "align": "center"
     },
     {
       "name": "nomeCliente",
-      "label": "Nome Completo",
+      "label": "Cliente",
       "field": "nomeCliente",
       "align": "center"
     },
     {
       "name": "documento",
-      "label": "CNPJ/CPF",
+      "label": "CNPJ/CPF do Cliente",
       "field": "documento",
+      "align": "center"
+    },
+    {
+      "name": "valorNota",
+      "label": "Valor",
+      "field": "valorNota",
       "align": "center"
     },
     {

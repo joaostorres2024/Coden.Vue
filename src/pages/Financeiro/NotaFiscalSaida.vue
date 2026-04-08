@@ -5,14 +5,14 @@
       <div class="row col-2 q-mt-md">
         <q-input class="col-2" label="Número NF" outlined dense />
         <q-input
-          class="col-3 q-px-md"
+          class="col-2 q-px-md"
           label="Período: De"
           type="date"
           outlined
           dense
         />
         <q-input
-          class="col-3"
+          class="col-2"
           label="Período: Até"
           type="date"
           outlined
@@ -21,8 +21,14 @@
       </div>
       <div class="col-12 row justify-between items-center q-mt-md">
         <div class="row col-9">
-          <q-input class="col-6" label="Nome Completo" outlined dense />
-          <q-input class="col-4 q-px-md" label="CNPJ/CPF" outlined dense />
+          <q-input class="col-3" label="Nome do Cliente" outlined dense />
+          <q-input
+            class="col-3 q-px-md"
+            label="CNPJ/CPF do Cliente"
+            outlined
+            dense
+          />
+          <q-input class="col-2" label="Valor" outlined dense />
         </div>
         <div class="row q-gutter-md">
           <q-btn
@@ -36,7 +42,7 @@
 
       <div>
         <q-table
-          :rows="this.rowsNotaFiscalSaida"
+          :data="this.rowsNfSaida"
           :columns="this.colunasNotaFiscalSaida"
           row-key="codigo"
           flat
@@ -47,17 +53,17 @@
           <template v-slot:body-cell-acoes="props">
             <q-td align="center">
               <q-btn
-                icon="edit"
+                icon="picture_as_pdf"
                 size="sm"
-                color="primary"
+                color="red"
                 flat
                 round
                 @click="editar(props.row)"
               />
               <q-btn
-                icon="delete"
+                icon="description"
                 size="sm"
-                color="negative"
+                color="green"
                 flat
                 round
                 @click="excluir(props.row)"
@@ -91,6 +97,30 @@ export default class ModuleComponent extends Vue {
    // ===== data =====
 
   colunasNotaFiscalSaida = listNotaFiscalSaida.columns
+
+  rowsNfSaida = [
+  {
+    numeroNF: '003',
+    dataSaida: '25/04/2026',
+    nomeCliente: 'Maria',
+    documento: '3487567878',
+    valorNota: '150.50'
+  },
+  {
+    numeroNF: '002',
+    dataSaida: '15/02/2026',
+    nomeCliente: 'Maria Aparecida Souza',
+    documento: '34875612900',
+    valorNota: '742.50'
+  },
+  {
+    numeroNF: '003',
+    dataSaida: '28/03/2026',
+    nomeCliente: 'Carlos Eduardo Lima',
+    documento: '91234567844',
+    valorNota: '189.90'
+  }
+]
 }
 </script>
 

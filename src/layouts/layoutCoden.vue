@@ -116,39 +116,18 @@
               <q-item-section> Relatório Vendas </q-item-section>
             </q-item>
           </q-expansion-item>
-
-          <q-expansion-item
-            label="Vendas"
-            icon="shop"
-            header-class="menu-header b-r-10"
-            expand-separator
+          <q-item
+            class="menu-header b-r-10"
+            clickable
+            v-ripple
+            @click="$router.push('/VendaBalcao')"
           >
-            <q-item
-              class="b-r-10 q-my-xs q-pl-lg"
-              clickable
-              v-ripple
-              @click="$router.push('/VendaBalcao')"
-            >
-              <q-item-section avatar>
-                <q-icon name="point_of_sale" />
-              </q-item-section>
+            <q-item-section avatar>
+              <q-icon name="point_of_sale" />
+            </q-item-section>
 
-              <q-item-section> Venda Balcão </q-item-section>
-            </q-item>
-
-            <q-item
-              class="b-r-10 q-my-xs q-pl-lg"
-              clickable
-              v-ripple
-              @click="$router.push('/NotaFiscalVenda')"
-            >
-              <q-item-section avatar>
-                <q-icon name="receipt" />
-              </q-item-section>
-
-              <q-item-section> NF Venda </q-item-section>
-            </q-item>
-          </q-expansion-item>
+            <q-item-section>Vendas Balcão</q-item-section>
+          </q-item>
         </q-list>
         <q-list class="column margin-auto q-pt-lg">
           <q-item class="b-r-10 q-mx-xs" clickable v-ripple to="">
