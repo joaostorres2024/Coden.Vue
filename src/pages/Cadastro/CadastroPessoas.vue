@@ -208,7 +208,7 @@
         </div>
       </form>
 
-      <form action="">
+      <q-form ref="formCadastroPF">
         <div v-if="mostrarFormCadastroPJ">
           <div class="row col-12 q-mt-md">
             <div class="q-pb-md q-mt-md">
@@ -348,7 +348,7 @@
             >
           </div>
         </div>
-      </form>
+      </q-form>
 
       <div>
         <q-table
