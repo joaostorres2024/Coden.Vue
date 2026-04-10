@@ -5,31 +5,29 @@
       <div class="col-12 row justify-between items-center q-mt-md">
         <div class="row col-7">
           <q-input
+            v-model="codigo"
+            class="col-2"
+            label="Código do Cliente"
+            outlined
+            dense
+          />
+          <q-input
             v-model="nome"
-            class="col-3"
+            class="col-3 q-px-md"
             label="Nome Completo"
             outlined
             dense
           />
           <q-input
             v-model="documento"
-            class="col-3 q-px-md"
+            class="col-3"
             label="CNPJ/CPF"
             outlined
             dense
           />
-          <q-input
-            v-model="codigo"
-            class="col-3"
-            label="Código do Cliente"
-            outlined
-            dense
-          />
         </div>
-        <div
-          class="row q-gutter-md"
-          v-if="!mostrarFormCadastroPF && !mostrarFormCadastroPJ"
-        >
+
+        <div class="row q-gutter-md" v-if="!procurarProduto">
           <q-btn
             icon="delete"
             class="text-black"
@@ -45,319 +43,26 @@
         </div>
       </div>
 
-      <form action="">
-        <div v-if="mostrarFormCadastroPF">
-          <div class="row col-12 q-mt-md">
-            <div class="q-pb-md q-mt-md">
-              <q-title class="text-h6">Dados Gerais</q-title>
-            </div>
-            <div class="row col-12 q-gutter-md">
-              <q-input
-                v-model="dtaNascimento"
-                class="col-2"
-                label="Data de Nascimento"
-                type="date"
-                outlined
-                dense
-              />
-              <q-input
-                v-model="nmeSocial"
-                class="col-3"
-                label="Nome Social"
-                outlined
-                dense
-              />
-              <q-select
-                class="col-2"
-                v-model="ativoInativo"
-                :options="this.ativo_inativo"
-                label="Ativo/Inativo"
-                outlined
-                dense
-              />
-            </div>
-          </div>
-
-          <div class="row col-12 q-mt-md">
-            <div class="q-pb-md q-mt-md">
-              <q-title class="text-h6">Dados de Contato</q-title>
-            </div>
-            <div class="row col-12 q-gutter-md">
-              <q-input
-                v-model="telefone1"
-                class="col-3"
-                label="Telefone 1"
-                mask="(##) #####-####"
-                outlined
-                dense
-              />
-              <q-input
-                v-model="telefone2"
-                class="col-3"
-                label="Telefone 2"
-                mask="(##) #####-####"
-                outlined
-                dense
-              />
-              <q-input
-                class="col-3"
-                label="E-mail"
-                v-model="email"
-                outlined
-                dense
-              />
-            </div>
-          </div>
-
-          <div class="row col-12 q-mt-md">
-            <div class="q-pb-md q-mt-md">
-              <q-title class="text-h6">Dados de Endereço</q-title>
-            </div>
-            <div class="row col-12 q-gutter-md">
-              <q-input
-                class="col-3"
-                label="CEP"
-                mask="#####-###"
-                outlined
-                dense
-              />
-              <q-input
-                class="col-3"
-                label="Endereço"
-                v-model="endereco"
-                outlined
-                dense
-              />
-              <q-input
-                class="col-3"
-                label="Número"
-                v-model="numero"
-                outlined
-                dense
-              />
-              <q-input
-                class="col-3"
-                label="Bairro"
-                v-model="bairro"
-                outlined
-                dense
-              />
-              <q-input
-                class="col-3"
-                label="Cidade"
-                v-model="cidade"
-                outlined
-                dense
-              />
-              <q-select
-                class="col-2"
-                v-model="ufSelect"
-                :options="this.uf_select"
-                label="UF"
-                outlined
-                dense
-              />
-            </div>
-          </div>
-
-          <div class="row col-12 q-mt-md">
-            <div class="q-pb-md q-mt-md">
-              <q-title class="text-h6">Observações</q-title>
-            </div>
-            <div class="row col-12 q-gutter-md">
-              <q-input
-                class="row col-10"
-                v-model="text"
-                outlined
-                dense
-                type="textarea"
-                input-style="resize: none;"
-              />
-            </div>
-          </div>
-
-          <div class="row col-12 q-mt-lg q-gutter-md">
-            <q-btn class="bg-green text-white text-bold" rounded>Salvar</q-btn>
-            <q-btn
-              rounded
-              class="bg-red text-white text-bold"
-              @click="abrirDialogCancelar()"
-              >Cancelar</q-btn
-            >
-          </div>
-        </div>
-      </form>
-
-      <q-form ref="formCadastroPF">
-        <div v-if="mostrarFormCadastroPJ">
-          <div class="row col-12 q-mt-md">
-            <div class="q-pb-md q-mt-md">
-              <q-title class="text-h6">Dados Gerais</q-title>
-            </div>
-            <div class="row col-12 q-gutter-md">
-              <q-input
-                class="col-3"
-                label="Razão Social"
-                v-model="razaoSocial"
-                outlined
-                dense
-              />
-              <q-input
-                class="col-3"
-                label="Nome do responsável"
-                v-model="nomeResponsavel"
-                outlined
-                dense
-              />
-              <q-select
-                class="col-2"
-                v-model="ativoInativo"
-                :options="this.ativo_inativo"
-                label="Ativo/Inativo"
-                outlined
-                dense
-              />
-            </div>
-          </div>
-
-          <div class="row col-12 q-mt-md">
-            <div class="q-pb-md q-mt-md">
-              <q-title class="text-h6">Dados de Contato</q-title>
-            </div>
-            <div class="row col-12 q-gutter-md">
-              <q-input
-                class="col-3"
-                v-model="telefone1"
-                label="Telefone 1"
-                mask="(##) #####-####"
-                outlined
-                dense
-              />
-              <q-input
-                class="col-3"
-                label="Telefone 2"
-                v-model="telefone2"
-                mask="(##) #####-####"
-                outlined
-                dense
-              />
-              <q-input
-                class="col-3"
-                label="E-mail"
-                v-model="email"
-                outlined
-                dense
-              />
-            </div>
-          </div>
-
-          <div class="row col-12 q-mt-md">
-            <div class="q-pb-md q-mt-md">
-              <q-title class="text-h6">Dados de Endereço</q-title>
-            </div>
-            <div class="row col-12 q-gutter-md">
-              <q-input
-                class="col-3"
-                label="CEP"
-                mask="#####-###"
-                outlined
-                dense
-              />
-              <q-input
-                class="col-3"
-                label="Endereço"
-                v-model="endereco"
-                outlined
-                dense
-              />
-              <q-input
-                class="col-3"
-                label="Número"
-                v-model="numero"
-                outlined
-                dense
-              />
-              <q-input
-                class="col-3"
-                label="Bairro"
-                v-model="bairro"
-                outlined
-                dense
-              />
-              <q-input
-                class="col-3"
-                label="Cidade"
-                v-model="cidade"
-                outlined
-                dense
-              />
-              <q-select
-                class="col-2"
-                v-model="ufSelect"
-                :options="this.uf_select"
-                label="Ativo/Inativo"
-                outlined
-                dense
-              />
-            </div>
-          </div>
-
-          <div class="row col-12 q-mt-md">
-            <div class="q-pb-md q-mt-md">
-              <q-title class="text-h6">Observações</q-title>
-            </div>
-            <div class="row col-12 q-gutter-md">
-              <q-input
-                class="row col-10"
-                v-model="text"
-                outlined
-                dense
-                type="textarea"
-                input-style="resize: none;"
-              />
-            </div>
-          </div>
-
-          <div class="row col-12 q-mt-lg q-gutter-md">
-            <q-btn class="bg-green text-white text-bold" rounded>Salvar</q-btn>
-            <q-btn
-              class="bg-red text-white text-bold"
-              rounded
-              @click="abrirDialogCancelar()"
-              >Cancelar</q-btn
-            >
-          </div>
-        </div>
-      </q-form>
-
       <div>
         <q-table
           :data="this.rowsFiltradas"
-          :columns="this.colunasCadastroPessoas"
+          :columns="this.colunasVendaBalcão"
           row-key="codigo"
           flat
           bordered
           class="q-mt-lg"
-          v-if="!mostrarFormCadastroPF && !mostrarFormCadastroPJ"
+          v-if="!procurarProduto"
         >
           <!-- Coluna Ações -->
           <template v-slot:body-cell-acoes="props">
             <q-td align="center">
               <q-btn
-                icon="edit"
+                icon="point_of_sale"
                 size="sm"
-                color="primary"
+                color="warning"
                 flat
                 round
-                @click="editar(props.row)"
-              />
-              <q-btn
-                icon="delete"
-                size="sm"
-                color="negative"
-                flat
-                round
-                @click="confirmarExcluir()"
+                @click="realizarVenda(props.row)"
               />
             </q-td>
           </template>
@@ -373,6 +78,81 @@
             </q-td>
           </template>
         </q-table>
+      </div>
+
+      <div v-if="procurarProduto" class="column q-gutter-md q-mt-md">
+        <q-title class="text-h6">Produto</q-title>
+        <div class="row">
+          <q-input
+            v-model="codigoProduto"
+            class="col-2"
+            label="Código do Produto"
+            outlined
+            dense
+          />
+          <q-input
+            v-model="nomeProduto"
+            class="col-2 q-px-md"
+            label="Nome do Produto"
+            outlined
+            dense
+          />
+          <q-input
+            v-model="codigoBarras"
+            class="col-3"
+            label="Código de Barras"
+            outlined
+            dense
+          />
+        </div>
+        <div>
+          <q-table
+          :data="this.rowsProduto"
+          :columns="this.colunasTabelProduto"
+          row-key="codigo"
+          flat
+          bordered
+          class="q-mt-lg"
+          >
+          <!-- Coluna Ações -->
+          <template v-slot:body-cell-acoes="props">
+            <q-td align="center">
+              <q-btn
+                icon="density_small"
+                size="sm"
+                color="green"
+                flat
+                round
+              />
+              <q-btn
+                icon="percent"
+                size="sm"
+                color="blue"
+                flat
+                round
+              />
+              <q-btn
+                icon="delete"
+                size="sm"
+                color="negative"
+                flat
+                round
+              />
+            </q-td>
+          </template>
+
+          <!-- Coluna Status -->
+          <template v-slot:body-cell-status="props">
+            <q-td align="center">
+              <q-badge
+                :color="props.row.status === 'Ativo' ? 'positive' : 'negative'"
+              >
+                {{ props.row.status }}
+              </q-badge>
+            </q-td>
+          </template>
+          </q-table>
+        </div>
       </div>
 
       <q-dialog v-model="dialogCancelar">
@@ -426,21 +206,21 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import listCadastroPessoas from '../../config/listCadastroPessoas.json'
+import listVendaBalcao from '../../config/listVendaBalcao.json'
 
 @Component
 export default class ModuleComponent extends Vue {
   // ===== data =====
 
-  colunasCadastroPessoas = listCadastroPessoas.columns
+  colunasVendaBalcão = listVendaBalcao.columns
+  colunasTabelProduto = listVendaBalcao.columnsTableProduto
   tipoPessoa: string | null = null
   sexo: string | null = null
   ativoInativo: string | null = null
   ufSelect: string | null = null
-  mostrarFormCadastroPF = false
-  mostrarFormCadastroPJ = false
   dialogCancelar = false
   dialogExcluir = false
+  procurarProduto = false
 
   // Dados Gerais
   nome = ''
@@ -505,43 +285,17 @@ export default class ModuleComponent extends Vue {
     }
   ]
 
-  opcoesTipoPessoa = [
-      { label: 'Pessoa Física', value: 'PF' },
-      { label: 'Pessoa Jurídica', value: 'PJ' }
-    ]
-  tipoSexo = [
-    { label: 'Masculino', value: 'M' },
-    { label: 'Feminino', value: 'F' },
-    { label: 'Não informado', value: 'NI' }
-  ]
-  ativo_inativo = [
-    { label: 'Ativo', value: 'A' },
-    { label: 'Inativo', value: 'I' }
-  ]
-
-  uf_select = [
-    { label: 'DF', value: 'DF' },
-    { label: 'Outro', value: 'Outro' }
-  ]
-
-  mostrarFormulario(){
-    if(this.tipoPessoa === 'PF'){
-      this.mostrarFormCadastroPF = true
-      this.mostrarFormCadastroPJ = false
+  rowsProduto = [
+    {
+      codigoProduto: '02672483',
+      nomeProduto: 'Tomada',
+      quantidade: '1',
+      valorUnitario: '40',
+      desconto: '0%',
+      subtotal: '40',
+      total: '40'
     }
-    if(this.tipoPessoa === 'PJ'){
-      this.mostrarFormCadastroPF = false
-      this.mostrarFormCadastroPJ = true
-    }
-    if(!this.tipoPessoa){
-      this.$q.notify({
-        type: 'negative',
-        message: 'Selecione o tipo de pessoa',
-        position: 'bottom'
-      })
-    return
-    }
-  }
+  ]
 
   abrirDialogCancelar(){
     this.dialogCancelar = true
@@ -550,12 +304,13 @@ export default class ModuleComponent extends Vue {
   confirmarCancelamento() {
   this.dialogCancelar = false
 
-  // volta pra tabela
-  this.mostrarFormCadastroPF = false
-  this.mostrarFormCadastroPJ = false
-
-  // opcional: limpa dados
   this.tipoPessoa = null
+  this.codigo = ""
+  this.nome = ""
+  this.documento = ""
+  this.rowsFiltradas = this.rowsClientes
+
+  this.procurarProduto = false
 }
 
 confirmarExcluir() {
@@ -576,15 +331,11 @@ pesquisar() {
     !this.documento ||
     row.documento.toLowerCase().includes(this.documento.toLowerCase())
 
-    const tipoPessoaMatch =
-      !this.tipoPessoa ||
-      row.tipoPessoa === this.tipoPessoa
-
-    return nomeMatch && codigoMatch && documentoMatch && tipoPessoaMatch
+    return nomeMatch && codigoMatch && documentoMatch
   })
 }
 
-editar(row: any) {
+realizarVenda(row: any) {
   // Preenche os campos do formulário com os dados do usuário
   this.codigo = row.codigo
   this.nome = row.nome
@@ -592,20 +343,13 @@ editar(row: any) {
   this.tipoPessoa = row.tipoPessoa
   this.ativoInativo = row.status === 'Ativo' ? 'Ativo' : 'Inativo'
 
-  if (row.tipoPessoa === 'PF') {
-    this.mostrarFormCadastroPF = true
-    this.mostrarFormCadastroPJ = false
-  } else {
-    this.mostrarFormCadastroPF = false
-    this.mostrarFormCadastroPJ = true
-  }
+  this.procurarProduto = true
 }
 
 refreshTable(){
   this.codigo = ""
   this.nome = ""
   this.documento = ""
-  this.tipoPessoa = null
 
   this.rowsFiltradas = this.rowsClientes
 }

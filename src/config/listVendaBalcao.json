@@ -1,0 +1,108 @@
+{
+  "columns": [
+    {
+      "name": "codigo",
+      "label": "Código",
+      "field": "codigo",
+      "align": "center",
+      "sortable": true
+    },
+    {
+      "name": "tipoPessoa",
+      "label": "Tipo",
+      "field": "tipoPessoa",
+      "align": "center",
+      "sortable": true
+    },
+    {
+      "name": "nome",
+      "label": "Nome",
+      "field": "nome",
+      "align": "center",
+      "sortable": true
+    },
+    {
+      "name": "documento",
+      "label": "CPF/CNPJ",
+      "field": "documento",
+      "align": "center"
+    },
+    {
+      "name": "telefone",
+      "label": "Telefone",
+      "field": "telefone",
+      "align": "center"
+    },
+    {
+      "name": "email",
+      "label": "E-mail",
+      "field": "email",
+      "align": "center"
+    },
+    {
+      "name": "status",
+      "label": "Status",
+      "field": "status",
+      "align": "center"
+    },
+    {
+      "name": "acoes",
+      "label": "Ações",
+      "field": "acoes",
+      "align": "center"
+    }
+  ],
+  "columnsTableProduto": [
+    {
+      "name": "codigoProduto",
+      "label": "Código do Produto",
+      "field": "codigoProduto",
+      "align": "center",
+      "sortable": true
+    },
+    {
+      "name": "nomeProduto",
+      "label": "Nome do Produto",
+      "field": "nomeProduto",
+      "align": "center",
+      "sortable": true
+    },
+    {
+      "name": "quantidade",
+      "label": "Quantidade",
+      "field": "quantidade",
+      "align": "center",
+      "sortable": true
+    },
+    {
+      "name": "valorUnitario",
+      "label": "Valor Unitário",
+      "field": "valorUnitario",
+      "align": "center"
+    },
+    {
+      "name": "desconto",
+      "label": "Desconto",
+      "field": "desconto",
+      "align": "center"
+    },
+    {
+      "name": "subtotal",
+      "label": "Subtotal",
+      "field": "subtotal",
+      "align": "center"
+    },
+    {
+      "name": "total",
+      "label": "Total",
+      "field": "total",
+      "align": "center"
+    },
+    {
+      "name": "acoes",
+      "label": "Ações",
+      "field": "acoes",
+      "align": "center"
+    }
+  ]
+}
