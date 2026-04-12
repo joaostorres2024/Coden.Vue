@@ -192,15 +192,16 @@
 </template>
 
 <script lang="ts">
-import { ref } from 'vue'
 import Vue from 'vue'
 import Component from 'vue-class-component'
 
 @Component
 export default class ModuleComponent extends Vue {
 
-  created(){
-    const leftDrawerOpen = ref(true)
+  leftDrawerOpen = true
+
+  creted(){
+    this.$q.dark.set(false)
   }
 
   toggleDark(){
