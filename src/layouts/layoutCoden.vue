@@ -5,21 +5,21 @@
       show-if-above
       bordered
       :width="300"
-      content-class="bg-grey-1"
+      :content-class="$q.dark.isActive ? 'bg-dark' : 'bg-grey-1'"
     >
-      <div class="col-12 column bg-grey-1 no-wrap full-height q-pa-sm">
-        <q-item class="q-pt-md b-r-10 no-wrap" to="/">
+      <div class="col-12 column no-wrap full-height">
+        <q-item class="q-pt-md b-r-10 no-wrap items-center" to="/">
           <img
-            class="q-mb-sm justify-center"
+            class="q-mb-sm"
             style="width: 120px"
-            src="../assets/Logo Coden.png"
-            alt=""
+            :src="$q.dark.isActive ? require('../assets/Logo Coden Branca.png') : require('../assets/Logo Coden.png')"
+            alt="Logo Coden"
           />
         </q-item>
 
         <q-list>
           <q-expansion-item
-            icon="group"
+            icon="o_group"
             label="Cadastro"
             header-class="menu-header b-r-10"
             expand-separator
@@ -31,7 +31,7 @@
               @click="$router.push('/CadastroPessoas')"
             >
               <q-item-section avatar>
-                <q-icon name="groups" />
+                <q-icon name="o_groups" />
               </q-item-section>
 
               <q-item-section> Cadastro Pessoas </q-item-section>
@@ -52,7 +52,7 @@
           </q-expansion-item>
 
           <q-expansion-item
-            icon="paid"
+            icon="o_paid"
             label="Financeiro"
             header-class="menu-header b-r-10"
             expand-separator
@@ -86,7 +86,7 @@
 
           <q-expansion-item
             label="Relatórios"
-            icon="article"
+            icon="o_article"
             header-class="menu-header b-r-10"
             expand-separator
           >
@@ -97,7 +97,7 @@
               @click="$router.push('/RelatorioEstoque')"
             >
               <q-item-section avatar>
-                <q-icon name="inventory" />
+                <q-icon name="o_inventory" />
               </q-item-section>
 
               <q-item-section> Relatório Estoque </q-item-section>
@@ -110,7 +110,7 @@
               @click="$router.push('/RelatorioVendas')"
             >
               <q-item-section avatar>
-                <q-icon name="sell" />
+                <q-icon name="o_sell" />
               </q-item-section>
 
               <q-item-section> Relatório Vendas </q-item-section>
@@ -129,8 +129,14 @@
             <q-item-section>Vendas Balcão</q-item-section>
           </q-item>
         </q-list>
-        <q-list class="column margin-auto q-pt-lg">
-          <q-item class="b-r-10 q-mx-xs" clickable v-ripple to="">
+        <q-list class="column margin-auto q-pt-lg q-pb-md">
+          <q-item
+            class="b-r-10 q-mx-xs"
+            @click="toggleDark()"
+            clickable
+            v-ripple
+            to=""
+          >
             <q-item-section avatar>
               <q-icon name="dark_mode" />
             </q-item-section>
@@ -138,13 +144,13 @@
             <q-item-section>Modo Escuro/Claro</q-item-section>
           </q-item>
           <q-item
-            class="b-r-10 q-mx-xs q-my-sm"
+            class="b-r-10 q-mx-xs"
             clickable
             v-ripple
             @click="$router.push('/Configuracoes')"
           >
             <q-item-section avatar>
-              <q-icon name="settings" />
+              <q-icon name="o_settings" />
             </q-item-section>
 
             <q-item-section>Configurações</q-item-section>
@@ -156,7 +162,7 @@
             @click="$router.push('/Perfil')"
           >
             <q-item-section avatar>
-              <q-icon name="account_circle" />
+              <q-icon name="o_account_circle" />
             </q-item-section>
 
             <q-item-section>Perfil</q-item-section>
@@ -185,10 +191,33 @@
   </q-layout>
 </template>
 
-<script setup>
+<script lang="ts">
 import { ref } from 'vue'
+import Vue from 'vue'
+import Component from 'vue-class-component'
 
-const leftDrawerOpen = ref(true)
+@Component
+export default class ModuleComponent extends Vue {
+
+  created(){
+    const leftDrawerOpen = ref(true)
+  }
+
+  toggleDark(){
+    this.$q.dark.toggle()
+  }
+
+  // ===== data =====
+  user = ''
+  password = ''
+
+  logoSrc () {
+    return this.$q.dark.isActive
+      ? require('../assets/Logo Coden Branca.png')
+      : require('../assets/Logo Coden.png')
+  }
+
+  }
 </script>
 
 <style>

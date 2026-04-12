@@ -1,6 +1,6 @@
 <template>
   <div class="text-h5 text-bold">
-    <div class="q-py-md">CADASTRO DE PESSOAS</div>
+    <div class="q-py-md text-bold">CADASTRO DE PESSOAS</div>
     <div class="col-12">
       <div class="row col-3 q-mt-md">
         <q-select
@@ -46,20 +46,23 @@
         >
           <q-btn
             icon="delete"
-            class="text-black"
+            class="text-black border"
             label="Limpar"
+            unelevated
             @click="refreshTable()"
           />
           <q-btn
             icon="add"
             label="Cadastrar"
-            class="text-black"
+            class="text-black border"
+            unelevated
             @click="mostrarFormulario()"
           />
           <q-btn
             icon="search"
-            class="text-white verde-escuro"
+            class="text-white bg-primary"
             label="Pesquisar"
+            unelevated
             @click="pesquisar()"
           />
         </div>
@@ -197,10 +200,9 @@
           </div>
 
           <div class="row col-12 q-mt-lg q-gutter-md">
-            <q-btn class="bg-green text-white text-bold" rounded>Salvar</q-btn>
+            <q-btn class="bg-green text-white text-bold">Salvar</q-btn>
             <q-btn
-              rounded
-              class="bg-red text-white text-bold"
+              class="bg-negative text-white text-bold"
               @click="abrirDialogCancelar()"
               >Cancelar</q-btn
             >
@@ -339,10 +341,9 @@
           </div>
 
           <div class="row col-12 q-mt-lg q-gutter-md">
-            <q-btn class="bg-green text-white text-bold" rounded>Salvar</q-btn>
+            <q-btn class="bg-green text-white text-bold">Salvar</q-btn>
             <q-btn
-              class="bg-red text-white text-bold"
-              rounded
+              class="bg-negative text-white text-bold"
               @click="abrirDialogCancelar()"
               >Cancelar</q-btn
             >
@@ -358,6 +359,7 @@
           flat
           bordered
           class="q-mt-lg"
+          no-data-label="Nenhum registro encontrado"
           v-if="!mostrarFormCadastroPF && !mostrarFormCadastroPJ"
         >
           <!-- Coluna Ações -->
@@ -633,11 +635,7 @@ refreshTable(){
 </script>
 
 <style scoped>
-.verde {
-  background-color: #11b69a;
-}
-
-.verde-escuro {
-  background-color: #00725f;
+.border{
+  border: 1px solid black;
 }
 </style>

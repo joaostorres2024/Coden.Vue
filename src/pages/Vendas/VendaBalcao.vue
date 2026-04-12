@@ -30,13 +30,15 @@
         <div class="row q-gutter-md" v-if="!procurarProduto">
           <q-btn
             icon="delete"
-            class="text-black"
+            class="text-black border"
+            unelevated
             label="Limpar"
             @click="refreshTable()"
           />
           <q-btn
             icon="search"
-            class="text-white verde-escuro"
+            class="text-white bg-primary"
+            unelevated
             label="Pesquisar"
             @click="pesquisar()"
           />
@@ -51,6 +53,7 @@
           flat
           bordered
           class="q-mt-lg"
+          no-data-label="Nenhum registro encontrado"
           v-if="!procurarProduto"
         >
           <!-- Coluna Ações -->
@@ -82,62 +85,59 @@
 
       <div v-if="procurarProduto" class="column q-gutter-md q-mt-md">
         <q-title class="text-h6">Produto</q-title>
-        <div class="row">
+        <div class="col-12 row justify-between items-center q-mt-md">
+        <div class="row col-6">
           <q-input
             v-model="codigoProduto"
-            class="col-2"
+            class="col-4"
             label="Código do Produto"
             outlined
             dense
           />
           <q-input
             v-model="nomeProduto"
-            class="col-2 q-px-md"
+            class="col-5 q-px-md"
             label="Nome do Produto"
             outlined
             dense
           />
-          <q-input
-            v-model="codigoBarras"
-            class="col-3"
-            label="Código de Barras"
-            outlined
-            dense
+        </div>
+
+        <div class="row q-gutter-md">
+          <q-btn
+            icon="search"
+            class="text-white bg-primary"
+            unelevated
+            label="Pesquisar"
+            @click="pesquisar()"
           />
         </div>
-        <div>
-          <q-table
+      </div>
+      </div>
+      <div class="q-mt-lg">
+        <q-table
           :data="this.rowsProduto"
           :columns="this.colunasTabelProduto"
           row-key="codigo"
           flat
           bordered
-          class="q-mt-lg"
-          >
+          :rows-per-page-options="[0]"
+          no-data-label="Nenhum registro encontrado"
+          v-if="procurarProduto"
+        >
           <!-- Coluna Ações -->
           <template v-slot:body-cell-acoes="props">
             <q-td align="center">
               <q-btn
-                icon="density_small"
+                icon="o_add_box"
                 size="sm"
-                color="green"
+                color="warning"
                 flat
                 round
+                @click="abrirDialogQuantiade()"
               />
-              <q-btn
-                icon="percent"
-                size="sm"
-                color="blue"
-                flat
-                round
-              />
-              <q-btn
-                icon="delete"
-                size="sm"
-                color="negative"
-                flat
-                round
-              />
+              <q-btn icon="percent" size="sm" color="blue" @click="abrirDialogDesconto()" flat round />
+              <q-btn icon="add" size="sm" color="positive" @click="revisarProdutos()" flat round />
             </q-td>
           </template>
 
@@ -151,7 +151,104 @@
               </q-badge>
             </q-td>
           </template>
-          </q-table>
+        </q-table>
+      </div>
+
+      <div v-if="produtosAdicionados" class="column q-gutter-md q-mt-md">
+        <q-title class="text-h6">Produtos Adicionados</q-title>
+      </div>
+
+      <div class="q-mt-lg">
+        <q-table
+          :data="this.rowsProduto"
+          :columns="this.colunasTabelProduto"
+          row-key="codigo"
+          flat
+          bordered
+          :rows-per-page-options="[0]"
+          no-data-label="Nenhum registro encontrado"
+          v-if="produtosAdicionados"
+        >
+          <!-- Coluna Ações -->
+          <template v-slot:body-cell-acoes="props">
+            <q-td align="center">
+              <q-btn icon="delete" size="sm" color="negative" flat round />
+            </q-td>
+          </template>
+
+          <!-- Coluna Status -->
+          <template v-slot:body-cell-status="props">
+            <q-td align="center">
+              <q-badge
+                :color="props.row.status === 'Ativo' ? 'positive' : 'negative'"
+              >
+                {{ props.row.status }}
+              </q-badge>
+            </q-td>
+          </template>
+        </q-table>
+      </div>
+
+      <div v-if="finalizacaoVenda" class="column q-gutter-md q-mt-md">
+        <q-title class="text-h6">Revisar Itens</q-title>
+      </div>
+      <div v-if="finalizacaoVenda" class="row col-12 justify-between items-center q-mt-md q-mb-md">
+        <div class="row col-5 q-gutter-md">
+          <q-btn
+            icon="o_credit_card"
+            label="Realizar Pagamento"
+            unelevated
+            class="text-white bg-positive"
+          />
+          <q-btn
+            icon="close"
+            label="Cancelar"
+            unelevated
+            class="text-white bg-negative"
+            @click="abrirDialogCancelar()"
+          />
+        </div>
+        <div class="row q-gutter-md col-7 justify-end">
+          <q-input
+            v-model="valorBrutoVenda"
+            label="Produtos"
+            class="col-2"
+            outlined
+            readonly
+            dense
+          />
+          <q-input
+            v-model="valorBrutoVenda"
+            label="Valor Bruto"
+            class="col-2"
+            outlined
+            readonly
+            dense
+          />
+          <q-input
+            v-model="valorBrutoVenda"
+            label="Desconto (R$)"
+            outlined
+            readonly
+            class="col-2"
+            dense
+          />
+          <q-input
+            v-model="valorBrutoVenda"
+            label="Desconto (%)"
+            outlined
+            readonly
+            class="col-2"
+            dense
+          />
+          <q-input
+            v-model="valorBrutoVenda"
+            label="Valor Total"
+            outlined
+            readonly
+            class="col-2"
+            dense
+          />
         </div>
       </div>
 
@@ -178,23 +275,92 @@
         </q-card>
       </q-dialog>
 
-      <q-dialog v-model="dialogExcluir">
+      <q-dialog v-model="dialogCancelarVenda">
         <q-card style="min-width: 300px">
           <q-card-section class="text-h6">
-            Deseja mesmo excluir?
+            Confirmar Cancelamento
           </q-card-section>
 
           <q-card-section>
-            Você tem certeza que deseja excluir?
+            Você tem certeza que deseja cancelar? Os dados não salvos serão
+            perdidos.
           </q-card-section>
 
           <q-card-actions align="right">
             <q-btn flat label="Não" color="primary" v-close-popup />
             <q-btn
               flat
-              label="Sim, excluir"
+              label="Sim, cancelar"
               color="negative"
-              @click="confirmarExcluir()"
+              @click="confirmarCancelamento()"
+            />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
+
+      <q-dialog v-model="dialogQuantidade">
+        <q-card style="min-width: 300px">
+          <!-- Texto -->
+          <q-card-section>
+            <div class="text-subtitle1">Selecione quantidade:</div>
+          </q-card-section>
+
+          <!-- Input -->
+          <q-card-section>
+            <q-input
+              v-model="quantidade"
+              outlined
+              dense
+              min="1"
+            />
+          </q-card-section>
+
+          <!-- Botões -->
+          <q-card-actions align="right">
+            <q-btn label="Cancelar" flat color="negative" v-close-popup />
+
+            <q-btn
+              label="Confirmar"
+              class="bg-primary text-white"
+              unelevated
+              @click="confirmarQuantidade"
+            />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
+
+      <q-dialog v-model="dialogDesconto">
+        <q-card style="min-width: 300px">
+          <!-- Texto -->
+          <q-card-section>
+            <div class="text-subtitle1">Selecione desconto:</div>
+          </q-card-section>
+
+          <!-- Input -->
+          <q-card-section class="row q-gutter-md">
+            <q-input
+              v-model="valor"
+              label="Reais"
+              outlined
+              dense
+            />
+            <q-input
+              v-model="porcentagem"
+              label="Porcentagem (%)"
+              outlined
+              dense
+            />
+          </q-card-section>
+
+          <!-- Botões -->
+          <q-card-actions align="right">
+            <q-btn label="Cancelar" flat color="negative" v-close-popup />
+
+            <q-btn
+              label="Confirmar"
+              class="bg-primary text-white"
+              unelevated
+              @click="confirmarQuantidade"
             />
           </q-card-actions>
         </q-card>
@@ -220,7 +386,12 @@ export default class ModuleComponent extends Vue {
   ufSelect: string | null = null
   dialogCancelar = false
   dialogExcluir = false
+  dialogCancelarVenda = false
+  dialogQuantidade = false
+  dialogDesconto = false
   procurarProduto = false
+  produtosAdicionados = false
+  finalizacaoVenda = false
 
   // Dados Gerais
   nome = ''
@@ -301,8 +472,22 @@ export default class ModuleComponent extends Vue {
     this.dialogCancelar = true
   }
 
+  abrirDialogCancelarVenda(){
+    this.dialogCancelarVenda = true
+  }
+
+  abrirDialogQuantiade(){
+    this.dialogQuantidade = true
+  }
+
+  abrirDialogDesconto(){
+    this.dialogDesconto = true
+  }
+
   confirmarCancelamento() {
   this.dialogCancelar = false
+  this.dialogCancelarVenda = false
+  this.finalizacaoVenda = false
 
   this.tipoPessoa = null
   this.codigo = ""
@@ -311,6 +496,7 @@ export default class ModuleComponent extends Vue {
   this.rowsFiltradas = this.rowsClientes
 
   this.procurarProduto = false
+  this.produtosAdicionados = false
 }
 
 confirmarExcluir() {
@@ -346,6 +532,11 @@ realizarVenda(row: any) {
   this.procurarProduto = true
 }
 
+revisarProdutos(){
+  this.produtosAdicionados = true
+  this.finalizacaoVenda = true
+}
+
 refreshTable(){
   this.codigo = ""
   this.nome = ""
@@ -357,11 +548,7 @@ refreshTable(){
 </script>
 
 <style scoped>
-.verde {
-  background-color: #11b69a;
-}
-
-.verde-escuro {
-  background-color: #00725f;
+.border {
+  border: 1px solid black;
 }
 </style>

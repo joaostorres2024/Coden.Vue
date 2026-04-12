@@ -29,20 +29,23 @@
         <div class="row q-gutter-md" v-if="!formNotaFiscalEntrada">
           <q-btn
             icon="delete"
-            class="text-black"
+            class="text-black border"
             label="Limpar"
+            unelevated
             @click="refreshTable()"
           />
           <q-btn
             icon="add"
             label="Cadastrar"
-            class="text-black"
+            class="text-black border"
+            unelevated
             @click="mostrarFormulario()"
           />
           <q-btn
             icon="search"
-            class="text-white verde-escuro"
+            class="text-white bg-primary"
             label="Pesquisar"
+            unelevated
             @click="pesquisar()"
           />
         </div>
@@ -56,6 +59,7 @@
           flat
           bordered
           class="q-mt-lg"
+          no-data-label="Nenhum registro encontrado"
           v-if="!formNotaFiscalEntrada"
         >
           <!-- Coluna Ações -->
@@ -64,7 +68,7 @@
               <q-btn
                 icon="picture_as_pdf"
                 size="sm"
-                color="red"
+                color="negative"
                 flat
                 round
                 @click="editar(props.row)"
@@ -181,7 +185,7 @@
                   outlined
                   dense
                 />
-                <q-btn icon="add" label="Gerar" class="text-black q-mx-md" />
+                <q-btn icon="add" label="Gerar" class="text-white bg-primary q-mx-md" unelevated />
               </div>
               <div class="row">
                 <q-input
@@ -222,7 +226,7 @@
                   outlined
                   dense
                 />
-                <q-btn icon="add" label="Criar" class="text-black q-mx-md" />
+                <q-btn icon="add" label="Criar" class="text-white bg-primary q-mx-md" unelevated />
               </div>
             </div>
             <div class="q-pb-md q-mt-md">
@@ -320,10 +324,10 @@
           </div>
 
           <div class="row col-12 q-mt-lg q-gutter-md">
-            <q-btn class="bg-green text-white text-bold" rounded>Salvar</q-btn>
+            <q-btn class="bg-green text-white text-bold" unelevated>Salvar</q-btn>
             <q-btn
-              class="bg-red text-white text-bold"
-              rounded
+              class="bg-negative text-white text-bold"
+              unelevated
               @click="abrirDialogCancelar()"
               >Cancelar</q-btn
             >
@@ -544,11 +548,7 @@ export default class ModuleComponent extends Vue {
 </script>
 
 <style scoped>
-.verde {
-  background-color: #11b69a;
-}
-
-.verde-escuro {
-  background-color: #00725f;
+.border{
+  border: 1px solid black;
 }
 </style>

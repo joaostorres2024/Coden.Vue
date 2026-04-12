@@ -1,3 +1,16 @@
+@import url('https://fonts.cdnfonts.com/css/galano-grotesque-alt');
+$font-family-galano: 'Galano Grotesque Alt', sans-serif;
+
 body {
-  font-family: 'Google Sans', sans-serif;
+  font-family: $font-family-galano;
+}
+
+.title {
+  font-family: $font-family-galano;
+  font-weight: 700;
+}
+
+.text {
+  font-family: $font-family-galano;
+  font-weight: 400;
 }

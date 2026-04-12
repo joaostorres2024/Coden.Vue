@@ -23,21 +23,24 @@
         <div class="row q-gutter-md" v-if="!cadastroProdutoForm">
           <q-btn
             icon="delete"
-            class="text-black"
+            class="text-black border"
             label="Limpar"
             @click="refreshTable()"
+            unelevated
           />
           <q-btn
             icon="add"
             label="Cadastrar"
-            class="text-black"
+            class="text-black border"
             @click="mostrarFormulario()"
+            unelevated
           />
           <q-btn
             icon="search"
-            class="text-white verde-escuro"
+            class="text-white bg-primary"
             label="Pesquisar"
             @click="pesquisar()"
+            unelevated
           />
         </div>
       </div>
@@ -153,10 +156,9 @@
         </div>
 
         <div class="row col-12 q-mt-lg q-gutter-md">
-          <q-btn class="bg-green text-white text-bold" rounded>Salvar</q-btn>
+          <q-btn class="bg-green text-white text-bold">Salvar</q-btn>
           <q-btn
-            class="bg-red text-white text-bold"
-            rounded
+            class="bg-negative text-white text-bold"
             @click="abrirDialogCancelar()"
             >Cancelar</q-btn
           >
@@ -171,6 +173,7 @@
           flat
           bordered
           class="q-mt-lg"
+          no-data-label="Nenhum registro encontrado"
           v-if="!  cadastroProdutoForm"
         >
           <!-- Coluna Ações -->
@@ -383,11 +386,7 @@ refreshTable(){
 </script>
 
 <style scoped>
-.verde {
-  background-color: #11b69a;
-}
-
-.verde-escuro {
-  background-color: #00725f;
+.border{
+  border: 1px solid black;
 }
 </style>

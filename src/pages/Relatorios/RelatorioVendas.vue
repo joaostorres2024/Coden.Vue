@@ -77,14 +77,16 @@
         <div class="row q-gutter-md">
           <q-btn
             icon="delete"
-            class="text-black"
+            class="text-black border"
             label="Limpar"
+            unelevated
             @click="refreshTable()"
           />
           <q-btn
             icon="search"
-            class="text-white verde-escuro"
+            class="text-white bg-primary"
             label="Pesquisar"
+            unelevated
             @click="pesquisar()"
           />
         </div>
@@ -98,6 +100,7 @@
         row-key="codigo"
         flat
         bordered
+        no-data-label="Nenhum registro encontrado"
         class="q-mt-lg"
       >
         <!-- Coluna Ações -->
@@ -106,7 +109,7 @@
             <q-btn
               icon="picture_as_pdf"
               size="sm"
-              color="red"
+              color="negative"
               flat
               round
               @click="editar(props.row)"
@@ -264,11 +267,7 @@ refreshTable(){
 </script>
 
 <style scoped>
-.verde {
-  background-color: #11b69a;
-}
-
-.verde-escuro {
-  background-color: #00725f;
+.border{
+  border: 1px solid black;
 }
 </style>
