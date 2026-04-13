@@ -44,6 +44,10 @@ const routes: RouteConfig[] = [
       {
         path: 'Perfil',
         component: () => import('../pages/Perfil.vue')
+      },
+      {
+        path: 'GerenciamentoCaixa',
+        component: () => import('../pages/GerenciamentoCaixa.vue')
       }
     ]
   },

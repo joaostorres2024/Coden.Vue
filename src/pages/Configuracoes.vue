@@ -320,12 +320,12 @@
                   <q-icon name="point_of_sale" size="28px" color="primary" />
                 </div>
                 <div class="q-pa-none q-ml-lg">
-                  <p class="q-ma-none" style="font-size: 18px;">Cadastro de Caixa</p>
-                  <p class="q-ma-none">Cadastrar caixas</p>
+                  <p class="q-ma-none" style="font-size: 18px;">Gerenciamento de Caixa</p>
+                  <p class="q-ma-none">Gerenciamento de caixas e operadores</p>
                 </div>
               </div>
               <div>
-                <q-btn flat dense icon="chevron_right" color="grey" />
+                <q-btn @click="$router.push('/GerenciamentoCaixa')" flat dense icon="chevron_right" color="grey" />
               </div>
             </div>
           </q-item>
