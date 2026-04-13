@@ -9,22 +9,22 @@
       class="text-grey"
       active-color="primary"
       indicator-color="primary"
-      align="justify"
+      align="start"
       narrow-indicator
     >
-      <q-tab name="tab1" label="Notificações" icon="o_notifications" />
-      <q-tab name="tab2" label="Pagamento" icon="o_credit_card" />
-      <q-tab name="tab3" label="Vendas" icon="o_sell" />
-      <q-tab name="tab4" label="Sistema" icon="o_settings" />
-      <q-tab name="tab5" label="Caixa" icon="point_of_sale" />
+      <q-tab name="tab1" label="Notificações"/>
+      <q-tab name="tab2" label="Pagamento"/>
+      <q-tab name="tab3" label="Vendas" />
+      <q-tab name="tab4" label="Sistema"/>
+      <q-tab name="tab5" label="Caixa"/>
     </q-tabs>
 
     <!-- Conteúdo das Tabs -->
-    <q-tab-panels v-model="tab" animated class="q-mt-md">
+    <q-tab-panels v-model="tab" animated class="q-pa-none q-mt-md">
       <!-- TAB 1 -->
       <q-tab-panel name="tab1">
         <q-list class="column">
-          <q-item>
+          <q-item class="q-px-none">
             <div
               class="row items-center justify-between q-pa-sm border"
               style="width: 40vw"
@@ -34,7 +34,7 @@
                   <q-icon name="notifications" size="28px" color="primary" />
                 </div>
                 <div class="q-pa-none q-ml-lg">
-                  <p class="text-h6 q-ma-none">Alertas de Vendas</p>
+                  <p class="q-ma-none" style="font-size: 18px;">Alertas de Vendas</p>
                   <p class="q-ma-none">Notificar ao concluir venda</p>
                 </div>
               </div>
@@ -44,7 +44,7 @@
             </div>
           </q-item>
 
-          <q-item>
+          <q-item class="q-px-none">
             <div
               class="row items-center justify-between q-pa-sm border"
               style="width: 40vw"
@@ -54,7 +54,7 @@
                   <q-icon name="inventory_2" size="28px" color="primary" />
                 </div>
                 <div class="q-pa-none q-ml-lg">
-                  <p class="text-h6 q-ma-none">Estoque Baixo</p>
+                  <p class="q-ma-none" style="font-size: 18px;">Estoque Baixo</p>
                   <p class="q-ma-none">Alertar ao estoque atingir mínimo</p>
                 </div>
               </div>
@@ -64,17 +64,17 @@
             </div>
           </q-item>
 
-          <q-item>
+          <q-item class="q-px-none">
             <div
               class="row items-center justify-between q-pa-sm border"
               style="width: 40vw"
             >
               <div class="row items-center">
                 <div class="q-ml-md">
-                  <q-icon name="inventory_2" size="28px" color="primary" />
+                  <q-icon name="alarm" size="28px" color="primary" />
                 </div>
                 <div class="q-pa-none q-ml-lg">
-                  <p class="text-h6 q-ma-none">Alertas automáticos</p>
+                  <p class="q-ma-none" style="font-size: 18px;">Alertas automáticos</p>
                   <p class="q-ma-none">Notificar quando produto baixar</p>
                 </div>
               </div>
@@ -89,7 +89,7 @@
       <!-- TAB 2 -->
       <q-tab-panel name="tab2">
         <q-list class="column">
-          <q-item>
+          <q-item class="q-px-none">
             <div
               class="row items-center justify-between q-pa-sm border"
               style="width: 40vw"
@@ -99,7 +99,7 @@
                   <q-icon name="credit_card" size="28px" color="primary" />
                 </div>
                 <div class="q-pa-none q-ml-lg">
-                  <p class="text-h6 q-ma-none">Cartão de Crédito</p>
+                  <p class="q-ma-none" style="font-size: 18px;">Cartão de Crédito</p>
                   <p class="q-ma-none">Aceitar pagamento por crédito</p>
                 </div>
               </div>
@@ -109,7 +109,7 @@
             </div>
           </q-item>
 
-          <q-item>
+          <q-item class="q-px-none">
             <div
               class="row items-center justify-between q-pa-sm border"
               style="width: 40vw"
@@ -119,7 +119,7 @@
                   <q-icon name="credit_card" size="28px" color="primary" />
                 </div>
                 <div class="q-pa-none q-ml-lg">
-                  <p class="text-h6 q-ma-none">Cartão de Débito</p>
+                  <p class="q-ma-none" style="font-size: 18px;">Cartão de Débito</p>
                   <p class="q-ma-none">Aceitar pagamento por débito</p>
                 </div>
               </div>
@@ -129,7 +129,7 @@
             </div>
           </q-item>
 
-          <q-item>
+          <q-item class="q-px-none">
             <div
               class="row items-center justify-between q-pa-sm border"
               style="width: 40vw"
@@ -139,7 +139,7 @@
                   <q-icon name="pix" size="28px" color="primary" />
                 </div>
                 <div class="q-pa-none q-ml-lg">
-                  <p class="text-h6 q-ma-none">PIX</p>
+                  <p class="q-ma-none" style="font-size: 18px;">PIX</p>
                   <p class="q-ma-none">Aceitar pagamento por PIX</p>
                 </div>
               </div>
@@ -149,7 +149,7 @@
             </div>
           </q-item>
 
-          <q-item>
+          <q-item class="q-px-none">
             <div
               class="row items-center justify-between q-pa-sm border"
               style="width: 40vw"
@@ -159,7 +159,7 @@
                   <q-icon name="attach_money" size="28px" color="primary" />
                 </div>
                 <div class="q-pa-none q-ml-lg">
-                  <p class="text-h6 q-ma-none">Dinheiro</p>
+                  <p class="q-ma-none" style="font-size: 18px;">Dinheiro</p>
                   <p class="q-ma-none">Aceitar pagamento por Dinheiro</p>
                 </div>
               </div>
@@ -174,7 +174,7 @@
       <!-- TAB 3 -->
       <q-tab-panel name="tab3">
         <q-list class="column">
-          <q-item>
+          <q-item class="q-px-none">
             <div
               class="row items-center justify-between q-pa-sm border"
               style="width: 40vw"
@@ -184,7 +184,7 @@
                   <q-icon name="person" size="28px" color="primary" />
                 </div>
                 <div class="q-pa-none q-ml-lg">
-                  <p class="text-h6 q-ma-none">Cliente Padrão</p>
+                  <p class="q-ma-none" style="font-size: 18px;">Cliente Padrão</p>
                   <p class="q-ma-none">
                     Permitir vendas sem identificação de cliente
                   </p>
@@ -196,7 +196,7 @@
             </div>
           </q-item>
 
-          <q-item>
+          <q-item class="q-px-none">
             <div
               class="row items-center justify-between q-pa-sm border"
               style="width: 40vw"
@@ -206,7 +206,7 @@
                   <q-icon name="block" size="28px" color="primary" />
                 </div>
                 <div class="q-pa-none q-ml-lg">
-                  <p class="text-h6 q-ma-none">Bloquear Venda sem Estoque</p>
+                  <p class="q-ma-none" style="font-size: 18px;">Bloquear Venda sem Estoque</p>
                   <p class="q-ma-none">
                     Impedir venda com saldo de estoque negativo
                   </p>
@@ -218,7 +218,7 @@
             </div>
           </q-item>
 
-          <q-item>
+          <q-item class="q-px-none">
             <div
               class="row items-center justify-between q-pa-sm border"
               style="width: 40vw"
@@ -228,7 +228,7 @@
                   <q-icon name="percent" size="28px" color="primary" />
                 </div>
                 <div class="q-pa-none q-ml-lg">
-                  <p class="text-h6 q-ma-none">Desconto por Vendedor</p>
+                  <p class="q-ma-none" style="font-size: 18px;">Desconto por Vendedor</p>
                   <p class="q-ma-none">Permitir que vendedor altere o preço</p>
                 </div>
               </div>
@@ -238,7 +238,7 @@
             </div>
           </q-item>
 
-          <q-item>
+          <q-item class="q-px-none">
             <div
               class="row items-center justify-between q-pa-sm border"
               style="width: 40vw"
@@ -248,7 +248,7 @@
                   <q-icon name="person" size="28px" color="primary" />
                 </div>
                 <div class="q-pa-none q-ml-lg">
-                  <p class="text-h6 q-ma-none">Desconto Máximo</p>
+                  <p class="q-ma-none" style="font-size: 18px;">Desconto Máximo</p>
                   <p class="q-ma-none">
                     Definir limite de desconto: {{ limiteDesconto }}
                   </p>
@@ -260,7 +260,7 @@
             </div>
           </q-item>
 
-          <q-item>
+          <q-item class="q-px-none">
             <div
               class="row items-center justify-between q-pa-sm border"
               style="width: 40vw"
@@ -270,7 +270,7 @@
                   <q-icon name="warning" size="28px" color="primary" />
                 </div>
                 <div class="q-pa-none q-ml-lg">
-                  <p class="text-h6 q-ma-none">Requer aprovação de gerente</p>
+                  <p class="q-ma-none" style="font-size: 18px;">Requer aprovação de gerente</p>
                   <p class="q-ma-none">Para descontos acima do limite</p>
                 </div>
               </div>
@@ -285,7 +285,7 @@
       <!-- TAB 4 -->
       <q-tab-panel name="tab4">
         <q-list class="column">
-          <q-item>
+          <q-item class="q-px-none">
             <div
               class="row items-center justify-between q-pa-sm border"
               style="width: 40vw"
@@ -295,7 +295,7 @@
                   <q-icon name="language" size="28px" color="primary" />
                 </div>
                 <div class="q-pa-none q-ml-lg">
-                  <p class="text-h6 q-ma-none">Idioma</p>
+                  <p class="q-ma-none" style="font-size: 18px;">Idioma</p>
                   <p class="q-ma-none">Idioma Definido: {{ idiomaDefinido }}</p>
                 </div>
               </div>
@@ -310,7 +310,7 @@
       <!-- TAB 5 -->
       <q-tab-panel name="tab5">
         <q-list class="column">
-          <q-item>
+          <q-item class="q-px-none">
             <div
               class="row items-center justify-between q-pa-sm border"
               style="width: 40vw"
@@ -320,7 +320,7 @@
                   <q-icon name="point_of_sale" size="28px" color="primary" />
                 </div>
                 <div class="q-pa-none q-ml-lg">
-                  <p class="text-h6 q-ma-none">Cadastro de Caixa</p>
+                  <p class="q-ma-none" style="font-size: 18px;">Cadastro de Caixa</p>
                   <p class="q-ma-none">Cadastrar caixas</p>
                 </div>
               </div>
@@ -330,7 +330,7 @@
             </div>
           </q-item>
 
-          <q-item>
+          <q-item class="q-px-none">
             <div
               class="row items-center justify-between q-pa-sm border"
               style="width: 40vw"
@@ -340,7 +340,7 @@
                   <q-icon name="money" size="28px" color="primary" />
                 </div>
                 <div class="q-pa-none q-ml-lg">
-                  <p class="text-h6 q-ma-none">Troco Inicial</p>
+                  <p class="q-ma-none" style="font-size: 18px;">Troco Inicial</p>
                   <p class="q-ma-none">
                     Valor padrão de abertura: {{ valorAbertura }}
                   </p>
