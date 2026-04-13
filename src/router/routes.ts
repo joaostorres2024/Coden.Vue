@@ -10,6 +10,10 @@ const routes: RouteConfig[] = [
     component: () => import('layouts/layoutCoden.vue'),
     children: [
       {
+        path: '',
+        component: () => import('../pages/Home.vue')
+      },
+      {
         path: 'CadastroPessoas',
         component: () => import('../pages/Cadastro/CadastroPessoas.vue')
       },
