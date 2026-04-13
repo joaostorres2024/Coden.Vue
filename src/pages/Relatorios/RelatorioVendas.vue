@@ -1,6 +1,6 @@
 <template>
   <div class="text-h5 text-bold">
-    <div class="q-py-md">RELATÓRIO DE VENDAS</div>
+    <div class="q-py-md">Relatório de Vendas</div>
 
     <div class="col-8">
       <div class="row q-mt-md">
@@ -101,7 +101,7 @@
         flat
         bordered
         no-data-label="Nenhum registro encontrado"
-        class="q-mt-lg"
+        class="q-mt-lg text-weight-medium"
       >
         <!-- Coluna Ações -->
         <template v-slot:body-cell-acoes="props">

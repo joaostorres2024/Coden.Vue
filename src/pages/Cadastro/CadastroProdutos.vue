@@ -1,6 +1,6 @@
 <template>
   <div class="text-h5 text-bold">
-    <div class="q-py-md">CADASTRO DE PRODUTOS</div>
+    <div class="q-py-md">Cadastro de Produtos</div>
 
     <div class="col-12">
       <div class="col-12 row justify-between items-center q-mt-md">
@@ -172,7 +172,7 @@
           row-key="codigo"
           flat
           bordered
-          class="q-mt-lg"
+          class="q-mt-lg text-weight-medium"
           no-data-label="Nenhum registro encontrado"
           v-if="!  cadastroProdutoForm"
         >

@@ -1,6 +1,6 @@
 <template>
   <div class="text-h5 text-bold">
-    <div class="q-py-md text-bold">CADASTRO DE PESSOAS</div>
+    <div class="q-py-md text-weight-medium">Cadastro de Pessoas</div>
     <div class="col-12">
       <div class="row col-3 q-mt-md">
         <q-select
@@ -358,7 +358,7 @@
           row-key="codigo"
           flat
           bordered
-          class="q-mt-lg"
+          class="q-mt-lg text-weight-medium"
           no-data-label="Nenhum registro encontrado"
           v-if="!mostrarFormCadastroPF && !mostrarFormCadastroPJ"
         >

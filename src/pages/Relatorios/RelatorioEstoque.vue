@@ -1,6 +1,6 @@
 <template>
   <div class="text-h5 text-bold">
-    <div class="q-py-md">RELATÓRIO DE ESTOQUE</div>
+    <div class="q-py-md">Relatório de Estoque</div>
     <div class="col-12">
       <div class="row col-2 q-mt-md">
         <q-input
@@ -74,7 +74,7 @@
           flat
           bordered
           no-data-label="Nenhum registro encontrado"
-          class="q-mt-lg"
+          class="q-mt-lg text-weight-medium"
         >
           <!-- Coluna Ações -->
           <template v-slot:body-cell-acoes="props">

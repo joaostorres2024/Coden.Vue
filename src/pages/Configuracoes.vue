@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="text-h5 q-py-md">CONFIGURAÇÕES</div>
+    <div class="text-h5 text-bold q-py-md">Configurações</div>
 
     <!-- Tabs -->
     <q-tabs

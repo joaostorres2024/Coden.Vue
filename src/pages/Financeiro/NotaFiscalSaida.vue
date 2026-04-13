@@ -1,6 +1,6 @@
 <template>
   <div class="text-h5 text-bold">
-    <div class="q-py-md">NF SAÍDA</div>
+    <div class="q-py-md">NF Saída</div>
     <div class="col-12">
       <div class="row col-2 q-mt-md">
         <q-input class="col-2" label="Número NF" outlined dense />
@@ -49,7 +49,7 @@
           flat
           bordered
           no-data-label="Nenhum registro encontrado"
-          class="q-mt-lg"
+          class="q-mt-lg text-weight-medium"
         >
           <!-- Coluna Ações -->
           <template v-slot:body-cell-acoes="props">
