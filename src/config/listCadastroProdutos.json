@@ -8,9 +8,9 @@
       "sortable": true
     },
     {
-      "name": "nome",
+      "name": "nmeProduto",
       "label": "Nome do Produto",
-      "field": "nome",
+      "field": "nmeProduto",
       "align": "center",
       "sortable": true
     },
@@ -22,9 +22,9 @@
       "sortable": true
     },
     {
-      "name": "precoVenda",
+      "name": "precoVendaTabela",
       "label": "Preço Venda",
-      "field": "precoVendaTable",
+      "field": "precoVendaTabela",
       "align": "center",
       "sortable": true
     },
