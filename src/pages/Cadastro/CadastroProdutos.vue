@@ -4,7 +4,7 @@
 
     <div class="col-12">
       <div class="col-12 row justify-between items-center q-mt-md">
-        <div class="row col-7">
+        <div class="row col-7 q-gutter-md">
           <q-input
             v-model="codigo"
             class="col-4"
@@ -14,7 +14,7 @@
           />
 
           <q-input
-            class="col-4 q-px-md"
+            class="col-4"
             label="Nome do Produto"
             v-model="nmeProduto"
             outlined
@@ -47,76 +47,71 @@
       </div>
 
       <div v-if="cadastroProdutoForm">
-        <div class="row col-12 q-mt-md">
-          <div class="q-pb-md q-mt-md">
-            <q-title class="text-h6">Dados Gerais</q-title>
-          </div>
-          <div class="row col-12 q-gutter-md">
-            <q-input class="col-6" label="Código de Barras" outlined dense />
+        <div class="col-12 column q-mt-md q-col-gutter-md">
+          <div class="text-h6">Dados Gerais</div>
+          <div class="row col-7 q-gutter-md">
             <q-select
+              v-model="grupo"
               class="col-3"
               label="Grupo"
-              v-model="grupo"
               outlined
               dense
             />
+            <q-btn label="Criar" unelevated class="bg-primary text-white" />
+          </div>
+          <div class="row col-7 q-gutter-md">
+            <q-input
+              class="col-4"
+              label="Código de Barras"
+              v-model="nmeProduto"
+              outlined
+              dense
+            />
+            <q-btn label="Gerar" unelevated class="bg-primary text-white" />
           </div>
         </div>
 
-        <div class="row col-12 q-mt-md">
-          <div class="q-pb-md q-mt-md">
-            <q-title class="text-h6">Preço</q-title>
-          </div>
-          <div class="row col-12 q-gutter-md">
+        <div class="column q-col-gutter-md col-12 q-mt-md">
+          <div class="text-h6">Preço</div>
+          <div class="row col-7 q-gutter-md">
             <q-input
               v-model="precoCusto"
-              class="col-3"
+              class="col-2"
               label="Preço de Custo"
               outlined
               dense
             />
-
             <q-input
               v-model="precoVendaTabela"
-              class="col-3"
+              class="col-2"
               label="Preço de Venda"
               outlined
               dense
             />
-
             <q-input
-              class="col-2"
+              :value="margemCalculada"
+              class="col-1"
               label="Margem (%)"
               outlined
               dense
-              :value="margemCalculada"
               readonly
             />
           </div>
         </div>
 
-        <div class="row col-12 q-mt-md">
-          <div class="q-pb-md q-mt-md">
-            <q-title class="text-h6">Estoque</q-title>
-          </div>
-          <div class="row col-12 q-gutter-md">
+        <div class="column q-col-gutter-md col-12 q-mt-md">
+          <div class="text-h6">Estoque</div>
+          <div class="row col-7 q-gutter-md">
             <q-input
-              class="col-3"
-              label="Estoque Atual"
               v-model="estoque"
-              outlined
-              dense
-            />
-            <q-input
-              type="money"
-              class="col-3"
-              label="Estoque Máximo"
-              outlined
-              dense
-            />
-
-            <q-select
               class="col-2"
+              label="Estoque Atual"
+              outlined
+              dense
+            />
+            <q-input class="col-2" label="Estoque Máximo" outlined dense />
+            <q-select
+              class="col-1"
               v-model="ativoInativo"
               :options="ativoInativoOpcoes"
               label="Ativo/Inativo"
@@ -126,19 +121,17 @@
           </div>
         </div>
 
-        <div class="row col-12 q-mt-md">
-          <div class="q-pb-md q-mt-md">
-            <q-title class="text-h6">Dados do Fornecedor</q-title>
-          </div>
-          <div class="row col-12 q-gutter-md">
+        <div class="column q-col-gutter-md col-12 q-mt-md">
+          <div class="text-h6">Estoque</div>
+          <div class="row col-7 q-gutter-md">
             <q-input
-              class="col-3"
-              label="Nome do Fornecedor"
               v-model="fornecedor"
+              class="col-3"
+              label="Fornecedor"
               outlined
               dense
             />
-            <q-input class="col-3" label="Garantia" outlined dense />
+            <q-input class="col-2" label="Garantia" outlined dense />
           </div>
         </div>
 

@@ -1,8 +1,8 @@
 <template>
   <div class="text-h5 text-bold">
-    <div class="q-py-md text-weight-medium">Cadastro de Pessoas</div>
+    <div class="q-py-md text-bold">Cadastro de Pessoas</div>
     <div class="col-12">
-      <div class="row col-3 q-mt-md">
+      <div class="row col-7 q-mt-md">
         <q-select
           class="col-2"
           v-model="tipoPessoa"
@@ -17,7 +17,7 @@
         />
       </div>
       <div class="col-12 row justify-between items-center q-mt-md">
-        <div class="row col-7">
+        <div class="row col-8 q-gutter-md">
           <q-input
             v-model="nome"
             class="col-3"
@@ -27,7 +27,7 @@
           />
           <q-input
             v-model="documento"
-            class="col-3 q-px-md"
+            class="col-3"
             label="CNPJ/CPF"
             outlined
             dense
@@ -70,11 +70,11 @@
 
       <form action="">
         <div v-if="mostrarFormCadastroPF">
-          <div class="row col-12 q-mt-md">
-            <div class="q-pb-md q-mt-md">
+          <div class="column col-12 q-col-gutter-md q-mt-md">
+            <div>
               <q-title class="text-h6">Dados Gerais</q-title>
             </div>
-            <div class="row col-12 q-gutter-md">
+            <div class="row col-8 q-gutter-md">
               <q-input
                 v-model="dtaNascimento"
                 class="col-2"
@@ -91,7 +91,7 @@
                 dense
               />
               <q-select
-                class="col-2"
+                class="col-1"
                 v-model="ativoInativo"
                 :options="this.ativo_inativo"
                 label="Ativo/Inativo"
@@ -101,14 +101,14 @@
             </div>
           </div>
 
-          <div class="row col-12 q-mt-md">
-            <div class="q-pb-md q-mt-md">
+          <div class="column q-col-gutter-md col-12 q-mt-md">
+            <div>
               <q-title class="text-h6">Dados de Contato</q-title>
             </div>
-            <div class="row col-12 q-gutter-md">
+            <div class="row col-8 q-gutter-md">
               <q-input
                 v-model="telefone1"
-                class="col-3"
+                class="col-2"
                 label="Telefone 1"
                 mask="(##) #####-####"
                 outlined
@@ -116,14 +116,14 @@
               />
               <q-input
                 v-model="telefone2"
-                class="col-3"
+                class="col-2"
                 label="Telefone 2"
                 mask="(##) #####-####"
                 outlined
                 dense
               />
               <q-input
-                class="col-3"
+                class="col-2"
                 label="E-mail"
                 v-model="email"
                 outlined
@@ -132,41 +132,43 @@
             </div>
           </div>
 
-          <div class="row col-12 q-mt-md">
-            <div class="q-pb-md q-mt-md">
+          <div class="column col-12 q-mt-md q-col-gutter-md">
+            <div>
               <q-title class="text-h6">Dados de Endereço</q-title>
             </div>
-            <div class="row col-12 q-gutter-md">
+            <div class="row col-8 q-gutter-md">
               <q-input
-                class="col-3"
+                class="col-2"
                 label="CEP"
                 mask="#####-###"
                 outlined
                 dense
               />
               <q-input
-                class="col-3"
+                class="col-2"
                 label="Endereço"
                 v-model="endereco"
                 outlined
                 dense
               />
               <q-input
-                class="col-3"
+                class="col-2"
                 label="Número"
                 v-model="numero"
                 outlined
                 dense
               />
+            </div>
+            <div class="row q-gutter-md">
               <q-input
-                class="col-3"
+                class="col-2"
                 label="Bairro"
                 v-model="bairro"
                 outlined
                 dense
               />
               <q-input
-                class="col-3"
+                class="col-2"
                 label="Cidade"
                 v-model="cidade"
                 outlined
@@ -212,13 +214,13 @@
 
       <q-form ref="formCadastroPF">
         <div v-if="mostrarFormCadastroPJ">
-          <div class="row col-12 q-mt-md">
-            <div class="q-pb-md q-mt-md">
+          <div class="column col-12 q-col-gutter-md q-mt-md">
+            <div>
               <q-title class="text-h6">Dados Gerais</q-title>
             </div>
-            <div class="row col-12 q-gutter-md">
+            <div class="row col-8 q-gutter-md">
               <q-input
-                class="col-3"
+                class="col-2"
                 label="Razão Social"
                 v-model="razaoSocial"
                 outlined
@@ -232,7 +234,7 @@
                 dense
               />
               <q-select
-                class="col-2"
+                class="col-1"
                 v-model="ativoInativo"
                 :options="this.ativo_inativo"
                 label="Ativo/Inativo"
@@ -242,13 +244,13 @@
             </div>
           </div>
 
-          <div class="row col-12 q-mt-md">
-            <div class="q-pb-md q-mt-md">
+          <div class="column col-12 q-col-gutter-md q-mt-md">
+            <div>
               <q-title class="text-h6">Dados de Contato</q-title>
             </div>
-            <div class="row col-12 q-gutter-md">
+            <div class="row col-8 q-gutter-md">
               <q-input
-                class="col-3"
+                class="col-2"
                 v-model="telefone1"
                 label="Telefone 1"
                 mask="(##) #####-####"
@@ -256,7 +258,7 @@
                 dense
               />
               <q-input
-                class="col-3"
+                class="col-2"
                 label="Telefone 2"
                 v-model="telefone2"
                 mask="(##) #####-####"
@@ -264,7 +266,7 @@
                 dense
               />
               <q-input
-                class="col-3"
+                class="col-2"
                 label="E-mail"
                 v-model="email"
                 outlined
@@ -273,51 +275,53 @@
             </div>
           </div>
 
-          <div class="row col-12 q-mt-md">
-            <div class="q-pb-md q-mt-md">
+          <div class="column col-12 q-col-gutter-md q-mt-md">
+            <div>
               <q-title class="text-h6">Dados de Endereço</q-title>
             </div>
-            <div class="row col-12 q-gutter-md">
+            <div class="row col-8 q-gutter-md">
               <q-input
-                class="col-3"
+                class="col-2"
                 label="CEP"
                 mask="#####-###"
                 outlined
                 dense
               />
               <q-input
-                class="col-3"
+                class="col-2"
                 label="Endereço"
                 v-model="endereco"
                 outlined
                 dense
               />
               <q-input
-                class="col-3"
+                class="col-2"
                 label="Número"
                 v-model="numero"
                 outlined
                 dense
               />
+            </div>
+            <div class="row col-8 q-gutter-md">
               <q-input
-                class="col-3"
+                class="col-2"
                 label="Bairro"
                 v-model="bairro"
                 outlined
                 dense
               />
               <q-input
-                class="col-3"
+                class="col-2"
                 label="Cidade"
                 v-model="cidade"
                 outlined
                 dense
               />
               <q-select
-                class="col-2"
+                class="col-1"
                 v-model="ufSelect"
                 :options="this.uf_select"
-                label="Ativo/Inativo"
+                label="UF"
                 outlined
                 dense
               />
@@ -577,6 +581,9 @@ export default class ModuleComponent extends Vue {
   this.mostrarFormCadastroPJ = false
 
   // opcional: limpa dados
+  this.codigo = ""
+  this.nome = ""
+  this.documento = ""
   this.tipoPessoa = null
 }
 
@@ -635,7 +642,7 @@ refreshTable(){
 </script>
 
 <style scoped>
-.border{
+.border {
   border: 1px solid black;
 }
 </style>
