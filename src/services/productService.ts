@@ -1,24 +1,29 @@
 import api from './api';
-import { Product } from '../types/productTypes';
+
+export interface CreateProductRequest {
+  nome: string;
+  preco: number;
+  tipo: 'produto' | 'servico';
+}
 
 export const productService = {
-  getAll() {
-    return api.get<Product[]>('/products');
+  listar() {
+    return api.get('/products');
   },
 
-  getById(id: number) {
-    return api.get<Product>(`/products/${id}`);
+  buscarPorId(id: number) {
+    return api.get(`/products/${id}`);
   },
 
-  create(product: Product) {
-    return api.post('/products', product);
+  criar(produto: any) {
+    return api.post('/products', produto);
   },
 
-  update(id: number, product: Product) {
-    return api.put(`/products/${id}`, product);
+  atualizar(id: number, produto: any) {
+    return api.put(`/products/${id}`, produto);
   },
 
-  delete(id: number) {
+  excluir(id: number) {
     return api.delete(`/products/${id}`);
   }
 };

@@ -1,33 +1,23 @@
 import api from './api';
-import {
-  LoginRequest,
-  RegisterRequest,
-  RegisterEstabelecimentoRequest,
-  AuthResponse
-} from '../types/authTypes';
 
 export const authService = {
-  async login(dados: LoginRequest): Promise<AuthResponse> {
-    const response = await api.post<AuthResponse>('/login', dados);
 
-    localStorage.setItem('token', response.data.token);
+async login(dados: { email: string; senha: string }) {
+  const response = await api.post('/auth/login', dados);
 
-    return response.data;
+  localStorage.setItem('token', response.data.token);
+
+  return response.data;
+},
+  register(dados: any) {
+    return api.post('/auth/register', dados);
   },
 
-  async register(dados: RegisterRequest) {
-    return api.post('/register', dados);
-  },
-
-  async registerEstabelecimento(dados: RegisterEstabelecimentoRequest) {
-    return api.post('/registerestabelecimento', dados);
+  registerEstabelecimento(dados: any) {
+    return api.post('/auth/registerestabelecimento', dados);
   },
 
   logout() {
     localStorage.removeItem('token');
-  },
-
-  isAuthenticated(): boolean {
-    return !!localStorage.getItem('token');
   }
 };
