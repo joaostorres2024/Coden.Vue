@@ -155,18 +155,27 @@
 
             <q-item-section>Configurações</q-item-section>
           </q-item>
-          <q-item
-            class="b-r-10 q-mx-xs"
-            clickable
-            v-ripple
-            @click="$router.push('/Perfil')"
-          >
-            <q-item-section avatar>
-              <q-icon name="o_account_circle" />
-            </q-item-section>
+          <div class="row">
+            <q-item
+              class="b-r-10 q-mx-xs"
+              clickable
+              v-ripple
+              @click="$router.push('/Perfil')"
+            >
+              <q-item-section avatar>
+                <q-icon name="o_account_circle" />
+              </q-item-section>
 
-            <q-item-section>Perfil</q-item-section>
-          </q-item>
+              <q-item-section>Perfil</q-item-section>
+            </q-item>
+            <q-item class="b-r-10 q-mx-xs" clickable v-ripple>
+              <q-item-section avatar>
+                <q-icon name="logout" />
+              </q-item-section>
+
+              <q-item-section>Sair</q-item-section>
+            </q-item>
+          </div>
         </q-list>
       </div>
     </q-drawer>

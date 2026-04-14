@@ -1,7 +1,9 @@
 <template>
-  <div class="col-12">
-    <div class="text-h5 text-bold q-py-md">Perfil</div>
+  <q-page padding>
+    <div class="col-12">
+    <div class="text-h5 text-bold q-py-md">Administradores</div>
   </div>
+  </q-page>
 </template>
 
 <script lang="ts">

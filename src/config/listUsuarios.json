@@ -1,0 +1,28 @@
+{
+    "columns": [
+        {
+      "name": "nome",
+      "label": "Usuário",
+      "field": "nome",
+      "align": "center"
+    },
+    {
+      "name": "email",
+      "label": "E-mail",
+      "field": "email",
+      "align": "center"
+    },
+    {
+      "name": "estabelecimento_id",
+      "label": "Estabalecimento ID",
+      "field": "estabelecimento_id",
+      "align": "center"
+    },
+    {
+      "name": "actions",
+      "label": "Ações",
+      "field": "actions",
+      "align": "center"
+    }
+    ]
+}
