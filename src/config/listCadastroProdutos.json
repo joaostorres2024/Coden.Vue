@@ -4,36 +4,31 @@
       "name": "codigo",
       "label": "Código do Produto",
       "field": "codigo",
-      "align": "center",
-      "sortable": true
+      "align": "center"
     },
     {
       "name": "nmeProduto",
       "label": "Nome do Produto",
       "field": "nmeProduto",
-      "align": "center",
-      "sortable": true
+      "align": "center"
     },
     {
       "name": "grupo",
       "label": "Grupo",
       "field": "grupo",
-      "align": "center",
-      "sortable": true
+      "align": "center"
     },
     {
       "name": "precoVendaTabela",
       "label": "Preço Venda",
       "field": "precoVendaTabela",
-      "align": "center",
-      "sortable": true
+      "align": "center"
     },
     {
       "name": "estoque",
       "label": "Estoque",
       "field": "estoque",
-      "align": "center",
-      "sortable": true
+      "align": "center"
     },
     {
       "name": "fornecedor",

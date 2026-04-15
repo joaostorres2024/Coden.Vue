@@ -5,14 +5,14 @@
       show-if-above
       bordered
       :width="300"
-      :content-class="$q.dark.isActive ? 'bg-dark' : 'bg-grey-1'"
+      :content-class="$q.dark.isActive ? 'bg-dark' : 'bg-grey-10'"
     >
       <div class="col-12 column no-wrap full-height">
-        <q-item class="q-pt-md b-r-10 no-wrap items-center" to="/">
+        <q-item class="q-pt-md no-wrap items-center" to="/">
           <img
             class="q-mb-sm"
             style="width: 120px"
-            :src="$q.dark.isActive ? require('../assets/Logo Coden Branca.png') : require('../assets/Logo Coden.png')"
+            :src="$q.dark.isActive ? require('../assets/Logo Coden Branca.png') : require('../assets/Logo Coden Branca.png')"
             alt="Logo Coden"
           />
         </q-item>
@@ -21,11 +21,11 @@
           <q-expansion-item
             icon="o_group"
             label="Cadastro"
-            header-class="menu-header b-r-10"
+            header-class="menu-header text-white"
             expand-separator
           >
             <q-item
-              class="b-r-10 q-my-xs q-pl-lg"
+              class="q-my-xs q-pl-lg text-white"
               clickable
               v-ripple
               @click="$router.push('/CadastroPessoas')"
@@ -38,7 +38,7 @@
             </q-item>
 
             <q-item
-              class="b-r-10 q-my-xs q-pl-lg"
+              class="q-my-xs q-pl-lg text-white"
               clickable
               v-ripple
               @click="$router.push('/CadastroProdutos')"
@@ -54,11 +54,11 @@
           <q-expansion-item
             icon="o_paid"
             label="Financeiro"
-            header-class="menu-header b-r-10"
+            header-class="menu-header text-white"
             expand-separator
           >
             <q-item
-              class="b-r-10 q-my-xs q-pl-lg"
+              class="q-my-xs q-pl-lg text-white"
               clickable
               v-ripple
               @click="$router.push('/NotaFiscalEntrada')"
@@ -71,7 +71,7 @@
             </q-item>
 
             <q-item
-              class="b-r-10 q-my-xs q-pl-lg"
+              class="q-my-xs q-pl-lg text-white"
               clickable
               v-ripple
               @click="$router.push('/NotaFiscalSaida')"
@@ -87,11 +87,11 @@
           <q-expansion-item
             label="Relatórios"
             icon="o_article"
-            header-class="menu-header b-r-10"
+            header-class="menu-header text-white"
             expand-separator
           >
             <q-item
-              class="b-r-10 q-my-xs q-pl-lg"
+              class="q-my-xs q-pl-lg text-white"
               clickable
               v-ripple
               @click="$router.push('/RelatorioEstoque')"
@@ -104,7 +104,7 @@
             </q-item>
 
             <q-item
-              class="b-r-10 q-my-xs q-pl-lg"
+              class="q-my-xs q-pl-lg text-white"
               clickable
               v-ripple
               @click="$router.push('/RelatorioVendas')"
@@ -117,7 +117,7 @@
             </q-item>
           </q-expansion-item>
           <q-item
-            class="menu-header b-r-10"
+            class="menu-header text-white"
             clickable
             v-ripple
             @click="$router.push('/VendaBalcao')"
@@ -129,9 +129,9 @@
             <q-item-section>Vendas Balcão</q-item-section>
           </q-item>
         </q-list>
-        <q-list class="column margin-auto q-pt-lg q-pb-md">
+        <q-list class="column margin-auto q-pt-lg q-pb-md text-white">
           <q-item
-            class="b-r-10 q-mx-xs"
+            class="q-mx-xs"
             @click="toggleDark()"
             clickable
             v-ripple
@@ -144,7 +144,7 @@
             <q-item-section>Modo Escuro/Claro</q-item-section>
           </q-item>
           <q-item
-            class="b-r-10 q-mx-xs"
+            class="q-mx-xs"
             clickable
             v-ripple
             @click="$router.push('/Configuracoes')"
@@ -157,7 +157,7 @@
           </q-item>
           <div class="row">
             <q-item
-              class="b-r-10 q-mx-xs"
+              class="q-mx-xs"
               clickable
               v-ripple
               @click="$router.push('/Perfil')"
@@ -168,7 +168,7 @@
 
               <q-item-section>Perfil</q-item-section>
             </q-item>
-            <q-item class="b-r-10 q-mx-xs" clickable v-ripple>
+            <q-item class="q-mx-xs" clickable v-ripple>
               <q-item-section avatar>
                 <q-icon name="logout" />
               </q-item-section>
@@ -237,5 +237,9 @@ export default class ModuleComponent extends Vue {
 
 .margin-auto {
   margin-top: auto;
+}
+
+.q-expansion-item__toggle-icon{
+  color: white;
 }
 </style>

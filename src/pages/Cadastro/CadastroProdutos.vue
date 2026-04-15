@@ -195,6 +195,11 @@
           </template>
 
           <!-- Coluna Status -->
+           <template v-slot:body-cell-precoVendaTabela="props">
+            <q-td :props="props" align="center">
+              {{ formatarReais(props.row.precoVendaTabela) }}
+            </q-td>
+          </template>
           <template v-slot:body-cell-status="props">
             <q-td align="center">
               <q-badge
@@ -299,6 +304,14 @@ export default class ModuleComponent extends Vue {
       status: 'Ativo'
     }
   ]
+
+  formatarReais(valor: string | number): string {
+    const numero = typeof valor === 'string' ? parseFloat(valor) : valor
+    return numero.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    })
+  }
 
   get margemCalculada (): string {
     if (!this.precoCusto || !this.precoVendaTabela) return ''

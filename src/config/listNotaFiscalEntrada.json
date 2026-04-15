@@ -4,36 +4,31 @@
       "name": "numeroNF",
       "label": "Número NF",
       "field": "numeroNF",
-      "align": "center",
-      "sortable": true
+      "align": "center"
     },
     {
       "name": "produto",
       "label": "Produto",
       "field": "produto",
-      "align": "center",
-      "sortable": true
+      "align": "center"
     },
     {
       "name": "quantidade",
       "label": "Qtd",
       "field": "quantidade",
-      "align": "center",
-      "sortable": true
+      "align": "center"
     },
     {
       "name": "valorUnitario",
-      "label": "Vlr Unitário",
+      "label": "Valor Unitário",
       "field": "valorUnitario",
-      "align": "center",
-      "sortable": true
+      "align": "center"
     },
     {
       "name": "valorTotal",
-      "label": "Vlr Total",
+      "label": "Valor Total",
       "field": "valorTotal",
-      "align": "center",
-      "sortable": true
+      "align": "center"
     },
     {
       "name": "icms",

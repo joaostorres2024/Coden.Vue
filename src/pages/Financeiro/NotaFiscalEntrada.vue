@@ -85,6 +85,16 @@
           </template>
 
           <!-- Coluna Status -->
+          <template v-slot:body-cell-valorUnitario="props">
+            <q-td :props="props" align="center">
+              {{ formatarReais(props.row.valorUnitario) }}
+            </q-td>
+          </template>
+          <template v-slot:body-cell-valorTotal="props">
+            <q-td :props="props" align="center">
+              {{ formatarReais(props.row.valorTotal) }}
+            </q-td>
+          </template>
           <template v-slot:body-cell-status="props">
             <q-td align="center">
               <q-badge
@@ -429,6 +439,14 @@ export default class ModuleComponent extends Vue {
       icms: '17'
     }
   ]
+
+  formatarReais(valor: string | number): string {
+    const numero = typeof valor === 'string' ? parseFloat(valor) : valor
+    return numero.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    })
+  }
 
   created() {
     this.rowsFiltradas = this.rowsNfEntrada

@@ -142,6 +142,16 @@
           </template>
 
           <!-- Coluna Status -->
+           <template v-slot:body-cell-valorUnitario="props">
+            <q-td :props="props" align="center">
+              {{ formatarReais(props.row.valorUnitario) }}
+            </q-td>
+          </template>
+          <template v-slot:body-cell-total="props">
+            <q-td :props="props" align="center">
+              {{ formatarReais(props.row.total) }}
+            </q-td>
+          </template>
           <template v-slot:body-cell-status="props">
             <q-td align="center">
               <q-badge
@@ -170,6 +180,16 @@
           v-if="produtosAdicionados"
         >
           <!-- Coluna Ações -->
+           <template v-slot:body-cell-valorUnitario="props">
+            <q-td :props="props" align="center">
+              {{ formatarReais(props.row.valorUnitario) }}
+            </q-td>
+          </template>
+          <template v-slot:body-cell-total="props">
+            <q-td :props="props" align="center">
+              {{ formatarReais(props.row.total) }}
+            </q-td>
+          </template>
           <template v-slot:body-cell-acoes="props">
             <q-td align="center">
               <q-btn icon="delete" size="sm" color="negative" flat round />
@@ -467,6 +487,14 @@ export default class ModuleComponent extends Vue {
       total: '40'
     }
   ]
+
+  formatarReais(valor: string | number): string {
+    const numero = typeof valor === 'string' ? parseFloat(valor) : valor
+    return numero.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    })
+  }
 
   abrirDialogCancelar(){
     this.dialogCancelar = true

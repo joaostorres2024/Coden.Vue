@@ -74,6 +74,11 @@
           </template>
 
           <!-- Coluna Status -->
+           <template v-slot:body-cell-valorNota="props">
+            <q-td :props="props" align="center">
+              {{ formatarReais(props.row.valorNota) }}
+            </q-td>
+          </template>
           <template v-slot:body-cell-status="props">
             <q-td align="center">
               <q-badge
@@ -123,6 +128,14 @@ export default class ModuleComponent extends Vue {
     valorNota: '189.90'
   }
 ]
+
+formatarReais(valor: string | number): string {
+    const numero = typeof valor === 'string' ? parseFloat(valor) : valor
+    return numero.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    })
+  }
 }
 </script>
 

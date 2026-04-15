@@ -4,22 +4,19 @@
       "name": "codigo",
       "label": "Código",
       "field": "codigo",
-      "align": "center",
-      "sortable": true
+      "align": "center"
     },
     {
       "name": "tipoPessoa",
       "label": "Tipo",
       "field": "tipoPessoa",
-      "align": "center",
-      "sortable": true
+      "align": "center"
     },
     {
       "name": "nome",
       "label": "Nome",
       "field": "nome",
-      "align": "center",
-      "sortable": true
+      "align": "center"
     },
     {
       "name": "documento",
