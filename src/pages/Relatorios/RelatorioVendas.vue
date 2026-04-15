@@ -1,6 +1,20 @@
 <template>
-  <div class="text-h5 text-bold">
-    <div class="q-py-md">Relatório de Vendas</div>
+  <div class="">
+    <div class="q-pt-md text-h5 text-bold">Relatório de Vendas</div>
+    <q-toolbar class="q-pa-none">
+        <q-breadcrumbs active-color="primary" style="font-size: 14px" class="q-mb-md">
+          <template v-slot:separator>
+        <q-icon
+          size="1.5em"
+          name="chevron_right"
+          color="primary"
+        />
+      </template>
+          <q-breadcrumbs-el label="Home" icon="home" to="/" />
+          <q-breadcrumbs-el label="Relatórios" icon="article" />
+          <q-breadcrumbs-el label="Relatório de Vendas" icon="sell" />
+        </q-breadcrumbs>
+      </q-toolbar>
 
     <div class="col-8">
       <div class="row q-mt-md">

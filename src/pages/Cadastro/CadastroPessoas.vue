@@ -1,6 +1,20 @@
 <template>
-  <div class="text-h5 text-bold">
-    <div class="q-py-md text-bold">Cadastro de Pessoas</div>
+  <div class="">
+    <div class="q-pt-md text-h5 text-bold">Cadastro de Pessoas</div>
+    <q-toolbar class="q-pa-none">
+        <q-breadcrumbs active-color="primary" style="font-size: 14px" class="q-mb-md">
+          <template v-slot:separator>
+        <q-icon
+          size="1.5em"
+          name="chevron_right"
+          color="primary"
+        />
+      </template>
+          <q-breadcrumbs-el label="Home" icon="home" to="/" />
+          <q-breadcrumbs-el label="Cadastro" icon="group" />
+          <q-breadcrumbs-el label="Cadastro Pessoas" icon="groups" />
+        </q-breadcrumbs>
+      </q-toolbar>
     <div class="col-12">
       <div class="row col-7 q-mt-md">
         <q-select

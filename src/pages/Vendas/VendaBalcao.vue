@@ -1,6 +1,19 @@
 <template>
-  <div class="text-h5 text-bold">
-    <div class="q-py-md">Vendas Balcão</div>
+  <div class="">
+    <div class="q-pt-md text-h5 text-bold">Vendas Balcão</div>
+    <q-toolbar class="q-pa-none">
+        <q-breadcrumbs active-color="primary" style="font-size: 14px" class="q-mb-md">
+          <template v-slot:separator>
+        <q-icon
+          size="1.5em"
+          name="chevron_right"
+          color="primary"
+        />
+      </template>
+          <q-breadcrumbs-el label="Home" icon="home" to="/" />
+          <q-breadcrumbs-el label="Vendas Balcão" icon="point_of_sale" />
+        </q-breadcrumbs>
+      </q-toolbar>
     <div class="col-12">
       <div class="col-12 row justify-between items-center q-mt-md">
         <div class="row col-7">

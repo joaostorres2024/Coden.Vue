@@ -1,6 +1,20 @@
 <template>
-  <div class="text-h5 text-bold">
-    <div class="q-py-md">Relatório de Estoque</div>
+  <div class="">
+    <div class="q-pt-md text-h5 text-bold">Relatório de Estoque</div>
+    <q-toolbar class="q-pa-none">
+        <q-breadcrumbs active-color="primary" style="font-size: 14px" class="q-mb-md">
+          <template v-slot:separator>
+        <q-icon
+          size="1.5em"
+          name="chevron_right"
+          color="primary"
+        />
+      </template>
+          <q-breadcrumbs-el label="Home" icon="home" to="/" />
+          <q-breadcrumbs-el label="Relatórios" icon="article" />
+          <q-breadcrumbs-el label="Relatório de Estoque" icon="inventory" />
+        </q-breadcrumbs>
+      </q-toolbar>
     <div class="col-12">
       <div class="row col-2 q-mt-md">
         <q-input
