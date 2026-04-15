@@ -150,20 +150,20 @@
                 readonly
               />
             </div>
-            <div class="q-pb-md q-mt-md">
+            <div class="q-mt-md q-pb-md">
               <q-title class="text-h6">Produto</q-title>
             </div>
-            <div class="column col-12 q-gutter-md">
-              <div class="row">
+            <div class="column col-8 q-col-gutter-md">
+              <div class="row q-gutter-md">
                 <q-input
-                  class="col-3"
+                  class="col-2"
                   label="Código do Produto"
                   v-model="form.codigoProduto"
                   outlined
                   dense
                 />
                 <q-input
-                  class="col-3 q-px-md"
+                  class="col-2"
                   label="Nome do Produto"
                   v-model="form.nomeProduto"
                   outlined
@@ -177,17 +177,7 @@
                   dense
                 />
               </div>
-              <div class="row">
-                <q-input
-                  class="col-6"
-                  label="Código de Barras"
-                  v-model="form.codigoBarras"
-                  outlined
-                  dense
-                />
-                <q-btn icon="add" label="Gerar" class="text-white bg-primary q-mx-md" unelevated />
-              </div>
-              <div class="row">
+              <div class="row q-gutter-md">
                 <q-input
                   class="col-2"
                   label="Valor Unitário"
@@ -196,7 +186,7 @@
                   dense
                 />
                 <q-input
-                  class="col-2 q-px-md"
+                  class="col-2"
                   label="Valor Total"
                   v-model="form.valorTotal"
                   outlined
@@ -210,7 +200,7 @@
                   dense
                 />
                 <q-input
-                  class="col-2 q-px-md"
+                  class="col-1"
                   label="Margem"
                   v-model="form.margem"
                   outlined
@@ -218,31 +208,41 @@
                   readonly
                 />
               </div>
-              <div class="row">
+              <div class="row q-gutter-md">
                 <q-select
-                  class="col-2"
+                  class="col-3"
                   label="Grupo"
                   v-model="form.grupo"
                   outlined
                   dense
                 />
-                <q-btn icon="add" label="Criar" class="text-white bg-primary q-mx-md" unelevated />
+                <q-btn label="Criar" class="text-white bg-primary" unelevated />
+              </div>
+              <div class="row col-8 q-gutter-md">
+                <q-input
+                  class="col-4"
+                  label="Código de Barras"
+                  v-model="form.codigoBarras"
+                  outlined
+                  dense
+                />
+                <q-btn label="Gerar" class="text-white bg-primary" unelevated />
               </div>
             </div>
             <div class="q-pb-md q-mt-md">
               <q-title class="text-h6">Origem</q-title>
             </div>
-            <div class="column col-12 q-gutter-md">
-              <div class="row">
+            <div class="column col-8 q-col-gutter-md">
+              <div class="row q-gutter-md">
                 <q-input
-                  class="col-3"
+                  class="col-2"
                   label="Fornecedor"
                   v-model="form.fornecedor"
                   outlined
                   dense
                 />
                 <q-input
-                  class="col-2 q-px-md"
+                  class="col-2"
                   label="CNPJ/CPF"
                   v-model="form.cnpjCpf"
                   outlined
@@ -256,7 +256,7 @@
                   dense
                 />
                 <q-select
-                  class="col-1 q-px-md"
+                  class="col-1"
                   label="UF"
                   v-model="form.uf"
                   outlined
@@ -267,17 +267,17 @@
             <div class="q-pb-md q-mt-md">
               <q-title class="text-h6">Tributação</q-title>
             </div>
-            <div class="column col-12 q-gutter-md">
+            <div class="column col-8 q-col-gutter-md">
               <div class="row">
                 <q-input
-                  class="col-3"
+                  class="col-4"
                   label="Origem"
                   v-model="form.origemTributaria"
                   outlined
                   dense
                 />
               </div>
-              <div class="row">
+              <div class="row q-gutter-md">
                 <q-input
                   class="col-2"
                   label="ICMS"
@@ -286,7 +286,7 @@
                   dense
                 />
                 <q-input
-                  class="col-2 q-px-md"
+                  class="col-2"
                   label="IPI"
                   v-model="form.ipi"
                   outlined
@@ -300,7 +300,7 @@
                   dense
                 />
                 <q-input
-                  class="col-2 q-px-md"
+                  class="col-2"
                   label="COFINS"
                   v-model="form.cofins"
                   outlined
@@ -324,7 +324,9 @@
           </div>
 
           <div class="row col-12 q-mt-lg q-gutter-md">
-            <q-btn class="bg-green text-white text-bold" unelevated>Salvar</q-btn>
+            <q-btn class="bg-green text-white text-bold" unelevated
+              >Salvar</q-btn
+            >
             <q-btn
               class="bg-negative text-white text-bold"
               unelevated
@@ -548,7 +550,7 @@ export default class ModuleComponent extends Vue {
 </script>
 
 <style scoped>
-.border{
+.border {
   border: 1px solid black;
 }
 </style>
