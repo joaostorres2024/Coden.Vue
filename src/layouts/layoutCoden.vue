@@ -5,7 +5,7 @@
       show-if-above
       bordered
       :width="300"
-      :content-class="$q.dark.isActive ? 'bg-dark' : 'bg-grey-10'"
+      :content-class="$q.dark.isActive ? 'bg-dark' : 'bg-primary'"
     >
       <div class="col-12 column no-wrap full-height">
         <q-item class="q-pt-md no-wrap items-center" to="/">
