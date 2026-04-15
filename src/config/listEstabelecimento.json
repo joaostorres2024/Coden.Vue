@@ -1,0 +1,34 @@
+{
+      "columns" : [
+    {
+      "name": "id",
+      "label": "ID",
+      "field": "id",
+      "align": "left"
+    },
+    {
+      "name": "nome",
+      "label": "Nome",
+      "field": "nome",
+      "align": "left"
+    },
+    {
+      "name": "cnpj",
+      "label": "CNPJ",
+      "field": "cnpj",
+      "align": "left"
+    },
+    {
+      "name": "cep",
+      "label": "CEP",
+      "field": "cep",
+      "align": "left"
+    },
+    {
+      "name": "actions",
+      "label": "Ações",
+      "field": "actions",
+      "align": "center"
+    }
+  ]
+}

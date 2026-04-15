@@ -5,6 +5,10 @@ const routes: RouteConfig[] = [
     path: '/login',
     component: () => import('pages/Login.vue')
   },
+  {
+    path: '/adminLogin',
+    component: () => import('pages/Admin/AdminLogin.vue')
+  },
 
 {
     path: '/admin',
@@ -17,6 +21,10 @@ const routes: RouteConfig[] = [
       {
         path: '/AdminUsuario',
         component: () => import('pages/Admin/AdminUsuario.vue')
+      },
+      {
+        path: '/AdminEstabelecimento',
+        component: () => import('pages/Admin/AdminEstabelecimento.vue')
       }
     ]
   },

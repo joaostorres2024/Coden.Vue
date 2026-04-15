@@ -1,43 +1,33 @@
 <template>
   <q-page padding>
-    <!-- SEÇÃO 1: CRIAÇÃO DE USUÁRIO -->
+    <!-- SEÇÃO 1: CRIAÇÃO DE ESTABELECIMENTO -->
     <div class="row q-col-gutter-lg q-mb-xl" style="max-width: 1200px">
       <!-- Lado Esquerdo: Formulário de Criação -->
       <div class="col-12 col-md-6">
-        <div class="text-h6 q-mb-md">Criar/Editar Usuário</div>
+        <div class="text-h6 q-mb-md">Criar/Editar Estabelecimento</div>
 
         <q-form @submit="onSubmitCreate" class="q-gutter-y-sm">
-          <q-input outlined dense v-model="newUser.nome" label="Nome" />
-
           <q-input
             outlined
             dense
-            type="email"
-            v-model="newUser.email"
-            label="E-mail"
+            v-model="newEstabelecimento.nome"
+            label="Nome"
           />
 
           <q-input
             outlined
             dense
-            type="password"
-            v-model="newUser.senha"
-            label="Senha"
+            v-model="newEstabelecimento.cnpj"
+            label="CNPJ"
+            mask="##.###.###/####-##"
           />
 
           <q-input
             outlined
             dense
-            type="number"
-            v-model.number="newUser.estabelecimento_id"
-            label="ID Estabelecimento"
-          />
-
-          <q-select
-            outlined
-            dense
-            type="number"
-            label="Cargo"
+            v-model="newEstabelecimento.cep"
+            label="CEP"
+            mask="#####-###"
           />
 
           <!-- Botões de Ação do Formulário -->
@@ -61,7 +51,7 @@
 
       <!-- Lado Direito: Card de Atenção -->
       <div class="col-12 col-md-6">
-        <q-card flat bordered class="attention-card q-mt-xl">
+        <q-card flat bordered class="attention-card q-mt-lg">
           <q-card-section class="row items-center q-gutter-sm">
             <q-icon name="warning" size="sm" />
             <div class="text-subtitle2 text-bold">Atenção</div>
@@ -73,11 +63,12 @@
               prosseguir.
             </p>
             <ul class="q-pl-md">
-              <li>O e-mail deve ser único no sistema.</li>
+              <li>O nome do estabelecimento deve ser único no sistema.</li>
               <li>
-                A senha será criptografada automaticamente via hash SHA-256.
+                O CNPJ deve ser válido e estar no formato correto
+                (##.###.###/####-##).
               </li>
-              <li>O ID do estabelecimento deve ser um número válido.</li>
+              <li>O CEP deve estar no formato correto (#####-###).</li>
             </ul>
           </q-card-section>
         </q-card>
@@ -89,7 +80,7 @@
     <!-- SEÇÃO 2: LISTAGEM E FILTROS -->
     <div class="row q-col-gutter-sm q-mb-md items-center">
       <div class="col-12">
-        <div class="text-h6 q-mb-sm">Listagem de Usuários</div>
+        <div class="text-h6 q-mb-sm">Listagem de Estabelecimentos</div>
       </div>
 
       <div class="col-12 col-sm-3">
@@ -105,8 +96,8 @@
         <q-input
           outlined
           dense
-          v-model="filter.email"
-          label="E-mail"
+          v-model="filter.cnpj"
+          label="CNPJ"
           @keyup.enter="onSearch"
         />
       </div>
@@ -114,9 +105,8 @@
         <q-input
           outlined
           dense
-          type="number"
-          v-model.number="filter.estabelecimento_id"
-          label="ID Estabelecimento"
+          v-model="filter.cep"
+          label="CEP"
           @keyup.enter="onSearch"
         />
       </div>
@@ -139,15 +129,15 @@
       </div>
     </div>
 
-    <!-- Tabela de Usuários -->
+    <!-- Tabela de Estabelecimentos -->
     <q-table
       flat
       bordered
-      :data="users"
-      :columns="colunasUsuarios"
+      :data="estabelecimentos"
+      :columns="colunasEstabelecimento"
       row-key="id"
       :loading="loadingTable"
-      no-data-label="Nenhum usuário encontrado"
+      no-data-label="Nenhum estabelecimento encontrado"
       rows-per-page-label="Registros por página"
     >
       <template v-slot:body-cell-actions="props">
@@ -166,7 +156,6 @@
             icon="delete"
             @click="onDelete(props.row)"
           />
-          <q-btn dense flat color="warning" icon="lock" />
         </q-td>
       </template>
     </q-table>
@@ -176,49 +165,77 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import listUsuarios from '../../config/listUsuarios.json'
+import listEstabelecimento from '../../config/listEstabelecimento.json'
 
-interface UserForm {
+interface EstabelecimentoForm {
   nome: string;
-  email: string;
-  senha: string;
-  estabelecimento_id: number | null;
+  cnpj: string;
+  cep: string;
+}
+
+interface EstabelecimentoRow extends EstabelecimentoForm {
+  id: string;
 }
 
 @Component
-export default class ModuleComponent extends Vue {
+export default class EstabelecimentoComponent extends Vue {
+    colunasEstabelecimento = listEstabelecimento.columns
+
   // --- ESTADO DA CRIAÇÃO ---
-  private newUser: UserForm = {
+  private newEstabelecimento: EstabelecimentoForm = {
     nome: '',
-    email: '',
-    senha: '',
-    estabelecimento_id: null
+    cnpj: '',
+    cep: ''
   }
   private loadingCreate = false
-  colunasUsuarios = listUsuarios.columns
 
   // --- ESTADO DA LISTAGEM ---
   private filter = {
     nome: '',
-    email: '',
-    estabelecimento_id: null as number | null
+    cnpj: '',
+    cep: ''
   }
   private loadingTable = false
+  private estabelecimentos: EstabelecimentoRow[] = []
 
-  // --- MÉTODOS DE CRIAÇÃO ---
-  private async hashPassword(password: string): Promise<string> {
-    const encoder = new TextEncoder()
-    const data = encoder.encode(password)
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data)
-    const hashArray = Array.from(new Uint8Array(hashBuffer))
-    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
+  // --- MÉTODOS DE VALIDAÇÃO ---
+  private validateCNPJ(cnpj: string): boolean {
+    // Remove caracteres não numéricos
+    const cnpjNumbers = cnpj.replace(/\D/g, '')
+
+    // Valida se tem 14 dígitos
+    if (cnpjNumbers.length !== 14) {
+      this.showAlert('CNPJ deve ter 14 dígitos!')
+      return false
+    }
+
+    return true
+  }
+
+  private validateCEP(cep: string): boolean {
+    // Remove caracteres não numéricos
+    const cepNumbers = cep.replace(/\D/g, '')
+
+    // Valida se tem 8 dígitos
+    if (cepNumbers.length !== 8) {
+      this.showAlert('CEP deve ter 8 dígitos!')
+      return false
+    }
+
+    return true
   }
 
   private validateForm(): boolean {
-    if (!this.newUser.nome) { this.showAlert('Nome é obrigatório!'); return false }
-    if (!this.newUser.email || !/.+@.+\..+/.test(this.newUser.email)) { this.showAlert('E-mail inválido!'); return false }
-    if (!this.newUser.senha || this.newUser.senha.length < 6) { this.showAlert('Senha deve ter 6+ caracteres!'); return false }
-    if (this.newUser.estabelecimento_id === null) { this.showAlert('ID Estabelecimento é obrigatório!'); return false }
+    if (!this.newEstabelecimento.nome) {
+      this.showAlert('Nome é obrigatório!')
+      return false
+    }
+    if (!this.newEstabelecimento.cnpj || !this.validateCNPJ(this.newEstabelecimento.cnpj)) {
+      return false
+    }
+    if (!this.newEstabelecimento.cep || !this.validateCEP(this.newEstabelecimento.cep)) {
+      return false
+    }
     return true
   }
 
@@ -230,17 +247,17 @@ export default class ModuleComponent extends Vue {
     })
   }
 
+  // --- MÉTODOS DE CRIAÇÃO ---
   async onSubmitCreate(): Promise<void> {
     if (!this.validateForm()) return
     try {
       this.loadingCreate = true
-      const passwordHash = await this.hashPassword(this.newUser.senha)
-      const payload = { ...this.newUser, senha: passwordHash }
+      const payload = { ...this.newEstabelecimento }
 
-      console.log('Criando usuário:', payload)
+      console.log('Criando estabelecimento:', payload)
 
       // Simulação de sucesso
-      this.$q.notify({ color: 'positive', message: 'Usuário salvo!', icon: 'check' })
+      this.$q.notify({ color: 'positive', message: 'Estabelecimento salvo!', icon: 'check' })
       this.onCancelCreate()
       this.onSearch() // Atualiza a tabela
     } catch (error) {
@@ -251,7 +268,7 @@ export default class ModuleComponent extends Vue {
   }
 
   onCancelCreate(): void {
-    this.newUser = { nome: '', email: '', senha: '', estabelecimento_id: null }
+    this.newEstabelecimento = { nome: '', cnpj: '', cep: '' }
   }
 
   // --- MÉTODOS DA LISTAGEM ---
@@ -262,21 +279,19 @@ export default class ModuleComponent extends Vue {
   }
 
   onClearFilters(): void {
-    this.filter = { nome: '', email: '', estabelecimento_id: null }
+    this.filter = { nome: '', cnpj: '', cep: '' }
     this.onSearch()
   }
 
-
-onEdit(row: any): void {
-  this.newUser = {
-    nome: row.nome,
-    email: row.email,
-    senha: '', // NÃO sobe senha por segurança
-    estabelecimento_id: row.estabelecimento_id
+  onEdit(row: EstabelecimentoRow): void {
+    this.newEstabelecimento = {
+      nome: row.nome,
+      cnpj: row.cnpj,
+      cep: row.cep
+    }
   }
-}
 
-  onDelete(row: any): void {
+  onDelete(row: EstabelecimentoRow): void {
     this.$q.dialog({
       title: 'Confirmar',
       message: `Excluir ${row.nome}?`,

@@ -99,14 +99,14 @@
 
       <form action="">
         <div v-if="formNotaFiscalEntrada">
-          <div class="row col-12">
+          <div class="column col-12">
             <div class="row q-gutter-md items-center q-pb-md">
               <q-title class="text-h6">Dados da Nota</q-title>
               <q-file
                 outlined
                 dense
                 label="Carregar XML"
-                class="col-5"
+                class="col-1"
                 v-model="arquivoXML"
                 accept=".xml"
                 clearable
@@ -117,7 +117,7 @@
                 </template>
               </q-file>
             </div>
-            <div class="row col-12 q-gutter-md">
+            <div class="row col-8 q-gutter-md">
               <q-input
                 class="col-2"
                 label="Número NF"
@@ -133,7 +133,7 @@
                 dense
               />
               <q-input
-                class="col-2"
+                class="col-1"
                 label="Data Emissão"
                 type="date"
                 v-model="form.dataEmissao"
@@ -141,7 +141,7 @@
                 dense
               />
               <q-input
-                class="col-2"
+                class="col-1"
                 label="Data Entrada"
                 type="date"
                 v-model="dataHoje"
