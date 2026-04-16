@@ -1,465 +1,234 @@
 <template>
-  <div class="">
-    <div class="q-pt-md text-h5 text-bold">Cadastro de Pessoas</div>
-    <q-toolbar class="q-pa-none">
-        <q-breadcrumbs active-color="primary" style="font-size: 14px" class="q-mb-md">
-          <template v-slot:separator>
-        <q-icon
-          size="1.5em"
-          name="chevron_right"
-          color="primary"
-        />
-      </template>
-          <q-breadcrumbs-el label="Home" icon="home" to="/" />
-          <q-breadcrumbs-el label="Cadastro" icon="group" />
-          <q-breadcrumbs-el label="Cadastro Pessoas" icon="groups" />
-        </q-breadcrumbs>
-      </q-toolbar>
-    <div class="col-12">
-      <div class="row col-7 q-mt-md">
-        <q-select
-          class="col-2"
-          v-model="tipoPessoa"
-          :options="this.opcoesTipoPessoa"
-          label="Tipo de Pessoa"
-          outlined
-          option-value="value"
-          option-label="label"
-          emit-value
-          map-options
-          dense
-        />
-      </div>
-      <div class="col-12 row justify-between items-center q-mt-md">
-        <div class="row col-8 q-gutter-md">
-          <q-input
-            v-model="nome"
-            class="col-3"
-            label="Nome Completo"
-            outlined
-            dense
-          />
-          <q-input
-            v-model="documento"
-            class="col-3"
-            label="CNPJ/CPF"
-            outlined
-            dense
-          />
-          <q-input
-            v-model="codigo"
-            class="col-3"
-            label="Código do Cliente"
-            outlined
-            dense
-          />
-        </div>
-        <div
-          class="row q-gutter-md"
-          v-if="!mostrarFormCadastroPF && !mostrarFormCadastroPJ"
-        >
-          <q-btn
-            icon="delete"
-            class="text-black border"
-            label="Limpar"
-            unelevated
-            @click="refreshTable()"
-          />
-          <q-btn
-            icon="add"
-            label="Cadastrar"
-            class="text-black border"
-            unelevated
-            @click="mostrarFormulario()"
-          />
-          <q-btn
-            icon="search"
-            class="text-white bg-primary"
-            label="Pesquisar"
-            unelevated
-            @click="pesquisar()"
-          />
-        </div>
-      </div>
+  <!-- Container principal para centralizar o card na tela -->
+  <div class="row justify-center items-center">
+    
+    <q-card class="col-11 col-md-10 col-lg-9 shadow-2" style="width: 1500px;">
+      
+      <!-- Cabeçalho do Card -->
+      <q-card-section class="bg-primary text-white q-pb-none">
+        <div class="text-h5 text-bold">Cadastro de Pessoas</div>
+        <q-toolbar class="q-pa-none">
+          <q-breadcrumbs active-color="white" style="font-size: 14px" class="q-mb-md">
+            <template v-slot:separator>
+              <q-icon size="1.5em" name="chevron_right" color="white" />
+            </template>
+            <q-breadcrumbs-el label="Home" icon="home" to="/" />
+            <q-breadcrumbs-el label="Cadastro" icon="group" />
+            <q-breadcrumbs-el label="Cadastro Pessoas" icon="groups" />
+          </q-breadcrumbs>
+        </q-toolbar>
+      </q-card-section>
 
-      <form action="">
-        <div v-if="mostrarFormCadastroPF">
-          <div class="column col-12 q-col-gutter-md q-mt-md">
-            <div>
-              <q-title class="text-h6">Dados Gerais</q-title>
-            </div>
-            <div class="row col-8 q-gutter-md">
-              <q-input
-                v-model="dtaNascimento"
-                class="col-2"
-                label="Data de Nascimento"
-                type="date"
-                outlined
-                dense
-              />
-              <q-input
-                v-model="nmeSocial"
-                class="col-3"
-                label="Nome Social"
-                outlined
-                dense
-              />
-              <q-select
-                class="col-1"
-                v-model="ativoInativo"
-                :options="this.ativo_inativo"
-                label="Ativo/Inativo"
-                outlined
-                dense
-              />
-            </div>
-          </div>
+      <q-separator />
 
-          <div class="column q-col-gutter-md col-12 q-mt-md">
-            <div>
-              <q-title class="text-h6">Dados de Contato</q-title>
-            </div>
-            <div class="row col-8 q-gutter-md">
-              <q-input
-                v-model="telefone1"
-                class="col-2"
-                label="Telefone 1"
-                mask="(##) #####-####"
-                outlined
-                dense
-              />
-              <q-input
-                v-model="telefone2"
-                class="col-2"
-                label="Telefone 2"
-                mask="(##) #####-####"
-                outlined
-                dense
-              />
-              <q-input
-                class="col-2"
-                label="E-mail"
-                v-model="email"
-                outlined
-                dense
-              />
-            </div>
-          </div>
-
-          <div class="column col-12 q-mt-md q-col-gutter-md">
-            <div>
-              <q-title class="text-h6">Dados de Endereço</q-title>
-            </div>
-            <div class="row col-8 q-gutter-md">
-              <q-input
-                class="col-2"
-                label="CEP"
-                mask="#####-###"
-                outlined
-                dense
-              />
-              <q-input
-                class="col-2"
-                label="Endereço"
-                v-model="endereco"
-                outlined
-                dense
-              />
-              <q-input
-                class="col-2"
-                label="Número"
-                v-model="numero"
-                outlined
-                dense
-              />
-            </div>
-            <div class="row q-gutter-md">
-              <q-input
-                class="col-2"
-                label="Bairro"
-                v-model="bairro"
-                outlined
-                dense
-              />
-              <q-input
-                class="col-2"
-                label="Cidade"
-                v-model="cidade"
-                outlined
-                dense
-              />
-              <q-select
-                class="col-2"
-                v-model="ufSelect"
-                :options="this.uf_select"
-                label="UF"
-                outlined
-                dense
-              />
-            </div>
-          </div>
-
-          <div class="row col-12 q-mt-md">
-            <div class="q-pb-md q-mt-md">
-              <q-title class="text-h6">Observações</q-title>
-            </div>
-            <div class="row col-12 q-gutter-md">
-              <q-input
-                class="row col-10"
-                v-model="text"
-                outlined
-                dense
-                type="textarea"
-                input-style="resize: none;"
-              />
-            </div>
-          </div>
-
-          <div class="row col-12 q-mt-lg q-gutter-md">
-            <q-btn class="bg-green text-white text-bold">Salvar</q-btn>
-            <q-btn
-              class="bg-negative text-white text-bold"
-              @click="abrirDialogCancelar()"
-              >Cancelar</q-btn
-            >
+      <!-- Corpo do Card -->
+      <q-card-section class="q-pa-lg">
+        <!-- Filtros e Ações (Visíveis apenas quando não está em modo de formulário) -->
+        <div>
+          
+          <!-- Linha Superior: Tipo de Pessoa -->
+          
+<div class="row q-col-gutter-md q-mb-md">
+          <div class="col-12 col-md-3">
+            <q-select
+              v-model="tipoPessoa"
+              :options="opcoesTipoPessoa"
+              label="Tipo de Pessoa"
+              outlined
+              dense
+              emit-value
+              map-options
+            />
           </div>
         </div>
-      </form>
 
-      <q-form ref="formCadastroPF">
-        <div v-if="mostrarFormCadastroPJ">
-          <div class="column col-12 q-col-gutter-md q-mt-md">
-            <div>
-              <q-title class="text-h6">Dados Gerais</q-title>
-            </div>
-            <div class="row col-8 q-gutter-md">
-              <q-input
-                class="col-2"
-                label="Razão Social"
-                v-model="razaoSocial"
-                outlined
-                dense
-              />
-              <q-input
-                class="col-3"
-                label="Nome do responsável"
-                v-model="nomeResponsavel"
-                outlined
-                dense
-              />
-              <q-select
-                class="col-1"
-                v-model="ativoInativo"
-                :options="this.ativo_inativo"
-                label="Ativo/Inativo"
-                outlined
-                dense
-              />
+
+          <!-- Linha Inferior: Inputs e Botões Separados -->
+          
+<div class="row items-center q-col-gutter-md">
+
+          <!-- INPUTS -->
+          <div class="col-12 col-md-9">
+            <div class="row q-col-gutter-md">
+              <div class="col-12 col-md-4">
+                <q-input v-model="nome" label="Nome Completo" outlined dense />
+              </div>
+              <div class="col-12 col-md-4">
+                <q-input v-model="documento" label="CNPJ/CPF" outlined dense />
+              </div>
+              <div class="col-12 col-md-4">
+                <q-input v-model="codigo" label="Código do Cliente" outlined dense />
+              </div>
             </div>
           </div>
 
-          <div class="column col-12 q-col-gutter-md q-mt-md">
-            <div>
-              <q-title class="text-h6">Dados de Contato</q-title>
-            </div>
-            <div class="row col-8 q-gutter-md">
-              <q-input
-                class="col-2"
-                v-model="telefone1"
-                label="Telefone 1"
-                mask="(##) #####-####"
-                outlined
-                dense
-              />
-              <q-input
-                class="col-2"
-                label="Telefone 2"
-                v-model="telefone2"
-                mask="(##) #####-####"
-                outlined
-                dense
-              />
-              <q-input
-                class="col-2"
-                label="E-mail"
-                v-model="email"
-                outlined
-                dense
-              />
-            </div>
-          </div>
-
-          <div class="column col-12 q-col-gutter-md q-mt-md">
-            <div>
-              <q-title class="text-h6">Dados de Endereço</q-title>
-            </div>
-            <div class="row col-8 q-gutter-md">
-              <q-input
-                class="col-2"
-                label="CEP"
-                mask="#####-###"
-                outlined
-                dense
-              />
-              <q-input
-                class="col-2"
-                label="Endereço"
-                v-model="endereco"
-                outlined
-                dense
-              />
-              <q-input
-                class="col-2"
-                label="Número"
-                v-model="numero"
-                outlined
-                dense
-              />
-            </div>
-            <div class="row col-8 q-gutter-md">
-              <q-input
-                class="col-2"
-                label="Bairro"
-                v-model="bairro"
-                outlined
-                dense
-              />
-              <q-input
-                class="col-2"
-                label="Cidade"
-                v-model="cidade"
-                outlined
-                dense
-              />
-              <q-select
-                class="col-1"
-                v-model="ufSelect"
-                :options="this.uf_select"
-                label="UF"
-                outlined
-                dense
-              />
-            </div>
-          </div>
-
-          <div class="row col-12 q-mt-md">
-            <div class="q-pb-md q-mt-md">
-              <q-title class="text-h6">Observações</q-title>
-            </div>
-            <div class="row col-12 q-gutter-md">
-              <q-input
-                class="row col-10"
-                v-model="text"
-                outlined
-                dense
-                type="textarea"
-                input-style="resize: none;"
-              />
-            </div>
-          </div>
-
-          <div class="row col-12 q-mt-lg q-gutter-md">
-            <q-btn class="bg-green text-white text-bold">Salvar</q-btn>
-            <q-btn
-              class="bg-negative text-white text-bold"
-              @click="abrirDialogCancelar()"
-              >Cancelar</q-btn
-            >
-          </div>
-        </div>
-      </q-form>
-
-      <div>
-        <q-table
-          :data="this.rowsFiltradas"
-          :columns="this.colunasCadastroPessoas"
-          row-key="codigo"
-          flat
-          bordered
-          class="q-mt-lg text-weight-medium"
-          no-data-label="Nenhum registro encontrado"
-          v-if="!mostrarFormCadastroPF && !mostrarFormCadastroPJ"
-        >
-          <!-- Coluna Ações -->
-          <template v-slot:body-cell-acoes="props">
-            <q-td align="center">
+          <!-- BOTÕES -->
+          <div class="col-12 col-md-3" v-if="!mostrarFormCadastroPF && !mostrarFormCadastroPJ">
+            <div class="row justify-end items-center q-gutter-sm">
               <q-btn
-                icon="edit"
-                size="sm"
+                icon="add"
+                unelevated
+                class="bg-positive text-white"
+                @click="mostrarFormulario()"
+              />
+              <q-btn
+                icon="search"
                 color="primary"
-                flat
-                round
-                @click="editar(props.row)"
+                unelevated
+                @click="pesquisar()"
               />
               <q-btn
                 icon="delete"
-                size="sm"
-                color="negative"
-                flat
-                round
-                @click="confirmarExcluir()"
+                unelevated
+                class="bg-warning text-white"
+                @click="refreshTable()"
               />
-            </q-td>
-          </template>
+            </div>
+          </div>
 
-          <!-- Coluna Status -->
-          <template v-slot:body-cell-status="props">
-            <q-td align="center">
-              <q-badge
-                :color="props.row.status === 'Ativo' ? 'positive' : 'negative'"
-              >
-                {{ props.row.status }}
-              </q-badge>
-            </q-td>
-          </template>
-        </q-table>
+        </div>
       </div>
 
-      <q-dialog v-model="dialogCancelar">
-        <q-card style="min-width: 300px">
-          <q-card-section class="text-h6">
-            Confirmar Cancelamento
-          </q-card-section>
+        <!-- Formulário de Cadastro (PF ou PJ) -->
+        <div v-if="mostrarFormCadastroPF || mostrarFormCadastroPJ" class="q-mt-md">
+          <q-form @submit.prevent="salvar()">
+            <!-- Seção: Dados Gerais -->
+            <div class="text-h6 q-mb-sm">Dados Gerais</div>
+            <div class="row q-col-gutter-md">
+              <template v-if="mostrarFormCadastroPF">
+                <div class="col-12 col-sm-3">
+                  <q-input v-model="dtaNascimento" label="Data de Nascimento" type="date" outlined dense />
+                </div>
+                <div class="col-12 col-sm-6">
+                  <q-input v-model="nmeSocial" label="Nome Social" outlined dense />
+                </div>
+              </template>
+              <template v-if="mostrarFormCadastroPJ">
+                <div class="col-12 col-sm-5">
+                  <q-input v-model="razaoSocial" label="Razão Social" outlined dense />
+                </div>
+                <div class="col-12 col-sm-4">
+                  <q-input v-model="nomeResponsavel" label="Nome do Responsável" outlined dense />
+                </div>
+              </template>
+              <div class="col-12 col-sm-3">
+                <q-select v-model="ativoInativo" :options="ativo_inativo" label="Status" outlined dense emit-value map-options />
+              </div>
+            </div>
 
-          <q-card-section>
-            Você tem certeza que deseja cancelar? Os dados não salvos serão
-            perdidos.
-          </q-card-section>
+            <!-- Seção: Dados de Contato -->
+            <div class="text-h6 q-mt-lg q-mb-sm">Dados de Contato</div>
+            <div class="row q-col-gutter-md">
+              <div class="col-12 col-sm-4">
+                <q-input v-model="telefone1" label="Telefone 1" mask="(##) #####-####" outlined dense />
+              </div>
+              <div class="col-12 col-sm-4">
+                <q-input v-model="telefone2" label="Telefone 2" mask="(##) #####-####" outlined dense />
+              </div>
+              <div class="col-12 col-sm-4">
+                <q-input v-model="email" label="E-mail" outlined dense />
+              </div>
+            </div>
 
-          <q-card-actions align="right">
-            <q-btn flat label="Não" color="primary" v-close-popup />
-            <q-btn
-              flat
-              label="Sim, cancelar"
-              color="negative"
-              @click="confirmarCancelamento()"
-            />
-          </q-card-actions>
-        </q-card>
-      </q-dialog>
+            <!-- Seção: Dados de Endereço -->
+            <div class="text-h6 q-mt-lg q-mb-sm">Dados de Endereço</div>
+            <div class="row q-col-gutter-md">
+              <div class="col-12 col-sm-2">
+                <q-input v-model="cep" label="CEP" mask="#####-###" outlined dense />
+              </div>
+              <div class="col-12 col-sm-6">
+                <q-input v-model="endereco" label="Endereço" outlined dense />
+              </div>
+              <div class="col-12 col-sm-2">
+                <q-input v-model="numero" label="Número" outlined dense />
+              </div>
+              <div class="col-12 col-sm-4">
+                <q-input v-model="bairro" label="Bairro" outlined dense />
+              </div>
+              <div class="col-12 col-sm-4">
+                <q-input v-model="cidade" label="Cidade" outlined dense />
+              </div>
+              <div class="col-12 col-sm-2">
+                <q-select v-model="ufSelect" :options="uf_select" label="UF" outlined dense emit-value map-options />
+              </div>
+            </div>
 
-      <q-dialog v-model="dialogExcluir">
-        <q-card style="min-width: 300px">
-          <q-card-section class="text-h6">
-            Deseja mesmo excluir?
-          </q-card-section>
+            <!-- Seção: Observações -->
+            <div class="text-h6 q-mt-lg q-mb-sm">Observações</div>
+            <div class="row">
+              <div class="col-12">
+                <q-input v-model="text" type="textarea" outlined dense input-style="resize: none;" rows="3" />
+              </div>
+            </div>
 
-          <q-card-section>
-            Você tem certeza que deseja excluir?
-          </q-card-section>
+            <!-- Botões do Formulário -->
+            <div class="row q-mt-xl q-gutter-md justify-end">
+              <q-btn label="Cancelar" color="negative" flat @click="abrirDialogCancelar()" />
+              <q-btn label="Salvar Cadastro" color="positive" unelevated type="submit" />
+            </div>
+          </q-form>
+        </div>
 
-          <q-card-actions align="right">
-            <q-btn flat label="Não" color="primary" v-close-popup />
-            <q-btn
-              flat
-              label="Sim, excluir"
-              color="negative"
-              @click="confirmarExcluir()"
-            />
-          </q-card-actions>
-        </q-card>
-      </q-dialog>
-    </div>
+        <!-- Tabela de Resultados (Visível apenas quando não está em modo de formulário) -->
+        <div v-if="!mostrarFormCadastroPF && !mostrarFormCadastroPJ" class="q-mt-xl">
+          <q-table
+            :data="rowsFiltradas"
+            :columns="colunasCadastroProdutos"
+            row-key="codigo"
+            flat
+            bordered
+            no-data-label="Nenhum registro encontrado"
+            class="text-weight-medium"
+          >
+            <!-- Coluna Ações -->
+            <template v-slot:body-cell-acoes="props">
+              <q-td align="center">
+                <q-btn
+                  icon="edit"
+                  size="sm"
+                  color="primary"
+                  flat
+                  round
+                  @click="editar(props.row)"
+                />
+                <q-btn
+                  icon="delete"
+                  size="sm"
+                  color="negative"
+                  flat
+                  round
+                  @click="confirmarExcluir(props.row)"
+                />
+              </q-td>
+            </template>
+
+            <!-- Coluna Status -->
+            <template v-slot:body-cell-status="props">
+              <q-td align="center">
+                <q-badge
+                  :color="props.row.status === 'Ativo' ? 'positive' : 'negative'"
+                >
+                  {{ props.row.status }}
+                </q-badge>
+              </q-td>
+            </template>
+          </q-table>
+        </div>
+      </q-card-section>
+    </q-card>
+
+    <!-- Dialogs -->
+    <q-dialog v-model="dialogCancelar" persistent>
+      <q-card>
+        <q-card-section class="row items-center">
+          <span class="q-ml-sm">Deseja realmente cancelar? As alterações não salvas serão perdidas.</span>
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="Não" color="primary" v-close-popup />
+          <q-btn flat label="Sim, Cancelar" color="negative" @click="confirmarCancelamento()" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
@@ -470,193 +239,129 @@ import listCadastroPessoas from '../../config/listCadastroPessoas.json'
 
 @Component
 export default class ModuleComponent extends Vue {
+  colunasCadastroProdutos = listCadastroPessoas.columns
   // ===== data =====
-
-  colunasCadastroPessoas = listCadastroPessoas.columns
-  tipoPessoa: string | null = null
-  sexo: string | null = null
-  ativoInativo: string | null = null
-  ufSelect: string | null = null
+  tipoPessoa = null
+  nome = ''
+  documento = ''
+  codigo = ''
+  
+  // Controle de UI
   mostrarFormCadastroPF = false
   mostrarFormCadastroPJ = false
   dialogCancelar = false
   dialogExcluir = false
 
-  // Dados Gerais
-  nome = ''
-  documento = ''
-  codigo = ''
+  // Dados do Formulário
   dtaNascimento = ''
   nmeSocial = ''
-
-  // Dados PJ específicos
   razaoSocial = ''
   nomeResponsavel = ''
-
-  // Dados de Contato
+  ativoInativo = 'A'
   telefone1 = ''
   telefone2 = ''
   email = ''
-
-  // Dados de Endereço
   cep = ''
-  logradouro = ''
+  endereco = ''
   numero = ''
   bairro = ''
   cidade = ''
-
-  // Observações
+  ufSelect = 'DF'
   text = ''
+
+  rowsClientes = [
+    { codigo: '001', tipoPessoa: 'PF', nome: 'Antônio Carlos', documento: '123-456-789-10', telefone: '(61) 98159-8038', email: 'antonio@gmail.com', status: 'Ativo' },
+    { codigo: '002', tipoPessoa: 'PJ', nome: 'Matheus Tech', documento: '12.342.278/0001-10', telefone: '(61) 98112-8038', email: 'matheus@gmail.com', status: 'Inativo' },
+    { codigo: '003', tipoPessoa: 'PF', nome: 'Brunna Silva', documento: '677-886-080-21', telefone: '(61) 98999-9999', email: 'brunna@gmail.com', status: 'Inativo' }
+  ]
 
   rowsFiltradas: any[] = []
 
-  created(){
-    this.rowsFiltradas = this.rowsClientes
-  }
-
-  // ===== dados de tabela fictícios =====
-  rowsClientes = [
-    {
-      codigo: '001',
-      tipoPessoa: 'PF',
-      nome: 'Antônio Carlos',
-      documento: '123-456-789-10',
-      telefone: '(61) 981590-8038',
-      email: 'antonio@gmail.com',
-      status: 'Ativo'
-    },
-    {
-      codigo: '002',
-      tipoPessoa: 'PJ',
-      nome: 'Matheus',
-      documento: '123-422-789-10',
-      telefone: '(61) 981120-8038',
-      email: 'matheus@gmail.com',
-      status: 'Inativo'
-    },
-    {
-      codigo: '003',
-      tipoPessoa: 'PF',
-      nome: 'Uma tal de Brunna',
-      documento: '677-886-080-21',
-      telefone: '(61) 98999-9999',
-      email: 'brunna@gmail.com',
-      status: 'Inativo'
-    }
-  ]
-
+  // Opções
   opcoesTipoPessoa = [
-      { label: 'Pessoa Física', value: 'PF' },
-      { label: 'Pessoa Jurídica', value: 'PJ' }
-    ]
-  tipoSexo = [
-    { label: 'Masculino', value: 'M' },
-    { label: 'Feminino', value: 'F' },
-    { label: 'Não informado', value: 'NI' }
+    { label: 'Pessoa Física', value: 'PF' },
+    { label: 'Pessoa Jurídica', value: 'PJ' }
   ]
   ativo_inativo = [
     { label: 'Ativo', value: 'A' },
     { label: 'Inativo', value: 'I' }
   ]
-
   uf_select = [
     { label: 'DF', value: 'DF' },
-    { label: 'Outro', value: 'Outro' }
+    { label: 'SP', value: 'SP' },
+    { label: 'RJ', value: 'RJ' },
+    { label: 'MG', value: 'MG' }
   ]
 
-  mostrarFormulario(){
-    if(this.tipoPessoa === 'PF'){
-      this.mostrarFormCadastroPF = true
-      this.mostrarFormCadastroPJ = false
-    }
-    if(this.tipoPessoa === 'PJ'){
-      this.mostrarFormCadastroPF = false
-      this.mostrarFormCadastroPJ = true
-    }
-    if(!this.tipoPessoa){
-      this.$q.notify({
-        type: 'negative',
-        message: 'Selecione o tipo de pessoa',
-        position: 'bottom'
-      })
-    return
-    }
+  created() {
+    this.rowsFiltradas = this.rowsClientes
   }
 
-  abrirDialogCancelar(){
+  // ===== Métodos =====
+  mostrarFormulario() {
+    if (!this.tipoPessoa) {
+      this.$q.notify({ type: 'negative', message: 'Selecione o tipo de pessoa primeiro', position: 'bottom' })
+      return
+    }
+    this.mostrarFormCadastroPF = this.tipoPessoa === 'PF'
+    this.mostrarFormCadastroPJ = this.tipoPessoa === 'PJ'
+  }
+
+  abrirDialogCancelar() {
     this.dialogCancelar = true
   }
 
   confirmarCancelamento() {
-  this.dialogCancelar = false
-
-  // volta pra tabela
-  this.mostrarFormCadastroPF = false
-  this.mostrarFormCadastroPJ = false
-
-  // opcional: limpa dados
-  this.codigo = ""
-  this.nome = ""
-  this.documento = ""
-  this.tipoPessoa = null
-}
-
-confirmarExcluir() {
-  this.dialogExcluir = true
-}
-
-pesquisar() {
-  this.rowsFiltradas = this.rowsClientes.filter((row: any) => {
-    const nomeMatch =
-      !this.nome ||
-      row.nome.toLowerCase().includes(this.nome.toLowerCase())
-
-    const codigoMatch =
-      !this.codigo ||
-      row.codigo.toLowerCase().includes(this.codigo.toLowerCase())
-
-    const documentoMatch =
-    !this.documento ||
-    row.documento.toLowerCase().includes(this.documento.toLowerCase())
-
-    const tipoPessoaMatch =
-      !this.tipoPessoa ||
-      row.tipoPessoa === this.tipoPessoa
-
-    return nomeMatch && codigoMatch && documentoMatch && tipoPessoaMatch
-  })
-}
-
-editar(row: any) {
-  // Preenche os campos do formulário com os dados do usuário
-  this.codigo = row.codigo
-  this.nome = row.nome
-  this.documento = row.documento
-  this.tipoPessoa = row.tipoPessoa
-  this.ativoInativo = row.status === 'Ativo' ? 'Ativo' : 'Inativo'
-
-  if (row.tipoPessoa === 'PF') {
-    this.mostrarFormCadastroPF = true
-    this.mostrarFormCadastroPJ = false
-  } else {
+    this.dialogCancelar = false
     this.mostrarFormCadastroPF = false
-    this.mostrarFormCadastroPJ = true
+    this.mostrarFormCadastroPJ = false
+    this.limparCampos()
   }
-}
 
-refreshTable(){
-  this.codigo = ""
-  this.nome = ""
-  this.documento = ""
-  this.tipoPessoa = null
+  limparCampos() {
+    this.codigo = ""
+    this.nome = ""
+    this.documento = ""
+    this.tipoPessoa = null
+  }
 
-  this.rowsFiltradas = this.rowsClientes
-}
+  pesquisar() {
+    this.rowsFiltradas = this.rowsClientes.filter((row: any) => {
+      const nomeMatch = !this.nome || row.nome.toLowerCase().includes(this.nome.toLowerCase())
+      const codigoMatch = !this.codigo || row.codigo.toLowerCase().includes(this.codigo.toLowerCase())
+      const documentoMatch = !this.documento || row.documento.toLowerCase().includes(this.documento.toLowerCase())
+      const tipoPessoaMatch = !this.tipoPessoa || row.tipoPessoa === this.tipoPessoa
+      return nomeMatch && codigoMatch && documentoMatch && tipoPessoaMatch
+    })
+  }
+
+  editar(row: any) {
+    this.codigo = row.codigo
+    this.nome = row.nome
+    this.documento = row.documento
+    this.tipoPessoa = row.tipoPessoa
+    this.ativoInativo = row.status === 'Ativo' ? 'A' : 'I'
+    this.mostrarFormulario()
+  }
+
+  confirmarExcluir(row: any) {
+    console.log('Excluir:', row)
+  }
+
+  refreshTable() {
+    this.limparCampos()
+    this.rowsFiltradas = this.rowsClientes
+  }
+
+  salvar() {
+    this.$q.notify({ type: 'positive', message: 'Cadastro salvo com sucesso!' })
+    this.confirmarCancelamento()
+  }
 }
 </script>
 
 <style scoped>
 .border {
-  border: 1px solid black;
+  border: 1px solid #ccc;
 }
 </style>

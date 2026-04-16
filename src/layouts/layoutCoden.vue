@@ -182,7 +182,7 @@
 
     <!-- CONTEÚDO -->
     <q-page-container>
-      <q-page padding>
+      <q-page class="bg-accent" padding>
         <router-view />
       </q-page>
     </q-page-container>

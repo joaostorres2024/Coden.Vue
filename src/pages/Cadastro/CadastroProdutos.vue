@@ -1,269 +1,211 @@
 <template>
-  <div class="">
-    <div class="q-pt-md text-h5 text-bold">Cadastro de Produtos</div>
-    <q-toolbar class="q-pa-none">
-        <q-breadcrumbs active-color="primary" style="font-size: 14px" class="q-mb-md">
-          <template v-slot:separator>
-        <q-icon
-          size="1.5em"
-          name="chevron_right"
-          color="primary"
-        />
-      </template>
-          <q-breadcrumbs-el label="Home" icon="home" to="/" />
-          <q-breadcrumbs-el label="Cadastro" icon="group" />
-          <q-breadcrumbs-el label="Cadastro Produtos" icon="shelves" />
-        </q-breadcrumbs>
-      </q-toolbar>
-
-    <div class="col-12">
-      <div class="col-12 row justify-between items-center q-mt-md">
-        <div class="row col-7 q-gutter-md">
-          <q-input
-            v-model="codigo"
-            class="col-4"
-            label="Código do Produto"
-            outlined
-            dense
-          />
-
-          <q-input
-            class="col-4"
-            label="Nome do Produto"
-            v-model="nmeProduto"
-            outlined
-            dense
-          />
-        </div>
-        <div class="row q-gutter-md" v-if="!cadastroProdutoForm">
-          <q-btn
-            icon="delete"
-            class="text-black border"
-            label="Limpar"
-            @click="refreshTable()"
-            unelevated
-          />
-          <q-btn
-            icon="add"
-            label="Cadastrar"
-            class="text-black border"
-            @click="mostrarFormulario()"
-            unelevated
-          />
-          <q-btn
-            icon="search"
-            class="text-white bg-primary"
-            label="Pesquisar"
-            @click="pesquisar()"
-            unelevated
-          />
-        </div>
-      </div>
-
-      <div v-if="cadastroProdutoForm">
-        <div class="col-12 column q-mt-md q-col-gutter-md">
-          <div class="text-h6">Dados Gerais</div>
-          <div class="row col-7 q-gutter-md">
-            <q-select
-              v-model="grupo"
-              class="col-3"
-              label="Grupo"
-              outlined
-              dense
-            />
-            <q-btn label="Criar" unelevated class="bg-primary text-white" />
-          </div>
-          <div class="row col-7 q-gutter-md">
-            <q-input
-              class="col-4"
-              label="Código de Barras"
-              v-model="nmeProduto"
-              outlined
-              dense
-            />
-            <q-btn label="Gerar" unelevated class="bg-primary text-white" />
-          </div>
-        </div>
-
-        <div class="column q-col-gutter-md col-12 q-mt-md">
-          <div class="text-h6">Preço</div>
-          <div class="row col-7 q-gutter-md">
-            <q-input
-              v-model="precoCusto"
-              class="col-2"
-              label="Preço de Custo"
-              outlined
-              dense
-            />
-            <q-input
-              v-model="precoVendaTabela"
-              class="col-2"
-              label="Preço de Venda"
-              outlined
-              dense
-            />
-            <q-input
-              :value="margemCalculada"
-              class="col-1"
-              label="Margem (%)"
-              outlined
-              dense
-              readonly
-            />
-          </div>
-        </div>
-
-        <div class="column q-col-gutter-md col-12 q-mt-md">
-          <div class="text-h6">Estoque</div>
-          <div class="row col-7 q-gutter-md">
-            <q-input
-              v-model="estoque"
-              class="col-2"
-              label="Estoque Atual"
-              outlined
-              dense
-            />
-            <q-input class="col-2" label="Estoque Máximo" outlined dense />
-            <q-select
-              class="col-1"
-              v-model="ativoInativo"
-              :options="ativoInativoOpcoes"
-              label="Ativo/Inativo"
-              outlined
-              dense
-            />
-          </div>
-        </div>
-
-        <div class="column q-col-gutter-md col-12 q-mt-md">
-          <div class="text-h6">Estoque</div>
-          <div class="row col-7 q-gutter-md">
-            <q-input
-              v-model="fornecedor"
-              class="col-3"
-              label="Fornecedor"
-              outlined
-              dense
-            />
-            <q-input class="col-2" label="Garantia" outlined dense />
-          </div>
-        </div>
-
-        <div class="row col-12 q-mt-md">
-          <div class="q-pb-md q-mt-md">
-            <q-title class="text-h6">Observações</q-title>
-          </div>
-          <div class="row col-12 q-gutter-md">
-            <q-input
-              class="row col-10"
-              v-model="obsProduto"
-              outlined
-              dense
-              type="textarea"
-              input-style="resize: none;"
-            />
-          </div>
-        </div>
-
-        <div class="row col-12 q-mt-lg q-gutter-md">
-          <q-btn class="bg-green text-white text-bold">Salvar</q-btn>
-          <q-btn
-            class="bg-negative text-white text-bold"
-            @click="abrirDialogCancelar()"
-            >Cancelar</q-btn
+  <!-- Container principal para centralizar o card na tela -->
+  <div class="row justify-center items-center">
+    <q-card class="col-11 col-md-10 col-lg-9 shadow-2" style="width: 1500px">
+      <!-- Cabeçalho do Card -->
+      <q-card-section class="bg-primary text-white q-pb-none">
+        <div class="text-h5 text-bold">Cadastro de Produtos</div>
+        <q-toolbar class="q-pa-none">
+          <q-breadcrumbs
+            active-color="white"
+            style="font-size: 14px"
+            class="q-mb-md"
           >
-        </div>
-      </div>
+            <template v-slot:separator>
+              <q-icon size="1.5em" name="chevron_right" color="white" />
+            </template>
+            <q-breadcrumbs-el label="Home" icon="home" to="/" />
+            <q-breadcrumbs-el label="Cadastro" icon="group" />
+            <q-breadcrumbs-el label="Cadastro Produtos" icon="shelves" />
+          </q-breadcrumbs>
+        </q-toolbar>
+      </q-card-section>
 
-      <div>
-        <q-table
-          :data="rowsFiltradas"
-          :columns="colunasCadastroProdutos"
-          row-key="codigo"
-          flat
-          bordered
-          class="q-mt-lg text-weight-medium"
-          no-data-label="Nenhum registro encontrado"
-          v-if="!cadastroProdutoForm"
-        >
-          <!-- Coluna Ações -->
-          <template v-slot:body-cell-acoes="props">
-            <q-td align="center">
+      <q-separator />
+
+      <!-- Corpo do Card -->
+<q-card-section class="q-pa-lg">
+        <!-- Filtros e Ações (Visíveis apenas quando não está em modo de formulário) -->
+        <div class="row items-center justify-between no-wrap">
+          
+          <!-- Grupo de Inputs (Alinhado à Esquerda) -->
+          <div class="row q-gutter-md col">
+            <q-input
+              v-model="codigo"
+              style="width: 300px"
+              label="Código do Produto"
+              outlined
+              dense
+            />
+            <q-input
+              v-model="nmeProduto"
+              style="width: 400px"
+              label="Nome do Produto"
+              outlined
+              dense
+            />
+          </div>
+
+          <!-- Grupo de Botões (Alinhado à Direita) -->
+          <div v-if="!cadastroProdutoForm" class="row q-gutter-sm">
+            <q-btn
+                icon="add"
+                unelevated
+                class="bg-positive text-white"
+                @click="mostrarFormulario()"
+              />
               <q-btn
-                icon="edit"
-                size="sm"
+                icon="search"
                 color="primary"
-                flat
-                round
-                @click="editar(props.row)"
+                unelevated
+                @click="pesquisar()"
               />
               <q-btn
                 icon="delete"
-                size="sm"
-                color="negative"
-                flat
-                round
-                @click="confirmarExcluir(props.row)"
+                unelevated
+                class="bg-warning text-white"
+                @click="refreshTable()"
               />
-            </q-td>
-          </template>
+          </div>
+        </div>
 
-          <!-- Coluna Status -->
-           <template v-slot:body-cell-precoVendaTabela="props">
-            <q-td :props="props" align="center">
-              {{ formatarReais(props.row.precoVendaTabela) }}
-            </q-td>
-          </template>
-          <template v-slot:body-cell-status="props">
-            <q-td align="center">
-              <q-badge
-                :color="props.row.status === 'Ativo' ? 'positive' : 'negative'"
-              >
-                {{ props.row.status }}
-              </q-badge>
-            </q-td>
-          </template>
-        </q-table>
-      </div>
-    </div>
+        <!-- Formulário de Cadastro -->
+        <div v-if="cadastroProdutoForm" class="q-mt-md">
+          <q-form @submit.prevent="salvar()">
+            <!-- Seção: Dados Gerais -->
+            <div class="text-h6 q-mb-sm">Dados Gerais</div>
+            <div class="row q-col-gutter-md items-center">
+              <div class="col-12 col-sm-4">
+                <q-select
+                  v-model="grupo"
+                  label="Grupo"
+                  outlined
+                  dense
+                  :options="['Lanternagem', 'Mecânica', 'Elétrica']"
+                />
+              </div>
+              <div class="col-12 col-sm-2">
+                <q-btn label="Criar Grupo" color="primary" unelevated class="full-width" />
+              </div>
+              <div class="col-12 col-sm-4">
+                <q-input v-model="codigoBarras" label="Código de Barras" outlined dense />
+              </div>
+              <div class="col-12 col-sm-2">
+                <q-btn label="Gerar" color="primary" unelevated class="full-width" />
+              </div>
+            </div>
 
-    <q-dialog v-model="dialogCancelar">
-      <q-card style="min-width: 300px">
-        <q-card-section class="text-h6">
-          Confirmar Cancelamento
+            <!-- Seção: Preço -->
+            <div class="text-h6 q-mt-lg q-mb-sm">Preço</div>
+            <div class="row q-col-gutter-md">
+              <div class="col-12 col-sm-4">
+                <q-input v-model="precoCusto" label="Preço de Custo" outlined dense type="number" />
+              </div>
+              <div class="col-12 col-sm-4">
+                <q-input v-model="precoVendaTabela" label="Preço de Venda" outlined dense type="number" />
+              </div>
+              <div class="col-12 col-sm-4">
+                <q-input :value="margemCalculada" label="Margem (%)" outlined dense readonly />
+              </div>
+            </div>
+
+            <!-- Seção: Estoque e Fornecedor -->
+            <div class="text-h6 q-mt-lg q-mb-sm">Estoque e Fornecedor</div>
+            <div class="row q-col-gutter-md">
+              <div class="col-12 col-sm-3">
+                <q-input v-model="estoque" label="Estoque Atual" outlined dense />
+              </div>
+              <div class="col-12 col-sm-3">
+                <q-input label="Estoque Máximo" outlined dense />
+              </div>
+              <div class="col-12 col-sm-3">
+                <q-input v-model="fornecedor" label="Fornecedor" outlined dense />
+              </div>
+              <div class="col-12 col-sm-3">
+                <q-select v-model="ativoInativo" :options="ativoInativoOpcoes" label="Status" outlined dense emit-value map-options />
+              </div>
+            </div>
+
+            <!-- Seção: Observações -->
+            <div class="text-h6 q-mt-lg q-mb-sm">Observações</div>
+            <div class="row">
+              <div class="col-12">
+                <q-input v-model="obsProduto" type="textarea" outlined dense input-style="resize: none;" rows="3" />
+              </div>
+            </div>
+
+            <!-- Botões do Formulário -->
+            <div class="row q-mt-xl q-gutter-md justify-end">
+              <q-btn label="Cancelar" color="negative" flat @click="abrirDialogCancelar()" />
+              <q-btn label="Salvar Produto" color="positive" unelevated type="submit" />
+            </div>
+          </q-form>
+        </div>
+
+        <!-- Tabela de Resultados (Visível apenas quando não está em modo de formulário) -->
+        <div v-if="!cadastroProdutoForm" class="q-mt-xl">
+          <q-table
+            :data="rowsFiltradas"
+            :columns="colunasCadastroProdutos"
+            row-key="codigo"
+            flat
+            bordered
+            no-data-label="Nenhum registro encontrado"
+            class="text-weight-medium"
+          >
+            <!-- Coluna Ações -->
+            <template v-slot:body-cell-acoes="props">
+              <q-td align="center">
+                <q-btn
+                  icon="edit"
+                  size="sm"
+                  color="primary"
+                  flat
+                  round
+                  @click="editar(props.row)"
+                />
+                <q-btn
+                  icon="delete"
+                  size="sm"
+                  color="negative"
+                  flat
+                  round
+                  @click="confirmarExcluir(props.row)"
+                />
+              </q-td>
+            </template>
+
+            <!-- Coluna Preço -->
+            <template v-slot:body-cell-precoVendaTabela="props">
+              <q-td :props="props" align="center">
+                {{ formatarReais(props.row.precoVendaTabela) }}
+              </q-td>
+            </template>
+
+            <!-- Coluna Status -->
+            <template v-slot:body-cell-status="props">
+              <q-td align="center">
+                <q-badge
+                  :color="props.row.status === 'Ativo' ? 'positive' : 'negative'"
+                >
+                  {{ props.row.status }}
+                </q-badge>
+              </q-td>
+            </template>
+          </q-table>
+        </div>
+      </q-card-section>
+    </q-card>
+
+    <!-- Dialogs -->
+    <q-dialog v-model="dialogCancelar" persistent>
+      <q-card>
+        <q-card-section class="row items-center">
+          <span class="q-ml-sm">Deseja realmente cancelar? As alterações não salvas serão perdidas.</span>
         </q-card-section>
-
-        <q-card-section>
-          Você tem certeza que deseja cancelar? Os dados não salvos serão
-          perdidos.
-        </q-card-section>
-
         <q-card-actions align="right">
           <q-btn flat label="Não" color="primary" v-close-popup />
-          <q-btn
-            flat
-            label="Sim, cancelar"
-            color="negative"
-            @click="confirmarCancelamento()"
-          />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
-
-    <q-dialog v-model="dialogExcluir">
-      <q-card style="min-width: 300px">
-        <q-card-section class="text-h6"> Deseja mesmo excluir? </q-card-section>
-
-        <q-card-section> Você tem certeza que deseja excluir? </q-card-section>
-
-        <q-card-actions align="right">
-          <q-btn flat label="Não" color="primary" v-close-popup />
-          <q-btn
-            flat
-            label="Sim, excluir"
-            color="negative"
-            @click="confirmarExcluir()"
-          />
+          <q-btn flat label="Sim, Cancelar" color="negative" @click="confirmarCancelamento()" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -277,35 +219,24 @@ import listCadastroProdutos from '../../config/listCadastroProdutos.json'
 
 @Component
 export default class ModuleComponent extends Vue {
-  // ===== Campos do Produto =====
+  colunasCadastroProdutos = listCadastroProdutos.columns
+
+  // ===== data =====
   codigo = ''
   nmeProduto = ''
+  codigoBarras = ''
   grupo = ''
   estoque = ''
   fornecedor = ''
-  status = ''
   precoCusto: number | null = null
   precoVendaTabela: number | null = null
-  ativoInativo: string | null = null
+  ativoInativo = 'Ativo'
   obsProduto = ''
 
-  // ===== Controle =====
+  // Controle de UI
   cadastroProdutoForm = false
   dialogCancelar = false
   dialogExcluir = false
-
-  // ===== Tabela =====
-  rowsFiltradas: any[] = []
-  colunasCadastroProdutos = listCadastroProdutos.columns
-
-  created () {
-    this.rowsFiltradas = this.rowsProdutos
-  }
-
-  ativoInativoOpcoes = [
-    { label: 'Ativo', value: 'Ativo' },
-    { label: 'Inativo', value: 'Inativo' }
-  ]
 
   rowsProdutos = [
     {
@@ -319,6 +250,24 @@ export default class ModuleComponent extends Vue {
     }
   ]
 
+  rowsFiltradas: any[] = []
+
+  ativoInativoOpcoes = [
+    { label: 'Ativo', value: 'Ativo' },
+    { label: 'Inativo', value: 'Inativo' }
+  ]
+
+  created() {
+    this.rowsFiltradas = this.rowsProdutos
+  }
+
+  // ===== Métodos =====
+  get margemCalculada(): string {
+    if (!this.precoCusto || !this.precoVendaTabela) return '0.00%'
+    const margem = ((this.precoVendaTabela - this.precoCusto) / this.precoCusto) * 100
+    return margem.toFixed(2) + '%'
+  }
+
   formatarReais(valor: string | number): string {
     const numero = typeof valor === 'string' ? parseFloat(valor) : valor
     return numero.toLocaleString('pt-BR', {
@@ -327,46 +276,39 @@ export default class ModuleComponent extends Vue {
     })
   }
 
-  get margemCalculada (): string {
-    if (!this.precoCusto || !this.precoVendaTabela) return ''
-
-    const margem =
-      ((this.precoVendaTabela - this.precoCusto) / this.precoCusto) * 100
-
-    return margem.toFixed(2) + '%'
-  }
-
-  mostrarFormulario () {
+  mostrarFormulario() {
     this.cadastroProdutoForm = true
   }
 
-  abrirDialogCancelar () {
+  abrirDialogCancelar() {
     this.dialogCancelar = true
   }
 
-  confirmarCancelamento () {
+  confirmarCancelamento() {
     this.dialogCancelar = false
     this.cadastroProdutoForm = false
-    this.codigo = ''
-    this.nmeProduto = ''
-    this.rowsFiltradas = this.rowsProdutos
+    this.limparCampos()
   }
 
-  pesquisar () {
+  limparCampos() {
+    this.codigo = ''
+    this.nmeProduto = ''
+    this.grupo = ''
+    this.estoque = ''
+    this.fornecedor = ''
+    this.precoCusto = null
+    this.precoVendaTabela = null
+  }
+
+  pesquisar() {
     this.rowsFiltradas = this.rowsProdutos.filter((row: any) => {
-      const nomeMatch =
-        !this.nmeProduto ||
-        row.nmeProduto.toLowerCase().includes(this.nmeProduto.toLowerCase())
-
-      const codigoMatch =
-        !this.codigo ||
-        row.codigo.toLowerCase().includes(this.codigo.toLowerCase())
-
+      const nomeMatch = !this.nmeProduto || row.nmeProduto.toLowerCase().includes(this.nmeProduto.toLowerCase())
+      const codigoMatch = !this.codigo || row.codigo.toLowerCase().includes(this.codigo.toLowerCase())
       return nomeMatch && codigoMatch
     })
   }
 
-  editar (row: any) {
+  editar(row: any) {
     this.codigo = row.codigo
     this.nmeProduto = row.nmeProduto
     this.grupo = row.grupo
@@ -377,20 +319,21 @@ export default class ModuleComponent extends Vue {
     this.cadastroProdutoForm = true
   }
 
-  confirmarExcluir () {
-    this.dialogExcluir = true
+  confirmarExcluir(row: any) {
+    console.log('Excluir:', row)
   }
 
-  refreshTable () {
-    this.codigo = ''
-    this.nmeProduto = ''
+  refreshTable() {
+    this.limparCampos()
     this.rowsFiltradas = this.rowsProdutos
+  }
+
+  salvar() {
+    this.$q.notify({ type: 'positive', message: 'Produto salvo com sucesso!' })
+    this.confirmarCancelamento()
   }
 }
 </script>
 
 <style scoped>
-.border {
-  border: 1px solid black;
-}
 </style>

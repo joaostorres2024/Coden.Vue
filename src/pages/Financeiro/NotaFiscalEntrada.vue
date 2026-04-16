@@ -1,413 +1,301 @@
 <template>
-  <div class="">
-    <div class="q-pt-md text-h5 text-bold">NF Entrada</div>
-    <q-toolbar class="q-pa-none">
-        <q-breadcrumbs active-color="primary" style="font-size: 14px" class="q-mb-md">
-          <template v-slot:separator>
-        <q-icon
-          size="1.5em"
-          name="chevron_right"
-          color="primary"
-        />
-      </template>
-          <q-breadcrumbs-el label="Home" icon="home" to="/" />
-          <q-breadcrumbs-el label="Financeiro" icon="paid" />
-          <q-breadcrumbs-el label="NF Entrada" icon="trending_up" />
-        </q-breadcrumbs>
-      </q-toolbar>
-    <div class="col-12">
-      <div class="col-12 row justify-between items-center q-mt-md">
-        <div class="row col-7" v-if="!formNotaFiscalEntrada">
-          <q-input
-            class="col-2"
-            label="Número NF"
-            v-model="numeroNF"
-            outlined
-            dense
-          />
-          <q-input
-            class="col-3 q-px-md"
-            label="Código do Produto"
-            v-model="codigo"
-            outlined
-            dense
-          />
-          <q-input
-            class="col-3"
-            label="Nome do Produto"
-            v-model="produto"
-            outlined
-            dense
-          />
-        </div>
-        <div class="row q-gutter-md" v-if="!formNotaFiscalEntrada">
-          <q-btn
-            icon="delete"
-            class="text-black border"
-            label="Limpar"
-            unelevated
-            @click="refreshTable()"
-          />
-          <q-btn
-            icon="add"
-            label="Cadastrar"
-            class="text-black border"
-            unelevated
-            @click="mostrarFormulario()"
-          />
-          <q-btn
-            icon="search"
-            class="text-white bg-primary"
-            label="Pesquisar"
-            unelevated
-            @click="pesquisar()"
-          />
-        </div>
-      </div>
+  <!-- Container principal para centralizar o card na tela -->
+  <div class="row justify-center items-center">
+    <q-card class="col-11 col-md-10 col-lg-9 shadow-2" style="width: 1500px">
+      <!-- Cabeçalho do Card -->
+      <q-card-section class="bg-primary text-white q-pb-none">
+        <div class="text-h5 text-bold">NF Entrada</div>
+        <q-toolbar class="q-pa-none">
+          <q-breadcrumbs
+            active-color="white"
+            style="font-size: 14px"
+            class="q-mb-md"
+          >
+            <template v-slot:separator>
+              <q-icon size="1.5em" name="chevron_right" color="white" />
+            </template>
+            <q-breadcrumbs-el label="Home" icon="home" to="/" />
+            <q-breadcrumbs-el label="Financeiro" icon="paid" />
+            <q-breadcrumbs-el label="NF Entrada" icon="trending_up" />
+          </q-breadcrumbs>
+        </q-toolbar>
+      </q-card-section>
 
-      <div>
-        <q-table
-          :data="this.rowsFiltradas"
-          :columns="this.colunasNotaFiscalEntrada"
-          row-key="codigo"
-          flat
-          bordered
-          class="q-mt-lg text-weight-medium"
-          no-data-label="Nenhum registro encontrado"
-          v-if="!formNotaFiscalEntrada"
-        >
-          <!-- Coluna Ações -->
-          <template v-slot:body-cell-acoes="props">
-            <q-td align="center">
-              <q-btn
-                icon="picture_as_pdf"
-                size="sm"
-                color="negative"
-                flat
-                round
-                @click="editar(props.row)"
+      <q-separator />
+
+      <!-- Corpo do Card -->
+      <q-card-section class="q-pa-lg">
+        <!-- Filtros e Ações (Visíveis apenas quando não está em modo de formulário) -->
+        <div class="row items-center justify-between no-wrap">
+          
+          <!-- Grupo de Inputs (Alinhado à Esquerda) -->
+          <div class="row q-gutter-md col">
+            <q-input
+              v-model="numeroNF"
+              style="width: 200px"
+              label="Número NF"
+              outlined
+              dense
+            />
+            <q-input
+              v-model="codigo"
+              style="width: 250px"
+              label="Código do Produto"
+              outlined
+              dense
+            />
+            <q-input
+              v-model="produto"
+              style="width: 350px"
+              label="Nome do Produto"
+              outlined
+              dense
+            />
+          </div>
+
+          <!-- Grupo de Botões (Alinhado à Direita) -->
+          <div v-if="!formNotaFiscalEntrada" class="row q-gutter-sm">
+            <q-btn
+                icon="add"
+                unelevated
+                class="bg-positive text-white"
+                @click="mostrarFormulario()"
               />
               <q-btn
-                icon="description"
-                size="sm"
-                color="green"
-                flat
-                round
-                @click="excluir(props.row)"
+                icon="search"
+                color="primary"
+                unelevated
+                @click="pesquisar()"
               />
-            </q-td>
-          </template>
+              <q-btn
+                icon="delete"
+                unelevated
+                class="bg-warning text-white"
+                @click="refreshTable()"
+              />
+          </div>
+        </div>
 
-          <!-- Coluna Status -->
-          <template v-slot:body-cell-valorUnitario="props">
-            <q-td :props="props" align="center">
-              {{ formatarReais(props.row.valorUnitario) }}
-            </q-td>
-          </template>
-          <template v-slot:body-cell-valorTotal="props">
-            <q-td :props="props" align="center">
-              {{ formatarReais(props.row.valorTotal) }}
-            </q-td>
-          </template>
-          <template v-slot:body-cell-status="props">
-            <q-td align="center">
-              <q-badge
-                :color="props.row.status === 'Ativo' ? 'positive' : 'negative'"
-              >
-                {{ props.row.status }}
-              </q-badge>
-            </q-td>
-          </template>
-        </q-table>
-      </div>
-
-      <form action="">
-        <div v-if="formNotaFiscalEntrada">
-          <div class="column col-12">
-            <div class="row q-gutter-md items-center q-pb-md">
-              <q-title class="text-h6">Dados da Nota</q-title>
+        <!-- Formulário de Cadastro -->
+        <div v-if="formNotaFiscalEntrada" class="q-mt-md">
+          <q-form @submit.prevent="salvar()">
+            <!-- Seção: Dados da Nota -->
+            <div class="row items-center justify-between q-mb-sm">
+              <div class="text-h6">Dados da Nota</div>
               <q-file
                 outlined
                 dense
                 label="Carregar XML"
-                class="col-1"
                 v-model="arquivoXML"
                 accept=".xml"
                 clearable
-                @input="lerXML"
+                style="width: 200px"
               >
                 <template v-slot:prepend>
                   <q-icon name="attach_file" />
                 </template>
               </q-file>
             </div>
-            <div class="row col-8 q-gutter-md">
-              <q-input
-                class="col-2"
-                label="Número NF"
-                v-model="form.numeroNF"
-                outlined
-                dense
-              />
-              <q-input
-                class="col-2"
-                label="Série"
-                v-model="form.serie"
-                outlined
-                dense
-              />
-              <q-input
-                class="col-1"
-                label="Data Emissão"
-                type="date"
-                v-model="form.dataEmissao"
-                outlined
-                dense
-              />
-              <q-input
-                class="col-1"
-                label="Data Entrada"
-                type="date"
-                v-model="dataHoje"
-                outlined
-                dense
-                readonly
-              />
-            </div>
-            <div class="q-mt-md q-pb-md">
-              <q-title class="text-h6">Produto</q-title>
-            </div>
-            <div class="column col-8 q-col-gutter-md">
-              <div class="row q-gutter-md">
-                <q-input
-                  class="col-2"
-                  label="Código do Produto"
-                  v-model="form.codigoProduto"
-                  outlined
-                  dense
-                />
-                <q-input
-                  class="col-2"
-                  label="Nome do Produto"
-                  v-model="form.nomeProduto"
-                  outlined
-                  dense
-                />
-                <q-input
-                  class="col-2"
-                  label="Quantidade"
-                  v-model="form.quantidade"
-                  outlined
-                  dense
-                />
+            
+            <div class="row q-col-gutter-md">
+              <div class="col-12 col-sm-3">
+                <q-input v-model="form.numeroNF" label="Número NF" outlined dense />
               </div>
-              <div class="row q-gutter-md">
-                <q-input
-                  class="col-2"
-                  label="Valor Unitário"
-                  v-model="form.valorUnitario"
-                  outlined
-                  dense
-                />
-                <q-input
-                  class="col-2"
-                  label="Valor Total"
-                  v-model="form.valorTotal"
-                  outlined
-                  dense
-                />
-                <q-input
-                  class="col-2"
-                  label="Valor de Venda"
-                  v-model="form.valorVenda"
-                  outlined
-                  dense
-                />
-                <q-input
-                  class="col-1"
-                  label="Margem"
-                  v-model="form.margem"
-                  outlined
-                  dense
-                  readonly
-                />
+              <div class="col-12 col-sm-3">
+                <q-input v-model="form.serie" label="Série" outlined dense />
               </div>
-              <div class="row q-gutter-md">
-                <q-select
-                  class="col-3"
-                  label="Grupo"
-                  v-model="form.grupo"
-                  outlined
-                  dense
-                />
-                <q-btn label="Criar" class="text-white bg-primary" unelevated />
+              <div class="col-12 col-sm-3">
+                <q-input v-model="form.dataEmissao" label="Data Emissão" type="date" outlined dense />
               </div>
-              <div class="row col-8 q-gutter-md">
-                <q-input
-                  class="col-4"
-                  label="Código de Barras"
-                  v-model="form.codigoBarras"
-                  outlined
-                  dense
-                />
-                <q-btn label="Gerar" class="text-white bg-primary" unelevated />
+              <div class="col-12 col-sm-3">
+                <q-input v-model="dataHoje" label="Data Entrada" type="date" outlined dense readonly />
               </div>
             </div>
-            <div class="q-pb-md q-mt-md">
-              <q-title class="text-h6">Origem</q-title>
-            </div>
-            <div class="column col-8 q-col-gutter-md">
-              <div class="row q-gutter-md">
-                <q-input
-                  class="col-2"
-                  label="Fornecedor"
-                  v-model="form.fornecedor"
-                  outlined
-                  dense
-                />
-                <q-input
-                  class="col-2"
-                  label="CNPJ/CPF"
-                  v-model="form.cnpjCpf"
-                  outlined
-                  dense
-                />
-                <q-input
-                  class="col-2"
-                  label="Inscrição Estadual"
-                  v-model="form.inscricaoEstadual"
-                  outlined
-                  dense
-                />
-                <q-select
-                  class="col-1"
-                  label="UF"
-                  v-model="form.uf"
-                  outlined
-                  dense
-                />
-              </div>
-            </div>
-            <div class="q-pb-md q-mt-md">
-              <q-title class="text-h6">Tributação</q-title>
-            </div>
-            <div class="column col-8 q-col-gutter-md">
-              <div class="row">
-                <q-input
-                  class="col-4"
-                  label="Origem"
-                  v-model="form.origemTributaria"
-                  outlined
-                  dense
-                />
-              </div>
-              <div class="row q-gutter-md">
-                <q-input
-                  class="col-2"
-                  label="ICMS"
-                  v-model="form.icms"
-                  outlined
-                  dense
-                />
-                <q-input
-                  class="col-2"
-                  label="IPI"
-                  v-model="form.ipi"
-                  outlined
-                  dense
-                />
-                <q-input
-                  class="col-2"
-                  label="PIS"
-                  v-model="form.pis"
-                  outlined
-                  dense
-                />
-                <q-input
-                  class="col-2"
-                  label="COFINS"
-                  v-model="form.cofins"
-                  outlined
-                  dense
-                />
-              </div>
-            </div>
-            <div class="q-pb-md q-mt-md">
-              <q-title class="text-h6">Observações</q-title>
-            </div>
-            <div class="row col-12 q-gutter-md">
-              <q-input
-                class="row col-10"
-                v-model="form.observacoes"
-                outlined
-                dense
-                type="textarea"
-                input-style="resize: none;"
-              />
-            </div>
-          </div>
 
-          <div class="row col-12 q-mt-lg q-gutter-md">
-            <q-btn class="bg-green text-white text-bold" unelevated
-              >Salvar</q-btn
-            >
-            <q-btn
-              class="bg-negative text-white text-bold"
-              unelevated
-              @click="abrirDialogCancelar()"
-              >Cancelar</q-btn
-            >
-          </div>
+            <!-- Seção: Produto -->
+            <div class="text-h6 q-mt-lg q-mb-sm">Produto</div>
+            <div class="row q-col-gutter-md">
+              <div class="col-12 col-sm-4">
+                <q-input v-model="form.codigoProduto" label="Código do Produto" outlined dense />
+              </div>
+              <div class="col-12 col-sm-4">
+                <q-input v-model="form.nomeProduto" label="Nome do Produto" outlined dense />
+              </div>
+              <div class="col-12 col-sm-4">
+                <q-input v-model="form.quantidade" label="Quantidade" outlined dense />
+              </div>
+              <div class="col-12 col-sm-3">
+                <q-input v-model="form.valorUnitario" label="Valor Unitário" outlined dense />
+              </div>
+              <div class="col-12 col-sm-3">
+                <q-input v-model="form.valorTotal" label="Valor Total" outlined dense />
+              </div>
+              <div class="col-12 col-sm-3">
+                <q-input v-model="form.valorVenda" label="Valor de Venda" outlined dense />
+              </div>
+              <div class="col-12 col-sm-3">
+                <q-input v-model="form.margem" label="Margem" outlined dense readonly />
+              </div>
+              <div class="col-12 col-sm-4">
+                <q-select v-model="form.grupo" label="Grupo" outlined dense :options="['Grupo 1', 'Grupo 2']" />
+              </div>
+              <div class="col-12 col-sm-2">
+                <q-btn label="Criar Grupo" color="primary" unelevated class="full-width" />
+              </div>
+              <div class="col-12 col-sm-4">
+                <q-input v-model="form.codigoBarras" label="Código de Barras" outlined dense />
+              </div>
+              <div class="col-12 col-sm-2">
+                <q-btn label="Gerar" color="primary" unelevated class="full-width" />
+              </div>
+            </div>
+
+            <!-- Seção: Origem -->
+            <div class="text-h6 q-mt-lg q-mb-sm">Origem</div>
+            <div class="row q-col-gutter-md">
+              <div class="col-12 col-sm-4">
+                <q-input v-model="form.fornecedor" label="Fornecedor" outlined dense />
+              </div>
+              <div class="col-12 col-sm-3">
+                <q-input v-model="form.cnpjCpf" label="CNPJ/CPF" outlined dense />
+              </div>
+              <div class="col-12 col-sm-3">
+                <q-input v-model="form.inscricaoEstadual" label="Inscrição Estadual" outlined dense />
+              </div>
+              <div class="col-12 col-sm-2">
+                <q-select v-model="form.uf" label="UF" outlined dense :options="['DF', 'SP', 'RJ']" />
+              </div>
+            </div>
+
+            <!-- Seção: Tributação -->
+            <div class="text-h6 q-mt-lg q-mb-sm">Tributação</div>
+            <div class="row q-col-gutter-md">
+              <div class="col-12 col-sm-4">
+                <q-input v-model="form.origemTributaria" label="Origem" outlined dense />
+              </div>
+              <div class="col-12 col-sm-2">
+                <q-input v-model="form.icms" label="ICMS" outlined dense />
+              </div>
+              <div class="col-12 col-sm-2">
+                <q-input v-model="form.ipi" label="IPI" outlined dense />
+              </div>
+              <div class="col-12 col-sm-2">
+                <q-input v-model="form.pis" label="PIS" outlined dense />
+              </div>
+              <div class="col-12 col-sm-2">
+                <q-input v-model="form.cofins" label="COFINS" outlined dense />
+              </div>
+            </div>
+
+            <div class="text-h6 q-mt-lg q-mb-sm">Observações</div>
+            <div class="row">
+              <div class="col-12">
+                <q-input v-model="text" type="textarea" outlined dense input-style="resize: none;" rows="3" />
+              </div>
+            </div>
+
+
+            <!-- Botões do Formulário -->
+            <div class="row q-mt-xl q-gutter-md justify-end">
+              <q-btn label="Cancelar" color="negative" flat @click="abrirDialogCancelar()" />
+              <q-btn label="Salvar Entrada" color="positive" unelevated type="submit" />
+            </div>
+          </q-form>
         </div>
-      </form>
 
-      <q-dialog v-model="dialogCancelar">
-        <q-card style="min-width: 300px">
-          <q-card-section class="text-h6">
-            Confirmar Cancelamento
-          </q-card-section>
+        <!-- Tabela de Resultados (Visível apenas quando não está em modo de formulário) -->
+        <div v-if="!formNotaFiscalEntrada" class="q-mt-xl">
+          <q-table
+            :data="rowsFiltradas"
+            :columns="colunasNotaFiscalEntrada"
+            row-key="codigo"
+            flat
+            bordered
+            no-data-label="Nenhum registro encontrado"
+            class="text-weight-medium"
+          >
+            <!-- Coluna Ações -->
+            <template v-slot:body-cell-acoes="props">
+              <q-td align="center">
+                <q-btn
+                  icon="picture_as_pdf"
+                  size="sm"
+                  color="negative"
+                  flat
+                  round
+                />
+                <q-btn
+                  icon="description"
+                  size="sm"
+                  color="green"
+                  flat
+                  round
+                />
+              </q-td>
+            </template>
 
-          <q-card-section>
-            Você tem certeza que deseja cancelar? Os dados não salvos serão
-            perdidos.
-          </q-card-section>
+            <!-- Colunas de Valor -->
+            <template v-slot:body-cell-valorUnitario="props">
+              <q-td :props="props" align="center">
+                {{ formatarReais(props.row.valorUnitario) }}
+              </q-td>
+            </template>
+            <template v-slot:body-cell-valorTotal="props">
+              <q-td :props="props" align="center">
+                {{ formatarReais(props.row.valorTotal) }}
+              </q-td>
+            </template>
 
-          <q-card-actions align="right">
-            <q-btn flat label="Não" color="primary" v-close-popup />
-            <q-btn
-              flat
-              label="Sim, cancelar"
-              color="negative"
-              @click="confirmarCancelamento()"
-            />
-          </q-card-actions>
-        </q-card>
-      </q-dialog>
-    </div>
+            <!-- Coluna Status -->
+            <template v-slot:body-cell-status="props">
+              <q-td align="center">
+                <q-badge
+                  :color="props.row.status === 'Ativo' ? 'positive' : 'negative'"
+                >
+                  {{ props.row.status }}
+                </q-badge>
+              </q-td>
+            </template>
+          </q-table>
+        </div>
+      </q-card-section>
+    </q-card>
+
+    <!-- Dialogs -->
+    <q-dialog v-model="dialogCancelar" persistent>
+      <q-card>
+        <q-card-section class="row items-center">
+          <span class="q-ml-sm">Deseja realmente cancelar? As alterações não salvas serão perdidas.</span>
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="Não" color="primary" v-close-popup />
+          <q-btn flat label="Sim, Cancelar" color="negative" @click="confirmarCancelamento()" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import moment from 'moment'
 import listNotaFiscalEntrada from '../../config/listNotaFiscalEntrada.json'
 
 @Component
 export default class ModuleComponent extends Vue {
-   // ===== data =====
-
   colunasNotaFiscalEntrada = listNotaFiscalEntrada.columns
-  formNotaFiscalEntrada = false
-  dataHoje = moment().format('YYYY-MM-DD')
-  dialogCancelar = false
-
+  // ===== data =====
   numeroNF = ''
   codigo = ''
   produto = ''
+  arquivoXML = null
+  dataHoje = new Date().toISOString().substr(0, 10)
 
-  arquivoXML: File | null = null
+  // Controle de UI
+  formNotaFiscalEntrada = false
+  dialogCancelar = false
 
+  // Dados do Formulário
   form = {
     numeroNF: '',
     serie: '',
@@ -415,45 +303,35 @@ export default class ModuleComponent extends Vue {
     codigoProduto: '',
     nomeProduto: '',
     quantidade: '',
-    codigoBarras: '',
     valorUnitario: '',
     valorTotal: '',
     valorVenda: '',
     margem: '',
-    grupo: null,
+    grupo: '',
+    codigoBarras: '',
     fornecedor: '',
     cnpjCpf: '',
     inscricaoEstadual: '',
-    uf: null,
+    uf: '',
     origemTributaria: '',
     icms: '',
     ipi: '',
     pis: '',
-    cofins: '',
-    observacoes: ''
+    cofins: ''
   }
+
+  rowsNfEntrada = [
+    { numeroNF: '101', codigo: 'PROD001', produto: 'Filtro de Óleo', valorUnitario: 45.50, valorTotal: 455.00, status: 'Ativo' },
+    { numeroNF: '102', codigo: 'PROD002', produto: 'Pastilha de Freio', valorUnitario: 120.00, valorTotal: 240.00, status: 'Ativo' }
+  ]
 
   rowsFiltradas: any[] = []
 
-  rowsNfEntrada = [
-    {
-      numeroNF: '002',
-      produto: 'Teclado Mecânico RGB',
-      quantidade: '1',
-      valorUnitario: '350.00',
-      valorTotal: '350.00',
-      icms: '17'
-    },
-    {
-      numeroNF: '003',
-      produto: 'Mouse Gamer Pro',
-      quantidade: '3',
-      valorUnitario: '149.90',
-      valorTotal: '449.70',
-      icms: '17'
-    }
-  ]
+  created() {
+    this.rowsFiltradas = this.rowsNfEntrada
+  }
 
+  // ===== Métodos =====
   formatarReais(valor: string | number): string {
     const numero = typeof valor === 'string' ? parseFloat(valor) : valor
     return numero.toLocaleString('pt-BR', {
@@ -462,127 +340,55 @@ export default class ModuleComponent extends Vue {
     })
   }
 
-  created() {
-    this.rowsFiltradas = this.rowsNfEntrada
-  }
-
-  pesquisar() {
-    this.rowsFiltradas = this.rowsNfEntrada.filter((row: any) => {
-      const numeroNFMatch = !this.numeroNF || row.numeroNF.toLowerCase().includes(this.numeroNF.toLowerCase())
-      const produtoMatch = !this.produto || row.produto.toLowerCase().includes(this.produto.toLowerCase())
-      return numeroNFMatch && produtoMatch
-    })
-  }
-
-  refreshTable() {
-    this.numeroNF = ''
-    this.produto = ''
-    this.codigo = ''
-
-    this.rowsFiltradas = this.rowsNfEntrada
-  }
-
-  mostrarFormulario(){
+  mostrarFormulario() {
     this.formNotaFiscalEntrada = true
   }
 
-  abrirDialogCancelar(){
+  abrirDialogCancelar() {
     this.dialogCancelar = true
   }
 
   confirmarCancelamento() {
     this.dialogCancelar = false
     this.formNotaFiscalEntrada = false
+    this.limparCampos()
   }
 
-  lerXML(file: File) {
+  limparCampos() {
+    this.numeroNF = ''
+    this.codigo = ''
+    this.produto = ''
+  }
 
-    if (!file){
-      this.form.numeroNF = '',
-      this.form.serie = '',
-    this.form.dataEmissao = '',
-    this.form.codigoProduto = '',
-    this.form.nomeProduto = '',
-    this.form.quantidade = '',
-    this.form.codigoBarras = '',
-    this.form.valorUnitario = '',
-    this.form.valorTotal = '',
-    this.form.valorVenda = '',
-    this.form.margem = '',
-    this.form.grupo = null,
-    this.form.fornecedor = '',
-    this.form.cnpjCpf = '',
-    this.form.inscricaoEstadual = '',
-    this.form.uf = null,
-    this.form.origemTributaria = '',
-    this.form.icms = '',
-    this.form.ipi = '',
-    this.form.pis = '',
-    this.form.cofins = '',
-    this.form.observacoes = ''
-    }
+  pesquisar() {
+    this.rowsFiltradas = this.rowsNfEntrada.filter((row: any) => {
+      const nfMatch = !this.numeroNF || row.numeroNF.includes(this.numeroNF)
+      const codigoMatch = !this.codigo || row.codigo.toLowerCase().includes(this.codigo.toLowerCase())
+      const produtoMatch = !this.produto || row.produto.toLowerCase().includes(this.produto.toLowerCase())
+      return nfMatch && codigoMatch && produtoMatch
+    })
+  }
 
-    const reader = new FileReader()
-    reader.onload = (e: any) => {
-      const content = e.target.result
-      const parser = new DOMParser()
-      const xmlDoc = parser.parseFromString(content, 'text/xml')
+  editar(row: any) {
+    console.log('Editar:', row)
+    this.formNotaFiscalEntrada = true
+  }
 
-      const getVal = (tagName: string, parent: Element | Document = xmlDoc) => {
-        const el = parent.getElementsByTagName(tagName)[0]
-        return el ? el.textContent : ''
-      }
+  excluir(row: any) {
+    console.log('Excluir:', row)
+  }
 
-      this.form.numeroNF = getVal('nNF') || ''
-      this.form.serie = getVal('serie') || ''
-      const dhEmi = getVal('dhEmi') || getVal('dEmi') || ''
-      if (dhEmi) {
-        this.form.dataEmissao = dhEmi.substring(0, 10)
-      }
+  refreshTable() {
+    this.limparCampos()
+    this.rowsFiltradas = this.rowsNfEntrada
+  }
 
-      const emit = xmlDoc.getElementsByTagName('emit')[0]
-      if (emit) {
-        this.form.fornecedor = getVal('xNome', emit) || ''
-        this.form.cnpjCpf = getVal('CNPJ', emit) || getVal('CPF', emit) || ''
-        this.form.inscricaoEstadual = getVal('IE', emit) || ''
-        this.form.uf = getVal('UF', emit) as any
-      }
-
-      const det = xmlDoc.getElementsByTagName('det')[0]
-      if (det) {
-        const prod = det.getElementsByTagName('prod')[0]
-        if (prod) {
-          this.form.codigoProduto = getVal('cProd', prod) || ''
-          this.form.nomeProduto = getVal('xProd', prod) || ''
-          this.form.quantidade = getVal('qCom', prod) || ''
-          this.form.codigoBarras = getVal('cEAN', prod) || ''
-          this.form.valorUnitario = getVal('vUnCom', prod) || ''
-          this.form.valorTotal = getVal('vProd', prod) || ''
-        }
-
-        const imposto = det.getElementsByTagName('imposto')[0]
-        if (imposto) {
-
-          this.form.icms = getVal('vICMS', imposto) || ''
-          this.form.ipi = getVal('vIPI', imposto) || ''
-          this.form.pis = getVal('vPIS', imposto) || ''
-          this.form.cofins = getVal('vCOFINS', imposto) || ''
-          this.form.origemTributaria = getVal('orig', imposto) || ''
-        }
-      }
-
-      this.$q.notify({
-        type: 'positive',
-        message: 'XML carregado com sucesso!'
-      })
-    }
-    reader.readAsText(file)
+  salvar() {
+    this.$q.notify({ type: 'positive', message: 'Entrada salva com sucesso!' })
+    this.confirmarCancelamento()
   }
 }
 </script>
 
 <style scoped>
-.border {
-  border: 1px solid black;
-}
 </style>
