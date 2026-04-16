@@ -86,7 +86,7 @@
         <div v-if="!procurarProduto" class="q-mt-xl">
           <q-table
             :data="rowsFiltradas"
-            :columns="colunasVendaBalcao"
+            :columns="colunaCliente"
             row-key="codigo"
             flat
             bordered
@@ -145,7 +145,7 @@
           <div class="q-mt-lg">
             <q-table
               :data="rowsProduto"
-              :columns="colunasTabelProduto"
+              :columns="colunaProduto"
               row-key="codigo"
               flat
               bordered
@@ -231,9 +231,13 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
+import listVendaBalcao from '../../config/listVendaBalcao.json'
 
 @Component
 export default class VendasBalcaoComponent extends Vue {
+  colunaCliente = listVendaBalcao.columns
+  colunaProduto = listVendaBalcao.columnsTableProduto
+
   // ===== data =====
   codigo = ''
   nome = ''

@@ -178,9 +178,12 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
+import listRelatorioEstoque from '../../config/listRelatorioEstoque.json'
 
 @Component
 export default class RelatorioEstoqueComponent extends Vue {
+  colunasRelatorioEstoque = listRelatorioEstoque.columns
+
   // ===== data =====
   codigo = ''
   nomeProduto = ''

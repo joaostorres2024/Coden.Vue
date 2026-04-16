@@ -129,7 +129,7 @@
         <div class="q-mt-xl">
           <q-table
             :data="rowsFiltradas"
-            :columns="colunasRelatorioVenda"
+            :columns="colunasRelatorioVendas"
             row-key="codigo"
             flat
             bordered
@@ -190,9 +190,13 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
+import listRelatorioVendas from '../../config/listRelatorioVenda.json'
 
 @Component
 export default class RelatorioVendasComponent extends Vue {
+
+  colunasRelatorioVendas = listRelatorioVendas.columns
+
   // ===== data =====
   codigoProduto = ''
   nomeProduto = ''
