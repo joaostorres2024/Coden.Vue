@@ -1,10 +1,13 @@
 <template>
   <!-- Container principal para centralizar o card na tela -->
-  <div class="row justify-center items-center">
-    <q-card class="col-11 col-md-10 col-lg-9 shadow-2" style="width: 1500px">
+  <div class="row justify-center items-center q-pa-md">
+    <q-card
+      class="shadow-2"
+      style="width: 1500px; min-width: 1500px; max-width: 1500px"
+    >
       <!-- Cabeçalho do Card -->
       <q-card-section class="bg-primary text-white q-pb-none">
-        <div class="text-h5 text-bold">Configurações</div>
+        <div class="text-h5 text-bold">Configurações Gerais</div>
         <q-toolbar class="q-pa-none">
           <q-breadcrumbs
             active-color="white"
@@ -24,136 +27,228 @@
 
       <!-- Corpo do Card -->
       <q-card-section class="q-pa-lg">
-        <!-- Tabs de Navegação -->
-        <q-tabs
-          v-model="tab"
-          dense
-          class="text-grey"
-          active-color="primary"
-          indicator-color="primary"
-          align="left"
-          narrow-indicator
-        >
-          <q-tab name="tab1" label="Notificações" />
-          <q-tab name="tab2" label="Pagamento" />
-          <q-tab name="tab3" label="Vendas" />
-          <q-tab name="tab4" label="Sistema" />
-          <q-tab name="tab5" label="Caixa" />
-        </q-tabs>
-
-        <q-separator />
-
-        <!-- Conteúdo das Tabs -->
-        <q-tab-panels v-model="tab" animated class="q-mt-md">
-          <!-- TAB 1: Notificações -->
-          <q-tab-panel name="tab1" class="q-pa-none">
-            <div class="row q-col-gutter-md">
-              <div v-for="(item, index) in notificacoes" :key="index" class="col-12 col-md-6">
-                <div class="row items-center justify-between q-pa-md border rounded-borders">
-                  <div class="row items-center">
-                    <q-icon :name="item.icon" size="28px" color="primary" class="q-mr-md" />
-                    <div>
-                      <div class="text-subtitle1 text-bold">{{ item.title }}</div>
-                      <div class="text-caption text-grey-8">{{ item.desc }}</div>
-                    </div>
+        <!-- SEÇÃO 1: Notificações -->
+        <div class="q-mb-xl">
+          <div class="row items-center q-mb-md">
+            <q-icon
+              name="notifications"
+              size="24px"
+              color="primary"
+              class="q-mr-sm"
+            />
+            <div class="text-h6 text-bold">Notificações</div>
+          </div>
+          <div class="row q-col-gutter-md">
+            <div
+              v-for="(item, index) in notificacoes"
+              :key="'notif-' + index"
+              class="col-12 col-md-6"
+            >
+              <div
+                class="row items-center justify-between q-pa-md border rounded-borders"
+              >
+                <div class="row items-center">
+                  <q-icon
+                    :name="item.icon"
+                    size="28px"
+                    color="primary"
+                    class="q-mr-md"
+                  />
+                  <div>
+                    <div class="text-subtitle1">{{ item.title }}</div>
+                    <div class="text-caption text-grey-8">{{ item.desc }}</div>
                   </div>
+                </div>
+                <q-toggle v-model="item.value" color="primary" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <q-separator class="q-my-lg" />
+
+        <!-- SEÇÃO 2: Pagamento -->
+        <div class="q-mb-xl">
+          <div class="row items-center q-mb-md">
+            <q-icon
+              name="payments"
+              size="24px"
+              color="primary"
+              class="q-mr-sm"
+            />
+            <div class="text-h6 text-bold">Pagamento</div>
+          </div>
+          <div class="row q-col-gutter-md">
+            <div
+              v-for="(item, index) in pagamentos"
+              :key="'pag-' + index"
+              class="col-12 col-md-6"
+            >
+              <div
+                class="row items-center justify-between q-pa-md border rounded-borders"
+              >
+                <div class="row items-center">
+                  <q-icon
+                    :name="item.icon"
+                    size="28px"
+                    color="primary"
+                    class="q-mr-md"
+                  />
+                  <div>
+                    <div class="text-subtitle1">{{ item.title }}</div>
+                    <div class="text-caption text-grey-8">{{ item.desc }}</div>
+                  </div>
+                </div>
+                <q-toggle v-model="item.value" color="primary" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <q-separator class="q-my-lg" />
+
+        <!-- SEÇÃO 3: Vendas -->
+        <div class="q-mb-xl">
+          <div class="row items-center q-mb-md">
+            <q-icon
+              name="shopping_cart"
+              size="24px"
+              color="primary"
+              class="q-mr-sm"
+            />
+            <div class="text-h6 text-bold">Vendas</div>
+          </div>
+          <div class="row q-col-gutter-md">
+            <div
+              v-for="(item, index) in vendas"
+              :key="'vend-' + index"
+              class="col-12 col-md-6"
+            >
+              <div
+                class="row items-center justify-between q-pa-md border rounded-borders"
+              >
+                <div class="row items-center">
+                  <q-icon
+                    :name="item.icon"
+                    size="28px"
+                    color="primary"
+                    class="q-mr-md"
+                  />
+                  <div>
+                    <div class="text-subtitle1">{{ item.title }}</div>
+                    <div class="text-caption text-grey-8">{{ item.desc }}</div>
+                  </div>
+                </div>
+                <template v-if="item.type === 'toggle'">
                   <q-toggle v-model="item.value" color="primary" />
-                </div>
+                </template>
+                <template v-else>
+                  <q-btn flat dense icon="chevron_right" color="grey" />
+                </template>
               </div>
             </div>
-          </q-tab-panel>
+          </div>
+        </div>
 
-          <!-- TAB 2: Pagamento -->
-          <q-tab-panel name="tab2" class="q-pa-none">
-            <div class="row q-col-gutter-md">
-              <div v-for="(item, index) in pagamentos" :key="index" class="col-12 col-md-6">
-                <div class="row items-center justify-between q-pa-md border rounded-borders">
-                  <div class="row items-center">
-                    <q-icon :name="item.icon" size="28px" color="primary" class="q-mr-md" />
-                    <div>
-                      <div class="text-subtitle1 text-bold">{{ item.title }}</div>
-                      <div class="text-caption text-grey-8">{{ item.desc }}</div>
-                    </div>
+        <q-separator class="q-my-lg" />
+
+        <!-- SEÇÃO 4: Sistema -->
+        <div class="q-mb-xl">
+          <div class="row items-center q-mb-md">
+            <q-icon
+              name="computer"
+              size="24px"
+              color="primary"
+              class="q-mr-sm"
+            />
+            <div class="text-h6 text-bold">Sistema</div>
+          </div>
+          <div class="row q-col-gutter-md">
+            <div
+              v-for="(item, index) in sistema"
+              :key="'sist-' + index"
+              class="col-12 col-md-6"
+            >
+              <div
+                class="row items-center justify-between q-pa-md border rounded-borders"
+              >
+                <div class="row items-center">
+                  <q-icon
+                    :name="item.icon"
+                    size="28px"
+                    color="primary"
+                    class="q-mr-md"
+                  />
+                  <div>
+                    <div class="text-subtitle1">{{ item.title }}</div>
+                    <div class="text-caption text-grey-8">{{ item.desc }}</div>
                   </div>
+                </div>
+                <template v-if="item.type === 'toggle'">
                   <q-toggle v-model="item.value" color="primary" />
-                </div>
+                </template>
+                <template v-else>
+                  <q-btn flat dense icon="chevron_right" color="grey" />
+                </template>
               </div>
             </div>
-          </q-tab-panel>
+          </div>
+        </div>
 
-          <!-- TAB 3: Vendas -->
-          <q-tab-panel name="tab3" class="q-pa-none">
-            <div class="row q-col-gutter-md">
-              <div v-for="(item, index) in vendas" :key="index" class="col-12 col-md-6">
-                <div class="row items-center justify-between q-pa-md border rounded-borders">
-                  <div class="row items-center">
-                    <q-icon :name="item.icon" size="28px" color="primary" class="q-mr-md" />
-                    <div>
-                      <div class="text-subtitle1 text-bold">{{ item.title }}</div>
-                      <div class="text-caption text-grey-8">{{ item.desc }}</div>
-                    </div>
-                  </div>
-                  <template v-if="item.type === 'toggle'">
-                    <q-toggle v-model="item.value" color="primary" />
-                  </template>
-                  <template v-else>
-                    <q-btn flat dense icon="chevron_right" color="grey" />
-                  </template>
-                </div>
-              </div>
-            </div>
-          </q-tab-panel>
+        <q-separator class="q-my-lg" />
 
-          <!-- TAB 4: Sistema -->
-          <q-tab-panel name="tab4" class="q-pa-none">
-            <div class="row q-col-gutter-md">
-              <div v-for="(item, index) in sistema" :key="index" class="col-12 col-md-6">
-                <div class="row items-center justify-between q-pa-md border rounded-borders">
-                  <div class="row items-center">
-                    <q-icon :name="item.icon" size="28px" color="primary" class="q-mr-md" />
-                    <div>
-                      <div class="text-subtitle1 text-bold">{{ item.title }}</div>
-                      <div class="text-caption text-grey-8">{{ item.desc }}</div>
-                    </div>
+        <!-- SEÇÃO 5: Caixa -->
+        <div class="q-mb-xl">
+          <div class="row items-center q-mb-md">
+            <q-icon
+              name="point_of_sale"
+              size="24px"
+              color="primary"
+              class="q-mr-sm"
+            />
+            <div class="text-h6 text-bold">Caixa</div>
+          </div>
+          <div class="row q-col-gutter-md">
+            <div
+              v-for="(item, index) in caixa"
+              :key="'caixa-' + index"
+              class="col-12 col-md-6"
+            >
+              <div
+                class="row items-center justify-between q-pa-md border rounded-borders"
+              >
+                <div class="row items-center">
+                  <q-icon
+                    :name="item.icon"
+                    size="28px"
+                    color="primary"
+                    class="q-mr-md"
+                  />
+                  <div>
+                    <div class="text-subtitle1">{{ item.title }}</div>
+                    <div class="text-caption text-grey-8">{{ item.desc }}</div>
                   </div>
-                  <template v-if="item.type === 'toggle'">
-                    <q-toggle v-model="item.value" color="primary" />
-                  </template>
-                  <template v-else>
-                    <q-btn flat dense icon="chevron_right" color="grey" />
-                  </template>
                 </div>
+                <template v-if="item.type === 'toggle'">
+                  <q-toggle v-model="item.value" color="primary" />
+                </template>
+                <template v-else>
+                  <q-btn flat dense icon="chevron_right" color="grey" />
+                </template>
               </div>
             </div>
-          </q-tab-panel>
-
-          <!-- TAB 5: Caixa -->
-          <q-tab-panel name="tab5" class="q-pa-none">
-            <div class="row q-col-gutter-md">
-              <div v-for="(item, index) in caixa" :key="index" class="col-12 col-md-6">
-                <div class="row items-center justify-between q-pa-md border rounded-borders">
-                  <div class="row items-center">
-                    <q-icon :name="item.icon" size="28px" color="primary" class="q-mr-md" />
-                    <div>
-                      <div class="text-subtitle1 text-bold">{{ item.title }}</div>
-                      <div class="text-caption text-grey-8">{{ item.desc }}</div>
-                    </div>
-                  </div>
-                  <template v-if="item.type === 'toggle'">
-                    <q-toggle v-model="item.value" color="primary" />
-                  </template>
-                  <template v-else>
-                    <q-btn flat dense icon="chevron_right" color="grey" />
-                  </template>
-                </div>
-              </div>
-            </div>
-          </q-tab-panel>
-        </q-tab-panels>
+          </div>
+        </div>
 
         <!-- Botão de Salvar Configurações -->
         <div class="row justify-end q-mt-xl">
-          <q-btn label="Salvar Alterações" color="positive" unelevated icon="save" @click="salvarConfig()" />
+          <q-btn
+            label="Salvar Todas as Alterações"
+            color="positive"
+            unelevated
+            icon="save"
+            @click="salvarConfig()"
+          />
         </div>
       </q-card-section>
     </q-card>
@@ -166,8 +261,6 @@ import Component from 'vue-class-component'
 
 @Component
 export default class ConfiguracoesComponent extends Vue {
-  tab = 'tab1'
-
   notificacoes = [
     { title: 'Alertas de Vendas', desc: 'Notificar ao concluir venda', icon: 'notifications', value: true },
     { title: 'Estoque Baixo', desc: 'Alertar ao estoque atingir mínimo', icon: 'inventory_2', value: true },
@@ -206,7 +299,7 @@ export default class ConfiguracoesComponent extends Vue {
   salvarConfig() {
     this.$q.notify({
       type: 'positive',
-      message: 'Configurações salvas com sucesso!',
+      message: 'Todas as configurações foram salvas com sucesso!',
       position: 'bottom'
     })
   }
@@ -223,5 +316,9 @@ export default class ConfiguracoesComponent extends Vue {
 }
 .rounded-borders {
   border-radius: 8px;
+}
+/* Garante que o card não mude de tamanho */
+.q-card {
+  transition: none !important;
 }
 </style>

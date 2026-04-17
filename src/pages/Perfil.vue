@@ -35,22 +35,37 @@
           narrow-indicator
         >
           <q-tab name="meu_perfil" label="Meu Perfil" icon="person" />
-          <q-tab name="gestao_usuarios" label="Gestão de Usuários" icon="group" />
+          <q-tab
+            name="gestao_usuarios"
+            label="Gestão de Usuários"
+            icon="group"
+          />
         </q-tabs>
 
         <q-separator />
 
         <!-- Conteúdo das Tabs -->
         <q-tab-panels v-model="tab" animated class="q-mt-md">
-          
           <!-- TAB 1: Meu Perfil (Somente UI) -->
           <q-tab-panel name="meu_perfil" class="q-pa-none">
             <div class="row q-col-gutter-md">
               <!-- Área da Foto -->
               <div class="col-12 col-md-4 flex justify-center items-center">
                 <div class="column items-center">
-                  <q-avatar size="150px" font-size="80px" color="grey-3" text-color="primary" icon="person" class="shadow-1" />
-                  <q-btn flat color="primary" label="Alterar Foto" class="q-mt-sm" />
+                  <q-avatar
+                    size="150px"
+                    font-size="80px"
+                    color="grey-3"
+                    text-color="primary"
+                    icon="person"
+                    class="shadow-1"
+                  />
+                  <q-btn
+                    flat
+                    color="primary"
+                    label="Alterar Foto"
+                    class="q-mt-sm"
+                  />
                 </div>
               </div>
 
@@ -58,38 +73,105 @@
               <div class="col-12 col-md-8">
                 <div class="text-h6 q-mb-md">Dados Pessoais</div>
                 <div class="row q-col-gutter-md">
-                  <q-input label="Nome Completo" class="col-12" outlined dense />
-                  <q-input label="E-mail" class="col-12 col-sm-6" outlined dense />
-                  <q-input label="Telefone" class="col-12 col-sm-6" outlined dense mask="(##) #####-####" />
-                  <q-input label="Cargo/Função" class="col-12 col-sm-6" outlined dense readonly />
-                  <q-input label="Membro desde" class="col-12 col-sm-6" outlined dense readonly />
+                  <q-input
+                    label="Nome Completo"
+                    class="col-12"
+                    outlined
+                    dense
+                  />
+                  <q-input
+                    label="Estabelecimento"
+                    class="col-12 col-sm-6"
+                    outlined
+                    dense
+                  />
+                  <q-input
+                    label="CNPJ/CPF"
+                    class="col-12 col-sm-6"
+                    outlined
+                    dense
+                    mask="(##) #####-####"
+                  />
+                  <q-input
+                    label="Usuário Admin"
+                    class="col-12 col-sm-6"
+                    outlined
+                    dense
+                    readonly
+                  />
+                  <q-input
+                    label="Cargo"
+                    class="col-12 col-sm-6"
+                    outlined
+                    dense
+                    readonly
+                  />
                 </div>
-                
+
                 <div class="text-h6 q-mt-lg q-mb-md">Segurança</div>
                 <div class="row q-col-gutter-md">
-                  <q-input label="Senha Atual" type="password" class="col-12 col-sm-4" outlined dense />
-                  <q-input label="Nova Senha" type="password" class="col-12 col-sm-4" outlined dense />
-                  <q-input label="Confirmar Nova Senha" type="password" class="col-12 col-sm-4" outlined dense />
+                  <q-input
+                    label="Senha Atual"
+                    type="password"
+                    class="col-12 col-sm-4"
+                    outlined
+                    dense
+                  />
+                  <q-input
+                    label="Nova Senha"
+                    type="password"
+                    class="col-12 col-sm-4"
+                    outlined
+                    dense
+                  />
+                  <q-input
+                    label="Confirmar Nova Senha"
+                    type="password"
+                    class="col-12 col-sm-4"
+                    outlined
+                    dense
+                  />
                 </div>
               </div>
             </div>
             <div class="row justify-end q-mt-xl">
-              <q-btn label="Salvar Alterações" color="positive" unelevated icon="save" />
+              <q-btn
+                label="Salvar Alterações"
+                color="positive"
+                unelevated
+                icon="save"
+              />
             </div>
           </q-tab-panel>
 
           <!-- TAB 2: Gestão de Usuários (Somente UI) -->
           <q-tab-panel name="gestao_usuarios" class="q-pa-none">
-            
             <!-- Filtros e Botões (Padronizado col-9 e col-3) -->
             <div class="row items-center justify-between no-wrap q-mb-lg">
               <div class="row q-gutter-md col">
-                <q-input style="width: 300px" label="Nome do Usuário" outlined dense />
-                <q-select style="width: 200px" label="Status" :options="['Ativo', 'Inativo']" outlined dense />
+                <q-input
+                  style="width: 300px"
+                  label="Nome do Usuário"
+                  outlined
+                  dense
+                />
+                <q-select
+                  style="width: 200px"
+                  label="Status"
+                  :options="['Ativo', 'Inativo']"
+                  outlined
+                  dense
+                />
+                <q-select style="width: 200px" label="Caixa" outlined dense />
               </div>
               <div class="row q-gutter-sm">
                 <q-btn icon="search" color="primary" unelevated />
-                <q-btn icon="add" color="positive" unelevated label="Novo Usuário" />
+                <q-btn
+                  icon="add"
+                  color="positive"
+                  unelevated
+                  label="Novo Usuário"
+                />
               </div>
             </div>
 
@@ -116,21 +198,32 @@
 
             <!-- SEÇÃO DE PERMISSÕES (Visualização de como seria no formulário) -->
             <div class="q-mt-xl">
-              <div class="text-h6 q-mb-sm">Permissões de Acesso (Exemplo de Formulário)</div>
+              <div class="text-h6 q-mb-sm">
+                Permissões de Acesso (Exemplo de Formulário)
+              </div>
               <div class="row q-col-gutter-md">
-                
                 <!-- Cadastro -->
                 <div class="col-12 col-md-4">
                   <q-card flat bordered>
-                    <q-card-section class="bg-grey-2 q-py-xs text-bold">CADASTRO</q-card-section>
+                    <q-card-section class="bg-grey-2 q-py-xs text-bold"
+                      >CADASTRO</q-card-section
+                    >
                     <q-list dense>
                       <q-item tag="label" v-ripple>
-                        <q-item-section avatar><q-checkbox :value="true" color="primary" /></q-item-section>
-                        <q-item-section><q-item-label>Produtos</q-item-label></q-item-section>
+                        <q-item-section avatar
+                          ><q-checkbox color="primary"
+                        /></q-item-section>
+                        <q-item-section
+                          ><q-item-label>Produtos</q-item-label></q-item-section
+                        >
                       </q-item>
                       <q-item tag="label" v-ripple>
-                        <q-item-section avatar><q-checkbox :value="false" color="primary" /></q-item-section>
-                        <q-item-section><q-item-label>Pessoas</q-item-label></q-item-section>
+                        <q-item-section avatar
+                          ><q-checkbox color="primary"
+                        /></q-item-section>
+                        <q-item-section
+                          ><q-item-label>Pessoas</q-item-label></q-item-section
+                        >
                       </q-item>
                     </q-list>
                   </q-card>
@@ -139,15 +232,27 @@
                 <!-- Financeiro -->
                 <div class="col-12 col-md-4">
                   <q-card flat bordered>
-                    <q-card-section class="bg-grey-2 q-py-xs text-bold">FINANCEIRO</q-card-section>
+                    <q-card-section class="bg-grey-2 q-py-xs text-bold"
+                      >FINANCEIRO</q-card-section
+                    >
                     <q-list dense>
                       <q-item tag="label" v-ripple>
-                        <q-item-section avatar><q-checkbox :value="true" color="primary" /></q-item-section>
-                        <q-item-section><q-item-label>NF Entrada</q-item-label></q-item-section>
+                        <q-item-section avatar
+                          ><q-checkbox color="primary"
+                        /></q-item-section>
+                        <q-item-section
+                          ><q-item-label
+                            >NF Entrada</q-item-label
+                          ></q-item-section
+                        >
                       </q-item>
                       <q-item tag="label" v-ripple>
-                        <q-item-section avatar><q-checkbox :value="true" color="primary" /></q-item-section>
-                        <q-item-section><q-item-label>NF Saída</q-item-label></q-item-section>
+                        <q-item-section avatar
+                          ><q-checkbox color="primary"
+                        /></q-item-section>
+                        <q-item-section
+                          ><q-item-label>NF Saída</q-item-label></q-item-section
+                        >
                       </q-item>
                     </q-list>
                   </q-card>
@@ -156,24 +261,43 @@
                 <!-- Relatórios e Vendas -->
                 <div class="col-12 col-md-4">
                   <q-card flat bordered>
-                    <q-card-section class="bg-grey-2 q-py-xs text-bold">RELATÓRIOS / VENDAS</q-card-section>
+                    <q-card-section class="bg-grey-2 q-py-xs text-bold"
+                      >RELATÓRIOS / VENDAS</q-card-section
+                    >
                     <q-list dense>
                       <q-item tag="label" v-ripple>
-                        <q-item-section avatar><q-checkbox :value="false" color="primary" /></q-item-section>
-                        <q-item-section><q-item-label>Relatório Estoque</q-item-label></q-item-section>
+                        <q-item-section avatar
+                          ><q-checkbox color="primary"
+                        /></q-item-section>
+                        <q-item-section
+                          ><q-item-label
+                            >Relatório Estoque</q-item-label
+                          ></q-item-section
+                        >
                       </q-item>
                       <q-item tag="label" v-ripple>
-                        <q-item-section avatar><q-checkbox :value="false" color="primary" /></q-item-section>
-                        <q-item-section><q-item-label>Relatório Venda</q-item-label></q-item-section>
+                        <q-item-section avatar
+                          ><q-checkbox color="primary"
+                        /></q-item-section>
+                        <q-item-section
+                          ><q-item-label
+                            >Relatório Venda</q-item-label
+                          ></q-item-section
+                        >
                       </q-item>
                       <q-item tag="label" v-ripple>
-                        <q-item-section avatar><q-checkbox :value="true" color="primary" /></q-item-section>
-                        <q-item-section><q-item-label>Venda Balcão</q-item-label></q-item-section>
+                        <q-item-section avatar
+                          ><q-checkbox color="primary"
+                        /></q-item-section>
+                        <q-item-section
+                          ><q-item-label
+                            >Venda Balcão</q-item-label
+                          ></q-item-section
+                        >
                       </q-item>
                     </q-list>
                   </q-card>
                 </div>
-
               </div>
             </div>
           </q-tab-panel>

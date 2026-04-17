@@ -289,7 +289,7 @@ export default class VendasBalcaoComponent extends Vue {
   created() {
     this.rowsFiltradas = this.rowsClientes
   }
-
+  
   // ===== Métodos =====
   formatarReais(valor: string | number): string {
     const numero = typeof valor === 'string' ? parseFloat(valor) : valor
