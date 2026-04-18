@@ -168,7 +168,7 @@
 
               <q-item-section>Perfil</q-item-section>
             </q-item>
-            <q-item class="q-mx-xs" clickable v-ripple>
+            <q-item class="q-mx-xs" @click=Sair() clickable v-ripple>
               <q-item-section avatar>
                 <q-icon name="logout" />
               </q-item-section>
@@ -226,6 +226,11 @@ export default class ModuleComponent extends Vue {
       ? require('../assets/Logo Coden Branca.png')
       : require('../assets/Logo Coden.png')
   }
+
+  Sair() {
+  localStorage.removeItem('token')
+  this.$router.push('/login')
+}
 
   }
 </script>
