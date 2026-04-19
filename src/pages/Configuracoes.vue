@@ -1,9 +1,9 @@
 <template>
   <!-- Container principal para centralizar o card na tela -->
-  <div class="row justify-center items-center q-pa-md">
+  <div class="row justify-center items-center">
     <q-card
       class="shadow-2"
-      style="width: 1500px; min-width: 1500px; max-width: 1500px"
+      style="width: 1500px;"
     >
       <!-- Cabeçalho do Card -->
       <q-card-section class="bg-primary text-white q-pb-none">

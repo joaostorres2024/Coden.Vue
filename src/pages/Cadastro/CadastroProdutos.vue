@@ -27,7 +27,7 @@
 <q-card-section class="q-pa-lg">
         <!-- Filtros e Ações (Visíveis apenas quando não está em modo de formulário) -->
         <div class="row items-center justify-between no-wrap">
-          
+
           <!-- Grupo de Inputs (Alinhado à Esquerda) -->
           <div class="row q-gutter-md col">
             <q-input
