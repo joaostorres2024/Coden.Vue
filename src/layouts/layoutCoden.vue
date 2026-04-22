@@ -120,6 +120,18 @@
             class="menu-header text-white"
             clickable
             v-ripple
+            @click="$router.push('/Integracoes')"
+          >
+            <q-item-section avatar>
+              <q-icon name="webhook" />
+            </q-item-section>
+
+            <q-item-section>Integrações</q-item-section>
+          </q-item>
+          <q-item
+            class="menu-header text-white"
+            clickable
+            v-ripple
             @click="$router.push('/VendaBalcao')"
           >
             <q-item-section avatar>

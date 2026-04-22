@@ -26,10 +26,10 @@
       <q-card-section class="q-pa-lg">
         <!-- Filtros e Ações (Visíveis apenas quando não está em modo de venda) -->
         <div class="column q-col-gutter-md">
-          
+
           <!-- Filtros e Botões (Estrutura col-9 e col-3) -->
           <div class="row items-center q-col-gutter-md">
-            
+
             <!-- Inputs (col-9) -->
             <div class="col-9">
               <div class="row q-col-gutter-md items-center">
@@ -242,7 +242,7 @@ export default class VendasBalcaoComponent extends Vue {
   codigo = ''
   nome = ''
   documento = ''
-  
+
   // Controle de Fluxo
   procurarProduto = false
   finalizacaoVenda = false
@@ -289,7 +289,7 @@ export default class VendasBalcaoComponent extends Vue {
   created() {
     this.rowsFiltradas = this.rowsClientes
   }
-  
+
   // ===== Métodos =====
   formatarReais(valor: string | number): string {
     const numero = typeof valor === 'string' ? parseFloat(valor) : valor

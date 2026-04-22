@@ -21,9 +21,9 @@
 
         <form @submit.prevent="realizarLogin">
           <q-input
-            v-model="usuario"
+            v-model="email"
             class="full-width q-my-md"
-            label="Usuário"
+            label="E-mail"
             outlined
             dense
           />
@@ -76,9 +76,9 @@ verSenha = false
     this.loading = true
 
     try {
-      await authService.login({ usuario: this.usuario, senha: this.senha })
+      await authService.login({ email: this.email, senha: this.senha })
       this.$router.push('/')
-      this.$q.notify({ color: 'positive', message: 'Bem-vindo ' + this.usuario, icon: 'check' })
+      this.$q.notify({ color: 'positive', message: 'Bem-vindo ' + this.email, icon: 'check' })
 } catch (err: any) {
   this.$q.notify({
     color: 'negative',

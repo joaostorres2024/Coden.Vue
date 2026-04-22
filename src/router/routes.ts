@@ -31,6 +31,7 @@ const routes: RouteConfig[] = [
       { path: 'NotaFiscalSaida', component: () => import('../pages/Financeiro/NotaFiscalSaida.vue') },
       { path: 'RelatorioEstoque', component: () => import('../pages/Relatorios/RelatorioEstoque.vue') },
       { path: 'RelatorioVendas', component: () => import('../pages/Relatorios/RelatorioVendas.vue') },
+      { path: 'Integracoes', component: () => import('../pages/Integracoes.vue') },
       { path: 'VendaBalcao', component: () => import('../pages/Vendas/VendaBalcao.vue') },
       { path: 'Configuracoes', component: () => import('../pages/Configuracoes.vue') },
       { path: 'Perfil', component: () => import('../pages/Perfil.vue') },
