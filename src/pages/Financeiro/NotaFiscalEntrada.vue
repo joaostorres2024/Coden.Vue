@@ -305,16 +305,16 @@
             <!-- Botões do Formulário -->
             <div class="row q-mt-xl q-gutter-md justify-end">
               <q-btn
-                label="Cancelar"
-                color="negative"
-                flat
-                @click="abrirDialogCancelar()"
-              />
-              <q-btn
                 label="Salvar Entrada"
                 color="positive"
                 unelevated
                 type="submit"
+              />
+              <q-btn
+                label="Cancelar"
+                color="negative"
+                flat
+                @click="abrirDialogCancelar()"
               />
             </div>
           </q-form>

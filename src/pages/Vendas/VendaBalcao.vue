@@ -199,7 +199,7 @@
           <div class="row items-center justify-between q-mt-md">
             <div class="row q-gutter-md">
               <q-btn icon="o_credit_card" label="Realizar Pagamento" color="positive" unelevated />
-              <q-btn icon="close" label="Cancelar Venda" color="negative" unelevated @click="abrirDialogCancelar()" />
+              <q-btn flat icon="close" label="Cancelar Venda" color="negative" unelevated @click="abrirDialogCancelar()" />
             </div>
             <div class="row q-gutter-sm">
               <q-input v-model="totalItens" label="Produtos" style="width: 100px" outlined readonly dense />
