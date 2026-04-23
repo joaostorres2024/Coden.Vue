@@ -44,6 +44,15 @@
               outlined
               dense
             />
+            <q-input
+              v-if="cadastroProdutoForm"
+              style="width: 300px"
+              label="Data de Cadastro"
+              type="date"
+              v-model="dataHoje"
+              outlined
+              dense
+            />
           </div>
 
           <!-- Grupo de Botões (Alinhado à Direita) -->
@@ -112,10 +121,13 @@
             <!-- Seção: Estoque e Fornecedor -->
             <div class="text-h6 q-mt-lg q-mb-sm">Estoque e Fornecedor</div>
             <div class="row q-col-gutter-md">
-              <div class="col-12 col-sm-3">
+              <div class="col-12 col-sm-2">
                 <q-input v-model="estoque" label="Estoque Atual" outlined dense />
               </div>
-              <div class="col-12 col-sm-3">
+              <div class="col-12 col-sm-2">
+                <q-input label="Estoque mínimo" outlined dense />
+              </div>
+              <div class="col-12 col-sm-2">
                 <q-input label="Estoque Máximo" outlined dense />
               </div>
               <div class="col-12 col-sm-3">
@@ -216,6 +228,7 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import listCadastroProdutos from '../../config/listCadastroProdutos.json'
+import moment from 'moment'
 
 @Component
 export default class ModuleComponent extends Vue {
@@ -232,6 +245,7 @@ export default class ModuleComponent extends Vue {
   precoVendaTabela: number | null = null
   ativoInativo = 'Ativo'
   obsProduto = ''
+  dataHoje = moment().format('YYYY-MM-DD')
 
   // Controle de UI
   cadastroProdutoForm = false

@@ -176,7 +176,7 @@
               <div class="col-12 col-sm-3">
                 <q-input
                   v-model="form.valorVenda"
-                  label="Valor de Venda"
+                  label="Preço de Venda"
                   outlined
                   dense
                 />
@@ -222,6 +222,9 @@
                   unelevated
                   class="full-width"
                 />
+              </div>
+              <div class="col-12">
+                <q-input label="Observações" v-model="obsProduto" type="textarea" outlined dense input-style="resize: none;" rows="3" />
               </div>
             </div>
 
