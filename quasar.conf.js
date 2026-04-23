@@ -10,6 +10,7 @@
 
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { configure } = require('quasar/wrappers')
+require('dotenv').config()
 
 module.exports = configure(function (/* ctx */) {
   return {
@@ -58,7 +59,9 @@ module.exports = configure(function (/* ctx */) {
     // Full list of options: https://v1.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-build
     build: {
       vueRouterMode: 'hash', // available values: 'hash', 'history'
-
+      env: {
+       API_URL: process.env.API_URL
+      },
       // transpile: false,
 
       // Add dependencies for transpiling with Babel (Array of string/regex)
