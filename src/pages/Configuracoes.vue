@@ -6,16 +6,16 @@
       style="width: 1500px;"
     >
       <!-- Cabeçalho do Card -->
-      <q-card-section class="bg-primary text-white q-pb-none">
+      <q-card-section class="bg-white text-primary q-pb-none">
         <div class="text-h5 text-bold">Configurações Gerais</div>
         <q-toolbar class="q-pa-none">
           <q-breadcrumbs
-            active-color="white"
+            active-color="primary"
             style="font-size: 14px"
             class="q-mb-md"
           >
             <template v-slot:separator>
-              <q-icon size="1.5em" name="chevron_right" color="white" />
+              <q-icon size="1.5em" name="chevron_right" color="primary" />
             </template>
             <q-breadcrumbs-el label="Home" icon="home" to="/" />
             <q-breadcrumbs-el label="Configurações" icon="settings" />

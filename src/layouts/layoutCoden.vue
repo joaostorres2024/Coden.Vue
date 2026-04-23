@@ -4,7 +4,7 @@
       v-model="leftDrawerOpen"
       show-if-above
       bordered
-      :width="300"
+      :width="280"
       :content-class="$q.dark.isActive ? 'bg-dark' : 'bg-primary'"
     >
       <div class="col-12 column no-wrap full-height">
@@ -143,7 +143,6 @@
         </q-list>
         <q-list class="column margin-auto q-pt-lg q-pb-md text-white">
           <q-item
-            class="q-mx-xs"
             @click="toggleDark()"
             clickable
             v-ripple
@@ -156,7 +155,6 @@
             <q-item-section>Modo Escuro/Claro</q-item-section>
           </q-item>
           <q-item
-            class="q-mx-xs"
             clickable
             v-ripple
             @click="$router.push('/Configuracoes')"
@@ -169,7 +167,6 @@
           </q-item>
           <div class="row">
             <q-item
-              class="q-mx-xs"
               clickable
               v-ripple
               @click="$router.push('/Perfil')"
@@ -180,7 +177,7 @@
 
               <q-item-section>Perfil</q-item-section>
             </q-item>
-            <q-item class="q-mx-xs" @click=Sair() clickable v-ripple>
+            <q-item @click=Sair() clickable v-ripple>
               <q-item-section avatar>
                 <q-icon name="logout" />
               </q-item-section>

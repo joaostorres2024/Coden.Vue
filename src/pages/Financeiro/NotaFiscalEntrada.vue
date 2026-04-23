@@ -3,16 +3,16 @@
   <div class="row justify-center items-center">
     <q-card class="col-11 col-md-10 col-lg-9 shadow-2" style="width: 1500px">
       <!-- Cabeçalho do Card -->
-      <q-card-section class="bg-primary text-white q-pb-none">
+      <q-card-section class="bg-white text-primary q-pb-none">
         <div class="text-h5 text-bold">NF Entrada</div>
         <q-toolbar class="q-pa-none">
           <q-breadcrumbs
-            active-color="white"
+            active-color="primary"
             style="font-size: 14px"
             class="q-mb-md"
           >
             <template v-slot:separator>
-              <q-icon size="1.5em" name="chevron_right" color="white" />
+              <q-icon size="1.5em" name="chevron_right" color="primary" />
             </template>
             <q-breadcrumbs-el label="Home" icon="home" to="/" />
             <q-breadcrumbs-el label="Financeiro" icon="paid" />
