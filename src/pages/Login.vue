@@ -13,11 +13,11 @@
     >
       <div
         class="column q-pa-lg items-left justify-center"
-        style="width: 100%; max-width: 400px"
+        style="width: 100%; max-width: 420px"
       >
         <div class="text-h5 text-bold">Bem-vindo ao sistema Coden!</div>
 
-        <div class="q-mb-md">Faça login para continuar.</div>
+        <div>Faça login para continuar.</div>
 
         <form @submit.prevent="realizarLogin">
           <q-input

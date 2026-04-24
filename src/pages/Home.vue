@@ -27,7 +27,7 @@
               style="width: 200px"
               label="Período"
             />
-            <q-btn icon="refresh" color="white" flat round @click="recarregarDados()" />
+            <q-btn icon="refresh" color="primary" flat round @click="recarregarDados()" />
           </div>
         </div>
       </q-card-section>
@@ -36,7 +36,7 @@
 
       <!-- Corpo do Card -->
       <q-card-section class="q-pa-lg">
-        
+
         <!-- 4 Cards de Números Gerais (Preparados para Dados) -->
         <div class="row q-col-gutter-md q-mb-xl">
           <div v-for="(card, index) in cardsResumo" :key="index" class="col-12 col-sm-6 col-md-3">
@@ -58,7 +58,7 @@
 
         <!-- Área de Gráficos e Atividades -->
         <div class="row q-col-gutter-md">
-          
+
           <!-- Gráfico Principal (Vendas) -->
           <div class="col-12 col-md-8">
             <q-card flat bordered style="min-height: 400px">
@@ -158,10 +158,10 @@ export default class ModuleExports extends Vue {
   // Controles de UI
   periodoSelecionado = 'Últimos 30 dias'
   opcoesPeriodo = ['Hoje', 'Últimos 7 dias', 'Últimos 30 dias', 'Este Ano']
-  
+
   // Estados de Dados (Simulação de retorno de API)
   temDadosGrafico = false // Mude para true para simular dados
-  
+
   cardsResumo = [
     { label: 'Total de Vendas', valor: 'R$ 0,00', icon: 'sell', color: 'blue', tendencia: null },
     { label: 'Pedidos', valor: '0', icon: 'shopping_cart', color: 'green', tendencia: null },
@@ -170,7 +170,7 @@ export default class ModuleExports extends Vue {
   ]
 
   atividadesUsuarios = [] // Lista vazia para simular estado inicial
-  
+
   alertasSistema = [] // Lista vazia para simular sistema OK
 
   // Exemplo de como os dados seriam preenchidos após chamada de API:
