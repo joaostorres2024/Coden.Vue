@@ -1,15 +1,15 @@
 {
   "columns": [
     {
-      "name": "codigo",
+      "name": "codigo_produto",
       "label": "Código do Produto",
-      "field": "codigo",
+      "field": "codigo_produto",
       "align": "center"
     },
     {
-      "name": "nmeProduto",
+      "name": "nome_produto",
       "label": "Nome do Produto",
-      "field": "nmeProduto",
+      "field": "nome_produto",
       "align": "center"
     },
     {
@@ -19,15 +19,15 @@
       "align": "center"
     },
     {
-      "name": "precoVendaTabela",
+      "name": "preco",
       "label": "Preço Venda",
-      "field": "precoVendaTabela",
+      "field": "preco",
       "align": "center"
     },
     {
-      "name": "estoque",
+      "name": "estoque_atual",
       "label": "Estoque",
-      "field": "estoque",
+      "field": "estoque_atual",
       "align": "center"
     },
     {

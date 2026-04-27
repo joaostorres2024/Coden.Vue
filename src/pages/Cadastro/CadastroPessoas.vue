@@ -1,9 +1,9 @@
 <template>
   <!-- Container principal para centralizar o card na tela -->
   <div class="row justify-center items-center">
-    
-    <q-card class="col-11 col-md-10 col-lg-9 shadow-2" style="width: 1500px;">
-      
+
+    <q-card class="col-11 col-md-10 col-lg-9 shadow-2 b-r-10" style="width: 1500px;">
+
       <!-- Cabeçalho do Card -->
       <q-card-section class="bg-white text-primary q-pb-none">
         <div class="text-h5 text-bold">Cadastro de Pessoas</div>
@@ -25,9 +25,9 @@
       <q-card-section class="q-pa-lg">
         <!-- Filtros e Ações (Visíveis apenas quando não está em modo de formulário) -->
         <div>
-          
+
           <!-- Linha Superior: Tipo de Pessoa -->
-          
+
 <div class="row q-col-gutter-md q-mb-md">
           <div class="col-12 col-md-3">
             <q-select
@@ -44,7 +44,7 @@
 
 
           <!-- Linha Inferior: Inputs e Botões Separados -->
-          
+
 <div class="row items-center q-col-gutter-md">
 
           <!-- INPUTS -->
@@ -245,7 +245,7 @@ export default class ModuleComponent extends Vue {
   nome = ''
   documento = ''
   codigo = ''
-  
+
   // Controle de UI
   mostrarFormCadastroPF = false
   mostrarFormCadastroPJ = false
@@ -363,5 +363,8 @@ export default class ModuleComponent extends Vue {
 <style scoped>
 .border {
   border: 1px solid #ccc;
+}
+.b-r-10{
+  border-radius: 10px;
 }
 </style>

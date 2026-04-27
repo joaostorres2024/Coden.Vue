@@ -2,7 +2,7 @@
   <!-- Container principal para centralizar o card na tela -->
   <div class="row justify-center items-center">
     <q-card
-      class="shadow-2"
+      class="shadow-2 b-r-10"
       style="width: 1500px;"
     >
       <!-- Cabeçalho do Card -->
@@ -320,5 +320,8 @@ export default class ConfiguracoesComponent extends Vue {
 /* Garante que o card não mude de tamanho */
 .q-card {
   transition: none !important;
+}
+.b-r-10{
+  border-radius: 10px;
 }
 </style>

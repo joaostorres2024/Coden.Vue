@@ -4,14 +4,14 @@
       v-model="leftDrawerOpen"
       show-if-above
       bordered
-      :width="280"
+      :width="260"
       :content-class="$q.dark.isActive ? 'bg-dark' : 'bg-primary'"
     >
       <div class="col-12 column no-wrap full-height">
         <q-item class="q-pt-md no-wrap items-center" to="/">
           <img
             class="q-mb-sm"
-            style="width: 120px"
+            style="width: 110px"
             :src="$q.dark.isActive ? require('../assets/Logo Coden Branca.png') : require('../assets/Logo Coden Branca.png')"
             alt="Logo Coden"
           />

@@ -1,7 +1,7 @@
 <template>
   <!-- Container principal para centralizar o card na tela -->
   <div class="row justify-center items-center">
-    <q-card class="col-11 col-md-10 col-lg-9 shadow-2" style="width: 1500px">
+    <q-card class="col-11 col-md-10 col-lg-9 shadow-2 b-r-10" style="width: 1500px">
       <!-- Cabeçalho do Card -->
       <q-card-section class="bg-white text-primary q-pb-none">
         <div class="text-h5 text-bold">NF Saída</div>
@@ -184,4 +184,8 @@ formatarReais(valor: string | number): string {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.b-r-10{
+  border-radius: 10px;
+}
+</style>

@@ -1,7 +1,7 @@
 <template>
   <!-- Container principal para centralizar o card na tela -->
   <div class="row justify-center items-center">
-    <q-card class="col-11 col-md-10 col-lg-9 shadow-2" style="width: 1500px">
+    <q-card class="col-11 col-md-10 col-lg-9 shadow-2 b-r-10" style="width: 1500px">
       <!-- Cabeçalho do Card -->
       <q-card-section class="bg-white text-primary q-pb-none">
         <div class="text-h5 text-bold">Relatório de Estoque</div>
@@ -26,7 +26,7 @@
       <!-- Corpo do Card -->
       <q-card-section class="q-pa-lg">
         <div class="column q-col-gutter-md">
-          
+
           <!-- Filtros Superiores -->
           <div class="row items-center q-col-gutter-md col-12 no-wrap">
             <q-input
@@ -55,7 +55,7 @@
 
           <!-- Filtros Inferiores e Botões (Estrutura col-9 e col-3) -->
           <div class="row items-center q-col-gutter-md">
-            
+
             <!-- Inputs (col-9) -->
             <div class="col-9">
               <div class="row q-col-gutter-md items-center">
@@ -248,4 +248,7 @@ export default class RelatorioEstoqueComponent extends Vue {
 </script>
 
 <style scoped>
+.b-r-10{
+  border-radius: 10px;
+}
 </style>

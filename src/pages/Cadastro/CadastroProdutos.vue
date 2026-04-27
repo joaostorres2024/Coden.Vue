@@ -1,7 +1,10 @@
 <template>
   <!-- Container principal para centralizar o card na tela -->
   <div class="row justify-center items-center">
-    <q-card class="col-11 col-md-10 col-lg-9 shadow-2" style="width: 1500px">
+    <q-card
+      class="col-11 col-md-10 col-lg-9 shadow-2 b-r-10"
+      style="width: 1500px"
+    >
       <!-- Cabeçalho do Card -->
       <q-card-section class="bg-white text-primary q-pb-none">
         <div class="text-h5 text-bold">Cadastro de Produtos</div>
@@ -24,21 +27,20 @@
       <q-separator />
 
       <!-- Corpo do Card -->
-<q-card-section class="q-pa-lg">
+      <q-card-section class="q-pa-lg">
         <!-- Filtros e Ações (Visíveis apenas quando não está em modo de formulário) -->
         <div class="row items-center justify-between no-wrap">
-
           <!-- Grupo de Inputs (Alinhado à Esquerda) -->
           <div class="row q-gutter-md col">
             <q-input
-              v-model="codigo"
+              v-model="codigo_produto"
               style="width: 300px"
               label="Código do Produto"
               outlined
               dense
             />
             <q-input
-              v-model="nmeProduto"
+              v-model="nome_produto"
               style="width: 400px"
               label="Nome do Produto"
               outlined
@@ -58,23 +60,23 @@
           <!-- Grupo de Botões (Alinhado à Direita) -->
           <div v-if="!cadastroProdutoForm" class="row q-gutter-sm">
             <q-btn
-                icon="add"
-                unelevated
-                class="bg-positive text-white"
-                @click="mostrarFormulario()"
-              />
-              <q-btn
-                icon="search"
-                color="primary"
-                unelevated
-                @click="pesquisar()"
-              />
-              <q-btn
-                icon="delete"
-                unelevated
-                class="bg-warning text-white"
-                @click="refreshTable()"
-              />
+              icon="add"
+              unelevated
+              class="bg-positive text-white"
+              @click="mostrarFormulario()"
+            />
+            <q-btn
+              icon="search"
+              color="primary"
+              unelevated
+              @click="pesquisar()"
+            />
+            <q-btn
+              icon="delete"
+              unelevated
+              class="bg-warning text-white"
+              @click="refreshTable()"
+            />
           </div>
         </div>
 
@@ -90,17 +92,31 @@
                   label="Grupo"
                   outlined
                   dense
-                  :options="['Lanternagem', 'Mecânica', 'Elétrica']"
                 />
               </div>
               <div class="col-12 col-sm-2">
-                <q-btn label="Criar Grupo" color="primary" unelevated class="full-width" />
+                <q-btn
+                  label="Criar Grupo"
+                  color="primary"
+                  unelevated
+                  class="full-width"
+                />
               </div>
               <div class="col-12 col-sm-4">
-                <q-input v-model="codigoBarras" label="Código de Barras" outlined dense />
+                <q-input
+                  v-model="codigo_barras"
+                  label="Código de Barras"
+                  outlined
+                  dense
+                />
               </div>
               <div class="col-12 col-sm-2">
-                <q-btn label="Gerar" color="primary" unelevated class="full-width" />
+                <q-btn
+                  label="Gerar"
+                  color="primary"
+                  unelevated
+                  class="full-width"
+                />
               </div>
             </div>
 
@@ -108,13 +124,31 @@
             <div class="text-h6 q-mt-lg q-mb-sm">Preço</div>
             <div class="row q-col-gutter-md">
               <div class="col-12 col-sm-4">
-                <q-input v-model="precoCusto" label="Preço de Custo" outlined dense type="number" />
+                <q-input
+                  v-model="preco_custo"
+                  label="Preço de Custo"
+                  outlined
+                  dense
+                  type="number"
+                />
               </div>
               <div class="col-12 col-sm-4">
-                <q-input v-model="precoVendaTabela" label="Preço de Venda" outlined dense type="number" />
+                <q-input
+                  v-model="preco_venda"
+                  label="Preço de Venda"
+                  outlined
+                  dense
+                  type="number"
+                />
               </div>
               <div class="col-12 col-sm-4">
-                <q-input :value="margemCalculada" label="Margem (%)" outlined dense readonly />
+                <q-input
+                  :value="margem_calculada"
+                  label="Margem (%)"
+                  outlined
+                  dense
+                  readonly
+                />
               </div>
             </div>
 
@@ -122,19 +156,37 @@
             <div class="text-h6 q-mt-lg q-mb-sm">Estoque e Fornecedor</div>
             <div class="row q-col-gutter-md">
               <div class="col-12 col-sm-2">
-                <q-input v-model="estoque" label="Estoque Atual" outlined dense />
+                <q-input
+                  v-model="estoque_atual"
+                  label="Estoque Atual"
+                  outlined
+                  dense
+                />
               </div>
               <div class="col-12 col-sm-2">
-                <q-input label="Estoque mínimo" outlined dense />
+                <q-input v-model="estoque_minimo" label="Estoque mínimo" outlined dense />
               </div>
               <div class="col-12 col-sm-2">
-                <q-input label="Estoque Máximo" outlined dense />
+                <q-input v-model="estoque_maximo" label="Estoque Máximo" outlined dense />
               </div>
               <div class="col-12 col-sm-3">
-                <q-input v-model="fornecedor" label="Fornecedor" outlined dense />
+                <q-input
+                  v-model="fornecedor"
+                  label="Fornecedor"
+                  outlined
+                  dense
+                />
               </div>
               <div class="col-12 col-sm-3">
-                <q-select v-model="ativoInativo" :options="ativoInativoOpcoes" label="Status" outlined dense emit-value map-options />
+                <q-select
+                  v-model="ativoInativo"
+                  :options="ativoInativoOpcoes"
+                  label="Status"
+                  outlined
+                  dense
+                  emit-value
+                  map-options
+                />
               </div>
             </div>
 
@@ -142,14 +194,31 @@
             <div class="text-h6 q-mt-lg q-mb-sm">Observações</div>
             <div class="row">
               <div class="col-12">
-                <q-input v-model="obsProduto" type="textarea" outlined dense input-style="resize: none;" rows="3" />
+                <q-input
+                  v-model="observacoes"
+                  type="textarea"
+                  outlined
+                  dense
+                  input-style="resize: none;"
+                  rows="3"
+                />
               </div>
             </div>
 
             <!-- Botões do Formulário -->
             <div class="row q-mt-xl q-gutter-md justify-end">
-              <q-btn label="Salvar Produto" color="positive" unelevated type="submit" />
-              <q-btn label="Cancelar" color="negative" flat @click="abrirDialogCancelar()" />
+              <q-btn
+                label="Salvar Produto"
+                color="positive"
+                unelevated
+                type="submit"
+              />
+              <q-btn
+                label="Cancelar"
+                color="negative"
+                flat
+                @click="abrirDialogCancelar()"
+              />
             </div>
           </q-form>
         </div>
@@ -187,10 +256,9 @@
               </q-td>
             </template>
 
-            <!-- Coluna Preço -->
-            <template v-slot:body-cell-precoVendaTabela="props">
+            <template v-slot:body-cell-preco="props">
               <q-td :props="props" align="center">
-                {{ formatarReais(props.row.precoVendaTabela) }}
+                {{ formatarReais(props.row.preco) }}
               </q-td>
             </template>
 
@@ -213,11 +281,19 @@
     <q-dialog v-model="dialogCancelar" persistent>
       <q-card>
         <q-card-section class="row items-center">
-          <span class="q-ml-sm">Deseja realmente cancelar? As alterações não salvas serão perdidas.</span>
+          <span class="q-ml-sm"
+            >Deseja realmente cancelar? As alterações não salvas serão
+            perdidas.</span
+          >
         </q-card-section>
         <q-card-actions align="right">
           <q-btn flat label="Não" color="primary" v-close-popup />
-          <q-btn flat label="Sim, Cancelar" color="negative" @click="confirmarCancelamento()" />
+          <q-btn
+            flat
+            label="Sim, Cancelar"
+            color="negative"
+            @click="confirmarCancelamento()"
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -229,125 +305,175 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import listCadastroProdutos from '../../config/listCadastroProdutos.json'
 import moment from 'moment'
+import productService, { Product } from '../../services/productService'
 
 @Component
 export default class ModuleComponent extends Vue {
   colunasCadastroProdutos = listCadastroProdutos.columns
 
-  // ===== data =====
-  codigo = ''
-  nmeProduto = ''
-  codigoBarras = ''
+ // ===== data =====
+  codigo_produto = ''
+  nome_produto = ''
+  codigo_barras = ''
   grupo = ''
-  estoque = ''
+  estoque_atual = ''
+  estoque_minimo = ''
+  estoque_maximo = ''
   fornecedor = ''
-  precoCusto: number | null = null
-  precoVendaTabela: number | null = null
+  observacoes = ''
+  preco_custo: number | null = null
+  preco_venda: number | null = null
   ativoInativo = 'Ativo'
-  obsProduto = ''
   dataHoje = moment().format('YYYY-MM-DD')
+  editandoId: number | null = null
 
   // Controle de UI
   cadastroProdutoForm = false
   dialogCancelar = false
   dialogExcluir = false
-
-  rowsProdutos = [
-    {
-      codigo: '1SB807221CGRU',
-      nmeProduto: 'Parachoque',
-      grupo: 'Lanternagem',
-      precoVendaTabela: 1200,
-      estoque: '20',
-      fornecedor: 'Volkswagen',
-      status: 'Ativo'
-    }
-  ]
-
-  rowsFiltradas: any[] = []
+  rows: Product[] = []
 
   ativoInativoOpcoes = [
     { label: 'Ativo', value: 'Ativo' },
     { label: 'Inativo', value: 'Inativo' }
   ]
 
-  created() {
-    this.rowsFiltradas = this.rowsProdutos
+    async created() {
+    await this.carregarProdutos()
   }
 
-  // ===== Métodos =====
-  get margemCalculada(): string {
-    if (!this.precoCusto || !this.precoVendaTabela) return '0.00%'
-    const margem = ((this.precoVendaTabela - this.precoCusto) / this.precoCusto) * 100
-    return margem.toFixed(2) + '%'
+ async salvar() {
+    try {
+
+      const payload: Product = {
+        nome_produto: this.nome_produto,
+        preco: this.preco_venda ?? 0,
+        grupo: this.grupo,
+        codigo_produto: this.codigo_produto,
+        codigo_barras: this.codigo_barras,
+        preco_custo: this.preco_custo ?? undefined,
+        margem_percentual: (!this.preco_custo || !this.preco_venda)
+          ? 0
+          : ((this.preco_venda - this.preco_custo) / this.preco_custo) * 100,
+        estoque_atual: this.estoque_atual ? Number(this.estoque_atual) : undefined,
+        estoque_minimo: this.estoque_minimo ? Number(this.estoque_minimo) : undefined,
+        estoque_maximo: this.estoque_maximo ? Number(this.estoque_maximo) : undefined,
+        fornecedor: this.fornecedor,
+        status: this.ativoInativo,
+        observacoes: this.observacoes
+      }
+
+      if (this.editandoId) {
+        await productService.updateProduct(this.editandoId, payload)
+        this.$q.notify({ type: 'positive', message: 'Produto atualizado com sucesso!' })
+      } else {
+        await productService.createProduct(payload)
+        this.$q.notify({ type: 'positive', message: 'Produto cadastrado com sucesso!' })
+      }
+
+      await this.carregarProdutos()
+      this.confirmarCancelamento()
+
+    } catch (err) {
+      this.$q.notify({ type: 'negative', message: 'Erro ao salvar produto!' })
+    }
   }
 
-  formatarReais(valor: string | number): string {
-    const numero = typeof valor === 'string' ? parseFloat(valor) : valor
-    return numero.toLocaleString('pt-BR', {
-      style: 'currency',
-      currency: 'BRL'
-    })
-  }
-
-  mostrarFormulario() {
-    this.cadastroProdutoForm = true
-  }
-
-  abrirDialogCancelar() {
-    this.dialogCancelar = true
-  }
-
-  confirmarCancelamento() {
-    this.dialogCancelar = false
-    this.cadastroProdutoForm = false
-    this.limparCampos()
-  }
-
-  limparCampos() {
-    this.codigo = ''
-    this.nmeProduto = ''
-    this.grupo = ''
-    this.estoque = ''
-    this.fornecedor = ''
-    this.precoCusto = null
-    this.precoVendaTabela = null
-  }
-
-  pesquisar() {
-    this.rowsFiltradas = this.rowsProdutos.filter((row: any) => {
-      const nomeMatch = !this.nmeProduto || row.nmeProduto.toLowerCase().includes(this.nmeProduto.toLowerCase())
-      const codigoMatch = !this.codigo || row.codigo.toLowerCase().includes(this.codigo.toLowerCase())
-      return nomeMatch && codigoMatch
-    })
+async carregarProdutos() {
+    try {
+      this.rows = await productService.getAllProducts()
+    } catch (err) {
+      this.$q.notify({ type: 'negative', message: 'Erro ao carregar produtos!' })
+    }
   }
 
   editar(row: any) {
-    this.codigo = row.codigo
-    this.nmeProduto = row.nmeProduto
+    this.editandoId = row.id
+    this.codigo_produto = row.codigo_produto
+    this.nome_produto = row.nome_produto
     this.grupo = row.grupo
-    this.estoque = row.estoque
+    this.codigo_barras = row.codigo_barras
+    this.estoque_atual = row.estoque_atual
+    this.estoque_minimo = row.estoque_minimo
+    this.estoque_maximo = row.estoque_maximo
     this.fornecedor = row.fornecedor
-    this.precoVendaTabela = row.precoVendaTabela
+    this.preco_custo = row.preco_custo
+    this.preco_venda = row.preco
     this.ativoInativo = row.status
+    this.observacoes = row.observacoes
     this.cadastroProdutoForm = true
   }
 
-  confirmarExcluir(row: any) {
-    console.log('Excluir:', row)
+  async confirmarExcluir(row: any) {
+    this.$q.dialog({
+      title: 'Excluir Produto',
+      message: `Deseja excluir o produto "${row.nome_produto}"?`,
+      cancel: true,
+      persistent: true
+    }).onOk(async () => {
+      try {
+        await productService.deleteProduct(row.id)
+        this.$q.notify({ type: 'positive', message: 'Produto excluído com sucesso!' })
+        await this.carregarProdutos()
+      } catch (err) {
+        this.$q.notify({ type: 'negative', message: 'Erro ao excluir produto!' })
+      }
+    })
   }
 
-  refreshTable() {
-    this.limparCampos()
-    this.rowsFiltradas = this.rowsProdutos
+  get rowsFiltradas() {
+    return this.rows.filter((p: Product) => {
+      const nomeOk = p.nome_produto.toLowerCase().includes(this.nome_produto.toLowerCase())
+      const codigoOk = !this.codigo_produto || p.codigo_produto?.startsWith(this.codigo_produto)
+      return nomeOk && codigoOk
+    })
   }
 
-  salvar() {
-    this.$q.notify({ type: 'positive', message: 'Produto salvo com sucesso!' })
-    this.confirmarCancelamento()
+get margem_calculada(): string {
+    if (!this.preco_custo || !this.preco_venda) return '0.00%'
+    const margem = ((this.preco_venda - this.preco_custo) / this.preco_custo) * 100
+    return margem.toFixed(2) + '%'
   }
+
+ formatarReais(valor: string | number): string {
+    const numero = typeof valor === 'string' ? parseFloat(valor) : valor
+    return numero.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+  }
+
+abrirDialogCancelar() {
+  this.dialogCancelar = true
+}
+
+  limparCampos() {
+    this.editandoId = null
+    this.codigo_produto = ''
+    this.nome_produto = ''
+    this.codigo_barras = ''
+    this.grupo = ''
+    this.estoque_atual = ''
+    this.estoque_minimo = ''
+    this.estoque_maximo = ''
+    this.fornecedor = ''
+    this.preco_custo = null
+    this.preco_venda = null
+    this.observacoes = ''
+    this.ativoInativo = 'Ativo'
+  }
+
+confirmarCancelamento() {
+  this.dialogCancelar = false
+  this.cadastroProdutoForm = false
+  this.limparCampos()
+}
+
+mostrarFormulario() {
+  this.cadastroProdutoForm = true
+}
 }
 </script>
 
 <style scoped>
+.b-r-10 {
+  border-radius: 10px;
+}
 </style>
