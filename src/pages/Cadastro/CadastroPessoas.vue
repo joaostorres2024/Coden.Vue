@@ -1,10 +1,7 @@
 <template>
-  <!-- Container principal para centralizar o card na tela -->
   <div class="row justify-center items-center">
-
     <q-card class="col-11 col-md-10 col-lg-9 shadow-2 b-r-10" style="width: 1500px;">
 
-      <!-- Cabeçalho do Card -->
       <q-card-section class="bg-white text-primary q-pb-none">
         <div class="text-h5 text-bold">Cadastro de Pessoas</div>
         <q-toolbar class="q-pa-none">
@@ -21,78 +18,55 @@
 
       <q-separator />
 
-      <!-- Corpo do Card -->
       <q-card-section class="q-pa-lg">
-        <!-- Filtros e Ações (Visíveis apenas quando não está em modo de formulário) -->
         <div>
 
-          <!-- Linha Superior: Tipo de Pessoa -->
-
-<div class="row q-col-gutter-md q-mb-md">
-          <div class="col-12 col-md-3">
-            <q-select
-              v-model="tipoPessoa"
-              :options="opcoesTipoPessoa"
-              label="Tipo de Pessoa"
-              outlined
-              dense
-              emit-value
-              map-options
-            />
-          </div>
-        </div>
-
-
-          <!-- Linha Inferior: Inputs e Botões Separados -->
-
-<div class="row items-center q-col-gutter-md">
-
-          <!-- INPUTS -->
-          <div class="col-12 col-md-9">
-            <div class="row q-col-gutter-md">
-              <div class="col-12 col-md-4">
-                <q-input v-model="nome" label="Nome Completo" outlined dense />
-              </div>
-              <div class="col-12 col-md-4">
-                <q-input v-model="documento" label="CNPJ/CPF" outlined dense />
-              </div>
-              <div class="col-12 col-md-4">
-                <q-input v-model="codigo" label="Código do Cliente" outlined dense />
-              </div>
-            </div>
-          </div>
-
-          <!-- BOTÕES -->
-          <div class="col-12 col-md-3" v-if="!mostrarFormCadastroPF && !mostrarFormCadastroPJ">
-            <div class="row justify-end items-center q-gutter-sm">
-              <q-btn
-                icon="add"
-                unelevated
-                class="bg-positive text-white"
-                @click="mostrarFormulario()"
-              />
-              <q-btn
-                icon="search"
-                color="primary"
-                unelevated
-                @click="pesquisar()"
-              />
-              <q-btn
-                icon="delete"
-                unelevated
-                class="bg-warning text-white"
-                @click="refreshTable()"
+          <!-- Tipo de Pessoa -->
+          <div class="row q-col-gutter-md q-mb-md">
+            <div class="col-12 col-md-3">
+              <q-select
+                v-model="tipoPessoa"
+                :options="opcoesTipoPessoa"
+                label="Tipo de Pessoa"
+                outlined
+                dense
+                emit-value
+                map-options
               />
             </div>
           </div>
 
-        </div>
-      </div>
+          <!-- Inputs e Botões -->
+          <div class="row items-center q-col-gutter-md">
+            <div class="col-12 col-md-9">
+              <div class="row q-col-gutter-md">
+                <div class="col-12 col-md-4">
+                  <q-input v-model="nome" label="Nome Completo" outlined dense />
+                </div>
+                <div class="col-12 col-md-4">
+                  <q-input v-model="documento" label="CNPJ/CPF" outlined dense />
+                </div>
+                <div class="col-12 col-md-4">
+                  <q-input v-model="codigo" label="Código do Cliente" outlined dense />
+                </div>
+              </div>
+            </div>
 
-        <!-- Formulário de Cadastro (PF ou PJ) -->
+            <div class="col-12 col-md-3" v-if="!mostrarFormCadastroPF && !mostrarFormCadastroPJ">
+              <div class="row justify-end items-center q-gutter-sm">
+                <q-btn icon="add" unelevated class="bg-positive text-white" @click="mostrarFormulario()" />
+                <q-btn icon="search" color="primary" unelevated @click="pesquisar()" />
+                <q-btn icon="delete" unelevated class="bg-warning text-white" @click="refreshTable()" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Formulário -->
         <div v-if="mostrarFormCadastroPF || mostrarFormCadastroPJ" class="q-mt-md">
           <q-form @submit.prevent="salvar()">
-            <!-- Seção: Dados Gerais -->
+
+            <!-- Dados Gerais -->
             <div class="text-h6 q-mb-sm">Dados Gerais</div>
             <div class="row q-col-gutter-md">
               <template v-if="mostrarFormCadastroPF">
@@ -116,7 +90,7 @@
               </div>
             </div>
 
-            <!-- Seção: Dados de Contato -->
+            <!-- Dados de Contato -->
             <div class="text-h6 q-mt-lg q-mb-sm">Dados de Contato</div>
             <div class="row q-col-gutter-md">
               <div class="col-12 col-sm-4">
@@ -130,7 +104,7 @@
               </div>
             </div>
 
-            <!-- Seção: Dados de Endereço -->
+            <!-- Dados de Endereço -->
             <div class="text-h6 q-mt-lg q-mb-sm">Dados de Endereço</div>
             <div class="row q-col-gutter-md">
               <div class="col-12 col-sm-2">
@@ -153,15 +127,15 @@
               </div>
             </div>
 
-            <!-- Seção: Observações -->
+            <!-- Observações -->
             <div class="text-h6 q-mt-lg q-mb-sm">Observações</div>
             <div class="row">
               <div class="col-12">
-                <q-input v-model="text" type="textarea" outlined dense input-style="resize: none;" rows="3" />
+                <q-input v-model="observacoes" type="textarea" outlined dense input-style="resize: none;" rows="3" />
               </div>
             </div>
 
-            <!-- Botões do Formulário -->
+            <!-- Botões -->
             <div class="row q-mt-xl q-gutter-md justify-end">
               <q-btn label="Salvar Cadastro" color="positive" unelevated type="submit" />
               <q-btn label="Cancelar" color="negative" flat @click="abrirDialogCancelar()" />
@@ -169,47 +143,34 @@
           </q-form>
         </div>
 
-        <!-- Tabela de Resultados (Visível apenas quando não está em modo de formulário) -->
+        <!-- Tabela -->
         <div v-if="!mostrarFormCadastroPF && !mostrarFormCadastroPJ" class="q-mt-xl">
           <q-table
             :data="rowsFiltradas"
             :columns="colunasCadastroProdutos"
-            row-key="codigo"
+            row-key="id"
             flat
             bordered
             no-data-label="Nenhum registro encontrado"
             class="text-weight-medium"
           >
-            <!-- Coluna Ações -->
             <template v-slot:body-cell-acoes="props">
               <q-td align="center">
-                <q-btn
-                  icon="edit"
-                  size="sm"
-                  color="primary"
-                  flat
-                  round
-                  @click="editar(props.row)"
-                />
-                <q-btn
-                  icon="delete"
-                  size="sm"
-                  color="negative"
-                  flat
-                  round
-                  @click="confirmarExcluir(props.row)"
-                />
+                <q-btn icon="edit" size="sm" color="primary" flat round @click="editar(props.row)" />
+                <q-btn icon="delete" size="sm" color="negative" flat round @click="confirmarExcluir(props.row)" />
               </q-td>
             </template>
 
-            <!-- Coluna Status -->
             <template v-slot:body-cell-status="props">
               <q-td align="center">
-                <q-badge
-                  :color="props.row.status === 'Ativo' ? 'positive' : 'negative'"
-                >
+                <q-badge :color="props.row.status === 'Ativo' ? 'positive' : 'negative'">
                   {{ props.row.status }}
                 </q-badge>
+              </q-td>
+            </template>
+            <template v-slot:body-cell-documento="props">
+              <q-td align="center">
+                {{ formatarDocumento(props.row) }}
               </q-td>
             </template>
           </q-table>
@@ -217,7 +178,7 @@
       </q-card-section>
     </q-card>
 
-    <!-- Dialogs -->
+    <!-- Dialog Cancelar -->
     <q-dialog v-model="dialogCancelar" persistent>
       <q-card>
         <q-card-section class="row items-center">
@@ -236,15 +197,18 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import listCadastroPessoas from '../../config/listCadastroPessoas.json'
+import clienteService, { Cliente } from '../../services/clienteService'
 
 @Component
 export default class ModuleComponent extends Vue {
   colunasCadastroProdutos = listCadastroPessoas.columns
+
   // ===== data =====
-  tipoPessoa = null
+  tipoPessoa: string | null = null
   nome = ''
   documento = ''
   codigo = ''
+  editandoId: number | null = null
 
   // Controle de UI
   mostrarFormCadastroPF = false
@@ -257,7 +221,7 @@ export default class ModuleComponent extends Vue {
   nmeSocial = ''
   razaoSocial = ''
   nomeResponsavel = ''
-  ativoInativo = 'A'
+  ativoInativo = 'Ativo'
   telefone1 = ''
   telefone2 = ''
   email = ''
@@ -267,15 +231,10 @@ export default class ModuleComponent extends Vue {
   bairro = ''
   cidade = ''
   ufSelect = 'DF'
-  text = ''
+  observacoes = ''
 
-  rowsClientes = [
-    { codigo: '001', tipoPessoa: 'PF', nome: 'Antônio Carlos', documento: '123-456-789-10', telefone: '(61) 98159-8038', email: 'antonio@gmail.com', status: 'Ativo' },
-    { codigo: '002', tipoPessoa: 'PJ', nome: 'Matheus Tech', documento: '12.342.278/0001-10', telefone: '(61) 98112-8038', email: 'matheus@gmail.com', status: 'Inativo' },
-    { codigo: '003', tipoPessoa: 'PF', nome: 'Brunna Silva', documento: '677-886-080-21', telefone: '(61) 98999-9999', email: 'brunna@gmail.com', status: 'Inativo' }
-  ]
-
-  rowsFiltradas: any[] = []
+  // Tabela
+  rows: Cliente[] = []
 
   // Opções
   opcoesTipoPessoa = [
@@ -283,8 +242,8 @@ export default class ModuleComponent extends Vue {
     { label: 'Pessoa Jurídica', value: 'PJ' }
   ]
   ativo_inativo = [
-    { label: 'Ativo', value: 'A' },
-    { label: 'Inativo', value: 'I' }
+    { label: 'Ativo', value: 'Ativo' },
+    { label: 'Inativo', value: 'Inativo' }
   ]
   uf_select = [
     { label: 'DF', value: 'DF' },
@@ -293,11 +252,122 @@ export default class ModuleComponent extends Vue {
     { label: 'MG', value: 'MG' }
   ]
 
-  created() {
-    this.rowsFiltradas = this.rowsClientes
+  async created() {
+    await this.carregarClientes()
+  }
+
+  // ===== Computed =====
+  get rowsFiltradas() {
+    return this.rows.filter((c: Cliente) => {
+      const nomeOk = c.nome_cliente.toLowerCase().startsWith(this.nome.toLowerCase())
+      const codigoOk = !this.codigo || c.codigo_cliente?.toLowerCase().startsWith(this.codigo.toLowerCase())
+      const docOk = !this.documento || c.cpf?.includes(this.documento) || c.cnpj?.includes(this.documento)
+      const tipoOk = !this.tipoPessoa || c.tipo_pessoa === this.tipoPessoa
+      return nomeOk && codigoOk && docOk && tipoOk
+    })
   }
 
   // ===== Métodos =====
+  async carregarClientes() {
+    try {
+      this.rows = await clienteService.listarClientes()
+    } catch (err) {
+      this.$q.notify({ type: 'negative', message: 'Erro ao carregar clientes!' })
+    }
+  }
+
+  async salvar() {
+    try {
+      const payload: Cliente = {
+        tipo_pessoa: this.tipoPessoa ?? '',
+        nome_cliente: this.nome,
+        cpf: this.tipoPessoa === 'PF' ? this.documento : undefined,
+        cnpj: this.tipoPessoa === 'PJ' ? this.documento : undefined,
+        codigo_cliente: this.codigo,
+        status: this.ativoInativo,
+        data_nascimento: this.tipoPessoa === 'PF' ? this.dtaNascimento : undefined,
+        nome_social: this.tipoPessoa === 'PF' ? this.nmeSocial : undefined,
+        razao_social: this.tipoPessoa === 'PJ' ? this.razaoSocial : undefined,
+        nome_responsavel: this.tipoPessoa === 'PJ' ? this.nomeResponsavel : undefined,
+        telefone_1: this.telefone1,
+        telefone_2: this.telefone2,
+        email: this.email,
+        cep: this.cep,
+        endereco: this.endereco,
+        numero: this.numero,
+        bairro: this.bairro,
+        cidade: this.cidade,
+        uf: this.ufSelect,
+        observacoes: this.observacoes
+      }
+
+      if (this.editandoId) {
+        await clienteService.atualizarCliente(this.editandoId, payload)
+        this.$q.notify({ type: 'positive', message: 'Cliente atualizado com sucesso!' })
+      } else {
+        await clienteService.criarCliente(payload)
+        this.$q.notify({ type: 'positive', message: 'Cliente cadastrado com sucesso!' })
+      }
+
+      await this.carregarClientes()
+      this.confirmarCancelamento()
+
+    } catch (err) {
+      this.$q.notify({ type: 'negative', message: 'Erro ao salvar cadastro!' })
+    }
+  }
+
+  formatarDocumento(row: any): string {
+  if (row.tipo_pessoa === 'PF') {
+    const cpf = row.cpf?.replace(/\D/g, '') ?? ''
+    return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')
+  } else {
+    const cnpj = row.cnpj?.replace(/\D/g, '') ?? ''
+    return cnpj.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5')
+  }
+}
+
+  editar(row: any) {
+    this.editandoId = row.id
+    this.tipoPessoa = row.tipo_pessoa
+    this.nome = row.nome_cliente
+    this.documento = row.cpf || row.cnpj
+    this.codigo = row.codigo_cliente
+    this.ativoInativo = row.status
+    this.dtaNascimento = row.data_nascimento
+    this.nmeSocial = row.nome_social
+    this.razaoSocial = row.razao_social
+    this.nomeResponsavel = row.nome_responsavel
+    this.telefone1 = row.telefone_1
+    this.telefone2 = row.telefone_2
+    this.email = row.email
+    this.cep = row.cep
+    this.endereco = row.endereco
+    this.numero = row.numero
+    this.bairro = row.bairro
+    this.cidade = row.cidade
+    this.ufSelect = row.uf
+    this.observacoes = row.observacoes
+    this.mostrarFormulario()
+  }
+
+  async confirmarExcluir(row: any) {
+    this.$q.dialog({
+      title: 'Excluir Cliente',
+      message: `Deseja excluir o cliente "${row.nome_cliente}"?`,
+      cancel: true,
+      persistent: true
+    }).onOk(async () => {
+      try {
+        await clienteService.deletarCliente(row.id)
+        this.$q.notify({ type: 'positive', message: 'Cliente excluído com sucesso!' })
+        await this.carregarClientes()
+      } catch (err) {
+        this.$q.notify({ type: 'negative', message: 'Erro ao excluir cliente!' })
+      }
+    })
+  }
+
   mostrarFormulario() {
     if (!this.tipoPessoa) {
       this.$q.notify({ type: 'negative', message: 'Selecione o tipo de pessoa primeiro', position: 'bottom' })
@@ -319,43 +389,30 @@ export default class ModuleComponent extends Vue {
   }
 
   limparCampos() {
-    this.codigo = ""
-    this.nome = ""
-    this.documento = ""
+    this.editandoId = null
     this.tipoPessoa = null
-  }
-
-  pesquisar() {
-    this.rowsFiltradas = this.rowsClientes.filter((row: any) => {
-      const nomeMatch = !this.nome || row.nome.toLowerCase().includes(this.nome.toLowerCase())
-      const codigoMatch = !this.codigo || row.codigo.toLowerCase().includes(this.codigo.toLowerCase())
-      const documentoMatch = !this.documento || row.documento.toLowerCase().includes(this.documento.toLowerCase())
-      const tipoPessoaMatch = !this.tipoPessoa || row.tipoPessoa === this.tipoPessoa
-      return nomeMatch && codigoMatch && documentoMatch && tipoPessoaMatch
-    })
-  }
-
-  editar(row: any) {
-    this.codigo = row.codigo
-    this.nome = row.nome
-    this.documento = row.documento
-    this.tipoPessoa = row.tipoPessoa
-    this.ativoInativo = row.status === 'Ativo' ? 'A' : 'I'
-    this.mostrarFormulario()
-  }
-
-  confirmarExcluir(row: any) {
-    console.log('Excluir:', row)
+    this.nome = ''
+    this.documento = ''
+    this.codigo = ''
+    this.dtaNascimento = ''
+    this.nmeSocial = ''
+    this.razaoSocial = ''
+    this.nomeResponsavel = ''
+    this.ativoInativo = 'Ativo'
+    this.telefone1 = ''
+    this.telefone2 = ''
+    this.email = ''
+    this.cep = ''
+    this.endereco = ''
+    this.numero = ''
+    this.bairro = ''
+    this.cidade = ''
+    this.ufSelect = 'DF'
+    this.observacoes = ''
   }
 
   refreshTable() {
     this.limparCampos()
-    this.rowsFiltradas = this.rowsClientes
-  }
-
-  salvar() {
-    this.$q.notify({ type: 'positive', message: 'Cadastro salvo com sucesso!' })
-    this.confirmarCancelamento()
   }
 }
 </script>

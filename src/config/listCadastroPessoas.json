@@ -1,21 +1,21 @@
 {
   "columns": [
     {
-      "name": "codigo",
+      "name": "codigo_cliente",
       "label": "Código",
-      "field": "codigo",
+      "field": "codigo_cliente",
       "align": "center"
     },
     {
-      "name": "tipoPessoa",
+      "name": "tipo_pessoa",
       "label": "Tipo",
-      "field": "tipoPessoa",
+      "field": "tipo_pessoa",
       "align": "center"
     },
     {
-      "name": "nome",
+      "name": "nome_cliente",
       "label": "Nome",
-      "field": "nome",
+      "field": "nome_cliente",
       "align": "center"
     },
     {
@@ -25,9 +25,9 @@
       "align": "center"
     },
     {
-      "name": "telefone",
+      "name": "telefone_1",
       "label": "Telefone",
-      "field": "telefone",
+      "field": "telefone_1",
       "align": "center"
     },
     {

@@ -31,36 +31,35 @@
           <div class="row items-center q-col-gutter-md">
 
             <!-- Inputs (col-9) -->
-            <div class="col-9">
-              <div class="row q-col-gutter-md items-center">
-                <div class="col-4">
-                  <q-input
-                    v-model="codigo"
-                    label="Código do Cliente"
-                    outlined
-                    dense
-                  />
-                </div>
+            <!-- Inputs de FILTRO (quando não está em modo de venda) -->
+<div class="col-9" v-if="!procurarProduto">
+  <div class="row q-col-gutter-md items-center">
+    <div class="col-4">
+      <q-input v-model="codigo" label="Código do Cliente" outlined dense />
+    </div>
+    <div class="col-4">
+      <q-input v-model="nome" label="Nome Completo" outlined dense />
+    </div>
+    <div class="col-4">
+      <q-input v-model="documento" label="CNPJ/CPF" outlined dense />
+    </div>
+  </div>
+</div>
 
-                <div class="col-4">
-                  <q-input
-                    v-model="nome"
-                    label="Nome Completo"
-                    outlined
-                    dense
-                  />
-                </div>
-
-                <div class="col-4">
-                  <q-input
-                    v-model="documento"
-                    label="CNPJ/CPF"
-                    outlined
-                    dense
-                  />
-                </div>
-              </div>
-            </div>
+<!-- Inputs de CLIENTE SELECIONADO (quando está em modo de venda) -->
+<div class="col-9" v-if="procurarProduto && clienteSelecionado">
+  <div class="row q-col-gutter-md items-center">
+    <div class="col-4">
+      <q-input :value="clienteSelecionado.codigo_cliente" label="Código do Cliente" outlined dense readonly />
+    </div>
+    <div class="col-4">
+      <q-input :value="clienteSelecionado.nome_cliente" label="Nome Completo" outlined dense readonly />
+    </div>
+    <div class="col-4">
+      <q-input :value="formatarDocumento(clienteSelecionado)" label="CNPJ/CPF" outlined dense readonly />
+    </div>
+  </div>
+</div>
 
             <!-- Botões (col-3) -->
             <div v-if="!procurarProduto" class="col-3">
@@ -108,6 +107,11 @@
             </template>
 
             <!-- Coluna Status -->
+             <template v-slot:body-cell-documento="props">
+    <q-td align="center">
+      {{ formatarDocumento(props.row) }}
+    </q-td>
+  </template>
             <template v-slot:body-cell-status="props">
               <q-td align="center">
                 <q-badge
@@ -232,6 +236,7 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import listVendaBalcao from '../../config/listVendaBalcao.json'
+import clienteService, { Cliente } from '../../services/clienteService'
 
 @Component
 export default class VendasBalcaoComponent extends Vue {
@@ -242,6 +247,7 @@ export default class VendasBalcaoComponent extends Vue {
   codigo = ''
   nome = ''
   documento = ''
+  clienteSelecionado: any = null
 
   // Controle de Fluxo
   procurarProduto = false
@@ -257,15 +263,6 @@ export default class VendasBalcaoComponent extends Vue {
   descontoPercent = '0%'
   valorTotalVenda = 'R$ 0,00'
 
-  // Configuração da Tabela
-  colunasVendaBalcao = [
-    { name: 'codigo', label: 'Código', field: 'codigo', align: 'left', sortable: true },
-    { name: 'nome', label: 'Nome Completo', field: 'nome', align: 'left', sortable: true },
-    { name: 'documento', label: 'CPF/CNPJ', field: 'documento', align: 'left' },
-    { name: 'status', label: 'Status', field: 'status', align: 'center' },
-    { name: 'acoes', label: 'Ações', field: 'acoes', align: 'center' }
-  ]
-
   colunasTabelProduto = [
     { name: 'codigo', label: 'Cód. Produto', field: 'codigo', align: 'left' },
     { name: 'nome', label: 'Produto', field: 'nome', align: 'left' },
@@ -274,37 +271,55 @@ export default class VendasBalcaoComponent extends Vue {
     { name: 'acoes', label: 'Ações', field: 'acoes', align: 'center' }
   ]
 
-  rowsClientes = [
-    { codigo: '001', nome: 'Antônio Carlos', documento: '123.456.789-10', status: 'Ativo' },
-    { codigo: '002', nome: 'Matheus Tech', documento: '12.342.278/0001-10', status: 'Ativo' }
-  ]
+  rows: Cliente[] = []
 
   rowsProduto = [
     { codigo: 'PROD001', nome: 'Peça de Motor', valorUnitario: 500.00, total: 500.00 }
   ]
 
   produtosAdicionados: any[] = []
-  rowsFiltradas: any[] = []
 
-  created() {
-    this.rowsFiltradas = this.rowsClientes
+  async created() {
+    await this.carregarClientes()
+  }
+
+  // ===== Computed =====
+  get rowsFiltradas() {
+    return this.rows.filter((c: Cliente) => {
+      const nomeOk = c.nome_cliente.toLowerCase().startsWith(this.nome.toLowerCase())
+      const codigoOk = !this.codigo || c.codigo_cliente?.toLowerCase().startsWith(this.codigo.toLowerCase())
+      const docOk = !this.documento || c.cpf?.includes(this.documento) || c.cnpj?.includes(this.documento)
+      return nomeOk && codigoOk && docOk
+    })
   }
 
   // ===== Métodos =====
+  async carregarClientes() {
+    try {
+      this.rows = await clienteService.listarClientes()
+    } catch (err) {
+      this.$q.notify({ type: 'negative', message: 'Erro ao carregar clientes!' })
+    }
+  }
+
   formatarReais(valor: string | number): string {
     const numero = typeof valor === 'string' ? parseFloat(valor) : valor
     return numero.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
   }
 
-  pesquisar() {
-    this.rowsFiltradas = this.rowsClientes.filter((row: any) => {
-      const nomeMatch = !this.nome || row.nome.toLowerCase().includes(this.nome.toLowerCase())
-      const codigoMatch = !this.codigo || row.codigo.includes(this.codigo)
-      return nomeMatch && codigoMatch
-    })
+formatarDocumento(row: any): string {
+  if (row.tipo_pessoa === 'PF') {
+    const cpf = (row.cpf ?? '').replace(/\D/g, '')
+    if (!cpf) return '-'
+    return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')
+  } else {
+    const cnpj = (row.cnpj ?? '').replace(/\D/g, '')
+    if (!cnpj) return '-'
+    return cnpj.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5')
   }
-
+}
   realizarVenda(row: any) {
+    this.clienteSelecionado = row
     this.procurarProduto = true
   }
 
@@ -334,6 +349,7 @@ export default class VendasBalcaoComponent extends Vue {
     this.procurarProduto = false
     this.finalizacaoVenda = false
     this.produtosAdicionados = []
+    this.clienteSelecionado = null
     this.limparCampos()
   }
 
@@ -341,16 +357,25 @@ export default class VendasBalcaoComponent extends Vue {
     this.codigo = ''
     this.nome = ''
     this.documento = ''
+    this.codigoProduto = ''
+    this.nomeProduto = ''
   }
 
   refreshTable() {
     this.limparCampos()
-    this.rowsFiltradas = this.rowsClientes
   }
 
-  pesquisarProduto() { console.log('Pesquisando produto...') }
-  abrirDialogQuantidade(row: any) { console.log('Qtd:', row) }
-  abrirDialogDesconto(row: any) { console.log('Desconto:', row) }
+  pesquisarProduto() {
+    console.log('Pesquisando produto...')
+  }
+
+  abrirDialogQuantidade(row: any) {
+    console.log('Qtd:', row)
+  }
+
+  abrirDialogDesconto(row: any) {
+    console.log('Desconto:', row)
+  }
 }
 </script>
 
