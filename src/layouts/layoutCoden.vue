@@ -206,7 +206,7 @@
       style="z-index: 2000"
     >
       <div class="column full-height">
-        <!-- Cabeçalho com avatar e nome -->
+        <q-separator/>
         <div class="q-pa-md q-pb-sm">
           <div class="row items-center q-gutter-md">
             <q-avatar size="48px" color="primary" text-color="white">

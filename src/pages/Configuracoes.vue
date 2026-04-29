@@ -1,19 +1,10 @@
 <template>
-  <!-- Container principal para centralizar o card na tela -->
   <div class="row justify-center items-center">
-    <q-card
-      class="no-shadow border b-r-10"
-      style="width: 1500px;"
-    >
-      <!-- Cabeçalho do Card -->
+    <q-card class="no-shadow border b-r-10" style="width: 1500px">
       <q-card-section class="bg-white text-primary q-pb-none">
         <div class="text-h5 text-bold">Configurações Gerais</div>
         <q-toolbar class="q-pa-none">
-          <q-breadcrumbs
-            active-color="primary"
-            style="font-size: 14px"
-            class="q-mb-md"
-          >
+          <q-breadcrumbs active-color="primary" style="font-size: 14px" class="q-mb-md">
             <template v-slot:separator>
               <q-icon size="1.5em" name="chevron_right" color="primary" />
             </template>
@@ -25,231 +16,316 @@
 
       <q-separator />
 
-      <!-- Corpo do Card -->
       <q-card-section class="q-pa-lg">
-        <!-- SEÇÃO 1: Notificações -->
-        <div class="q-mb-xl">
-          <div class="row items-center q-mb-md">
-            <q-icon
-              name="notifications"
-              size="24px"
-              color="primary"
-              class="q-mr-sm"
-            />
-            <div class="text-h6 text-bold">Notificações</div>
-          </div>
-          <div class="row q-col-gutter-md">
-            <div
-              v-for="(item, index) in notificacoes"
-              :key="'notif-' + index"
-              class="col-12 col-md-6"
-            >
-              <div
-                class="row items-center justify-between q-pa-md border rounded-borders"
-              >
-                <div class="row items-center">
-                  <q-icon
-                    :name="item.icon"
-                    size="28px"
-                    color="primary"
-                    class="q-mr-md"
-                  />
-                  <div>
-                    <div class="text-subtitle1">{{ item.title }}</div>
-                    <div class="text-caption text-grey-8">{{ item.desc }}</div>
-                  </div>
-                </div>
-                <q-toggle v-model="item.value" color="primary" />
-              </div>
-            </div>
-          </div>
+
+        <!-- NOTIFICAÇÕES -->
+        <div class="row items-center q-mb-sm">
+          <q-icon name="notifications" size="22px" color="primary" class="q-mr-sm" />
+          <div class="text-h6 text-bold">Notificações</div>
         </div>
+        <q-list bordered separator class="rounded-borders q-mb-xl">
+          <q-item>
+            <q-item-section avatar>
+              <q-icon name="notifications" color="primary" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Alertas de Vendas</q-item-label>
+              <q-item-label caption>Notificar ao concluir venda</q-item-label>
+            </q-item-section>
+            <q-item-section side>
+              <q-toggle v-model="notif_alertaVendas" color="primary" />
+            </q-item-section>
+          </q-item>
+
+          <q-item>
+            <q-item-section avatar>
+              <q-icon name="inventory_2" color="primary" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Estoque Baixo</q-item-label>
+              <q-item-label caption>Alertar ao estoque atingir mínimo</q-item-label>
+            </q-item-section>
+            <q-item-section side>
+              <q-toggle v-model="notif_estoqueBaixo" color="primary" />
+            </q-item-section>
+          </q-item>
+
+          <q-item>
+            <q-item-section avatar>
+              <q-icon name="alarm" color="primary" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Alertas Automáticos</q-item-label>
+              <q-item-label caption>Notificar quando produto baixar</q-item-label>
+            </q-item-section>
+            <q-item-section side>
+              <q-toggle v-model="notif_alertasAutomaticos" color="primary" />
+            </q-item-section>
+          </q-item>
+        </q-list>
 
         <q-separator class="q-my-lg" />
 
-        <!-- SEÇÃO 2: Pagamento -->
-        <div class="q-mb-xl">
-          <div class="row items-center q-mb-md">
-            <q-icon
-              name="payments"
-              size="24px"
-              color="primary"
-              class="q-mr-sm"
-            />
-            <div class="text-h6 text-bold">Pagamento</div>
-          </div>
-          <div class="row q-col-gutter-md">
-            <div
-              v-for="(item, index) in pagamentos"
-              :key="'pag-' + index"
-              class="col-12 col-md-6"
-            >
-              <div
-                class="row items-center justify-between q-pa-md border rounded-borders"
-              >
-                <div class="row items-center">
-                  <q-icon
-                    :name="item.icon"
-                    size="28px"
-                    color="primary"
-                    class="q-mr-md"
-                  />
-                  <div>
-                    <div class="text-subtitle1">{{ item.title }}</div>
-                    <div class="text-caption text-grey-8">{{ item.desc }}</div>
-                  </div>
-                </div>
-                <q-toggle v-model="item.value" color="primary" />
-              </div>
-            </div>
-          </div>
+        <!-- PAGAMENTO -->
+        <div class="row items-center q-mb-sm">
+          <q-icon name="payments" size="22px" color="primary" class="q-mr-sm" />
+          <div class="text-h6 text-bold">Pagamento</div>
         </div>
+        <q-list bordered separator class="rounded-borders q-mb-xl">
+          <q-item>
+            <q-item-section avatar>
+              <q-icon name="credit_card" color="primary" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Cartão de Crédito</q-item-label>
+              <q-item-label caption>Aceitar pagamento por crédito</q-item-label>
+            </q-item-section>
+            <q-item-section side>
+              <q-toggle v-model="pag_credito" color="primary" />
+            </q-item-section>
+          </q-item>
+
+          <q-item>
+            <q-item-section avatar>
+              <q-icon name="credit_card" color="primary" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Cartão de Débito</q-item-label>
+              <q-item-label caption>Aceitar pagamento por débito</q-item-label>
+            </q-item-section>
+            <q-item-section side>
+              <q-toggle v-model="pag_debito" color="primary" />
+            </q-item-section>
+          </q-item>
+
+          <q-item>
+            <q-item-section avatar>
+              <q-icon name="pix" color="primary" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>PIX</q-item-label>
+              <q-item-label caption>Aceitar pagamento por PIX</q-item-label>
+            </q-item-section>
+            <q-item-section side>
+              <q-toggle v-model="pag_pix" color="primary" />
+            </q-item-section>
+          </q-item>
+
+          <q-item>
+            <q-item-section avatar>
+              <q-icon name="attach_money" color="primary" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Dinheiro</q-item-label>
+              <q-item-label caption>Aceitar pagamento em dinheiro</q-item-label>
+            </q-item-section>
+            <q-item-section side>
+              <q-toggle v-model="pag_dinheiro" color="primary" />
+            </q-item-section>
+          </q-item>
+        </q-list>
 
         <q-separator class="q-my-lg" />
 
-        <!-- SEÇÃO 3: Vendas -->
-        <div class="q-mb-xl">
-          <div class="row items-center q-mb-md">
-            <q-icon
-              name="shopping_cart"
-              size="24px"
-              color="primary"
-              class="q-mr-sm"
-            />
-            <div class="text-h6 text-bold">Vendas</div>
-          </div>
-          <div class="row q-col-gutter-md">
-            <div
-              v-for="(item, index) in vendas"
-              :key="'vend-' + index"
-              class="col-12 col-md-6"
-            >
-              <div
-                class="row items-center justify-between q-pa-md border rounded-borders"
-              >
-                <div class="row items-center">
-                  <q-icon
-                    :name="item.icon"
-                    size="28px"
-                    color="primary"
-                    class="q-mr-md"
-                  />
-                  <div>
-                    <div class="text-subtitle1">{{ item.title }}</div>
-                    <div class="text-caption text-grey-8">{{ item.desc }}</div>
-                  </div>
-                </div>
-                <template v-if="item.type === 'toggle'">
-                  <q-toggle v-model="item.value" color="primary" />
-                </template>
-                <template v-else>
-                  <q-btn flat dense icon="chevron_right" color="grey" />
-                </template>
-              </div>
-            </div>
-          </div>
+        <!-- VENDAS -->
+        <div class="row items-center q-mb-sm">
+          <q-icon name="shopping_cart" size="22px" color="primary" class="q-mr-sm" />
+          <div class="text-h6 text-bold">Vendas</div>
         </div>
+        <q-list bordered separator class="rounded-borders q-mb-xl">
+          <q-item>
+            <q-item-section avatar>
+              <q-icon name="person" color="primary" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Cliente Padrão</q-item-label>
+              <q-item-label caption>Permitir vendas sem identificação</q-item-label>
+            </q-item-section>
+            <q-item-section side>
+              <q-toggle v-model="venda_clientePadrao" color="primary" />
+            </q-item-section>
+          </q-item>
+
+          <q-item>
+            <q-item-section avatar>
+              <q-icon name="block" color="primary" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Bloquear Venda sem Estoque</q-item-label>
+              <q-item-label caption>Impedir saldo negativo</q-item-label>
+            </q-item-section>
+            <q-item-section side>
+              <q-toggle v-model="venda_bloquearSemEstoque" color="primary" />
+            </q-item-section>
+          </q-item>
+
+          <q-item>
+            <q-item-section avatar>
+              <q-icon name="percent" color="primary" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Desconto por Vendedor</q-item-label>
+              <q-item-label caption>Permitir alteração de preço</q-item-label>
+            </q-item-section>
+            <q-item-section side>
+              <q-toggle v-model="venda_descontoVendedor" color="primary" />
+            </q-item-section>
+          </q-item>
+
+          <q-item clickable v-ripple>
+            <q-item-section avatar>
+              <q-icon name="settings_suggest" color="primary" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Desconto Máximo</q-item-label>
+              <q-item-label caption>Definir limite de desconto</q-item-label>
+            </q-item-section>
+            <q-item-section side>
+              <q-icon name="chevron_right" color="grey" />
+            </q-item-section>
+          </q-item>
+
+          <q-item>
+            <q-item-section avatar>
+              <q-icon name="warning" color="primary" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Aprovação de Gerente</q-item-label>
+              <q-item-label caption>Para descontos acima do limite</q-item-label>
+            </q-item-section>
+            <q-item-section side>
+              <q-toggle v-model="venda_aprovacaoGerente" color="primary" />
+            </q-item-section>
+          </q-item>
+        </q-list>
 
         <q-separator class="q-my-lg" />
 
-        <!-- SEÇÃO 4: Sistema -->
-        <div class="q-mb-xl">
-          <div class="row items-center q-mb-md">
-            <q-icon
-              name="computer"
-              size="24px"
-              color="primary"
-              class="q-mr-sm"
-            />
-            <div class="text-h6 text-bold">Sistema</div>
-          </div>
-          <div class="row q-col-gutter-md">
-            <div
-              v-for="(item, index) in sistema"
-              :key="'sist-' + index"
-              class="col-12 col-md-6"
-            >
-              <div
-                class="row items-center justify-between q-pa-md border rounded-borders"
-              >
-                <div class="row items-center">
-                  <q-icon
-                    :name="item.icon"
-                    size="28px"
-                    color="primary"
-                    class="q-mr-md"
-                  />
-                  <div>
-                    <div class="text-subtitle1">{{ item.title }}</div>
-                    <div class="text-caption text-grey-8">{{ item.desc }}</div>
-                  </div>
-                </div>
-                <template v-if="item.type === 'toggle'">
-                  <q-toggle v-model="item.value" color="primary" />
-                </template>
-                <template v-else>
-                  <q-btn flat dense icon="chevron_right" color="grey" />
-                </template>
-              </div>
-            </div>
-          </div>
+        <!-- SISTEMA -->
+        <div class="row items-center q-mb-sm">
+          <q-icon name="computer" size="22px" color="primary" class="q-mr-sm" />
+          <div class="text-h6 text-bold">Sistema</div>
         </div>
+        <q-list bordered separator class="rounded-borders q-mb-xl">
+          <q-item>
+            <q-item-section avatar>
+              <q-icon name="backup" color="primary" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Backup Automático</q-item-label>
+              <q-item-label caption>Realizar backup diário dos dados</q-item-label>
+            </q-item-section>
+            <q-item-section side>
+              <q-toggle v-model="sist_backup" color="primary" />
+            </q-item-section>
+          </q-item>
+
+          <q-item>
+            <q-item-section avatar>
+              <q-icon name="dark_mode" color="primary" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Tema Escuro</q-item-label>
+              <q-item-label caption>Habilitar interface em modo noturno</q-item-label>
+            </q-item-section>
+            <q-item-section side>
+              <q-toggle v-model="sist_temaEscuro" color="primary" />
+            </q-item-section>
+          </q-item>
+
+          <q-item>
+            <q-item-section avatar>
+              <q-icon name="history" color="primary" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Logs de Atividade</q-item-label>
+              <q-item-label caption>Registrar ações dos usuários</q-item-label>
+            </q-item-section>
+            <q-item-section side>
+              <q-toggle v-model="sist_logs" color="primary" />
+            </q-item-section>
+          </q-item>
+
+          <q-item clickable v-ripple>
+            <q-item-section avatar>
+              <q-icon name="update" color="primary" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Atualizações</q-item-label>
+              <q-item-label caption>Verificar novas versões do sistema</q-item-label>
+            </q-item-section>
+            <q-item-section side>
+              <q-icon name="chevron_right" color="grey" />
+            </q-item-section>
+          </q-item>
+        </q-list>
 
         <q-separator class="q-my-lg" />
 
-        <!-- SEÇÃO 5: Caixa -->
-        <div class="q-mb-xl">
-          <div class="row items-center q-mb-md">
-            <q-icon
-              name="point_of_sale"
-              size="24px"
-              color="primary"
-              class="q-mr-sm"
-            />
-            <div class="text-h6 text-bold">Caixa</div>
-          </div>
-          <div class="row q-col-gutter-md">
-            <div
-              v-for="(item, index) in caixa"
-              :key="'caixa-' + index"
-              class="col-12 col-md-6"
-            >
-              <div
-                class="row items-center justify-between q-pa-md border rounded-borders"
-              >
-                <div class="row items-center">
-                  <q-icon
-                    :name="item.icon"
-                    size="28px"
-                    color="primary"
-                    class="q-mr-md"
-                  />
-                  <div>
-                    <div class="text-subtitle1">{{ item.title }}</div>
-                    <div class="text-caption text-grey-8">{{ item.desc }}</div>
-                  </div>
-                </div>
-                <template v-if="item.type === 'toggle'">
-                  <q-toggle v-model="item.value" color="primary" />
-                </template>
-                <template v-else>
-                  <q-btn flat dense icon="chevron_right" color="grey" />
-                </template>
-              </div>
-            </div>
-          </div>
+        <!-- CAIXA -->
+        <div class="row items-center q-mb-sm">
+          <q-icon name="point_of_sale" size="22px" color="primary" class="q-mr-sm" />
+          <div class="text-h6 text-bold">Caixa</div>
         </div>
+        <q-list bordered separator class="rounded-borders q-mb-xl">
+          <q-item>
+            <q-item-section avatar>
+              <q-icon name="lock_open" color="primary" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Abertura de Caixa</q-item-label>
+              <q-item-label caption>Exigir valor inicial na abertura</q-item-label>
+            </q-item-section>
+            <q-item-section side>
+              <q-toggle v-model="caixa_abertura" color="primary" />
+            </q-item-section>
+          </q-item>
 
-        <!-- Botão de Salvar Configurações -->
+          <q-item>
+            <q-item-section avatar>
+              <q-icon name="visibility_off" color="primary" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Fechamento Cego</q-item-label>
+              <q-item-label caption>Não mostrar saldo esperado no fechamento</q-item-label>
+            </q-item-section>
+            <q-item-section side>
+              <q-toggle v-model="caixa_fechamentoCego" color="primary" />
+            </q-item-section>
+          </q-item>
+
+          <q-item>
+            <q-item-section avatar>
+              <q-icon name="outbox" color="primary" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Sangria de Caixa</q-item-label>
+              <q-item-label caption>Permitir retiradas durante o expediente</q-item-label>
+            </q-item-section>
+            <q-item-section side>
+              <q-toggle v-model="caixa_sangria" color="primary" />
+            </q-item-section>
+          </q-item>
+
+          <q-item>
+            <q-item-section avatar>
+              <q-icon name="print" color="primary" />
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Relatório de Turno</q-item-label>
+              <q-item-label caption>Imprimir resumo ao fechar caixa</q-item-label>
+            </q-item-section>
+            <q-item-section side>
+              <q-toggle v-model="caixa_relatorioTurno" color="primary" />
+            </q-item-section>
+          </q-item>
+        </q-list>
+
+        <!-- Salvar -->
         <div class="row justify-end q-mt-xl">
-          <q-btn
-            label="Salvar Todas as Alterações"
-            color="positive"
-            unelevated
-            icon="save"
-            @click="salvarConfig()"
-          />
+          <q-btn label="Salvar Todas as Alterações" color="positive" unelevated icon="save" @click="salvarConfig()" />
         </div>
+
       </q-card-section>
     </q-card>
   </div>
@@ -261,45 +337,39 @@ import Component from 'vue-class-component'
 
 @Component
 export default class ConfiguracoesComponent extends Vue {
-  notificacoes = [
-    { title: 'Alertas de Vendas', desc: 'Notificar ao concluir venda', icon: 'notifications', value: true },
-    { title: 'Estoque Baixo', desc: 'Alertar ao estoque atingir mínimo', icon: 'inventory_2', value: true },
-    { title: 'Alertas Automáticos', desc: 'Notificar quando produto baixar', icon: 'alarm', value: false }
-  ]
 
-  pagamentos = [
-    { title: 'Cartão de Crédito', desc: 'Aceitar pagamento por crédito', icon: 'credit_card', value: true },
-    { title: 'Cartão de Débito', desc: 'Aceitar pagamento por débito', icon: 'credit_card', value: true },
-    { title: 'PIX', desc: 'Aceitar pagamento por PIX', icon: 'pix', value: true },
-    { title: 'Dinheiro', desc: 'Aceitar pagamento por Dinheiro', icon: 'attach_money', value: true }
-  ]
+  // Notificações
+  notif_alertaVendas = true
+  notif_estoqueBaixo = true
+  notif_alertasAutomaticos = false
 
-  vendas = [
-    { title: 'Cliente Padrão', desc: 'Permitir vendas sem identificação', icon: 'person', value: true, type: 'toggle' },
-    { title: 'Bloquear Venda sem Estoque', desc: 'Impedir saldo negativo', icon: 'block', value: false, type: 'toggle' },
-    { title: 'Desconto por Vendedor', desc: 'Permitir alteração de preço', icon: 'percent', value: true, type: 'toggle' },
-    { title: 'Desconto Máximo', desc: 'Definir limite de desconto', icon: 'settings_suggest', value: null, type: 'button' },
-    { title: 'Aprovação de Gerente', desc: 'Para descontos acima do limite', icon: 'warning', value: true, type: 'toggle' }
-  ]
+  // Pagamento
+  pag_credito = true
+  pag_debito = true
+  pag_pix = true
+  pag_dinheiro = true
 
-  sistema = [
-    { title: 'Backup Automático', desc: 'Realizar backup diário dos dados', icon: 'backup', value: true, type: 'toggle' },
-    { title: 'Tema Escuro', desc: 'Habilitar interface em modo noturno', icon: 'dark_mode', value: false, type: 'toggle' },
-    { title: 'Logs de Atividade', desc: 'Registrar ações dos usuários', icon: 'history', value: true, type: 'toggle' },
-    { title: 'Atualizações', desc: 'Verificar novas versões do sistema', icon: 'update', value: null, type: 'button' }
-  ]
+  // Vendas
+  venda_clientePadrao = true
+  venda_bloquearSemEstoque = false
+  venda_descontoVendedor = true
+  venda_aprovacaoGerente = true
 
-  caixa = [
-    { title: 'Abertura de Caixa', desc: 'Exigir valor inicial na abertura', icon: 'lock_open', value: true, type: 'toggle' },
-    { title: 'Fechamento Cego', desc: 'Não mostrar saldo esperado no fechamento', icon: 'visibility_off', value: false, type: 'toggle' },
-    { title: 'Sangria de Caixa', desc: 'Permitir retiradas durante o expediente', icon: 'outbox', value: true, type: 'toggle' },
-    { title: 'Relatório de Turno', desc: 'Imprimir resumo ao fechar caixa', icon: 'print', value: true, type: 'toggle' }
-  ]
+  // Sistema
+  sist_backup = true
+  sist_temaEscuro = false
+  sist_logs = true
+
+  // Caixa
+  caixa_abertura = true
+  caixa_fechamentoCego = false
+  caixa_sangria = true
+  caixa_relatorioTurno = true
 
   salvarConfig() {
     this.$q.notify({
       type: 'positive',
-      message: 'Todas as configurações foram salvas com sucesso!',
+      message: 'Configurações salvas com sucesso!',
       position: 'bottom'
     })
   }
@@ -310,17 +380,10 @@ export default class ConfiguracoesComponent extends Vue {
 .border {
   border: 1px solid #ccc;
 }
-.border:hover {
-  background-color: #f5f5f5;
+.b-r-10 {
+  border-radius: 10px;
 }
 .rounded-borders {
   border-radius: 8px;
-}
-/* Garante que o card não mude de tamanho */
-.q-card {
-  transition: none !important;
-}
-.b-r-10{
-  border-radius: 10px;
 }
 </style>
