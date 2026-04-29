@@ -1,5 +1,53 @@
 <template>
   <q-layout view="hHh Lpr lFf">
+    <!-- CABEÇALHO -->
+    <q-header unelevated :class="$q.dark.isActive ? 'bg-dark' : 'bg-white'">
+      <q-toolbar>
+        <q-btn
+          flat
+          dense
+          round
+          color="primary"
+          icon="menu"
+          aria-label="Menu"
+          @click="leftDrawerOpen = !leftDrawerOpen"
+        />
+
+        <q-toolbar-title>
+          <img
+            style="width: 90px; vertical-align: middle; margin-top: -10px"
+            :src="require('../assets/Logo Coden.png')"
+            alt="Logo Coden"
+            @click="$router.push('/')"
+            class="cursor-pointer q-mr-lg"
+          />
+          <span class="text-primary text-bold"> Olá, {{ user }} </span>
+        </q-toolbar-title>
+
+        <q-space />
+
+        <div
+          class="row items-center q-gutter-sm cursor-pointer q-mr-sm"
+          @click="drawerPerfil = !drawerPerfil"
+        >
+          <q-avatar size="36px" color="primary" text-color="white">
+            {{ iniciais }}
+          </q-avatar>
+          <div class="column" style="line-height: 1.2">
+            <span
+              class="text-primary text-weight-bold"
+              style="font-size: 13px"
+              >{{ user }}</span
+            >
+            <span class="text-grey-6" style="font-size: 11px"
+              >Configurações e Perfil</span
+            >
+          </div>
+          <q-icon name="expand_more" color="primary" />
+        </div>
+      </q-toolbar>
+    </q-header>
+
     <q-drawer
       v-model="leftDrawerOpen"
       show-if-above
@@ -8,16 +56,19 @@
       :content-class="$q.dark.isActive ? 'bg-dark' : 'bg-primary'"
     >
       <div class="col-12 column no-wrap full-height">
-        <q-item class="q-pt-md no-wrap items-center" to="/">
-          <img
-            class="q-mb-sm"
-            style="width: 110px"
-            :src="$q.dark.isActive ? require('../assets/Logo Coden Branca.png') : require('../assets/Logo Coden Branca.png')"
-            alt="Logo Coden"
-          />
-        </q-item>
-
         <q-list>
+          <q-item
+            class="menu-header text-white"
+            clickable
+            v-ripple
+            @click="$router.push('/')"
+          >
+            <q-item-section avatar
+              ><q-icon name="o_dashboard"
+            /></q-item-section>
+            <q-item-section>Dashboard</q-item-section>
+          </q-item>
+
           <q-expansion-item
             icon="o_group"
             label="Cadastro"
@@ -30,24 +81,17 @@
               v-ripple
               @click="$router.push('/CadastroPessoas')"
             >
-              <q-item-section avatar>
-                <q-icon name="o_groups" />
-              </q-item-section>
-
-              <q-item-section> Cadastro Pessoas </q-item-section>
+              <q-item-section avatar><q-icon name="o_groups" /></q-item-section>
+              <q-item-section>Cadastro Pessoas</q-item-section>
             </q-item>
-
             <q-item
               class="q-my-xs q-pl-lg text-white"
               clickable
               v-ripple
               @click="$router.push('/CadastroProdutos')"
             >
-              <q-item-section avatar>
-                <q-icon name="shelves" />
-              </q-item-section>
-
-              <q-item-section> Cadastro Produtos </q-item-section>
+              <q-item-section avatar><q-icon name="shelves" /></q-item-section>
+              <q-item-section>Cadastro Produtos</q-item-section>
             </q-item>
           </q-expansion-item>
 
@@ -63,24 +107,21 @@
               v-ripple
               @click="$router.push('/NotaFiscalEntrada')"
             >
-              <q-item-section avatar>
-                <q-icon name="trending_up" />
-              </q-item-section>
-
-              <q-item-section> NF Entrada </q-item-section>
+              <q-item-section avatar
+                ><q-icon name="trending_up"
+              /></q-item-section>
+              <q-item-section>NF Entrada</q-item-section>
             </q-item>
-
             <q-item
               class="q-my-xs q-pl-lg text-white"
               clickable
               v-ripple
               @click="$router.push('/NotaFiscalSaida')"
             >
-              <q-item-section avatar>
-                <q-icon name="trending_down" />
-              </q-item-section>
-
-              <q-item-section> NF Saída </q-item-section>
+              <q-item-section avatar
+                ><q-icon name="trending_down"
+              /></q-item-section>
+              <q-item-section>NF Saída</q-item-section>
             </q-item>
           </q-expansion-item>
 
@@ -96,99 +137,147 @@
               v-ripple
               @click="$router.push('/RelatorioEstoque')"
             >
-              <q-item-section avatar>
-                <q-icon name="o_inventory" />
-              </q-item-section>
-
-              <q-item-section> Relatório Estoque </q-item-section>
+              <q-item-section avatar
+                ><q-icon name="o_inventory"
+              /></q-item-section>
+              <q-item-section>Relatório Estoque</q-item-section>
             </q-item>
-
             <q-item
               class="q-my-xs q-pl-lg text-white"
               clickable
               v-ripple
               @click="$router.push('/RelatorioVendas')"
             >
-              <q-item-section avatar>
-                <q-icon name="o_sell" />
-              </q-item-section>
-
-              <q-item-section> Relatório Vendas </q-item-section>
+              <q-item-section avatar><q-icon name="o_sell" /></q-item-section>
+              <q-item-section>Relatório Vendas</q-item-section>
             </q-item>
           </q-expansion-item>
+
           <q-item
             class="menu-header text-white"
             clickable
             v-ripple
             @click="$router.push('/Integracoes')"
           >
-            <q-item-section avatar>
-              <q-icon name="webhook" />
-            </q-item-section>
-
+            <q-item-section avatar><q-icon name="webhook" /></q-item-section>
             <q-item-section>Integrações</q-item-section>
           </q-item>
           <q-item
             class="menu-header text-white"
             clickable
             v-ripple
+            @click="$router.push('/Whatsapp')"
+          >
+            <q-item-section avatar
+              ><q-icon name="fab fa-whatsapp"
+            /></q-item-section>
+            <q-item-section>Whatsapp</q-item-section>
+          </q-item>
+
+          <q-item
+            class="menu-header text-white"
+            clickable
+            v-ripple
             @click="$router.push('/VendaBalcao')"
           >
-            <q-item-section avatar>
-              <q-icon name="point_of_sale" />
-            </q-item-section>
-
+            <q-item-section avatar
+              ><q-icon name="point_of_sale"
+            /></q-item-section>
             <q-item-section>Vendas Balcão</q-item-section>
           </q-item>
         </q-list>
-        <q-list class="column margin-auto q-pt-lg q-pb-md text-white">
-          <q-item
-            @click="toggleDark()"
-            clickable
-            v-ripple
-            to=""
-          >
-            <q-item-section avatar>
-              <q-icon name="dark_mode" />
-            </q-item-section>
+      </div>
+    </q-drawer>
+    <template v-if="drawerPerfil">
+      <div
+        class="fixed-full"
+        style="z-index: 1999; background: transparent"
+        @click="drawerPerfil = false"
+      />
+    </template>
 
-            <q-item-section>Modo Escuro/Claro</q-item-section>
-          </q-item>
-          <q-item
-            clickable
-            v-ripple
-            @click="$router.push('/Configuracoes')"
-          >
-            <q-item-section avatar>
-              <q-icon name="o_settings" />
-            </q-item-section>
-
-            <q-item-section>Configurações</q-item-section>
-          </q-item>
-          <div class="row">
-            <q-item
-              clickable
-              v-ripple
-              @click="$router.push('/Perfil')"
-            >
-              <q-item-section avatar>
-                <q-icon name="o_account_circle" />
-              </q-item-section>
-
-              <q-item-section>Perfil</q-item-section>
-            </q-item>
-            <q-item @click=Sair() clickable v-ripple>
-              <q-item-section avatar>
-                <q-icon name="logout" />
-              </q-item-section>
-
-              <q-item-section>Sair</q-item-section>
-            </q-item>
+    <q-drawer
+      v-model="drawerPerfil"
+      side="right"
+      overlay
+      bordered
+      :width="280"
+      :breakpoint="0"
+      style="z-index: 2000"
+    >
+      <div class="column full-height">
+        <!-- Cabeçalho com avatar e nome -->
+        <div class="q-pa-md q-pb-sm">
+          <div class="row items-center q-gutter-md">
+            <q-avatar size="48px" color="primary" text-color="white">
+              {{ iniciais }}
+            </q-avatar>
+            <div class="column">
+              <span
+                class="text-weight-bold"
+                style="font-size: 14px"
+                >{{ user }}</span
+              >
+              <span class="text-grey-6" style="font-size: 12px"
+                >Configurações e plano</span
+              >
+            </div>
           </div>
+        </div>
+
+        <q-separator />
+
+        <div class="q-px-md q-pt-md q-pb-xs">
+          <span class="text-bold text-grey-8" style="font-size: 13px"
+            >Minha Conta</span
+          >
+        </div>
+
+        <q-list dense>
+          <q-item
+            clickable
+            v-ripple
+            @click="$router.push('/Perfil'); drawerPerfil = false"
+          >
+            <q-item-section>
+              <span style="font-size: 13px">Perfil</span>
+            </q-item-section>
+          </q-item>
+
+          <q-item
+            clickable
+            v-ripple
+            @click="$router.push('/Configuracoes'); drawerPerfil = false"
+          >
+            <q-item-section>
+              <span style="font-size: 13px">Configurações</span>
+            </q-item-section>
+          </q-item>
+
+          <q-item
+            clickable
+            v-ripple
+            @click="toggleDark(); drawerPerfil = false"
+          >
+            <q-item-section>
+              <span style="font-size: 13px">Modo Escuro/Claro</span>
+            </q-item-section>
+          </q-item>
+        </q-list>
+
+        <q-space />
+
+        <q-separator />
+
+        <q-list dense class="q-pb-sm">
+          <q-item clickable v-ripple @click="Sair()">
+            <q-item-section>
+              <span class="text-negative" style="font-size: 13px">Sair</span>
+            </q-item-section>
+          </q-item>
         </q-list>
       </div>
     </q-drawer>
-
     <!-- CONTEÚDO -->
     <q-page-container>
       <q-page class="bg-accent" padding>
@@ -217,31 +306,40 @@ import Component from 'vue-class-component'
 export default class ModuleComponent extends Vue {
 
   leftDrawerOpen = true
+  drawerPerfil = false
+  user = ''
 
-  creted(){
-    this.$q.dark.set(false)
+created() {
+  const token = localStorage.getItem('token')
+  if (token) {
+    const payload = JSON.parse(atob(token.split('.')[1]))
+    this.user = payload.nome ?? localStorage.getItem('nomeUsuario') ?? ''
   }
+}
 
-  toggleDark(){
+get iniciais(): string {
+  if (!this.user) return '?'
+  const partes = this.user.trim().split(' ')
+  const primeira = partes[0]?.[0] ?? ''
+  const segunda = partes[1]?.[0] ?? ''
+  return (primeira + segunda).toUpperCase()
+}
+
+  toggleDark() {
     this.$q.dark.toggle()
   }
 
-  // ===== data =====
-  user = ''
-  password = ''
-
-  logoSrc () {
+  logoSrc() {
     return this.$q.dark.isActive
       ? require('../assets/Logo Coden Branca.png')
       : require('../assets/Logo Coden.png')
   }
 
   Sair() {
-  localStorage.removeItem('token')
-  this.$router.push('/login')
-}
-
+    localStorage.removeItem('token')
+    this.$router.push('/login')
   }
+}
 </script>
 
 <style>
@@ -253,7 +351,7 @@ export default class ModuleComponent extends Vue {
   margin-top: auto;
 }
 
-.q-expansion-item__toggle-icon{
+.q-expansion-item__toggle-icon {
   color: white;
 }
 </style>

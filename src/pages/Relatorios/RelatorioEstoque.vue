@@ -1,7 +1,7 @@
 <template>
   <!-- Container principal para centralizar o card na tela -->
   <div class="row justify-center items-center">
-    <q-card class="col-11 col-md-10 col-lg-9 shadow-2 b-r-10" style="width: 1500px">
+    <q-card class="col-11 col-md-10 col-lg-9 no-shadow border b-r-10" style="width: 1500px">
       <!-- Cabeçalho do Card -->
       <q-card-section class="bg-white text-primary q-pb-none">
         <div class="text-h5 text-bold">Relatório de Estoque</div>
@@ -97,17 +97,22 @@
             <div class="col-3">
               <div class="row justify-end items-center q-gutter-sm">
                 <q-btn
-                  icon="search"
-                  color="primary"
                   unelevated
+                  class="btn-outline-primary"
                   @click="pesquisar()"
-                />
+                >
+                  <q-icon name="search" color="primary" />
+                  <q-tooltip>Pesquisar</q-tooltip>
+                </q-btn>
+
                 <q-btn
-                  icon="delete"
-                  color="warning"
                   unelevated
+                  class="btn-outline-primary"
                   @click="refreshTable()"
-                />
+                >
+                  <q-icon name="delete" color="primary" />
+                  <q-tooltip>Limpar</q-tooltip>
+                </q-btn>
               </div>
             </div>
           </div>
@@ -250,5 +255,12 @@ export default class RelatorioEstoqueComponent extends Vue {
 <style scoped>
 .b-r-10{
   border-radius: 10px;
+}
+.border {
+  border: 1px solid #ccc;
+}
+.btn-outline-primary {
+  border: 1.5px solid #ccc;
+  background-color: #f0e9f5 !important;
 }
 </style>

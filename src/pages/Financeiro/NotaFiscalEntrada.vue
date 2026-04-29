@@ -1,7 +1,9 @@
 <template>
-  <!-- Container principal para centralizar o card na tela -->
   <div class="row justify-center items-center">
-    <q-card class="col-11 col-md-10 col-lg-9 shadow-2 b-r-10" style="width: 1500px">
+    <q-card
+      class="col-11 col-md-10 col-lg-9 no-shadow border b-r-10"
+      style="width: 1500px"
+    >
       <!-- Cabeçalho do Card -->
       <q-card-section class="bg-white text-primary q-pb-none">
         <div class="text-h5 text-bold">NF Entrada</div>
@@ -55,23 +57,27 @@
           <!-- Grupo de Botões (Alinhado à Direita) -->
           <div v-if="!formNotaFiscalEntrada" class="row q-gutter-sm">
             <q-btn
-              icon="add"
               unelevated
-              class="bg-positive text-white"
+              class="btn-outline-primary"
               @click="mostrarFormulario()"
-            />
+            >
+              <q-icon name="add" color="primary" />
+              <q-tooltip>Adicionar</q-tooltip>
+            </q-btn>
+
+            <q-btn unelevated class="btn-outline-primary" @click="pesquisar()">
+              <q-icon name="search" color="primary" />
+              <q-tooltip>Pesquisar</q-tooltip>
+            </q-btn>
+
             <q-btn
-              icon="search"
-              color="primary"
               unelevated
-              @click="pesquisar()"
-            />
-            <q-btn
-              icon="delete"
-              unelevated
-              class="bg-warning text-white"
+              class="btn-outline-primary"
               @click="refreshTable()"
-            />
+            >
+              <q-icon name="delete" color="primary" />
+              <q-tooltip>Limpar</q-tooltip>
+            </q-btn>
           </div>
         </div>
 
@@ -224,7 +230,15 @@
                 />
               </div>
               <div class="col-12">
-                <q-input label="Observações" v-model="obsProduto" type="textarea" outlined dense input-style="resize: none;" rows="3" />
+                <q-input
+                  label="Observações"
+                  v-model="obsProduto"
+                  type="textarea"
+                  outlined
+                  dense
+                  input-style="resize: none;"
+                  rows="3"
+                />
               </div>
             </div>
 
@@ -579,7 +593,14 @@ export default class ModuleComponent extends Vue {
 </script>
 
 <style scoped>
-.b-r-10{
+.b-r-10 {
   border-radius: 10px;
+}
+.border {
+  border: 1px solid #ccc;
+}
+.btn-outline-primary {
+  border: 1.5px solid #ccc;
+  background-color: #f0e9f5 !important;
 }
 </style>

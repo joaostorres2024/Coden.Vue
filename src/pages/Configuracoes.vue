@@ -2,7 +2,7 @@
   <!-- Container principal para centralizar o card na tela -->
   <div class="row justify-center items-center">
     <q-card
-      class="shadow-2 b-r-10"
+      class="no-shadow border b-r-10"
       style="width: 1500px;"
     >
       <!-- Cabeçalho do Card -->
@@ -308,8 +308,7 @@ export default class ConfiguracoesComponent extends Vue {
 
 <style scoped>
 .border {
-  border: 1px solid #e0e0e0;
-  transition: background-color 0.3s;
+  border: 1px solid #ccc;
 }
 .border:hover {
   background-color: #f5f5f5;

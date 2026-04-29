@@ -1,7 +1,10 @@
 <template>
   <!-- Container principal para centralizar o card na tela -->
   <div class="row justify-center items-center">
-    <q-card class="col-11 col-md-10 col-lg-9 shadow-2 b-r-10" style="width: 1500px">
+    <q-card
+      class="col-11 col-md-10 col-lg-9 no-shadow border b-r-10"
+      style="width: 1500px"
+    >
       <!-- Cabeçalho do Card -->
       <q-card-section class="bg-white text-primary q-pb-none">
         <div class="text-h5 text-bold">Vendas Balcão</div>
@@ -21,61 +24,90 @@
       </q-card-section>
 
       <q-separator />
-
-      <!-- Corpo do Card -->
       <q-card-section class="q-pa-lg">
-        <!-- Filtros e Ações (Visíveis apenas quando não está em modo de venda) -->
         <div class="column q-col-gutter-md">
-
-          <!-- Filtros e Botões (Estrutura col-9 e col-3) -->
           <div class="row items-center q-col-gutter-md">
+            <div class="col-9" v-if="!procurarProduto">
+              <div class="row q-col-gutter-md items-center">
+                <div class="col-4">
+                  <q-input
+                    v-model="codigo"
+                    label="Código do Cliente"
+                    outlined
+                    dense
+                  />
+                </div>
+                <div class="col-4">
+                  <q-input
+                    v-model="nome"
+                    label="Nome Completo"
+                    outlined
+                    dense
+                  />
+                </div>
+                <div class="col-4">
+                  <q-input
+                    v-model="documento"
+                    label="CNPJ/CPF"
+                    outlined
+                    dense
+                  />
+                </div>
+              </div>
+            </div>
 
-            <!-- Inputs (col-9) -->
-            <!-- Inputs de FILTRO (quando não está em modo de venda) -->
-<div class="col-9" v-if="!procurarProduto">
-  <div class="row q-col-gutter-md items-center">
-    <div class="col-4">
-      <q-input v-model="codigo" label="Código do Cliente" outlined dense />
-    </div>
-    <div class="col-4">
-      <q-input v-model="nome" label="Nome Completo" outlined dense />
-    </div>
-    <div class="col-4">
-      <q-input v-model="documento" label="CNPJ/CPF" outlined dense />
-    </div>
-  </div>
-</div>
-
-<!-- Inputs de CLIENTE SELECIONADO (quando está em modo de venda) -->
-<div class="col-9" v-if="procurarProduto && clienteSelecionado">
-  <div class="row q-col-gutter-md items-center">
-    <div class="col-4">
-      <q-input :value="clienteSelecionado.codigo_cliente" label="Código do Cliente" outlined dense readonly />
-    </div>
-    <div class="col-4">
-      <q-input :value="clienteSelecionado.nome_cliente" label="Nome Completo" outlined dense readonly />
-    </div>
-    <div class="col-4">
-      <q-input :value="formatarDocumento(clienteSelecionado)" label="CNPJ/CPF" outlined dense readonly />
-    </div>
-  </div>
-</div>
+            <div class="col-9" v-if="procurarProduto && clienteSelecionado">
+              <div class="row q-col-gutter-md items-center">
+                <div class="col-4">
+                  <q-input
+                    :value="clienteSelecionado.codigo_cliente"
+                    label="Código do Cliente"
+                    outlined
+                    dense
+                    readonly
+                  />
+                </div>
+                <div class="col-4">
+                  <q-input
+                    :value="clienteSelecionado.nome_cliente"
+                    label="Nome Completo"
+                    outlined
+                    dense
+                    readonly
+                  />
+                </div>
+                <div class="col-4">
+                  <q-input
+                    :value="formatarDocumento(clienteSelecionado)"
+                    label="CNPJ/CPF"
+                    outlined
+                    dense
+                    readonly
+                  />
+                </div>
+              </div>
+            </div>
 
             <!-- Botões (col-3) -->
             <div v-if="!procurarProduto" class="col-3">
               <div class="row justify-end items-center q-gutter-sm">
                 <q-btn
-                  icon="search"
-                  color="primary"
                   unelevated
+                  class="btn-outline-primary"
                   @click="pesquisar()"
-                />
+                >
+                  <q-icon name="search" color="primary" />
+                  <q-tooltip>Pesquisar</q-tooltip>
+                </q-btn>
+
                 <q-btn
-                  icon="delete"
-                  color="warning"
                   unelevated
+                  class="btn-outline-primary"
                   @click="refreshTable()"
-                />
+                >
+                  <q-icon name="delete" color="primary" />
+                  <q-tooltip>Limpar</q-tooltip>
+                </q-btn>
               </div>
             </div>
           </div>
@@ -107,11 +139,11 @@
             </template>
 
             <!-- Coluna Status -->
-             <template v-slot:body-cell-documento="props">
-    <q-td align="center">
-      {{ formatarDocumento(props.row) }}
-    </q-td>
-  </template>
+            <template v-slot:body-cell-documento="props">
+              <q-td align="center">
+                {{ formatarDocumento(props.row) }}
+              </q-td>
+            </template>
             <template v-slot:body-cell-status="props">
               <q-td align="center">
                 <q-badge
@@ -131,16 +163,42 @@
             <div class="col-9">
               <div class="row q-col-gutter-md items-center">
                 <div class="col-4">
-                  <q-input v-model="codigoProduto" label="Código do Produto" outlined dense />
+                  <q-input
+                    v-model="codigoProduto"
+                    label="Código do Produto"
+                    outlined
+                    dense
+                  />
                 </div>
                 <div class="col-8">
-                  <q-input v-model="nomeProduto" label="Nome do Produto" outlined dense />
+                  <q-input
+                    v-model="nomeProduto"
+                    label="Nome do Produto"
+                    outlined
+                    dense
+                  />
                 </div>
               </div>
             </div>
             <div class="col-3">
               <div class="row justify-end items-center q-gutter-sm">
-                <q-btn icon="search" color="primary" unelevated @click="pesquisarProduto()" />
+                <q-btn
+                  unelevated
+                  class="btn-outline-primary"
+                  @click="pesquisar()"
+                >
+                  <q-icon name="search" color="primary" />
+                  <q-tooltip>Pesquisar</q-tooltip>
+                </q-btn>
+
+                <q-btn
+                  unelevated
+                  class="btn-outline-primary"
+                  @click="abrirDialogCancelar()"
+                >
+                  <q-icon name="close" color="primary" />
+                  <q-tooltip>Cancelar</q-tooltip>
+                </q-btn>
               </div>
             </div>
           </div>
@@ -157,13 +215,37 @@
             >
               <template v-slot:body-cell-acoes="props">
                 <q-td align="center">
-                  <q-btn icon="o_add_box" size="sm" color="warning" flat round @click="abrirDialogQuantidade(props.row)" />
-                  <q-btn icon="percent" size="sm" color="blue" flat round @click="abrirDialogDesconto(props.row)" />
-                  <q-btn icon="add" size="sm" color="positive" flat round @click="adicionarProduto(props.row)" />
+                  <q-btn
+                    icon="o_add_box"
+                    size="sm"
+                    color="warning"
+                    flat
+                    round
+                    @click="abrirDialogQuantidade(props.row)"
+                  />
+                  <q-btn
+                    icon="percent"
+                    size="sm"
+                    color="blue"
+                    flat
+                    round
+                    @click="abrirDialogDesconto(props.row)"
+                  />
+                  <q-btn
+                    icon="add"
+                    size="sm"
+                    color="positive"
+                    flat
+                    round
+                    @click="adicionarProduto(props.row)"
+                  />
                 </q-td>
               </template>
               <template v-slot:body-cell-valorUnitario="props">
-                <q-td align="center">{{ formatarReais(props.row.valorUnitario) }}</q-td>
+                <q-td
+                  align="center"
+                  >{{ formatarReais(props.row.valorUnitario) }}</q-td
+                >
               </template>
               <template v-slot:body-cell-total="props">
                 <q-td align="center">{{ formatarReais(props.row.total) }}</q-td>
@@ -185,11 +267,21 @@
           >
             <template v-slot:body-cell-acoes="props">
               <q-td align="center">
-                <q-btn icon="delete" size="sm" color="negative" flat round @click="removerProduto(props.row)" />
+                <q-btn
+                  icon="delete"
+                  size="sm"
+                  color="negative"
+                  flat
+                  round
+                  @click="removerProduto(props.row)"
+                />
               </q-td>
             </template>
             <template v-slot:body-cell-valorUnitario="props">
-              <q-td align="center">{{ formatarReais(props.row.valorUnitario) }}</q-td>
+              <q-td
+                align="center"
+                >{{ formatarReais(props.row.valorUnitario) }}</q-td
+              >
             </template>
             <template v-slot:body-cell-total="props">
               <q-td align="center">{{ formatarReais(props.row.total) }}</q-td>
@@ -202,15 +294,63 @@
           <div class="text-h6 q-mb-sm">Revisar Itens</div>
           <div class="row items-center justify-between q-mt-md">
             <div class="row q-gutter-md">
-              <q-btn icon="o_credit_card" label="Realizar Pagamento" color="positive" unelevated />
-              <q-btn flat icon="close" label="Cancelar Venda" color="negative" unelevated @click="abrirDialogCancelar()" />
+              <q-btn
+                icon="o_credit_card"
+                label="Realizar Pagamento"
+                color="positive"
+                unelevated
+              />
+              <q-btn
+                flat
+                icon="close"
+                label="Cancelar Venda"
+                color="negative"
+                unelevated
+                @click="abrirDialogCancelar()"
+              />
             </div>
             <div class="row q-gutter-sm">
-              <q-input v-model="totalItens" label="Produtos" style="width: 100px" outlined readonly dense />
-              <q-input v-model="valorBruto" label="Valor Bruto" style="width: 150px" outlined readonly dense />
-              <q-input v-model="descontoReais" label="Desconto (R$)" style="width: 150px" outlined readonly dense />
-              <q-input v-model="descontoPercent" label="Desconto (%)" style="width: 120px" outlined readonly dense />
-              <q-input v-model="valorTotalVenda" label="Valor Total" style="width: 180px" outlined readonly dense bg-color="grey-2" />
+              <q-input
+                v-model="totalItens"
+                label="Produtos"
+                style="width: 100px"
+                outlined
+                readonly
+                dense
+              />
+              <q-input
+                v-model="valorBruto"
+                label="Valor Bruto"
+                style="width: 150px"
+                outlined
+                readonly
+                dense
+              />
+              <q-input
+                v-model="descontoReais"
+                label="Desconto (R$)"
+                style="width: 150px"
+                outlined
+                readonly
+                dense
+              />
+              <q-input
+                v-model="descontoPercent"
+                label="Desconto (%)"
+                style="width: 120px"
+                outlined
+                readonly
+                dense
+              />
+              <q-input
+                v-model="valorTotalVenda"
+                label="Valor Total"
+                style="width: 180px"
+                outlined
+                readonly
+                dense
+                bg-color="grey-2"
+              />
             </div>
           </div>
         </div>
@@ -225,7 +365,12 @@
         </q-card-section>
         <q-card-actions align="right">
           <q-btn flat label="Não" color="primary" v-close-popup />
-          <q-btn flat label="Sim, Cancelar" color="negative" @click="confirmarCancelamento()" />
+          <q-btn
+            flat
+            label="Sim, Cancelar"
+            color="negative"
+            @click="confirmarCancelamento()"
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -380,7 +525,14 @@ formatarDocumento(row: any): string {
 </script>
 
 <style scoped>
-.b-r-10{
+.b-r-10 {
   border-radius: 10px;
+}
+.border {
+  border: 1px solid #ccc;
+}
+.btn-outline-primary {
+  border: 1.5px solid #ccc;
+  background-color: #f0e9f5 !important;
 }
 </style>

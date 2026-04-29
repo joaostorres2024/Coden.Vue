@@ -5,6 +5,7 @@ export const authService = {
 async login(dados: { email: string; senha: string }) {
   const response = await api.post('/auth/login', dados);
   localStorage.setItem('token', response.data.token);
+  localStorage.setItem('nomeUsuario', response.data.nome)
   return response.data;
 },
 

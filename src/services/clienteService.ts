@@ -58,7 +58,11 @@ const clienteService = {
 
   deletarCliente(id: number): Promise<void> {
     return api.delete(`/clientes/${id}`).then(() => undefined)
-  }
+  },
+  async proximoCodigo(): Promise<string> {
+    const response = await api.get('/clientes/proximo-codigo')
+    return String(response.data.codigo).padStart(4, '0')
+}
 }
 
 export default clienteService

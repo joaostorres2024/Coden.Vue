@@ -1,11 +1,17 @@
 <template>
   <div class="row justify-center items-center">
-    <q-card class="col-11 col-md-10 col-lg-9 shadow-2 b-r-10" style="width: 1500px;">
-
+    <q-card
+      class="col-11 col-md-10 col-lg-9 no-shadow border b-r-10"
+      style="width: 1500px"
+    >
       <q-card-section class="bg-white text-primary q-pb-none">
         <div class="text-h5 text-bold">Cadastro de Pessoas</div>
         <q-toolbar class="q-pa-none">
-          <q-breadcrumbs active-color="primary" style="font-size: 14px" class="q-mb-md">
+          <q-breadcrumbs
+            active-color="primary"
+            style="font-size: 14px"
+            class="q-mb-md"
+          >
             <template v-slot:separator>
               <q-icon size="1.5em" name="chevron_right" color="primary" />
             </template>
@@ -20,8 +26,6 @@
 
       <q-card-section class="q-pa-lg">
         <div>
-
-          <!-- Tipo de Pessoa -->
           <div class="row q-col-gutter-md q-mb-md">
             <div class="col-12 col-md-3">
               <q-select
@@ -32,61 +36,145 @@
                 dense
                 emit-value
                 map-options
+                :rules="[val => !!val || 'Selecione o tipo de pessoa']"
+                ref="selectTipoPessoa"
+                hide-bottom-space
+                lazy-rules
               />
             </div>
           </div>
 
-          <!-- Inputs e Botões -->
           <div class="row items-center q-col-gutter-md">
             <div class="col-12 col-md-9">
               <div class="row q-col-gutter-md">
                 <div class="col-12 col-md-4">
-                  <q-input v-model="nome" label="Nome Completo" outlined dense />
+                  <q-input
+                    v-model="nome"
+                    label="Nome Completo"
+                    outlined
+                    dense
+                  />
                 </div>
                 <div class="col-12 col-md-4">
-                  <q-input v-model="documento" label="CNPJ/CPF" outlined dense />
+                  <q-input
+                    v-model="documento"
+                    label="CNPJ/CPF"
+                    outlined
+                    dense
+                  />
                 </div>
                 <div class="col-12 col-md-4">
-                  <q-input v-model="codigo" label="Código do Cliente" outlined dense />
+                  <q-input
+                    v-model="codigo"
+                    label="Código do Cliente"
+                    outlined
+                    dense
+                  />
                 </div>
               </div>
             </div>
 
-            <div class="col-12 col-md-3" v-if="!mostrarFormCadastroPF && !mostrarFormCadastroPJ">
+            <div
+              class="col-12 col-md-3"
+              v-if="!mostrarFormCadastroPF && !mostrarFormCadastroPJ"
+            >
               <div class="row justify-end items-center q-gutter-sm">
-                <q-btn icon="add" unelevated class="bg-positive text-white" @click="mostrarFormulario()" />
-                <q-btn icon="search" color="primary" unelevated @click="pesquisar()" />
-                <q-btn icon="delete" unelevated class="bg-warning text-white" @click="refreshTable()" />
+                <q-btn
+                  unelevated
+                  class="btn-outline-primary"
+                  @click="mostrarFormulario()"
+                >
+                  <q-icon name="add" color="primary" />
+                  <q-tooltip>Adicionar</q-tooltip>
+                </q-btn>
+                <q-btn
+                  unelevated
+                  class="btn-outline-primary"
+                  @click="pesquisar()"
+                >
+                  <q-icon name="search" color="primary" />
+                  <q-tooltip>Pesquisar</q-tooltip>
+                </q-btn>
+                <q-btn
+                  unelevated
+                  class="btn-outline-primary"
+                  @click="refreshTable()"
+                >
+                  <q-icon name="delete" color="primary" />
+                  <q-tooltip>Limpar</q-tooltip>
+                </q-btn>
               </div>
             </div>
           </div>
         </div>
 
         <!-- Formulário -->
-        <div v-if="mostrarFormCadastroPF || mostrarFormCadastroPJ" class="q-mt-md">
-          <q-form @submit.prevent="salvar()">
-
+        <div
+          v-if="mostrarFormCadastroPF || mostrarFormCadastroPJ"
+          class="q-mt-md"
+        >
+          <q-form ref="formCadastro" @submit.prevent="salvar()" greedy>
             <!-- Dados Gerais -->
             <div class="text-h6 q-mb-sm">Dados Gerais</div>
             <div class="row q-col-gutter-md">
               <template v-if="mostrarFormCadastroPF">
                 <div class="col-12 col-sm-3">
-                  <q-input v-model="dtaNascimento" label="Data de Nascimento" type="date" outlined dense />
+                  <q-input
+                    v-model="dtaNascimento"
+                    label="Data de Nascimento *"
+                    type="date"
+                    outlined
+                    dense
+                    :rules="[val => !!val || 'Data de nascimento obrigatória']"
+                    hide-bottom-space
+                    lazy-rules
+                  />
                 </div>
                 <div class="col-12 col-sm-6">
-                  <q-input v-model="nmeSocial" label="Nome Social" outlined dense />
+                  <q-input
+                    v-model="nmeSocial"
+                    label="Nome Social"
+                    outlined
+                    dense
+                  />
                 </div>
               </template>
+
               <template v-if="mostrarFormCadastroPJ">
                 <div class="col-12 col-sm-5">
-                  <q-input v-model="razaoSocial" label="Razão Social" outlined dense />
+                  <q-input
+                    v-model="razaoSocial"
+                    label="Razão Social *"
+                    outlined
+                    dense
+                    :rules="[val => !!val || 'Razão social obrigatória']"
+                    hide-bottom-space
+                    lazy-rules
+                  />
                 </div>
                 <div class="col-12 col-sm-4">
-                  <q-input v-model="nomeResponsavel" label="Nome do Responsável" outlined dense />
+                  <q-input
+                    v-model="nomeResponsavel"
+                    label="Nome do Responsável *"
+                    outlined
+                    dense
+                    :rules="[val => !!val || 'Nome do responsável obrigatório']"
+                    hide-bottom-space
+                    lazy-rules
+                  />
                 </div>
               </template>
+
               <div class="col-12 col-sm-3">
-                <q-select v-model="ativoInativo" :options="ativo_inativo" label="Status" outlined dense emit-value map-options />
+                <q-select
+                  v-model="ativoInativo"
+                  :options="ativo_inativo"
+                  label="Status"
+                  outlined
+                  dense
+                  emit-value
+                  map-options
+                />
               </div>
             </div>
 
@@ -94,13 +182,36 @@
             <div class="text-h6 q-mt-lg q-mb-sm">Dados de Contato</div>
             <div class="row q-col-gutter-md">
               <div class="col-12 col-sm-4">
-                <q-input v-model="telefone1" label="Telefone 1" mask="(##) #####-####" outlined dense />
+                <q-input
+                  v-model="telefone1"
+                  label="Telefone 1 *"
+                  mask="(##) #####-####"
+                  outlined
+                  dense
+                  :rules="[val => !!val || 'Telefone obrigatório']"
+                  hide-bottom-space
+                  lazy-rules
+                />
               </div>
               <div class="col-12 col-sm-4">
-                <q-input v-model="telefone2" label="Telefone 2" mask="(##) #####-####" outlined dense />
+                <q-input
+                  v-model="telefone2"
+                  label="Telefone 2"
+                  mask="(##) #####-####"
+                  outlined
+                  dense
+                />
               </div>
               <div class="col-12 col-sm-4">
-                <q-input v-model="email" label="E-mail" outlined dense />
+                <q-input
+                  v-model="email"
+                  label="E-mail *"
+                  outlined
+                  dense
+                  :rules="mostrarFormCadastroPJ ? [val => !!val || 'E-mail obrigatório'] : []"
+                  hide-bottom-space
+                  lazy-rules
+                />
               </div>
             </div>
 
@@ -108,22 +219,75 @@
             <div class="text-h6 q-mt-lg q-mb-sm">Dados de Endereço</div>
             <div class="row q-col-gutter-md">
               <div class="col-12 col-sm-2">
-                <q-input v-model="cep" label="CEP" mask="#####-###" outlined dense />
+                <q-input
+                  v-model="cep"
+                  label="CEP *"
+                  mask="#####-###"
+                  outlined
+                  dense
+                  :rules="[val => !!val || 'CEP obrigatório']"
+                  hide-bottom-space
+                  lazy-rules
+                  @input="buscarCep(cep)"
+                />
               </div>
               <div class="col-12 col-sm-6">
-                <q-input v-model="endereco" label="Endereço" outlined dense />
+                <q-input
+                  v-model="endereco"
+                  label="Endereço *"
+                  outlined
+                  dense
+                  :rules="[val => !!val || 'Endereço obrigatório']"
+                  hide-bottom-space
+                  lazy-rules
+                />
               </div>
               <div class="col-12 col-sm-2">
-                <q-input v-model="numero" label="Número" outlined dense />
+                <q-input
+                  v-model="numero"
+                  label="Número *"
+                  outlined
+                  dense
+                  :rules="[val => !!val || 'Número obrigatório']"
+                  hide-bottom-space
+                  lazy-rules
+                />
               </div>
               <div class="col-12 col-sm-4">
-                <q-input v-model="bairro" label="Bairro" outlined dense />
+                <q-input
+                  v-model="bairro"
+                  label="Bairro *"
+                  outlined
+                  dense
+                  :rules="[val => !!val || 'Bairro obrigatório']"
+                  hide-bottom-space
+                  lazy-rules
+                />
               </div>
               <div class="col-12 col-sm-4">
-                <q-input v-model="cidade" label="Cidade" outlined dense />
+                <q-input
+                  v-model="cidade"
+                  label="Cidade *"
+                  outlined
+                  dense
+                  :rules="[val => !!val || 'Cidade obrigatória']"
+                  hide-bottom-space
+                  lazy-rules
+                />
               </div>
               <div class="col-12 col-sm-2">
-                <q-select v-model="ufSelect" :options="uf_select" label="UF" outlined dense emit-value map-options />
+                <q-select
+                  v-model="ufSelect"
+                  :options="uf_select"
+                  label="UF *"
+                  outlined
+                  dense
+                  emit-value
+                  map-options
+                  :rules="[val => !!val || 'UF obrigatória']"
+                  hide-bottom-space
+                  lazy-rules
+                />
               </div>
             </div>
 
@@ -131,20 +295,40 @@
             <div class="text-h6 q-mt-lg q-mb-sm">Observações</div>
             <div class="row">
               <div class="col-12">
-                <q-input v-model="observacoes" type="textarea" outlined dense input-style="resize: none;" rows="3" />
+                <q-input
+                  v-model="observacoes"
+                  type="textarea"
+                  outlined
+                  dense
+                  input-style="resize: none;"
+                  rows="3"
+                />
               </div>
             </div>
 
             <!-- Botões -->
             <div class="row q-mt-xl q-gutter-md justify-end">
-              <q-btn label="Salvar Cadastro" color="positive" unelevated type="submit" />
-              <q-btn label="Cancelar" color="negative" flat @click="abrirDialogCancelar()" />
+              <q-btn
+                label="Salvar Cadastro"
+                color="positive"
+                unelevated
+                type="submit"
+              />
+              <q-btn
+                label="Cancelar"
+                color="negative"
+                flat
+                @click="abrirDialogCancelar()"
+              />
             </div>
           </q-form>
         </div>
 
         <!-- Tabela -->
-        <div v-if="!mostrarFormCadastroPF && !mostrarFormCadastroPJ" class="q-mt-xl">
+        <div
+          v-if="!mostrarFormCadastroPF && !mostrarFormCadastroPJ"
+          class="q-mt-xl"
+        >
           <q-table
             :data="rowsFiltradas"
             :columns="colunasCadastroProdutos"
@@ -156,37 +340,57 @@
           >
             <template v-slot:body-cell-acoes="props">
               <q-td align="center">
-                <q-btn icon="edit" size="sm" color="primary" flat round @click="editar(props.row)" />
-                <q-btn icon="delete" size="sm" color="negative" flat round @click="confirmarExcluir(props.row)" />
+                <q-btn
+                  icon="edit"
+                  size="sm"
+                  color="primary"
+                  flat
+                  round
+                  @click="editar(props.row)"
+                />
+                <q-btn
+                  icon="delete"
+                  size="sm"
+                  color="negative"
+                  flat
+                  round
+                  @click="confirmarExcluir(props.row)"
+                />
               </q-td>
             </template>
-
             <template v-slot:body-cell-status="props">
               <q-td align="center">
-                <q-badge :color="props.row.status === 'Ativo' ? 'positive' : 'negative'">
+                <q-badge
+                  :color="props.row.status === 'Ativo' ? 'positive' : 'negative'"
+                >
                   {{ props.row.status }}
                 </q-badge>
               </q-td>
             </template>
             <template v-slot:body-cell-documento="props">
-              <q-td align="center">
-                {{ formatarDocumento(props.row) }}
-              </q-td>
+              <q-td align="center">{{ formatarDocumento(props.row) }}</q-td>
             </template>
           </q-table>
         </div>
       </q-card-section>
     </q-card>
 
-    <!-- Dialog Cancelar -->
     <q-dialog v-model="dialogCancelar" persistent>
       <q-card>
         <q-card-section class="row items-center">
-          <span class="q-ml-sm">Deseja realmente cancelar? As alterações não salvas serão perdidas.</span>
+          <span class="q-ml-sm"
+            >Deseja realmente cancelar? As alterações não salvas serão
+            perdidas.</span
+          >
         </q-card-section>
         <q-card-actions align="right">
           <q-btn flat label="Não" color="primary" v-close-popup />
-          <q-btn flat label="Sim, Cancelar" color="negative" @click="confirmarCancelamento()" />
+          <q-btn
+            flat
+            label="Sim, Cancelar"
+            color="negative"
+            @click="confirmarCancelamento()"
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -277,6 +481,20 @@ export default class ModuleComponent extends Vue {
   }
 
   async salvar() {
+    const form = this.$refs.formCadastro as any
+    const valido = await form.validate()
+    if (!valido) return
+
+    // Validações extras dos campos do topo (fora do q-form)
+    if (!this.nome) {
+      this.$q.notify({ type: 'negative', message: 'Nome completo obrigatório', position: 'bottom' })
+      return
+    }
+    if (!this.documento) {
+      this.$q.notify({ type: 'negative', message: 'CPF/CNPJ obrigatório', position: 'bottom' })
+      return
+    }
+
     try {
       const payload: Cliente = {
         tipo_pessoa: this.tipoPessoa ?? '',
@@ -317,15 +535,41 @@ export default class ModuleComponent extends Vue {
     }
   }
 
-  formatarDocumento(row: any): string {
-  if (row.tipo_pessoa === 'PF') {
-    const cpf = row.cpf?.replace(/\D/g, '') ?? ''
-    return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')
-  } else {
-    const cnpj = row.cnpj?.replace(/\D/g, '') ?? ''
-    return cnpj.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5')
+  async buscarCep(cep: string) {
+  const cepLimpo = cep.replace(/\D/g, '')
+  if (cepLimpo.length !== 8) return
+
+  try {
+    const response = await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`)
+    const data = await response.json()
+
+    if (data.erro) {
+      this.$q.notify({ type: 'negative', message: 'CEP não encontrado' })
+      return
+    }
+
+    this.endereco = data.logradouro
+    this.bairro    = data.bairro
+    this.cidade    = data.localidade
+    this.ufSelect  = data.uf
+  } catch (err) {
+    this.$q.notify({ type: 'negative', message: 'Erro ao buscar CEP' })
   }
 }
+
+  abrirDialogCancelar(){
+    this.dialogCancelar = true
+  }
+
+  formatarDocumento(row: any): string {
+    if (row.tipo_pessoa === 'PF') {
+      const cpf = row.cpf?.replace(/\D/g, '') ?? ''
+      return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')
+    } else {
+      const cnpj = row.cnpj?.replace(/\D/g, '') ?? ''
+      return cnpj.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5')
+    }
+  }
 
   editar(row: any) {
     this.editandoId = row.id
@@ -367,24 +611,32 @@ export default class ModuleComponent extends Vue {
       }
     })
   }
-
-  mostrarFormulario() {
+async mostrarFormulario() {
     if (!this.tipoPessoa) {
-      this.$q.notify({ type: 'negative', message: 'Selecione o tipo de pessoa primeiro', position: 'bottom' })
-      return
+        (this.$refs.selectTipoPessoa as any).validate()
+        return
     }
+
+    if (!this.editandoId) {
+        try {
+            this.codigo = await clienteService.proximoCodigo()
+        } catch (err) {
+            this.$q.notify({ type: 'negative', message: 'Erro ao gerar código do cliente' })
+        }
+    }
+
     this.mostrarFormCadastroPF = this.tipoPessoa === 'PF'
     this.mostrarFormCadastroPJ = this.tipoPessoa === 'PJ'
-  }
-
-  abrirDialogCancelar() {
-    this.dialogCancelar = true
-  }
-
+}
   confirmarCancelamento() {
     this.dialogCancelar = false
     this.mostrarFormCadastroPF = false
     this.mostrarFormCadastroPJ = false
+    ;(this.$refs.selectTipoPessoa as any).resetValidation()
+    this.$nextTick(() => {
+      const form = this.$refs.formCadastro as any
+      if (form) form.resetValidation()
+    })
     this.limparCampos()
   }
 
@@ -413,6 +665,11 @@ export default class ModuleComponent extends Vue {
 
   refreshTable() {
     this.limparCampos()
+    ;(this.$refs.selectTipoPessoa as any).resetValidation()
+  }
+
+  pesquisar() {
+    // lógica de pesquisa
   }
 }
 </script>
@@ -421,7 +678,11 @@ export default class ModuleComponent extends Vue {
 .border {
   border: 1px solid #ccc;
 }
-.b-r-10{
+.b-r-10 {
   border-radius: 10px;
+}
+.btn-outline-primary {
+  border: 1.5px solid #ccc;
+  background-color: #f0e9f5 !important;
 }
 </style>

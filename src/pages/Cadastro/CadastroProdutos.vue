@@ -1,8 +1,7 @@
 <template>
-  <!-- Container principal para centralizar o card na tela -->
   <div class="row justify-center items-center">
     <q-card
-      class="col-11 col-md-10 col-lg-9 shadow-2 b-r-10"
+      class="col-11 col-md-10 col-lg-9 no-shadow border b-r-10"
       style="width: 1500px"
     >
       <!-- Cabeçalho do Card -->
@@ -33,16 +32,16 @@
           <!-- Grupo de Inputs (Alinhado à Esquerda) -->
           <div class="row q-gutter-md col">
             <q-input
-              v-model="codigo_produto"
-              style="width: 300px"
-              label="Código do Produto"
+              v-model="nome_produto"
+              style="width: 400px"
+              label="Nome do Produto"
               outlined
               dense
             />
             <q-input
-              v-model="nome_produto"
-              style="width: 400px"
-              label="Nome do Produto"
+              v-model="codigo_produto"
+              style="width: 300px"
+              label="Código do Produto"
               outlined
               dense
             />
@@ -60,39 +59,38 @@
           <!-- Grupo de Botões (Alinhado à Direita) -->
           <div v-if="!cadastroProdutoForm" class="row q-gutter-sm">
             <q-btn
-              icon="add"
               unelevated
-              class="bg-positive text-white"
+              class="btn-outline-primary"
               @click="mostrarFormulario()"
-            />
+            >
+              <q-icon name="add" color="primary" />
+              <q-tooltip>Adicionar</q-tooltip>
+            </q-btn>
+
+            <q-btn unelevated class="btn-outline-primary" @click="pesquisar()">
+              <q-icon name="search" color="primary" />
+              <q-tooltip>Pesquisar</q-tooltip>
+            </q-btn>
+
             <q-btn
-              icon="search"
-              color="primary"
               unelevated
-              @click="pesquisar()"
-            />
-            <q-btn
-              icon="delete"
-              unelevated
-              class="bg-warning text-white"
+              class="btn-outline-primary"
               @click="refreshTable()"
-            />
+            >
+              <q-icon name="delete" color="primary" />
+              <q-tooltip>Limpar</q-tooltip>
+            </q-btn>
           </div>
         </div>
 
         <!-- Formulário de Cadastro -->
         <div v-if="cadastroProdutoForm" class="q-mt-md">
-          <q-form @submit.prevent="salvar()">
+          <q-form ref="formProduto" @submit.prevent="salvar()" greedy>
             <!-- Seção: Dados Gerais -->
             <div class="text-h6 q-mb-sm">Dados Gerais</div>
             <div class="row q-col-gutter-md items-center">
               <div class="col-12 col-sm-4">
-                <q-select
-                  v-model="grupo"
-                  label="Grupo"
-                  outlined
-                  dense
-                />
+                <q-select v-model="grupo" label="Grupo" outlined dense />
               </div>
               <div class="col-12 col-sm-2">
                 <q-btn
@@ -120,25 +118,30 @@
               </div>
             </div>
 
-            <!-- Seção: Preço -->
             <div class="text-h6 q-mt-lg q-mb-sm">Preço</div>
             <div class="row q-col-gutter-md">
               <div class="col-12 col-sm-4">
                 <q-input
                   v-model="preco_custo"
-                  label="Preço de Custo"
+                  label="Preço de Custo *"
                   outlined
                   dense
                   type="number"
+                  :rules="[val => !!val || 'Preço de custo obrigatório']"
+                  hide-bottom-space
+                  lazy-rules
                 />
               </div>
               <div class="col-12 col-sm-4">
                 <q-input
                   v-model="preco_venda"
-                  label="Preço de Venda"
+                  label="Preço de Venda *"
                   outlined
                   dense
                   type="number"
+                  :rules="[val => !!val || 'Preço de venda obrigatório']"
+                  hide-bottom-space
+                  lazy-rules
                 />
               </div>
               <div class="col-12 col-sm-4">
@@ -158,23 +161,45 @@
               <div class="col-12 col-sm-2">
                 <q-input
                   v-model="estoque_atual"
-                  label="Estoque Atual"
+                  label="Estoque Atual *"
                   outlined
                   dense
+                  :rules="[val => !!val || 'Estoque atual obrigatório']"
+                  hide-bottom-space
+                  lazy-rules
                 />
               </div>
               <div class="col-12 col-sm-2">
-                <q-input v-model="estoque_minimo" label="Estoque mínimo" outlined dense />
+                <q-input
+                  v-model="estoque_minimo"
+                  label="Estoque Mínimo *"
+                  outlined
+                  dense
+                  :rules="[val => !!val || 'Estoque mínimo obrigatório']"
+                  hide-bottom-space
+                  lazy-rules
+                />
               </div>
               <div class="col-12 col-sm-2">
-                <q-input v-model="estoque_maximo" label="Estoque Máximo" outlined dense />
+                <q-input
+                  v-model="estoque_maximo"
+                  label="Estoque Máximo *"
+                  outlined
+                  dense
+                  :rules="[val => !!val || 'Estoque máximo obrigatório']"
+                  hide-bottom-space
+                  lazy-rules
+                />
               </div>
               <div class="col-12 col-sm-3">
                 <q-input
                   v-model="fornecedor"
-                  label="Fornecedor"
+                  label="Fornecedor *"
                   outlined
                   dense
+                  :rules="[val => !!val || 'Fornecedor obrigatório']"
+                  hide-bottom-space
+                  lazy-rules
                 />
               </div>
               <div class="col-12 col-sm-3">
@@ -343,6 +368,15 @@ export default class ModuleComponent extends Vue {
   }
 
  async salvar() {
+    const form = this.$refs.formProduto as any
+  const valido = await form.validate()
+  if (!valido) return
+
+  // Validações dos campos de topo (fora do q-form)
+  if (!this.nome_produto) {
+    this.$q.notify({ type: 'negative', message: 'Nome do produto obrigatório', position: 'bottom' })
+    return
+  }
     try {
 
       const payload: Product = {
@@ -475,5 +509,12 @@ mostrarFormulario() {
 <style scoped>
 .b-r-10 {
   border-radius: 10px;
+}
+.border {
+  border: 1px solid #ccc;
+}
+.btn-outline-primary {
+  border: 1.5px solid #ccc;
+  background-color: #f0e9f5 !important;
 }
 </style>
