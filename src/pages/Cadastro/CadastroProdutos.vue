@@ -457,7 +457,7 @@ async carregarProdutos() {
 
   get rowsFiltradas() {
     return this.rows.filter((p: Product) => {
-      const nomeOk = p.nome_produto.toLowerCase().includes(this.nome_produto.toLowerCase())
+      const nomeOk = p.nome_produto.toLowerCase().startsWith(this.nome_produto.toLowerCase())
       const codigoOk = !this.codigo_produto || p.codigo_produto?.startsWith(this.codigo_produto)
       return nomeOk && codigoOk
     })

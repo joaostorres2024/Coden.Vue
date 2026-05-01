@@ -465,7 +465,7 @@ export default class ModuleComponent extends Vue {
     return this.rows.filter((c: Cliente) => {
       const nomeOk = c.nome_cliente.toLowerCase().startsWith(this.nome.toLowerCase())
       const codigoOk = !this.codigo || c.codigo_cliente?.toLowerCase().startsWith(this.codigo.toLowerCase())
-      const docOk = !this.documento || c.cpf?.includes(this.documento) || c.cnpj?.includes(this.documento)
+      const docOk = !this.documento || c.cpf?.startsWith(this.documento) || c.cnpj?.startsWith(this.documento)
       const tipoOk = !this.tipoPessoa || c.tipo_pessoa === this.tipoPessoa
       return nomeOk && codigoOk && docOk && tipoOk
     })
