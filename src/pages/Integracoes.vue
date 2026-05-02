@@ -23,7 +23,7 @@
 
       <q-separator />
 
-      <q-card-section class="q-pa-lg">
+      <q-card-section v-if="inicioIntegracoes" class="q-pa-lg">
         <div class="row q-pb-md items-center" style="margin-top: -10px">
           Caso não saiba como fazer uma integração, clique aqui para ver o
           tutorial:
@@ -68,6 +68,7 @@
                   label="Adicionar"
                   unelevated
                   class="btn-outline-primary text-primary"
+                  @click="conectarIntegracao(m)"
                 />
               </q-card>
             </div>
@@ -78,7 +79,60 @@
           </div>
         </div>
       </q-card-section>
+
+      <q-card-section v-if="conectarIntegracoes">
+        <div>
+          <div class="row items-center q-gutter-md">
+            <img :src="marketplaceSelecionado.logo" style="width: 40px;" alt="">
+            <div class="text-bold text-h5">Integração com {{ marketplaceSelecionado.nome }}</div>
+          </div>
+          <div class="row q-gutter-sm q-mt-md">
+           <q-input
+            class="col-4"
+            label="Nome da Integração"
+            v-model="formularioIntegracao.nome"
+            outlined
+            dense
+          />
+          <q-btn
+          class="btn-outline-primary text-primary"
+          unelevated
+          :label="'Conectar com ' + marketplaceSelecionado.nome"
+          />
+          </div>
+          <div class="q-py-md q-pl-xs">
+            <p>Ao clicar no botão, você será redirecionado para a página do {{ marketplaceSelecionado.nome}} para realizar a autenticação e conectar sua conta com segurança.</p>
+          </div>
+          <div class="row justify-end">
+            <q-btn
+              label="Cancelar"
+              color="negative"
+              flat
+              @click="abrirDialogCancelar()"
+            />
+          </div>
+        </div>
+      </q-card-section>
     </q-card>
+    <q-dialog v-model="dialogCancelar" persistent>
+      <q-card>
+        <q-card-section class="row items-center">
+          <span class="q-ml-sm"
+            >Deseja realmente cancelar? As alterações não salvas serão
+            perdidas.</span
+          >
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="Não" color="primary" v-close-popup />
+          <q-btn
+            flat
+            label="Sim, Cancelar"
+            color="negative"
+            @click="confirmarCancelamento()"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
@@ -88,6 +142,16 @@ import Component from 'vue-class-component'
 
 @Component
 export default class ModuleComponent extends Vue {
+  conectarIntegracoes = false
+  inicioIntegracoes = true
+  dialogCancelar = false
+
+  marketplaceSelecionado: any = null
+
+  formularioIntegracao: any = {
+    nome: ''
+  }
+
   busca = ''
   marketplaces = [
   {
@@ -99,11 +163,6 @@ export default class ModuleComponent extends Vue {
     nome: 'Mercado Livre',
     tipo: 'Marketplace',
     logo: 'https://cdn.iconscout.com/icon/free/png-256/free-mercado-livre-icon-svg-download-png-14549372.png'
-  },
-  {
-    nome: 'Amazon',
-    tipo: 'Marketplace',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/4/4a/Amazon_icon.svg'
   }
 ]
 
@@ -114,6 +173,25 @@ get marketplacesFiltrados() {
     m.nome.toLowerCase().startsWith(this.busca.toLowerCase())
   )
 }
+
+ conectarIntegracao(marketplace: any){
+  this.marketplaceSelecionado = marketplace
+  this.formularioIntegracao = {
+    nome: marketplace.nome
+  }
+  this.conectarIntegracoes = true
+  this.inicioIntegracoes = false
+}
+
+confirmarCancelamento() {
+    this.dialogCancelar = false
+    this.conectarIntegracoes = false
+    this.inicioIntegracoes = true
+  }
+
+  abrirDialogCancelar(){
+    this.dialogCancelar = true
+  }
 }
 </script>
 
