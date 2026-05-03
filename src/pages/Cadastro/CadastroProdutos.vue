@@ -363,7 +363,7 @@ export default class ModuleComponent extends Vue {
     { label: 'Inativo', value: 'Inativo' }
   ]
 
-    async created() {
+  async created() {
     await this.carregarProdutos()
   }
 
