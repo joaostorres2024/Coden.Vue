@@ -1,0 +1,34 @@
+{
+    "columns": [
+     {
+      "name": "title",
+      "label": "Produto",
+      "field": "title",
+      "align": "center"
+    },
+      {
+      "name": "price",
+      "label": "Preço",
+      "field": "price",
+      "align": "center"
+    },
+      {
+      "name": "available_quantity",
+      "label": "Estoque",
+      "field": "available_quantity",
+      "align": "center"
+    },
+      {
+      "name": "status",
+      "label": "Status",
+      "field": "status",
+      "align": "center"
+    },
+     {
+      "name": "acoes",
+      "label": "Ações",
+      "field": "id",
+      "align": "center"
+    }
+    ]
+}

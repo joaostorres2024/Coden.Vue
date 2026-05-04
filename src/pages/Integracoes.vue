@@ -48,41 +48,83 @@
             dense
           />
         </div>
-        <div class="q-mt-lg">
-          <div class="row q-col-gutter-md">
-            <div
-              v-for="m in marketplacesFiltrados"
-              :key="m.nome"
-              class="col-12 col-sm-6 col-md-4"
-            >
-              <q-card
-                class="row items-center justify-between q-pa-md b-r-10 border no-shadow"
-              >
-                <div class="row items-center q-col-gutter-md">
-                  <img :src="m.logo" style="width: 50px" />
-                  <div class="column">
-                    <p class="text-h6 text-bold q-ma-none">{{ m.nome }}</p>
-                    <p class="q-ma-none">{{ m.tipo }}</p>
-                  </div>
-                </div>
-                <div class="column items-end q-gutter-xs">
-                  <q-btn
-                    :label="m.conectado ? 'Gerenciar' : 'Adicionar'"
-                    unelevated
-                    class="btn-outline-primary text-primary"
-                    @click="m.conectado ? irParaDashboard(m) : irParaConectar(m)"
-                  />
-                </div>
-              </q-card>
-            </div>
-            <div
-              v-if="marketplacesFiltrados.length === 0"
-              class="col-12 q-pa-md text-grey-6"
-            >
-              Nenhuma integração encontrada
+<div class="q-mt-lg">
+
+  <!-- MINHAS INTEGRAÇÕES -->
+  <div v-if="minhasIntegracoes.length">
+    <div class="text-bold q-pb-md" style="font-size: 18px;">
+      Minhas Integrações
+    </div>
+
+    <div class="row q-col-gutter-md">
+      <div
+        v-for="m in minhasIntegracoes"
+        :key="m.nome"
+        class="col-12 col-sm-6 col-md-4"
+      >
+        <q-card class="row items-center justify-between q-pa-md b-r-10 border no-shadow">
+          <div class="row items-center q-col-gutter-md">
+            <img :src="m.logo" style="width: 50px" />
+            <div class="column">
+              <p class="text-h6 text-bold q-ma-none">{{ m.nome }}</p>
+              <p class="q-ma-none">{{ m.tipo }}</p>
             </div>
           </div>
+          <q-btn
+            label="Gerenciar"
+            unelevated
+            class="btn-outline-primary text-primary"
+            @click="irParaDashboard(m)"
+          />
+        </q-card>
+      </div>
+    </div>
+  </div>
+
+<div class="q-mt-xl" v-if="minhasIntegracoes.length">
+  <div class="text-bold q-pb-md" style="font-size: 18px;">
+    Integrações disponíveis
+  </div>
+
+  <div v-if="integracoesDisponiveis.length" class="row q-col-gutter-md">
+    <div
+      v-for="m in integracoesDisponiveis"
+      :key="m.nome"
+      class="col-12 col-sm-6 col-md-4"
+    >
+      <q-card class="row items-center justify-between q-pa-md b-r-10 border no-shadow">
+        <div class="row items-center q-col-gutter-md">
+          <img :src="m.logo" style="width: 50px" />
+          <div class="column">
+            <p class="text-h6 text-bold q-ma-none">{{ m.nome }}</p>
+            <p class="q-ma-none">{{ m.tipo }}</p>
+          </div>
         </div>
+        <q-btn
+          label="Adicionar"
+          unelevated
+          class="btn-outline-primary text-primary"
+          @click="irParaConectar(m)"
+        />
+      </q-card>
+    </div>
+  </div>
+
+  <!-- EMPTY STATE -->
+  <div v-else class="text-grey-6 q-pa-md">
+    Nenhuma integração disponível encontrada.
+  </div>
+</div>
+
+  <!-- VAZIO -->
+  <div
+    v-if="!minhasIntegracoes.length && !integracoesDisponiveis.length"
+    class="col-12 q-pa-md text-grey-6"
+  >
+    Nenhuma integração encontrada
+  </div>
+
+</div>
       </q-card-section>
 
       <!-- TELA 2: CONECTAR (autenticação) -->
@@ -141,8 +183,8 @@
                 {{ marketplaceSelecionado.nome }}
               </div>
               <q-badge
-                color="green-2"
-                text-color="green-9"
+                color="positive"
+                text-color="white"
                 class="q-px-sm q-py-xs"
               >
                 <q-icon name="circle" size="10px" class="q-mr-xs" />
@@ -382,31 +424,33 @@
             </div>
 
             <!-- ABA: PRODUTOS -->
-            <q-card class="no-shadow border b-r-10">
+            <q-card class="no-shadow border">
               <q-inner-loading :showing="carregandoProdutos" />
               <q-table
                 flat
-                :rows="produtosFiltrados"
-                :columns="[
-      { name: 'title', label: 'Produto', field: 'title', align: 'left' },
-      { name: 'preco', label: 'Preço', field: 'price', align: 'center', format: v => `R$ ${v.toFixed(2)}` },
-      { name: 'estoque', label: 'Estoque', field: 'available_quantity', align: 'center' },
-      { name: 'status', label: 'Status', field: 'status', align: 'center' },
-      { name: 'acoes', label: 'Ações', field: 'id', align: 'center' }
-    ]"
-                row-key="id"
+                :data="produtosFiltrados"
+                :columns="colunaProdutosMercadoLivre"
                 hide-bottom
+                flat
+                bordered
+                no-data-label="Nenhum registro encontrado"
+                class="text-weight-medium"
               >
                 <template v-slot:body-cell-status="props">
                   <q-td :props="props">
                     <q-badge
-                      :color="props.value === 'active' ? 'green-2' : props.value === 'paused' ? 'orange-2' : 'red-2'"
-                      :text-color="props.value === 'active' ? 'green-9' : props.value === 'paused' ? 'orange-9' : 'red-9'"
+                      :color="props.value === 'active' ? 'positive' : props.value === 'paused' ? 'orange' : 'negative'"
+                      :text-color="props.value === 'active' ? 'white' : props.value === 'paused' ? 'white' : 'white'"
                     >
                       {{ props.value === 'active' ? 'Ativo' : props.value === 'paused' ? 'Pausado' : props.value }}
                     </q-badge>
                   </q-td>
                 </template>
+                <template v-slot:body-cell-price="props">
+              <q-td :props="props" align="center">
+                {{ formatarReais(props.row.price) }}
+              </q-td>
+            </template>
                 <template v-slot:body-cell-acoes="props">
                   <q-td :props="props">
                     <q-btn
@@ -491,6 +535,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
+import gridProdutosMercadoLivre from '../config/produtosMercadoLivre.json'
 import mlService, { StatusML, ProdutoML, PedidoML } from '../services/mlService'
 
 @Component
@@ -511,6 +556,8 @@ export default class ModuleComponent extends Vue {
   filtroProduto = 'todos'
   filtroLog = 'todos'
   periodoLog = 'Últimas 24h'
+
+  colunaProdutosMercadoLivre = gridProdutosMercadoLivre.columns
 
   config = {
     sincEstoque: true,
@@ -557,6 +604,14 @@ export default class ModuleComponent extends Vue {
     return this.marketplaces.filter(m =>
       m.nome.toLowerCase().startsWith(this.busca.toLowerCase())
     )
+  }
+
+  formatarReais(valor: string | number): string {
+    const numero = typeof valor === 'string' ? parseFloat(valor) : valor
+    return numero.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    })
   }
 
 get produtosFiltrados() {
@@ -641,6 +696,14 @@ async conectarML() {
     await this.carregarProdutos()
     await this.carregarPedidos()
   }
+
+get minhasIntegracoes() {
+  return this.marketplacesFiltrados.filter(m => m.conectado)
+}
+
+get integracoesDisponiveis() {
+  return this.marketplacesFiltrados.filter(m => !m.conectado)
+}
 
 async carregarProdutos() {
   try {
