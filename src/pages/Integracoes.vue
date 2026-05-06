@@ -51,18 +51,19 @@
 <div class="q-mt-lg">
 
   <!-- MINHAS INTEGRAÇÕES -->
-  <div v-if="minhasIntegracoes.length">
-    <div class="text-bold q-pb-md" style="font-size: 18px;">
-      Minhas Integrações
-    </div>
+  <div>
+  <div class="text-bold q-pb-md" style="font-size: 18px;">
+    Minhas Integrações
+  </div>
 
-    <div class="row q-col-gutter-md">
-      <div
-        v-for="m in minhasIntegracoes"
-        :key="m.nome"
-        class="col-12 col-sm-6 col-md-4"
-      >
+  <div v-if="minhasIntegracoes.length" class="row q-col-gutter-md">
+    <div
+      v-for="m in minhasIntegracoes"
+      :key="m.nome"
+      class="col-12 col-sm-6 col-md-4"
+    >
         <q-card class="row items-center justify-between q-pa-md b-r-10 border no-shadow">
+          <q-inner-loading :showing="verificandoConexao" />
           <div class="row items-center q-col-gutter-md">
             <img :src="m.logo" style="width: 50px" />
             <div class="column">
@@ -79,9 +80,12 @@
         </q-card>
       </div>
     </div>
+      <div v-else class="text-grey-6">
+    Nenhuma integração conectada ainda.
+  </div>
   </div>
 
-<div class="q-mt-xl" v-if="minhasIntegracoes.length">
+<div class="q-mt-xl">
   <div class="text-bold q-pb-md" style="font-size: 18px;">
     Integrações disponíveis
   </div>
@@ -92,38 +96,34 @@
       :key="m.nome"
       class="col-12 col-sm-6 col-md-4"
     >
-      <q-card class="row items-center justify-between q-pa-md b-r-10 border no-shadow">
-        <div class="row items-center q-col-gutter-md">
-          <img :src="m.logo" style="width: 50px" />
-          <div class="column">
-            <p class="text-h6 text-bold q-ma-none">{{ m.nome }}</p>
-            <p class="q-ma-none">{{ m.tipo }}</p>
-          </div>
-        </div>
-        <q-btn
-          label="Adicionar"
-          unelevated
-          class="btn-outline-primary text-primary"
-          @click="irParaConectar(m)"
-        />
-      </q-card>
+<q-card class="row items-center justify-between q-pa-md b-r-10 border no-shadow">
+  <div class="row items-center q-col-gutter-md">
+    <img :src="m.logo" style="width: 50px" />
+    <div class="column">
+      <p class="text-h6 text-bold q-ma-none">{{ m.nome }}</p>
+      <p class="q-ma-none">{{ m.tipo }}</p>
+    </div>
+  </div>
+
+  <div class="column items-center q-gutter-xs">
+    <q-badge v-if="m.emBreve" color="orange" class="q-mb-xs">Em breve</q-badge>
+    <q-btn
+      :label="m.emBreve ? 'Indisponível' : 'Adicionar'"
+      unelevated
+      :disable="m.emBreve"
+      class="btn-outline-primary text-primary"
+      @click="!m.emBreve && irParaConectar(m)"
+    />
+  </div>
+</q-card>
     </div>
   </div>
 
   <!-- EMPTY STATE -->
-  <div v-else class="text-grey-6 q-pa-md">
+  <div v-else class="text-grey-6">
     Nenhuma integração disponível encontrada.
   </div>
 </div>
-
-  <!-- VAZIO -->
-  <div
-    v-if="!minhasIntegracoes.length && !integracoesDisponiveis.length"
-    class="col-12 q-pa-md text-grey-6"
-  >
-    Nenhuma integração encontrada
-  </div>
-
 </div>
       </q-card-section>
 
@@ -430,8 +430,7 @@
                 flat
                 :data="produtosFiltrados"
                 :columns="colunaProdutosMercadoLivre"
-                hide-bottom
-                flat
+                :hide-bottom="produtosFiltrados.length > 0"
                 bordered
                 no-data-label="Nenhum registro encontrado"
                 class="text-weight-medium"
@@ -457,23 +456,23 @@
                       flat
                       dense
                       icon="pause"
-                      color="orange"
-                      @click="pausarProduto(props.value)"
+                      color="dark-blue"
+                      @click="pausarProduto(props.row.id)"
                       v-if="props.row.status === 'active'"
                     />
                     <q-btn
                       flat
                       dense
                       icon="play_arrow"
-                      color="green"
-                      @click="ativarProduto(props.value)"
+                      color="dark-blue"
+                      @click="ativarProduto(props.row.id)"
                       v-if="props.row.status === 'paused'"
                     />
                     <q-btn
                       flat
                       dense
                       icon="open_in_new"
-                      color="grey"
+                      color="primary"
                       :href="props.row.permalink"
                       target="_blank"
                     />
@@ -537,6 +536,7 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import gridProdutosMercadoLivre from '../config/produtosMercadoLivre.json'
 import mlService, { StatusML, ProdutoML, PedidoML } from '../services/mlService'
+import { NOMEM } from 'dns'
 
 @Component
 export default class ModuleComponent extends Vue {
@@ -548,6 +548,7 @@ export default class ModuleComponent extends Vue {
 
   marketplaceSelecionado: any = null
   statusML: StatusML | null = null
+  verificandoConexao = false
 
   formularioIntegracao: any = { nome: '' }
 
@@ -581,21 +582,71 @@ export default class ModuleComponent extends Vue {
   pedidos: PedidoML[] = []
   totalPedidos = 0
 
-  marketplaces = [
-    {
-      nome: 'Mercado Livre',
-      tipo: 'Marketplace',
-      conectado: false,
-      logo: 'https://cdn.iconscout.com/icon/free/png-256/free-mercado-livre-icon-svg-download-png-14549372.png'
-    }
-  ]
+marketplaces = [
+  {
+    nome: 'Mercado Livre',
+    tipo: 'Marketplace',
+    conectado: false,
+    emBreve: false,
+    logo: 'https://cdn.iconscout.com/icon/free/png-256/free-mercado-livre-icon-svg-download-png-14549372.png'
+  },
+  {
+    nome: 'Shopee',
+    tipo: 'Marketplace',
+    conectado: false,
+    emBreve: true,
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Shopee_logo.svg/1920px-Shopee_logo.svg.png'
+  },
+  {
+    nome: 'TikTok Shop',
+    tipo: 'Marketplace',
+    conectado: false,
+    emBreve: true,
+    logo: 'https://static.vecteezy.com/system/resources/previews/066/712/310/non_2x/tiktok-shop-icon-logo-symbol-free-png.png'
+  },
+  {
+    nome: 'AliExpress',
+    tipo: 'Marketplace',
+    conectado: false,
+    emBreve: true,
+    logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcyMCDXXve6oLBgLWoSxK2kGafMQn1pQNtCQ&s'
+  },
+  {
+    nome: 'Amazon',
+    tipo: 'Marketplace',
+    conectado: false,
+    emBreve: true,
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/d/de/Amazon_icon.png'
+  },
+  {
+    nome: 'Temu',
+    tipo: 'Marketplace',
+    conectado: false,
+    emBreve: true,
+    logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/5/5f/Temu_app_logo.svg/330px-Temu_app_logo.svg.png'
+  },
+  {
+    nome: 'Alibaba',
+    tipo: 'Marketplace',
+    conectado: false,
+    emBreve: true,
+    logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLb-jfCtY-1qAE3w2cVLS_bkYVjF0tZjmOBQ&s'
+  },
+  {
+    nome: 'Shopify',
+    tipo: 'Marketplace',
+    conectado: false,
+    emBreve: true,
+    logo: 'https://img.icons8.com/color/512/shopify.png'
+  }
+]
 
   // ─── LIFECYCLE ─────────────────────────────────────────────────────────────
 
-  async created() {
-    await this.verificarConexaoML()
-    this.carregarProdutos()
-  }
+async created() {
+  await this.verificarConexaoML()
+}
+
 
   // ─── COMPUTED ──────────────────────────────────────────────────────────────
 
@@ -630,15 +681,27 @@ get produtosFiltrados() {
 
   // ─── MÉTODOS ───────────────────────────────────────────────────────────────
 
-  async verificarConexaoML() {
-    try {
-      this.statusML = await mlService.getStatus()
-      const ml = this.marketplaces.find(m => m.nome === 'Mercado Livre')
-      if (ml) ml.conectado = this.statusML.conectado
-    } catch {
-      // Não conectado ainda, ignora
+async verificarConexaoML() {
+  const index = this.marketplaces.findIndex(m => m.nome === 'Mercado Livre')
+
+  try {
+    this.statusML = await mlService.getStatus()
+    Vue.set(this.marketplaces, index, {
+      ...this.marketplaces[index],
+      conectado: this.statusML.conectado ?? false
+    })
+
+    if (this.statusML?.conectado) {
+      await this.carregarProdutos()
+      await this.carregarPedidos()
     }
+  } catch {
+    Vue.set(this.marketplaces, index, {
+      ...this.marketplaces[index],
+      conectado: false
+    })
   }
+}
 
   async irParaConectar(marketplace: any) {
     this.marketplaceSelecionado = marketplace
@@ -648,7 +711,7 @@ get produtosFiltrados() {
 
 async conectarML() {
   try {
-    this.carregando = true
+    this.verificandoConexao = true
     const url = await mlService.getLoginUrl()
 
     this.$q.dialog({
@@ -668,34 +731,38 @@ async conectarML() {
         `width=${largura},height=${altura},left=${left},top=${top},toolbar=no,menubar=no,scrollbars=yes`
       )
 
-      const intervalo = setInterval(async () => {
-        if (popup?.closed) {
-          clearInterval(intervalo)
-          await this.verificarConexaoML()
-          if (this.statusML?.conectado) {
-            this.irParaDashboard(this.marketplaceSelecionado)
-          } else {
-            this.$q.notify({ message: 'Conexão não detectada, tente novamente', color: 'warning' })
-          }
-        }
-      }, 1000)
+const intervalo = setInterval(async () => {
+  if (popup?.closed) {
+    clearInterval(intervalo)
+
+    await new Promise(resolve => setTimeout(resolve, 2000))
+
+
+    await this.verificarConexaoML()
+    if (this.statusML?.conectado) {
+      this.irParaDashboard(this.marketplaceSelecionado)
+    } else {
+      this.$q.notify({ message: 'Conexão não detectada, tente novamente', color: 'warning' })
+    }
+  }
+}, 1000)
     })
   } catch (err) {
     this.$q.notify({ message: 'Erro ao conectar com o Mercado Livre', color: 'negative' })
   } finally {
-    this.carregando = false
+    this.verificandoConexao = false
   }
 }
 
-  async irParaDashboard(marketplace: any) {
-    this.marketplaceSelecionado = marketplace
-    this.abaAtiva = 'visao'
-    this.tela = 'dashboard'
-    const m = this.marketplaces.find(x => x.nome === marketplace.nome)
-    if (m) m.conectado = true
-    await this.carregarProdutos()
-    await this.carregarPedidos()
-  }
+async irParaDashboard(marketplace: any) {
+  this.marketplaceSelecionado = marketplace
+  this.abaAtiva = 'visao'
+  this.tela = 'dashboard'
+  const index = this.marketplaces.findIndex(x => x.nome === marketplace.nome)
+  Vue.set(this.marketplaces, index, { ...this.marketplaces[index], conectado: true })
+  await this.carregarProdutos()
+  await this.carregarPedidos()
+}
 
 get minhasIntegracoes() {
   return this.marketplacesFiltrados.filter(m => m.conectado)
@@ -710,7 +777,7 @@ async carregarProdutos() {
     this.carregandoProdutos = true
     const resultado = await mlService.listarProdutos()
     this.totalProdutos = resultado.total
-    this.$set(this, 'produtos', resultado.produtos)
+    this.produtos = resultado.produtos
   } catch (err) {
     console.error('Erro ao carregar produtos:', err)
     this.$q.notify({ message: 'Erro ao carregar produtos', color: 'negative' })
@@ -753,10 +820,10 @@ async carregarProdutos() {
     this.dialogDesconectar = true
   }
 
- async confirmarDesconexao() {
+async confirmarDesconexao() {
   await mlService.desconectar()
-  const m = this.marketplaces.find(x => x.nome === this.marketplaceSelecionado?.nome)
-  if (m) m.conectado = false
+  const index = this.marketplaces.findIndex(x => x.nome === this.marketplaceSelecionado?.nome)
+  Vue.set(this.marketplaces, index, { ...this.marketplaces[index], conectado: false })
   this.statusML = null
   this.dialogDesconectar = false
   this.tela = 'inicio'

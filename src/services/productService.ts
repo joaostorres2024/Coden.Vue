@@ -1,5 +1,4 @@
-import axios from 'axios'
-
+import api from './api';
 export interface Product {
   id?: number
   nome_produto: string
@@ -17,13 +16,6 @@ export interface Product {
   observacoes?: string
 }
 
-const api = axios.create({
-  baseURL: 'http://localhost:3000/api',
-  headers: {
-    'Content-Type': 'application/json'
-  }
-})
-
 api.interceptors.request.use(config => {
   const token = localStorage.getItem('token')
   if (token) {
@@ -34,23 +26,23 @@ api.interceptors.request.use(config => {
 
 const productService = {
   getAllProducts(): Promise<Product[]> {
-    return api.get('/products').then(r => r.data)
+    return api.get('/api/products').then(r => r.data)
   },
 
   getProduct(id: number): Promise<Product> {
-    return api.get(`/products/${id}`).then(r => r.data)
+    return api.get(`/api/products/${id}`).then(r => r.data)
   },
 
   createProduct(data: Product): Promise<Product> {
-    return api.post('/products', data).then(r => r.data.product)
+    return api.post('/api/products', data).then(r => r.data.product)
   },
 
   updateProduct(id: number, data: Product): Promise<Product> {
-    return api.put(`/products/${id}`, data).then(r => r.data.product)
+    return api.put(`/api/products/${id}`, data).then(r => r.data.product)
   },
 
   deleteProduct(id: number): Promise<void> {
-    return api.delete(`/products/${id}`).then(() => undefined)
+    return api.delete(`/api/products/${id}`).then(() => undefined)
   }
 }
 

@@ -1,4 +1,4 @@
-import axios from 'axios'
+import api from './api';
 
 export interface NFItem {
   produto_id: number
@@ -17,13 +17,6 @@ export interface NFEntrada {
   valor_total?: number
 }
 
-const api = axios.create({
-  baseURL: 'http://localhost:3000/api',
-  headers: {
-    'Content-Type': 'application/json'
-  }
-})
-
 api.interceptors.request.use(config => {
   const token = localStorage.getItem('token')
   if (token) {
@@ -35,19 +28,19 @@ api.interceptors.request.use(config => {
 const nfEntradaService = {
 
   criarNota(data: NFEntrada): Promise<NFEntrada> {
-    return api.post('/nf-entrada', data).then(r => r.data)
+    return api.post('/api/nf-entrada', data).then(r => r.data)
   },
 
   listarNotas(): Promise<NFEntrada[]> {
-    return api.get('/nf-entrada').then(r => r.data)
+    return api.get('/api/nf-entrada').then(r => r.data)
   },
 
   buscarNota(id: number): Promise<NFEntrada> {
-    return api.get(`/nf-entrada/${id}`).then(r => r.data)
+    return api.get(`/api/nf-entrada/${id}`).then(r => r.data)
   },
 
   cancelarNota(id: number): Promise<void> {
-    return api.delete(`/nf-entrada/${id}`).then(() => undefined)
+    return api.delete(`/api/nf-entrada/${id}`).then(() => undefined)
   }
 
 }
