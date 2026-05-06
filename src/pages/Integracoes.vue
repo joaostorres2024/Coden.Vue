@@ -48,83 +48,91 @@
             dense
           />
         </div>
-<div class="q-mt-lg">
+        <div class="q-mt-lg">
+          <!-- MINHAS INTEGRAÇÕES -->
+          <div>
+            <div class="text-bold q-pb-md" style="font-size: 18px">
+              Minhas Integrações
+            </div>
 
-  <!-- MINHAS INTEGRAÇÕES -->
-  <div>
-  <div class="text-bold q-pb-md" style="font-size: 18px;">
-    Minhas Integrações
-  </div>
-
-  <div v-if="minhasIntegracoes.length" class="row q-col-gutter-md">
-    <div
-      v-for="m in minhasIntegracoes"
-      :key="m.nome"
-      class="col-12 col-sm-6 col-md-4"
-    >
-        <q-card class="row items-center justify-between q-pa-md b-r-10 border no-shadow">
-          <q-inner-loading :showing="verificandoConexao" />
-          <div class="row items-center q-col-gutter-md">
-            <img :src="m.logo" style="width: 50px" />
-            <div class="column">
-              <p class="text-h6 text-bold q-ma-none">{{ m.nome }}</p>
-              <p class="q-ma-none">{{ m.tipo }}</p>
+            <div v-if="minhasIntegracoes.length" class="row q-col-gutter-md">
+              <div
+                v-for="m in minhasIntegracoes"
+                :key="m.nome"
+                class="col-12 col-sm-6 col-md-4"
+              >
+                <q-card
+                  class="row items-center justify-between q-pa-md b-r-10 border no-shadow"
+                >
+                  <q-inner-loading :showing="verificandoConexao" />
+                  <div class="row items-center q-col-gutter-md">
+                    <img :src="m.logo" style="width: 50px" />
+                    <div class="column">
+                      <p class="text-h6 text-bold q-ma-none">{{ m.nome }}</p>
+                      <p class="q-ma-none">{{ m.tipo }}</p>
+                    </div>
+                  </div>
+                  <q-btn
+                    label="Gerenciar"
+                    unelevated
+                    class="btn-outline-primary text-primary"
+                    @click="irParaDashboard(m)"
+                  />
+                </q-card>
+              </div>
+            </div>
+            <div v-else class="text-grey-6">
+              Nenhuma integração conectada ainda.
             </div>
           </div>
-          <q-btn
-            label="Gerenciar"
-            unelevated
-            class="btn-outline-primary text-primary"
-            @click="irParaDashboard(m)"
-          />
-        </q-card>
-      </div>
-    </div>
-      <div v-else class="text-grey-6">
-    Nenhuma integração conectada ainda.
-  </div>
-  </div>
 
-<div class="q-mt-xl">
-  <div class="text-bold q-pb-md" style="font-size: 18px;">
-    Integrações disponíveis
-  </div>
+          <div class="q-mt-xl">
+            <div class="text-bold q-pb-md" style="font-size: 18px">
+              Integrações disponíveis
+            </div>
 
-  <div v-if="integracoesDisponiveis.length" class="row q-col-gutter-md">
-    <div
-      v-for="m in integracoesDisponiveis"
-      :key="m.nome"
-      class="col-12 col-sm-6 col-md-4"
-    >
-<q-card class="row items-center justify-between q-pa-md b-r-10 border no-shadow">
-  <div class="row items-center q-col-gutter-md">
-    <img :src="m.logo" style="width: 50px" />
-    <div class="column">
-      <p class="text-h6 text-bold q-ma-none">{{ m.nome }}</p>
-      <p class="q-ma-none">{{ m.tipo }}</p>
-    </div>
-  </div>
+            <div
+              v-if="integracoesDisponiveis.length"
+              class="row q-col-gutter-md"
+            >
+              <div
+                v-for="m in integracoesDisponiveis"
+                :key="m.nome"
+                class="col-12 col-sm-6 col-md-4"
+              >
+                <q-card
+                  class="row items-center justify-between q-pa-md b-r-10 border no-shadow"
+                >
+                  <div class="row items-center q-col-gutter-md">
+                    <img :src="m.logo" style="width: 50px" />
+                    <div class="column">
+                      <p class="text-h6 text-bold q-ma-none">{{ m.nome }}</p>
+                      <p class="q-ma-none">{{ m.tipo }}</p>
+                    </div>
+                  </div>
 
-  <div class="column items-center q-gutter-xs">
-    <q-badge v-if="m.emBreve" color="orange" class="q-mb-xs">Em breve</q-badge>
-    <q-btn
-      :label="m.emBreve ? 'Indisponível' : 'Adicionar'"
-      unelevated
-      :disable="m.emBreve"
-      class="btn-outline-primary text-primary"
-      @click="!m.emBreve && irParaConectar(m)"
-    />
-  </div>
-</q-card>
-    </div>
-  </div>
+                  <div class="column items-center q-gutter-xs">
+                    <q-badge v-if="m.emBreve" color="orange" class="q-mb-xs"
+                      >Em breve</q-badge
+                    >
+                    <q-btn
+                      :label="m.emBreve ? 'Indisponível' : 'Adicionar'"
+                      unelevated
+                      :disable="m.emBreve"
+                      class="btn-outline-primary text-primary"
+                      @click="!m.emBreve && irParaConectar(m)"
+                    />
+                  </div>
+                </q-card>
+              </div>
+            </div>
 
-  <!-- EMPTY STATE -->
-  <div v-else class="text-grey-6">
-    Nenhuma integração disponível encontrada.
-  </div>
-</div>
-</div>
+            <!-- EMPTY STATE -->
+            <div v-else class="text-grey-6">
+              Nenhuma integração disponível encontrada.
+            </div>
+          </div>
+        </div>
       </q-card-section>
 
       <!-- TELA 2: CONECTAR (autenticação) -->
@@ -399,22 +407,22 @@
                 </template>
               </q-input>
               <div class="row q-gutter-sm items-center">
-<q-select
-  v-model="filtroProduto"
-  :options="[
+                <q-select
+                  v-model="filtroProduto"
+                  :options="[
     { label: 'Todos os status', value: 'todos' },
     { label: 'Ativo', value: 'active' },
     { label: 'Pausado', value: 'paused' },
     { label: 'Encerrado', value: 'closed' }
   ]"
-  option-label="label"
-  option-value="value"
-  emit-value
-  map-options
-  outlined
-  dense
-  style="min-width: 160px"
-/>
+                  option-label="label"
+                  option-value="value"
+                  emit-value
+                  map-options
+                  outlined
+                  dense
+                  style="min-width: 160px"
+                />
                 <q-btn
                   label="Publicar selecionados"
                   unelevated
@@ -446,10 +454,10 @@
                   </q-td>
                 </template>
                 <template v-slot:body-cell-price="props">
-              <q-td :props="props" align="center">
-                {{ formatarReais(props.row.price) }}
-              </q-td>
-            </template>
+                  <q-td :props="props" align="center">
+                    {{ formatarReais(props.row.price) }}
+                  </q-td>
+                </template>
                 <template v-slot:body-cell-acoes="props">
                   <q-td :props="props">
                     <q-btn

@@ -63,9 +63,9 @@
       "align": "center"
     },
     {
-      "name": "quantidade",
+      "name": "estoque_atual",
       "label": "Quantidade",
-      "field": "quantidade",
+      "field": "estoque_atual",
       "align": "center"
     },
     {
@@ -75,28 +75,56 @@
       "align": "center"
     },
     {
-      "name": "desconto",
-      "label": "Desconto",
-      "field": "desconto",
-      "align": "center"
-    },
-    {
-      "name": "subtotal",
-      "label": "Subtotal",
-      "field": "subtotal",
-      "align": "center"
-    },
-    {
-      "name": "total",
-      "label": "Total",
-      "field": "total",
-      "align": "center"
-    },
-    {
       "name": "acoes",
       "label": "Ações",
       "field": "acoes",
       "align": "center"
     }
-  ]
+  ],
+  "colunasProdutosAdicionados": [
+  {
+    "name": "codigo",
+    "label": "Cód. Produto",
+    "field": "codigo",
+    "align": "center",
+    "sortable": true
+  },
+  {
+    "name": "nome",
+    "label": "Produto",
+    "field": "nome",
+    "align": "center",
+    "sortable": true
+  },
+  {
+    "name": "quantidade",
+    "label": "Qtd.",
+    "field": "quantidade",
+    "align": "center"
+  },
+  {
+    "name": "valorUnitario",
+    "label": "Vlr. Unit.",
+    "field": "valorUnitario",
+    "align": "center"
+  },
+  {
+    "name": "desconto",
+    "label": "Desconto (R$)",
+    "field": "desconto",
+    "align": "center"
+  },
+  {
+    "name": "total",
+    "label": "Total",
+    "field": "total",
+    "align": "center"
+  },
+  {
+    "name": "acoes",
+    "label": "Ações",
+    "field": "acoes",
+    "align": "center"
+  }
+]
 }

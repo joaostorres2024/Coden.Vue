@@ -206,7 +206,7 @@
           <!-- Tabela de Busca de Produtos -->
           <div class="q-mt-lg">
             <q-table
-              :data="rowsProduto"
+              :data="rowsProdutoFiltradas"
               :columns="colunaProduto"
               row-key="codigo"
               flat
@@ -256,10 +256,10 @@
 
         <!-- SEÇÃO: PRODUTOS ADICIONADOS (A TABELA QUE FALTAVA) -->
         <div v-if="produtosAdicionados.length > 0" class="q-mt-xl">
-          <div class="text-h6 q-mb-sm">Produtos Adicionados</div>
+          <div class="text-h6 q-mb-md">Produtos Adicionados</div>
           <q-table
             :data="produtosAdicionados"
-            :columns="colunasTabelProduto"
+            :columns="colunasProdutosAdicionados"
             row-key="codigo"
             flat
             bordered
@@ -299,6 +299,7 @@
                 label="Realizar Pagamento"
                 color="positive"
                 unelevated
+                @click="abrirDialogPagamento()"
               />
               <q-btn
                 flat
@@ -374,6 +375,118 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+
+    <!-- Dialog Quantidade -->
+    <q-dialog v-model="dialogQuantidade" persistent>
+      <q-card style="min-width: 300px">
+        <q-card-section>
+          <div class="text-h6">Quantidade</div>
+          <div class="text-caption text-grey-6">
+            {{ produtoSelecionado?.nome_produto }}
+          </div>
+        </q-card-section>
+        <q-card-section>
+          <q-input
+            v-model.number="quantidadeInput"
+            type="number"
+            label="Quantidade"
+            outlined
+            dense
+            min="1"
+          />
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="Cancelar" v-close-popup />
+          <q-btn
+            unelevated
+            color="primary"
+            label="Confirmar"
+            @click="confirmarQuantidade()"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <!-- Dialog Desconto por Item -->
+    <q-dialog v-model="dialogDescontoItem" persistent>
+      <q-card style="min-width: 300px">
+        <q-card-section>
+          <div class="text-h6">Desconto no Item</div>
+          <div class="text-caption text-grey-6">
+            {{ produtoSelecionado?.nome_produto }}
+          </div>
+        </q-card-section>
+        <q-card-section>
+          <q-input
+            v-model.number="descontoInput"
+            type="number"
+            label="Desconto (R$)"
+            outlined
+            dense
+            min="0"
+          />
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="Cancelar" v-close-popup />
+          <q-btn
+            unelevated
+            color="primary"
+            label="Confirmar"
+            @click="confirmarDesconto()"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <!-- Dialog Pagamento -->
+    <q-dialog v-model="dialogPagamento" persistent>
+      <q-card style="min-width: 350px">
+        <q-card-section>
+          <div class="text-h6">Forma de Pagamento</div>
+          <div class="text-caption text-grey-6">
+            Total: {{ valorTotalVenda }}
+          </div>
+        </q-card-section>
+        <q-card-section>
+          <div class="row q-gutter-md justify-center">
+            <q-btn
+              :outline="formaPagamentoSelecionada !== 'dinheiro'"
+              :color="formaPagamentoSelecionada === 'dinheiro' ? 'primary' : 'grey-7'"
+              icon="payments"
+              label="Dinheiro"
+              unelevated
+              @click="formaPagamentoSelecionada = 'dinheiro'"
+            />
+            <q-btn
+              :outline="formaPagamentoSelecionada !== 'cartao'"
+              :color="formaPagamentoSelecionada === 'cartao' ? 'primary' : 'grey-7'"
+              icon="credit_card"
+              label="Cartão"
+              unelevated
+              @click="formaPagamentoSelecionada = 'cartao'"
+            />
+            <q-btn
+              :outline="formaPagamentoSelecionada !== 'pix'"
+              :color="formaPagamentoSelecionada === 'pix' ? 'primary' : 'grey-7'"
+              icon="pix"
+              label="Pix"
+              unelevated
+              @click="formaPagamentoSelecionada = 'pix'"
+            />
+          </div>
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn flat label="Cancelar" v-close-popup />
+          <q-btn
+            unelevated
+            color="positive"
+            label="Confirmar Pagamento"
+            :loading="carregando"
+            @click="confirmarPagamento()"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
@@ -382,47 +495,45 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import listVendaBalcao from '../../config/listVendaBalcao.json'
 import clienteService, { Cliente } from '../../services/clienteService'
+import productService, { Product } from '../../services/productService'
+import vendasService from '../../services/vendasService'
 
 @Component
 export default class VendasBalcaoComponent extends Vue {
+
   colunaCliente = listVendaBalcao.columns
   colunaProduto = listVendaBalcao.columnsTableProduto
+  colunasProdutosAdicionados = listVendaBalcao.colunasProdutosAdicionados
 
   // ===== data =====
   codigo = ''
   nome = ''
   documento = ''
   clienteSelecionado: any = null
+  vendaAtual: any = null // ← venda criada no backend
 
   // Controle de Fluxo
   procurarProduto = false
   finalizacaoVenda = false
   dialogCancelar = false
+  dialogPagamento = false
+  formaPagamentoSelecionada = ''
+  carregando = false
 
   // Dados de Venda
   codigoProduto = ''
   nomeProduto = ''
-  totalItens = '0'
-  valorBruto = 'R$ 0,00'
-  descontoReais = 'R$ 0,00'
-  descontoPercent = '0%'
-  valorTotalVenda = 'R$ 0,00'
-
-  colunasTabelProduto = [
-    { name: 'codigo', label: 'Cód. Produto', field: 'codigo', align: 'left' },
-    { name: 'nome', label: 'Produto', field: 'nome', align: 'left' },
-    { name: 'valorUnitario', label: 'Vlr. Unit.', field: 'valorUnitario', align: 'center' },
-    { name: 'total', label: 'Total', field: 'total', align: 'center' },
-    { name: 'acoes', label: 'Ações', field: 'acoes', align: 'center' }
-  ]
 
   rows: Cliente[] = []
+  rowsProduto: Product[] = []
+  produtosAdicionados: any[] = [] // itens locais com item_id do backend
 
-  rowsProduto = [
-    { codigo: 'PROD001', nome: 'Peça de Motor', valorUnitario: 500.00, total: 500.00 }
-  ]
-
-  produtosAdicionados: any[] = []
+  // Dialog quantidade/desconto
+  dialogQuantidade = false
+  dialogDescontoItem = false
+  produtoSelecionado: any = null
+  quantidadeInput = 1
+  descontoInput = 0
 
   async created() {
     await this.carregarClientes()
@@ -431,70 +542,196 @@ export default class VendasBalcaoComponent extends Vue {
   // ===== Computed =====
   get rowsFiltradas() {
     return this.rows.filter((c: Cliente) => {
-      const nomeOk = c.nome_cliente.toLowerCase().startsWith(this.nome.toLowerCase())
+      const nomeOk = !this.nome || c.nome_cliente.toLowerCase().startsWith(this.nome.toLowerCase())
       const codigoOk = !this.codigo || c.codigo_cliente?.toLowerCase().startsWith(this.codigo.toLowerCase())
       const docOk = !this.documento || c.cpf?.includes(this.documento) || c.cnpj?.includes(this.documento)
       return nomeOk && codigoOk && docOk
     })
   }
 
+  get rowsProdutoFiltradas() {
+    return this.rowsProduto.filter((p: any) => {
+      const nomeOk = !this.nomeProduto || p.nome_produto.toLowerCase().includes(this.nomeProduto.toLowerCase())
+      const codigoOk = !this.codigoProduto || p.codigo_produto?.toLowerCase().startsWith(this.codigoProduto.toLowerCase())
+      return nomeOk && codigoOk
+    })
+  }
+
+  get totalItens() {
+    return this.produtosAdicionados.length
+  }
+
+  get valorBruto() {
+    const total = this.produtosAdicionados.reduce((acc, p) => acc + p.total, 0)
+    return total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+  }
+
+  get descontoReais() {
+    const total = this.produtosAdicionados.reduce((acc, p) => acc + (p.desconto || 0), 0)
+    return total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+  }
+
+  get descontoPercent() {
+    const bruto = this.produtosAdicionados.reduce((acc, p) => acc + (p.valorUnitario * p.quantidade), 0)
+    const desc = this.produtosAdicionados.reduce((acc, p) => acc + (p.desconto || 0), 0)
+    if (!bruto) return '0%'
+    return ((desc / bruto) * 100).toFixed(1) + '%'
+  }
+
+  get valorTotalVenda() {
+    const total = this.produtosAdicionados.reduce((acc, p) => acc + p.total, 0)
+    return total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+  }
+
   // ===== Métodos =====
   async carregarClientes() {
     try {
       this.rows = await clienteService.listarClientes()
-    } catch (err) {
+    } catch {
       this.$q.notify({ type: 'negative', message: 'Erro ao carregar clientes!' })
     }
   }
 
-  formatarReais(valor: string | number): string {
-    const numero = typeof valor === 'string' ? parseFloat(valor) : valor
-    return numero.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-  }
-
-formatarDocumento(row: any): string {
-  if (row.tipo_pessoa === 'PF') {
-    const cpf = (row.cpf ?? '').replace(/\D/g, '')
-    if (!cpf) return '-'
-    return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')
-  } else {
-    const cnpj = (row.cnpj ?? '').replace(/\D/g, '')
-    if (!cnpj) return '-'
-    return cnpj.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5')
+async carregarProdutos() {
+  try {
+    const produtos = await productService.getAllProducts()
+    this.rowsProduto = produtos.map((p: any) => ({
+      ...p,
+      codigo: p.codigo_produto,
+      nome: p.nome_produto,
+      valorUnitario: p.preco,
+      total: p.preco
+    }))
+  } catch {
+    this.$q.notify({ type: 'negative', message: 'Erro ao carregar produtos!' })
   }
 }
-  realizarVenda(row: any) {
-    this.clienteSelecionado = row
-    this.procurarProduto = true
-  }
 
-  adicionarProduto(row: any) {
-    this.produtosAdicionados.push({ ...row })
-    this.finalizacaoVenda = true
-    this.totalItens = this.produtosAdicionados.length.toString()
-  }
-
-  removerProduto(row: any) {
-    const index = this.produtosAdicionados.indexOf(row)
-    if (index > -1) {
-      this.produtosAdicionados.splice(index, 1)
+  async realizarVenda(row: any) {
+    try {
+      this.carregando = true
+      // Cria venda no backend ao selecionar cliente
+      this.vendaAtual = await vendasService.criarVenda({
+        cliente_id: row.id,
+        itens: [],
+        forma_pagamento: 'pendente' // será atualizado ao finalizar
+      })
+      this.clienteSelecionado = row
+      this.procurarProduto = true
+      await this.carregarProdutos()
+    } catch {
+      this.$q.notify({ type: 'negative', message: 'Erro ao iniciar venda!' })
+    } finally {
+      this.carregando = false
     }
+  }
+
+  abrirDialogQuantidade(row: any) {
+    this.produtoSelecionado = row
+    this.quantidadeInput = 1
+    this.descontoInput = 0
+    this.dialogQuantidade = true
+  }
+
+  abrirDialogDesconto(row: any) {
+    this.produtoSelecionado = row
+    this.descontoInput = 0
+    this.dialogDescontoItem = true
+  }
+
+  async confirmarQuantidade() {
+    this.dialogQuantidade = false
+    await this.adicionarProduto(this.produtoSelecionado, this.quantidadeInput, 0)
+  }
+
+  async confirmarDesconto() {
+    this.dialogDescontoItem = false
+    await this.adicionarProduto(this.produtoSelecionado, 1, this.descontoInput)
+  }
+
+  async adicionarProduto(row: any, quantidade = 1, desconto = 0) {
+    try {
+      await vendasService.adicionarItem({
+        venda_id: this.vendaAtual.id,
+        produto_id: row.id,
+        quantidade,
+        desconto
+      })
+
+      // Recarrega itens do backend para pegar item_id correto
+      const itens = await vendasService.listarItens(this.vendaAtual.id)
+      this.produtosAdicionados = itens.map((i: any) => ({
+        item_id: i.id,
+        codigo: i.codigo_produto,
+        nome: i.nome_produto,
+        quantidade: i.quantidade,
+        valorUnitario: i.preco_unitario,
+        desconto: i.desconto,
+        total: i.subtotal
+      }))
+
+      this.finalizacaoVenda = true
+      this.$q.notify({ type: 'positive', message: 'Produto adicionado!' })
+    } catch (err: any) {
+      this.$q.notify({ type: 'negative', message: err.response?.data?.error || 'Erro ao adicionar produto' })
+    }
+  }
+
+  async removerProduto(row: any) {
+    try {
+      await vendasService.removerItem(row.item_id)
+      this.produtosAdicionados = this.produtosAdicionados.filter(p => p.item_id !== row.item_id)
+      if (this.produtosAdicionados.length === 0) this.finalizacaoVenda = false
+      this.$q.notify({ type: 'positive', message: 'Produto removido!' })
+    } catch {
+      this.$q.notify({ type: 'negative', message: 'Erro ao remover produto' })
+    }
+  }
+
+  abrirDialogPagamento() {
     if (this.produtosAdicionados.length === 0) {
-      this.finalizacaoVenda = false
+      this.$q.notify({ type: 'warning', message: 'Adicione ao menos um produto!' })
+      return
     }
-    this.totalItens = this.produtosAdicionados.length.toString()
+    this.formaPagamentoSelecionada = ''
+    this.dialogPagamento = true
+  }
+
+  async confirmarPagamento() {
+    if (!this.formaPagamentoSelecionada) {
+      this.$q.notify({ type: 'warning', message: 'Selecione a forma de pagamento!' })
+      return
+    }
+    try {
+      this.carregando = true
+      // Atualiza forma de pagamento e finaliza
+      await vendasService.finalizarVenda(this.vendaAtual.id, this.formaPagamentoSelecionada)
+      this.$q.notify({ type: 'positive', message: 'Venda finalizada com sucesso!' })
+      this.dialogPagamento = false
+      this.confirmarCancelamento() // limpa tudo
+    } catch {
+      this.$q.notify({ type: 'negative', message: 'Erro ao finalizar venda!' })
+    } finally {
+      this.carregando = false
+    }
   }
 
   abrirDialogCancelar() {
     this.dialogCancelar = true
   }
 
-  confirmarCancelamento() {
+  async confirmarCancelamento() {
+    if (this.vendaAtual?.id) {
+      try {
+        await vendasService.cancelarVenda(this.vendaAtual.id)
+      } catch { /* ignora */ }
+    }
     this.dialogCancelar = false
     this.procurarProduto = false
     this.finalizacaoVenda = false
     this.produtosAdicionados = []
     this.clienteSelecionado = null
+    this.vendaAtual = null
     this.limparCampos()
   }
 
@@ -510,16 +747,25 @@ formatarDocumento(row: any): string {
     this.limparCampos()
   }
 
-  pesquisarProduto() {
-    console.log('Pesquisando produto...')
+  pesquisar() {
+    // filtros já são reativos via computed
   }
 
-  abrirDialogQuantidade(row: any) {
-    console.log('Qtd:', row)
+  formatarReais(valor: string | number): string {
+    const numero = typeof valor === 'string' ? parseFloat(valor) : valor
+    return numero.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
   }
 
-  abrirDialogDesconto(row: any) {
-    console.log('Desconto:', row)
+  formatarDocumento(row: any): string {
+    if (row.tipo_pessoa === 'PF') {
+      const cpf = (row.cpf ?? '').replace(/\D/g, '')
+      if (!cpf) return '-'
+      return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')
+    } else {
+      const cnpj = (row.cnpj ?? '').replace(/\D/g, '')
+      if (!cnpj) return '-'
+      return cnpj.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5')
+    }
   }
 }
 </script>
