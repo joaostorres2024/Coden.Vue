@@ -5,16 +5,16 @@
       style="width: 1500px"
     >
       <!-- HEADER -->
-      <q-card-section class="bg-white text-primary q-pb-none">
+      <q-card-section class="bg-white text-black q-pb-none">
         <div class="text-h5 text-bold">Integrações</div>
         <q-toolbar class="q-pa-none">
           <q-breadcrumbs
-            active-color="primary"
+            active-color="black"
             style="font-size: 14px"
             class="q-mb-md"
           >
             <template v-slot:separator>
-              <q-icon size="1.5em" name="chevron_right" color="primary" />
+              <q-icon size="1.5em" name="chevron_right" color="black" />
             </template>
             <q-breadcrumbs-el label="Home" icon="home" to="/" />
             <q-breadcrumbs-el label="Integrações" icon="webhook" />
@@ -75,7 +75,7 @@
                   <q-btn
                     label="Gerenciar"
                     unelevated
-                    class="btn-outline-primary text-primary"
+                    class="bg-primary text-white"
                     @click="irParaDashboard(m)"
                   />
                 </q-card>
@@ -112,14 +112,14 @@
                   </div>
 
                   <div class="column items-center q-gutter-xs">
-                    <q-badge v-if="m.emBreve" color="orange" class="q-mb-xs"
+                    <q-badge v-if="m.emBreve" color="positive" class="q-mb-xs"
                       >Em breve</q-badge
                     >
                     <q-btn
                       :label="m.emBreve ? 'Indisponível' : 'Adicionar'"
                       unelevated
                       :disable="m.emBreve"
-                      class="btn-outline-primary text-primary"
+                      class="bg-blue-3 text-white"
                       @click="!m.emBreve && irParaConectar(m)"
                     />
                   </div>

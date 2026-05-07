@@ -7,7 +7,7 @@
           flat
           dense
           round
-          color="primary"
+          color="black"
           icon="menu"
           aria-label="Menu"
           @click="leftDrawerOpen = !leftDrawerOpen"
@@ -21,7 +21,7 @@
             @click="$router.push('/')"
             class="cursor-pointer q-mr-lg"
           />
-          <span class="text-primary text-bold"> Olá, {{ user }} </span>
+          <span class="text-bold text-black"> Olá, </span><span class="text-bold text-primary">{{ user }}</span>
         </q-toolbar-title>
 
         <q-space />
@@ -35,7 +35,7 @@
           </q-avatar>
           <div class="column" style="line-height: 1.2">
             <span
-              class="text-primary text-weight-bold"
+              class="text-black text-weight-bold"
               style="font-size: 13px"
               >{{ user }}</span
             >
@@ -43,7 +43,7 @@
               >Configurações e Perfil</span
             >
           </div>
-          <q-icon name="expand_more" color="primary" />
+          <q-icon name="expand_more" color="black" />
         </div>
       </q-toolbar>
     </q-header>

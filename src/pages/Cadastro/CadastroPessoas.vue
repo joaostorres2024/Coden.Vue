@@ -4,16 +4,16 @@
       class="col-11 col-md-10 col-lg-9 no-shadow border b-r-10"
       style="width: 1500px"
     >
-      <q-card-section class="bg-white text-primary q-pb-none">
+      <q-card-section class="bg-white text-black q-pb-none">
         <div class="text-h5 text-bold">Cadastro de Pessoas</div>
         <q-toolbar class="q-pa-none">
           <q-breadcrumbs
-            active-color="primary"
+            active-color="black"
             style="font-size: 14px"
             class="q-mb-md"
           >
             <template v-slot:separator>
-              <q-icon size="1.5em" name="chevron_right" color="primary" />
+              <q-icon size="1.5em" name="chevron_right" color="black" />
             </template>
             <q-breadcrumbs-el label="Home" icon="home" to="/" />
             <q-breadcrumbs-el label="Cadastro" icon="group" />
@@ -81,26 +81,18 @@
               <div class="row justify-end items-center q-gutter-sm">
                 <q-btn
                   unelevated
-                  class="btn-outline-primary"
+                  class="bg-positive"
                   @click="mostrarFormulario()"
                 >
-                  <q-icon name="add" color="primary" />
+                  <q-icon name="add" color="white" />
                   <q-tooltip>Adicionar</q-tooltip>
                 </q-btn>
                 <q-btn
                   unelevated
-                  class="btn-outline-primary"
-                  @click="pesquisar()"
-                >
-                  <q-icon name="search" color="primary" />
-                  <q-tooltip>Pesquisar</q-tooltip>
-                </q-btn>
-                <q-btn
-                  unelevated
-                  class="btn-outline-primary"
+                  class="bg-primary"
                   @click="refreshTable()"
                 >
-                  <q-icon name="delete" color="primary" />
+                  <q-icon name="delete_sweep" color="white" />
                   <q-tooltip>Limpar</q-tooltip>
                 </q-btn>
               </div>
@@ -130,7 +122,7 @@
                     lazy-rules
                   />
                 </div>
-                <div class="col-12 col-sm-6">
+                <div class="col-12 col-sm-3">
                   <q-input
                     v-model="nmeSocial"
                     label="Nome Social"
@@ -141,7 +133,7 @@
               </template>
 
               <template v-if="mostrarFormCadastroPJ">
-                <div class="col-12 col-sm-5">
+                <div class="col-12 col-sm-3">
                   <q-input
                     v-model="razaoSocial"
                     label="Razão Social *"
@@ -152,7 +144,7 @@
                     lazy-rules
                   />
                 </div>
-                <div class="col-12 col-sm-4">
+                <div class="col-12 col-sm-3">
                   <q-input
                     v-model="nomeResponsavel"
                     label="Nome do Responsável *"
@@ -181,7 +173,7 @@
             <!-- Dados de Contato -->
             <div class="text-h6 q-mt-lg q-mb-sm">Dados de Contato</div>
             <div class="row q-col-gutter-md">
-              <div class="col-12 col-sm-4">
+              <div class="col-12 col-sm-3">
                 <q-input
                   v-model="telefone1"
                   label="Telefone 1 *"
@@ -193,7 +185,7 @@
                   lazy-rules
                 />
               </div>
-              <div class="col-12 col-sm-4">
+              <div class="col-12 col-sm-3">
                 <q-input
                   v-model="telefone2"
                   label="Telefone 2"
@@ -202,7 +194,7 @@
                   dense
                 />
               </div>
-              <div class="col-12 col-sm-4">
+              <div class="col-12 col-sm-3">
                 <q-input
                   v-model="email"
                   label="E-mail *"
@@ -242,7 +234,7 @@
                   lazy-rules
                 />
               </div>
-              <div class="col-12 col-sm-2">
+              <div class="col-12 col-sm-1">
                 <q-input
                   v-model="numero"
                   label="Número *"
@@ -264,7 +256,7 @@
                   lazy-rules
                 />
               </div>
-              <div class="col-12 col-sm-4">
+              <div class="col-12 col-sm-3">
                 <q-input
                   v-model="cidade"
                   label="Cidade *"
@@ -275,7 +267,7 @@
                   lazy-rules
                 />
               </div>
-              <div class="col-12 col-sm-2">
+              <div class="col-12 col-sm-1">
                 <q-select
                   v-model="ufSelect"
                   :options="uf_select"
@@ -301,7 +293,7 @@
                   outlined
                   dense
                   input-style="resize: none;"
-                  rows="3"
+                  rows="5"
                 />
               </div>
             </div>
@@ -313,10 +305,12 @@
                 color="positive"
                 unelevated
                 type="submit"
+                class="b-r-8"
               />
               <q-btn
                 label="Cancelar"
                 color="negative"
+                class="b-r-8"
                 flat
                 @click="abrirDialogCancelar()"
               />
@@ -333,6 +327,7 @@
             :data="rowsFiltradas"
             :columns="colunasCadastroProdutos"
             row-key="id"
+            :rows-per-page-options="[10, 20, 50]"
             flat
             bordered
             no-data-label="Nenhum registro encontrado"
@@ -375,25 +370,65 @@
       </q-card-section>
     </q-card>
 
-    <q-dialog v-model="dialogCancelar" persistent>
-      <q-card>
-        <q-card-section class="row items-center">
-          <span class="q-ml-sm"
-            >Deseja realmente cancelar? As alterações não salvas serão
-            perdidas.</span
-          >
-        </q-card-section>
-        <q-card-actions align="right">
-          <q-btn flat label="Não" color="primary" v-close-popup />
-          <q-btn
-            flat
-            label="Sim, Cancelar"
-            color="negative"
-            @click="confirmarCancelamento()"
-          />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+<q-dialog v-model="dialogCancelar" persistent>
+  <q-card style="min-width: 380px; border-radius: 12px" class="q-pa-sm">
+    <q-card-section class="q-pb-none">
+      <div class="text-h6 text-bold">Cancelar operação</div>
+    </q-card-section>
+
+    <q-card-section class="text-grey-7" style="font-size: 14px">
+      Deseja realmente cancelar? As alterações não salvas serão perdidas.
+    </q-card-section>
+
+    <q-card-actions align="right" class="q-pa-md q-gutter-sm">
+      <q-btn
+        label="Voltar"
+        unelevated
+        style="border: 1px solid #ccc; border-radius: 8px; min-width: 100px"
+        color="white"
+        text-color="dark"
+        v-close-popup
+      />
+      <q-btn
+        label="Sim, Cancelar"
+        unelevated
+        color="negative"
+        style="border-radius: 8px; min-width: 130px"
+        @click="confirmarCancelamento()"
+      />
+    </q-card-actions>
+  </q-card>
+</q-dialog>
+
+<q-dialog v-model="dialogExcluir" persistent>
+  <q-card style="min-width: 380px; border-radius: 12px" class="q-pa-sm">
+    <q-card-section class="q-pb-none">
+      <div class="text-h6 text-bold">Excluir Cliente</div>
+    </q-card-section>
+
+<q-card-section class="text-grey-7" style="font-size: 14px">
+  Tem certeza que deseja excluir o cliente <strong>{{ clienteParaExcluir?.nome_cliente }}</strong>? Ao confirmar, todos os dados relacionados a esse cliente serão removidos permanentemente e essa ação não poderá ser desfeita.
+</q-card-section>
+
+    <q-card-actions align="right" class="q-pa-md q-gutter-sm">
+      <q-btn
+        label="Voltar"
+        unelevated
+        style="border: 1px solid #ccc; border-radius: 8px; min-width: 100px"
+        color="white"
+        text-color="dark"
+        v-close-popup
+      />
+      <q-btn
+        label="Sim, Excluir"
+        unelevated
+        color="negative"
+        style="border-radius: 8px; min-width: 130px"
+        @click="executarExclusao()"
+      />
+    </q-card-actions>
+  </q-card>
+</q-dialog>
   </div>
 </template>
 
@@ -413,6 +448,7 @@ export default class ModuleComponent extends Vue {
   documento = ''
   codigo = ''
   editandoId: number | null = null
+  clienteParaExcluir: any = null
 
   // Controle de UI
   mostrarFormCadastroPF = false
@@ -595,22 +631,22 @@ export default class ModuleComponent extends Vue {
     this.mostrarFormulario()
   }
 
-  async confirmarExcluir(row: any) {
-    this.$q.dialog({
-      title: 'Excluir Cliente',
-      message: `Deseja excluir o cliente "${row.nome_cliente}"?`,
-      cancel: true,
-      persistent: true
-    }).onOk(async () => {
-      try {
-        await clienteService.deletarCliente(row.id)
-        this.$q.notify({ type: 'positive', message: 'Cliente excluído com sucesso!' })
-        await this.carregarClientes()
-      } catch (err) {
-        this.$q.notify({ type: 'negative', message: 'Erro ao excluir cliente!' })
-      }
-    })
+confirmarExcluir(row: any) {
+  this.clienteParaExcluir = row
+  this.dialogExcluir = true
+}
+
+async executarExclusao() {
+  try {
+    await clienteService.deletarCliente(this.clienteParaExcluir.id)
+    this.$q.notify({ type: 'positive', message: 'Cliente excluído com sucesso!' })
+    this.dialogExcluir = false
+    this.clienteParaExcluir = null
+    await this.carregarClientes()
+  } catch {
+    this.$q.notify({ type: 'negative', message: 'Erro ao excluir cliente!' })
   }
+}
 async mostrarFormulario() {
     if (!this.tipoPessoa) {
         (this.$refs.selectTipoPessoa as any).validate()
@@ -667,10 +703,6 @@ async mostrarFormulario() {
     this.limparCampos()
     ;(this.$refs.selectTipoPessoa as any).resetValidation()
   }
-
-  pesquisar() {
-    // lógica de pesquisa
-  }
 }
 </script>
 
@@ -681,8 +713,11 @@ async mostrarFormulario() {
 .b-r-10 {
   border-radius: 10px;
 }
+.b-r-8 {
+  border-radius: 8px;
+}
 .btn-outline-primary {
   border: 1.5px solid #ccc;
-  background-color: #f0e9f5 !important;
+  background-color: #e9eff5 !important;
 }
 </style>

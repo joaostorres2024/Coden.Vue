@@ -5,16 +5,16 @@
       style="width: 1500px"
     >
       <!-- Cabeçalho do Card -->
-      <q-card-section class="bg-white text-primary q-pb-none">
+      <q-card-section class="bg-white text-black q-pb-none">
         <div class="text-h5 text-bold">Cadastro de Produtos</div>
         <q-toolbar class="q-pa-none">
           <q-breadcrumbs
-            active-color="primary"
+            active-color="black"
             style="font-size: 14px"
             class="q-mb-md"
           >
             <template v-slot:separator>
-              <q-icon size="1.5em" name="chevron_right" color="primary" />
+              <q-icon size="1.5em" name="chevron_right" color="black" />
             </template>
             <q-breadcrumbs-el label="Home" icon="home" to="/" />
             <q-breadcrumbs-el label="Cadastro" icon="group" />
@@ -60,24 +60,19 @@
           <div v-if="!cadastroProdutoForm" class="row q-gutter-sm">
             <q-btn
               unelevated
-              class="btn-outline-primary"
+              class="text-white bg-positive"
               @click="mostrarFormulario()"
             >
-              <q-icon name="add" color="primary" />
+              <q-icon name="add" color="white" />
               <q-tooltip>Adicionar</q-tooltip>
-            </q-btn>
-
-            <q-btn unelevated class="btn-outline-primary" @click="pesquisar()">
-              <q-icon name="search" color="primary" />
-              <q-tooltip>Pesquisar</q-tooltip>
             </q-btn>
 
             <q-btn
               unelevated
-              class="btn-outline-primary"
+              class="bg-primary"
               @click="refreshTable()"
             >
-              <q-icon name="delete" color="primary" />
+              <q-icon name="delete_sweep" color="white" />
               <q-tooltip>Limpar</q-tooltip>
             </q-btn>
           </div>
@@ -89,7 +84,7 @@
             <!-- Seção: Dados Gerais -->
             <div class="text-h6 q-mb-sm">Dados Gerais</div>
             <div class="row q-col-gutter-md items-center">
-              <div class="col-12 col-sm-4">
+              <div class="col-12 col-sm-3">
                 <q-select v-model="grupo" label="Grupo" outlined dense />
               </div>
               <div class="col-12 col-sm-2">
@@ -100,7 +95,7 @@
                   class="full-width"
                 />
               </div>
-              <div class="col-12 col-sm-4">
+              <div class="col-12 col-sm-3">
                 <q-input
                   v-model="codigo_barras"
                   label="Código de Barras"
@@ -120,7 +115,7 @@
 
             <div class="text-h6 q-mt-lg q-mb-sm">Preço</div>
             <div class="row q-col-gutter-md">
-              <div class="col-12 col-sm-4">
+              <div class="col-12 col-sm-3">
                 <q-input
                   v-model="preco_custo"
                   label="Preço de Custo *"
@@ -132,7 +127,7 @@
                   lazy-rules
                 />
               </div>
-              <div class="col-12 col-sm-4">
+              <div class="col-12 col-sm-3">
                 <q-input
                   v-model="preco_venda"
                   label="Preço de Venda *"
@@ -144,7 +139,7 @@
                   lazy-rules
                 />
               </div>
-              <div class="col-12 col-sm-4">
+              <div class="col-12 col-sm-3">
                 <q-input
                   :value="margem_calculada"
                   label="Margem (%)"
@@ -225,7 +220,7 @@
                   outlined
                   dense
                   input-style="resize: none;"
-                  rows="3"
+                  rows="5"
                 />
               </div>
             </div>
@@ -237,10 +232,12 @@
                 color="positive"
                 unelevated
                 type="submit"
+                class="b-r-8"
               />
               <q-btn
                 label="Cancelar"
                 color="negative"
+                class="b-r-8"
                 flat
                 @click="abrirDialogCancelar()"
               />
@@ -303,25 +300,60 @@
     </q-card>
 
     <!-- Dialogs -->
-    <q-dialog v-model="dialogCancelar" persistent>
-      <q-card>
-        <q-card-section class="row items-center">
-          <span class="q-ml-sm"
-            >Deseja realmente cancelar? As alterações não salvas serão
-            perdidas.</span
-          >
-        </q-card-section>
-        <q-card-actions align="right">
-          <q-btn flat label="Não" color="primary" v-close-popup />
-          <q-btn
-            flat
-            label="Sim, Cancelar"
-            color="negative"
-            @click="confirmarCancelamento()"
-          />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+<q-dialog v-model="dialogCancelar" persistent>
+  <q-card style="min-width: 380px; border-radius: 12px" class="q-pa-sm">
+    <q-card-section class="q-pb-none">
+      <div class="text-h6 text-bold">Cancelar operação</div>
+    </q-card-section>
+    <q-card-section class="text-grey-7" style="font-size: 14px">
+      Deseja realmente cancelar? As alterações não salvas serão perdidas.
+    </q-card-section>
+    <q-card-actions align="right" class="q-pa-md q-gutter-sm">
+      <q-btn
+        label="Voltar"
+        unelevated
+        style="border: 1px solid #ccc; border-radius: 8px; min-width: 100px"
+        color="white"
+        text-color="dark"
+        v-close-popup
+      />
+      <q-btn
+        label="Sim, Cancelar"
+        unelevated
+        color="negative"
+        style="border-radius: 8px; min-width: 130px"
+        @click="confirmarCancelamento()"
+      />
+    </q-card-actions>
+  </q-card>
+</q-dialog>
+<q-dialog v-model="dialogExcluir" persistent>
+  <q-card style="min-width: 380px; border-radius: 12px" class="q-pa-sm">
+    <q-card-section class="q-pb-none">
+      <div class="text-h6 text-bold">Excluir Produto</div>
+    </q-card-section>
+    <q-card-section class="text-grey-7" style="font-size: 14px">
+      Tem certeza que deseja excluir o produto <strong>{{ produtoParaExcluir?.nome_produto }}</strong>? Ao confirmar, todos os dados relacionados a esse produto serão removidos permanentemente e essa ação não poderá ser desfeita.
+    </q-card-section>
+    <q-card-actions align="right" class="q-pa-md q-gutter-sm">
+      <q-btn
+        label="Voltar"
+        unelevated
+        style="border: 1px solid #ccc; border-radius: 8px; min-width: 100px"
+        color="white"
+        text-color="dark"
+        v-close-popup
+      />
+      <q-btn
+        label="Sim, Excluir"
+        unelevated
+        color="negative"
+        style="border-radius: 8px; min-width: 130px"
+        @click="executarExclusao()"
+      />
+    </q-card-actions>
+  </q-card>
+</q-dialog>
   </div>
 </template>
 
@@ -351,6 +383,7 @@ export default class ModuleComponent extends Vue {
   ativoInativo = 'Ativo'
   dataHoje = moment().format('YYYY-MM-DD')
   editandoId: number | null = null
+  produtoParaExcluir: any = null
 
   // Controle de UI
   cadastroProdutoForm = false
@@ -438,22 +471,22 @@ async carregarProdutos() {
     this.cadastroProdutoForm = true
   }
 
-  async confirmarExcluir(row: any) {
-    this.$q.dialog({
-      title: 'Excluir Produto',
-      message: `Deseja excluir o produto "${row.nome_produto}"?`,
-      cancel: true,
-      persistent: true
-    }).onOk(async () => {
-      try {
-        await productService.deleteProduct(row.id)
-        this.$q.notify({ type: 'positive', message: 'Produto excluído com sucesso!' })
-        await this.carregarProdutos()
-      } catch (err) {
-        this.$q.notify({ type: 'negative', message: 'Erro ao excluir produto!' })
-      }
-    })
+confirmarExcluir(row: any) {
+  this.produtoParaExcluir = row
+  this.dialogExcluir = true
+}
+
+async executarExclusao() {
+  try {
+    await productService.deleteProduct(this.produtoParaExcluir.id)
+    this.$q.notify({ type: 'positive', message: 'Produto excluído com sucesso!' })
+    this.dialogExcluir = false
+    this.produtoParaExcluir = null
+    await this.carregarProdutos()
+  } catch {
+    this.$q.notify({ type: 'negative', message: 'Erro ao excluir produto!' })
   }
+}
 
   get rowsFiltradas() {
     return this.rows.filter((p: Product) => {
@@ -509,6 +542,9 @@ mostrarFormulario() {
 <style scoped>
 .b-r-10 {
   border-radius: 10px;
+}
+.b-r-8 {
+  border-radius: 8px;
 }
 .border {
   border: 1px solid #ccc;

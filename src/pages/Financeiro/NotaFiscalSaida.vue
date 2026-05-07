@@ -6,16 +6,16 @@
       style="width: 1500px"
     >
       <!-- Cabeçalho do Card -->
-      <q-card-section class="bg-white text-primary q-pb-none">
+      <q-card-section class="bg-white text-black q-pb-none">
         <div class="text-h5 text-bold">NF Saída</div>
         <q-toolbar class="q-pa-none">
           <q-breadcrumbs
-            active-color="primary"
+            active-color="black"
             style="font-size: 14px"
             class="q-mb-md"
           >
             <template v-slot:separator>
-              <q-icon size="1.5em" name="chevron_right" color="primary" />
+              <q-icon size="1.5em" name="chevron_right" color="black" />
             </template>
             <q-breadcrumbs-el label="Home" icon="home" to="/" />
             <q-breadcrumbs-el label="Financeiro" icon="paid" />
@@ -72,19 +72,19 @@
               <div class="row justify-end items-center q-gutter-sm">
                 <q-btn
                   unelevated
-                  class="btn-outline-primary"
+                  class="text-white bg-primary"
                   @click="pesquisar()"
                 >
-                  <q-icon name="search" color="primary" />
+                  <q-icon name="search" color="white" />
                   <q-tooltip>Pesquisar</q-tooltip>
                 </q-btn>
 
                 <q-btn
                   unelevated
-                  class="btn-outline-primary"
+                  class="text-white bg-primary"
                   @click="refreshTable()"
                 >
-                  <q-icon name="delete" color="primary" />
+                  <q-icon name="delete" color="white" />
                   <q-tooltip>Limpar</q-tooltip>
                 </q-btn>
               </div>
