@@ -1,33 +1,45 @@
 {
   "columns": [
     {
-      "name": "numeroNF",
+      "name": "numero_nf",
       "label": "Número NF",
-      "field": "numeroNF",
+      "field": "numero_nf",
       "align": "center"
     },
     {
-      "name": "dataSaida",
+      "name": "codigo_venda",
+      "label": "Venda",
+      "field": "codigo_venda",
+      "align": "center"
+    },
+    {
+      "name": "data_emissao",
       "label": "Data de Saída",
-      "field": "dataSaida",
+      "field": "data_emissao",
       "align": "center"
     },
     {
-      "name": "nomeCliente",
+      "name": "nome_cliente",
       "label": "Cliente",
-      "field": "nomeCliente",
+      "field": "nome_cliente",
       "align": "center"
     },
     {
-      "name": "documento",
-      "label": "CNPJ/CPF do Cliente",
-      "field": "documento",
+      "name": "forma_pagamento",
+      "label": "Pagamento",
+      "field": "forma_pagamento",
       "align": "center"
     },
     {
-      "name": "valorNota",
+      "name": "total",
       "label": "Valor",
-      "field": "valorNota",
+      "field": "total",
+      "align": "center"
+    },
+    {
+      "name": "status",
+      "label": "Status",
+      "field": "status",
       "align": "center"
     },
     {
