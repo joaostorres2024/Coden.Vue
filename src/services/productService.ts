@@ -3,7 +3,8 @@ export interface Product {
   id?: number
   nome_produto: string
   preco: number
-  grupo: string
+  grupo_id?: number
+  grupo?: string
   codigo_produto?: string
   codigo_barras?: string
   preco_custo?: number
@@ -43,7 +44,32 @@ const productService = {
 
   deleteProduct(id: number): Promise<void> {
     return api.delete(`/api/products/${id}`).then(() => undefined)
-  }
+  },
+
+  async listarGrupos(): Promise<{ id: number; nome: string }[]> {
+    return api.get('/api/grupos').then(r => r.data)
+  },
+
+  async criarGrupo(nome: string): Promise<{ id: number; nome: string }> {
+    return api.post('/api/grupos', { nome }).then(r => r.data)
+  },
+
+  async relatorioEstoque(filtros: {
+  codigo?: string
+  nome_produto?: string
+  grupo_id?: number | null
+  status?: string
+  fornecedor?: string
+}): Promise<any[]> {
+  const params = new URLSearchParams()
+  if (filtros.codigo) params.append('codigo', filtros.codigo)
+  if (filtros.nome_produto) params.append('nome_produto', filtros.nome_produto)
+  if (filtros.grupo_id) params.append('grupo_id', String(filtros.grupo_id))
+  if (filtros.status) params.append('status', filtros.status)
+  if (filtros.fornecedor) params.append('fornecedor', filtros.fornecedor)
+
+  return api.get(`/api/products/relatorio/estoque?${params.toString()}`).then(r => r.data)
+}
 }
 
 export default productService

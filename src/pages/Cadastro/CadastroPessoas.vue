@@ -87,11 +87,7 @@
                   <q-icon name="add" color="white" />
                   <q-tooltip>Adicionar</q-tooltip>
                 </q-btn>
-                <q-btn
-                  unelevated
-                  class="bg-primary"
-                  @click="refreshTable()"
-                >
+                <q-btn unelevated class="bg-primary" @click="refreshTable()">
                   <q-icon name="delete_sweep" color="white" />
                   <q-tooltip>Limpar</q-tooltip>
                 </q-btn>
@@ -195,6 +191,15 @@
                 />
               </div>
               <div class="col-12 col-sm-3">
+                <q-input
+                  v-model="telefone_fixo"
+                  label="Telefone Fixo"
+                  mask="(##) ####-####"
+                  outlined
+                  dense
+                />
+              </div>
+              <div class="col-12 col-sm-4">
                 <q-input
                   v-model="email"
                   label="E-mail *"
@@ -334,25 +339,41 @@
             class="text-weight-medium"
           >
             <template v-slot:body-cell-acoes="props">
-              <q-td align="center">
-                <q-btn
-                  icon="edit"
-                  size="sm"
-                  color="primary"
-                  flat
-                  round
-                  @click="editar(props.row)"
-                />
-                <q-btn
-                  icon="delete"
-                  size="sm"
-                  color="negative"
-                  flat
-                  round
-                  @click="confirmarExcluir(props.row)"
-                />
-              </q-td>
-            </template>
+  <q-td align="center">
+    <q-btn
+      icon="edit"
+      size="sm"
+      color="black"
+      flat
+      round
+      @click="editar(props.row)"
+    >
+    <q-tooltip>Editar</q-tooltip>
+    </q-btn>
+    <q-btn
+      v-if="props.row.status === 'Ativo'"
+      icon="person_off"
+      size="sm"
+      color="negative"
+      flat
+      round
+      @click="confirmarExcluir(props.row)"
+    >
+      <q-tooltip>Inativar</q-tooltip>
+    </q-btn>
+        <q-btn
+      v-if="props.row.status === 'Inativo'"
+      icon="person"
+      size="sm"
+      color="positive"
+      flat
+      round
+      @click="reativarCliente(props.row)"
+    >
+      <q-tooltip>Reativar</q-tooltip>
+    </q-btn>
+  </q-td>
+</template>
             <template v-slot:body-cell-status="props">
               <q-td align="center">
                 <q-badge
@@ -370,65 +391,68 @@
       </q-card-section>
     </q-card>
 
-<q-dialog v-model="dialogCancelar" persistent>
-  <q-card style="min-width: 380px; border-radius: 12px" class="q-pa-sm">
-    <q-card-section class="q-pb-none">
-      <div class="text-h6 text-bold">Cancelar operação</div>
-    </q-card-section>
+    <q-dialog v-model="dialogCancelar" persistent>
+      <q-card style="min-width: 380px; border-radius: 12px" class="q-pa-sm">
+        <q-card-section class="q-pb-none">
+          <div class="text-h6 text-bold">Cancelar operação</div>
+        </q-card-section>
 
-    <q-card-section class="text-grey-7" style="font-size: 14px">
-      Deseja realmente cancelar? As alterações não salvas serão perdidas.
-    </q-card-section>
+        <q-card-section class="text-grey-7" style="font-size: 14px">
+          Deseja realmente cancelar? As alterações não salvas serão perdidas.
+        </q-card-section>
 
-    <q-card-actions align="right" class="q-pa-md q-gutter-sm">
-      <q-btn
-        label="Voltar"
-        unelevated
-        style="border: 1px solid #ccc; border-radius: 8px; min-width: 100px"
-        color="white"
-        text-color="dark"
-        v-close-popup
-      />
-      <q-btn
-        label="Sim, Cancelar"
-        unelevated
-        color="negative"
-        style="border-radius: 8px; min-width: 130px"
-        @click="confirmarCancelamento()"
-      />
-    </q-card-actions>
-  </q-card>
-</q-dialog>
+        <q-card-actions align="right" class="q-pa-md q-gutter-sm">
+          <q-btn
+            label="Voltar"
+            unelevated
+            style="border: 1px solid #ccc; border-radius: 8px; min-width: 100px"
+            color="white"
+            text-color="dark"
+            v-close-popup
+          />
+          <q-btn
+            label="Sim, Cancelar"
+            unelevated
+            color="negative"
+            style="border-radius: 8px; min-width: 130px"
+            @click="confirmarCancelamento()"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
 
-<q-dialog v-model="dialogExcluir" persistent>
-  <q-card style="min-width: 380px; border-radius: 12px" class="q-pa-sm">
-    <q-card-section class="q-pb-none">
-      <div class="text-h6 text-bold">Excluir Cliente</div>
-    </q-card-section>
+    <q-dialog v-model="dialogExcluir" persistent>
+      <q-card style="min-width: 380px; border-radius: 12px" class="q-pa-sm">
+        <q-card-section class="q-pb-none">
+          <div class="text-h6 text-bold">Inativar Cliente</div>
+        </q-card-section>
 
-<q-card-section class="text-grey-7" style="font-size: 14px">
-  Tem certeza que deseja excluir o cliente <strong>{{ clienteParaExcluir?.nome_cliente }}</strong>? Ao confirmar, todos os dados relacionados a esse cliente serão removidos permanentemente e essa ação não poderá ser desfeita.
-</q-card-section>
+        <q-card-section class="text-grey-7" style="font-size: 14px">
+          Tem certeza que deseja inativar o cliente
+          <strong>{{ clienteParaExcluir?.nome_cliente }}</strong
+          >? O cliente não será excluído, mas ficará inativo no sistema.
+        </q-card-section>
 
-    <q-card-actions align="right" class="q-pa-md q-gutter-sm">
-      <q-btn
-        label="Voltar"
-        unelevated
-        style="border: 1px solid #ccc; border-radius: 8px; min-width: 100px"
-        color="white"
-        text-color="dark"
-        v-close-popup
-      />
-      <q-btn
-        label="Sim, Excluir"
-        unelevated
-        color="negative"
-        style="border-radius: 8px; min-width: 130px"
-        @click="executarExclusao()"
-      />
-    </q-card-actions>
-  </q-card>
-</q-dialog>
+        <q-card-actions class="row q-pa-md justify-end">
+          <!-- botão -->
+          <q-btn
+            label="Voltar"
+            unelevated
+            style="border: 1px solid #ccc; border-radius: 8px; min-width: 100px"
+            color="white"
+            text-color="dark"
+            v-close-popup
+          />
+          <q-btn
+            label="Sim, Inativar"
+            unelevated
+            color="negative"
+            style="border-radius: 8px; min-width: 130px"
+            @click="executarExclusao()"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
@@ -464,6 +488,7 @@ export default class ModuleComponent extends Vue {
   ativoInativo = 'Ativo'
   telefone1 = ''
   telefone2 = ''
+  telefone_fixo = ''
   email = ''
   cep = ''
   endereco = ''
@@ -545,6 +570,7 @@ export default class ModuleComponent extends Vue {
         nome_responsavel: this.tipoPessoa === 'PJ' ? this.nomeResponsavel : undefined,
         telefone_1: this.telefone1,
         telefone_2: this.telefone2,
+        telefone_fixo: this.telefone_fixo,
         email: this.email,
         cep: this.cep,
         endereco: this.endereco,
@@ -570,6 +596,19 @@ export default class ModuleComponent extends Vue {
       this.$q.notify({ type: 'negative', message: 'Erro ao salvar cadastro!' })
     }
   }
+
+  async reativarCliente(row: any) {
+  try {
+    await clienteService.atualizarCliente(row.id, {
+      ...row,
+      status: 'Ativo'
+    })
+    this.$q.notify({ type: 'positive', message: 'Cliente reativado com sucesso!' })
+    await this.carregarClientes()
+  } catch {
+    this.$q.notify({ type: 'negative', message: 'Erro ao reativar cliente!' })
+  }
+}
 
   async buscarCep(cep: string) {
   const cepLimpo = cep.replace(/\D/g, '')
@@ -620,6 +659,7 @@ export default class ModuleComponent extends Vue {
     this.nomeResponsavel = row.nome_responsavel
     this.telefone1 = row.telefone_1
     this.telefone2 = row.telefone_2
+    this.telefone_fixo = row.telefone_fixo
     this.email = row.email
     this.cep = row.cep
     this.endereco = row.endereco
@@ -638,15 +678,19 @@ confirmarExcluir(row: any) {
 
 async executarExclusao() {
   try {
-    await clienteService.deletarCliente(this.clienteParaExcluir.id)
-    this.$q.notify({ type: 'positive', message: 'Cliente excluído com sucesso!' })
+    await clienteService.atualizarCliente(this.clienteParaExcluir.id, {
+      ...this.clienteParaExcluir,
+      status: 'Inativo'
+    })
+    this.$q.notify({ type: 'positive', message: 'Cliente inativado com sucesso!' })
     this.dialogExcluir = false
     this.clienteParaExcluir = null
     await this.carregarClientes()
   } catch {
-    this.$q.notify({ type: 'negative', message: 'Erro ao excluir cliente!' })
+    this.$q.notify({ type: 'negative', message: 'Erro ao inativar cliente!' })
   }
 }
+
 async mostrarFormulario() {
     if (!this.tipoPessoa) {
         (this.$refs.selectTipoPessoa as any).validate()
@@ -689,6 +733,7 @@ async mostrarFormulario() {
     this.ativoInativo = 'Ativo'
     this.telefone1 = ''
     this.telefone2 = ''
+    this.telefone_fixo = ''
     this.email = ''
     this.cep = ''
     this.endereco = ''

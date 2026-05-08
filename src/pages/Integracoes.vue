@@ -119,7 +119,7 @@
                       :label="m.emBreve ? 'Indisponível' : 'Adicionar'"
                       unelevated
                       :disable="m.emBreve"
-                      class="bg-blue-3 text-white"
+                      class="bg-primary text-white"
                       @click="!m.emBreve && irParaConectar(m)"
                     />
                   </div>

@@ -14,6 +14,7 @@ export interface Cliente {
   nome_responsavel?: string
   telefone_1?: string
   telefone_2?: string
+  telefone_fixo?: string
   email?: string
   cep?: string
   endereco?: string

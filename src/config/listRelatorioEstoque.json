@@ -1,15 +1,15 @@
 {
   "columns": [
     {
-      "name": "codigo",
+      "name": "codigo_produto",
       "label": "Código",
-      "field": "codigo",
+      "field": "codigo_produto",
       "align": "center"
     },
     {
-      "name": "nomeProduto",
+      "name": "nome_produto",
       "label": "Produto",
-      "field": "nomeProduto",
+      "field": "nome_produto",
       "align": "center"
     },
     {
@@ -19,33 +19,45 @@
       "align": "center"
     },
     {
-      "name": "quantidade",
+      "name": "estoque_atual",
       "label": "Qtd. Estoque",
-      "field": "quantidade",
+      "field": "estoque_atual",
       "align": "center"
     },
     {
-      "name": "valorCusto",
+      "name": "estoque_minimo",
+      "label": "Estoque Mín.",
+      "field": "estoque_minimo",
+      "align": "center"
+    },
+    {
+      "name": "situacao_estoque",
+      "label": "Situação",
+      "field": "situacao_estoque",
+      "align": "center"
+    },
+    {
+      "name": "preco_custo",
       "label": "Valor Custo",
-      "field": "valorCusto",
+      "field": "preco_custo",
       "align": "center"
     },
     {
-      "name": "valorVenda",
+      "name": "preco",
       "label": "Valor Venda",
-      "field": "valorVenda",
+      "field": "preco",
+      "align": "center"
+    },
+    {
+      "name": "fornecedor",
+      "label": "Fornecedor",
+      "field": "fornecedor",
       "align": "center"
     },
     {
       "name": "status",
       "label": "Status",
       "field": "status",
-      "align": "center"
-    },
-    {
-      "name": "acoes",
-      "label": "Ações",
-      "field": "acoes",
       "align": "center"
     }
   ]

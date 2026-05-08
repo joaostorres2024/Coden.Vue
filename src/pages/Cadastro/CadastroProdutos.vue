@@ -67,11 +67,7 @@
               <q-tooltip>Adicionar</q-tooltip>
             </q-btn>
 
-            <q-btn
-              unelevated
-              class="bg-primary"
-              @click="refreshTable()"
-            >
+            <q-btn unelevated class="bg-primary" @click="refreshTable()">
               <q-icon name="delete_sweep" color="white" />
               <q-tooltip>Limpar</q-tooltip>
             </q-btn>
@@ -85,15 +81,26 @@
             <div class="text-h6 q-mb-sm">Dados Gerais</div>
             <div class="row q-col-gutter-md items-center">
               <div class="col-12 col-sm-3">
-                <q-select v-model="grupo" label="Grupo" outlined dense />
+                <q-select
+  v-model="grupo"
+  :options="grupos"
+  option-label="nome"
+  option-value="id"
+  emit-value
+  map-options
+  label="Grupo"
+  outlined
+  dense
+/>
               </div>
               <div class="col-12 col-sm-2">
                 <q-btn
-                  label="Criar Grupo"
-                  color="primary"
-                  unelevated
-                  class="full-width"
-                />
+  label="Criar Grupo"
+  color="primary"
+  unelevated
+  class="full-width"
+  @click="dialogCriarGrupo = true"
+/>
               </div>
               <div class="col-12 col-sm-3">
                 <q-input
@@ -251,6 +258,7 @@
             :data="rowsFiltradas"
             :columns="colunasCadastroProdutos"
             row-key="codigo"
+            :rows-per-page-options="[10, 20, 50]"
             flat
             bordered
             no-data-label="Nenhum registro encontrado"
@@ -262,19 +270,35 @@
                 <q-btn
                   icon="edit"
                   size="sm"
-                  color="primary"
+                  color="black"
                   flat
                   round
                   @click="editar(props.row)"
-                />
+                >
+                  <q-tooltip>Editar</q-tooltip>
+                </q-btn>
                 <q-btn
-                  icon="delete"
+                  v-if="props.row.status === 'Ativo'"
+                  icon="inventory_2"
                   size="sm"
                   color="negative"
                   flat
                   round
                   @click="confirmarExcluir(props.row)"
-                />
+                >
+                  <q-tooltip>Inativar</q-tooltip>
+                </q-btn>
+                <q-btn
+                  v-if="props.row.status === 'Inativo'"
+                  icon="inventory"
+                  size="sm"
+                  color="positive"
+                  flat
+                  round
+                  @click="reativarProduto(props.row)"
+                >
+                  <q-tooltip>Reativar</q-tooltip>
+                </q-btn>
               </q-td>
             </template>
 
@@ -300,57 +324,73 @@
     </q-card>
 
     <!-- Dialogs -->
-<q-dialog v-model="dialogCancelar" persistent>
-  <q-card style="min-width: 380px; border-radius: 12px" class="q-pa-sm">
+    <q-dialog v-model="dialogCancelar" persistent>
+      <q-card style="min-width: 380px; border-radius: 12px" class="q-pa-sm">
+        <q-card-section class="q-pb-none">
+          <div class="text-h6 text-bold">Cancelar operação</div>
+        </q-card-section>
+        <q-card-section class="text-grey-7" style="font-size: 14px">
+          Deseja realmente cancelar? As alterações não salvas serão perdidas.
+        </q-card-section>
+        <q-card-actions align="right" class="q-pa-md q-gutter-sm">
+          <q-btn
+            label="Voltar"
+            unelevated
+            style="border: 1px solid #ccc; border-radius: 8px; min-width: 100px"
+            color="white"
+            text-color="dark"
+            v-close-popup
+          />
+          <q-btn
+            label="Sim, Cancelar"
+            unelevated
+            color="negative"
+            style="border-radius: 8px; min-width: 130px"
+            @click="confirmarCancelamento()"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+    <q-dialog v-model="dialogExcluir" persistent>
+      <q-card style="min-width: 380px; border-radius: 12px" class="q-pa-sm">
+        <q-card-section class="q-pb-none">
+          <div class="text-h6 text-bold">Inativar Produto</div>
+        </q-card-section>
+        <q-card-section class="text-grey-7" style="font-size: 14px">
+          Tem certeza que deseja inativar o produto
+          <strong>{{ produtoParaExcluir?.nome_produto }}</strong
+          >? O produto não será excluído, mas ficará inativo no sistema.
+        </q-card-section>
+        <q-card-actions align="right" class="q-pa-md q-gutter-sm">
+          <q-btn
+            label="Voltar"
+            unelevated
+            style="border: 1px solid #ccc; border-radius: 8px; min-width: 100px"
+            color="white"
+            text-color="dark"
+            v-close-popup
+          />
+          <q-btn
+            label="Sim, Inativar"
+            unelevated
+            color="negative"
+            style="border-radius: 8px; min-width: 130px"
+            @click="executarExclusao()"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+    <q-dialog v-model="dialogCriarGrupo" persistent>
+  <q-card style="min-width: 350px; border-radius: 12px" class="q-pa-sm">
     <q-card-section class="q-pb-none">
-      <div class="text-h6 text-bold">Cancelar operação</div>
+      <div class="text-h6 text-bold">Criar Grupo</div>
     </q-card-section>
-    <q-card-section class="text-grey-7" style="font-size: 14px">
-      Deseja realmente cancelar? As alterações não salvas serão perdidas.
+    <q-card-section>
+      <q-input v-model="novoGrupo" label="Nome do Grupo" outlined dense autofocus />
     </q-card-section>
     <q-card-actions align="right" class="q-pa-md q-gutter-sm">
-      <q-btn
-        label="Voltar"
-        unelevated
-        style="border: 1px solid #ccc; border-radius: 8px; min-width: 100px"
-        color="white"
-        text-color="dark"
-        v-close-popup
-      />
-      <q-btn
-        label="Sim, Cancelar"
-        unelevated
-        color="negative"
-        style="border-radius: 8px; min-width: 130px"
-        @click="confirmarCancelamento()"
-      />
-    </q-card-actions>
-  </q-card>
-</q-dialog>
-<q-dialog v-model="dialogExcluir" persistent>
-  <q-card style="min-width: 380px; border-radius: 12px" class="q-pa-sm">
-    <q-card-section class="q-pb-none">
-      <div class="text-h6 text-bold">Excluir Produto</div>
-    </q-card-section>
-    <q-card-section class="text-grey-7" style="font-size: 14px">
-      Tem certeza que deseja excluir o produto <strong>{{ produtoParaExcluir?.nome_produto }}</strong>? Ao confirmar, todos os dados relacionados a esse produto serão removidos permanentemente e essa ação não poderá ser desfeita.
-    </q-card-section>
-    <q-card-actions align="right" class="q-pa-md q-gutter-sm">
-      <q-btn
-        label="Voltar"
-        unelevated
-        style="border: 1px solid #ccc; border-radius: 8px; min-width: 100px"
-        color="white"
-        text-color="dark"
-        v-close-popup
-      />
-      <q-btn
-        label="Sim, Excluir"
-        unelevated
-        color="negative"
-        style="border-radius: 8px; min-width: 130px"
-        @click="executarExclusao()"
-      />
+      <q-btn label="Cancelar" flat v-close-popup />
+      <q-btn label="Criar" unelevated color="primary" class="b-r-8" @click="salvarGrupo()" />
     </q-card-actions>
   </q-card>
 </q-dialog>
@@ -372,7 +412,7 @@ export default class ModuleComponent extends Vue {
   codigo_produto = ''
   nome_produto = ''
   codigo_barras = ''
-  grupo = ''
+  grupo: number | null = null
   estoque_atual = ''
   estoque_minimo = ''
   estoque_maximo = ''
@@ -398,6 +438,7 @@ export default class ModuleComponent extends Vue {
 
   async created() {
     await this.carregarProdutos()
+    await this.carregarGrupos()
   }
 
  async salvar() {
@@ -415,7 +456,7 @@ export default class ModuleComponent extends Vue {
       const payload: Product = {
         nome_produto: this.nome_produto,
         preco: this.preco_venda ?? 0,
-        grupo: this.grupo,
+        grupo_id: this.grupo ? Number(this.grupo) : undefined,
         codigo_produto: this.codigo_produto,
         codigo_barras: this.codigo_barras,
         preco_custo: this.preco_custo ?? undefined,
@@ -454,11 +495,31 @@ async carregarProdutos() {
     }
   }
 
+  dialogCriarGrupo = false
+novoGrupo = ''
+
+async salvarGrupo() {
+  if (!this.novoGrupo) {
+    this.$q.notify({ type: 'warning', message: 'Informe o nome do grupo!' })
+    return
+  }
+  try {
+    const grupo = await productService.criarGrupo(this.novoGrupo)
+    this.grupos.push(grupo)
+    this.grupo = grupo.id
+    this.novoGrupo = ''
+    this.dialogCriarGrupo = false
+    this.$q.notify({ type: 'positive', message: 'Grupo criado com sucesso!' })
+  } catch {
+    this.$q.notify({ type: 'negative', message: 'Erro ao criar grupo!' })
+  }
+}
+
   editar(row: any) {
     this.editandoId = row.id
     this.codigo_produto = row.codigo_produto
     this.nome_produto = row.nome_produto
-    this.grupo = row.grupo
+    this.grupo = row.grupo_id ?? null
     this.codigo_barras = row.codigo_barras
     this.estoque_atual = row.estoque_atual
     this.estoque_minimo = row.estoque_minimo
@@ -478,13 +539,29 @@ confirmarExcluir(row: any) {
 
 async executarExclusao() {
   try {
-    await productService.deleteProduct(this.produtoParaExcluir.id)
-    this.$q.notify({ type: 'positive', message: 'Produto excluído com sucesso!' })
+    await productService.updateProduct(this.produtoParaExcluir.id, {
+      ...this.produtoParaExcluir,
+      status: 'Inativo'
+    })
+    this.$q.notify({ type: 'positive', message: 'Produto inativado com sucesso!' })
     this.dialogExcluir = false
     this.produtoParaExcluir = null
     await this.carregarProdutos()
   } catch {
-    this.$q.notify({ type: 'negative', message: 'Erro ao excluir produto!' })
+    this.$q.notify({ type: 'negative', message: 'Erro ao inativar produto!' })
+  }
+}
+
+async reativarProduto(row: any) {
+  try {
+    await productService.updateProduct(row.id, {
+      ...row,
+      status: 'Ativo'
+    })
+    this.$q.notify({ type: 'positive', message: 'Produto reativado com sucesso!' })
+    await this.carregarProdutos()
+  } catch {
+    this.$q.notify({ type: 'negative', message: 'Erro ao reativar produto!' })
   }
 }
 
@@ -507,6 +584,17 @@ get margem_calculada(): string {
     return numero.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
   }
 
+  grupos: any[] = []
+
+async carregarGrupos() {
+  try {
+    const grupos = await productService.listarGrupos()
+    this.grupos = [{ id: null, nome: 'Nenhum' }, ...grupos]
+  } catch {
+    this.$q.notify({ type: 'negative', message: 'Erro ao carregar grupos!' })
+  }
+}
+
 abrirDialogCancelar() {
   this.dialogCancelar = true
 }
@@ -516,7 +604,7 @@ abrirDialogCancelar() {
     this.codigo_produto = ''
     this.nome_produto = ''
     this.codigo_barras = ''
-    this.grupo = ''
+    this.grupo = null
     this.estoque_atual = ''
     this.estoque_minimo = ''
     this.estoque_maximo = ''
