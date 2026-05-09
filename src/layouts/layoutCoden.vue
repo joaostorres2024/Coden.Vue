@@ -197,87 +197,69 @@
     </template>
 
     <q-drawer
-      v-model="drawerPerfil"
-      side="right"
-      overlay
-      bordered
-      :width="280"
-      :breakpoint="0"
-      style="z-index: 2000"
-    >
-      <div class="column full-height">
-        <q-separator/>
-        <div class="q-pa-md q-pb-sm">
-          <div class="row items-center q-gutter-md">
-            <q-avatar size="48px" color="primary" text-color="white">
-              {{ iniciais }}
-            </q-avatar>
-            <div class="column">
-              <span
-                class="text-weight-bold"
-                style="font-size: 14px"
-                >{{ user }}</span
-              >
-              <span class="text-grey-6" style="font-size: 12px"
-                >Configurações e plano</span
-              >
-            </div>
-          </div>
-        </div>
+  v-model="drawerPerfil"
+  side="right"
+  overlay
+  bordered
+  :width="260"
+  :breakpoint="0"
+  style="z-index: 2000"
+>
+  <div class="column full-height">
 
-        <q-separator />
-
-        <div class="q-px-md q-pt-md q-pb-xs">
-          <span class="text-bold text-grey-8" style="font-size: 13px"
-            >Minha Conta</span
-          >
-        </div>
-
-        <q-list dense>
-          <q-item
-            clickable
-            v-ripple
-            @click="$router.push('/Perfil'); drawerPerfil = false"
-          >
-            <q-item-section>
-              <span style="font-size: 13px">Perfil</span>
-            </q-item-section>
-          </q-item>
-
-          <q-item
-            clickable
-            v-ripple
-            @click="$router.push('/Configuracoes'); drawerPerfil = false"
-          >
-            <q-item-section>
-              <span style="font-size: 13px">Configurações</span>
-            </q-item-section>
-          </q-item>
-
-          <q-item
-            clickable
-            v-ripple
-            @click="toggleDark(); drawerPerfil = false"
-          >
-            <q-item-section>
-              <span style="font-size: 13px">Modo Escuro/Claro</span>
-            </q-item-section>
-          </q-item>
-        </q-list>
-
-        <q-space />
-
-        <q-separator />
-
-        <q-list dense class="q-pb-sm">
-          <q-item clickable v-ripple @click="Sair()">
-            <q-item-section>
-              <span class="text-negative" style="font-size: 13px">Sair</span>
-            </q-item-section>
-          </q-item>
-        </q-list>
+    <!-- Header -->
+    <div class="q-pa-lg row items-center q-gutter-md">
+      <q-avatar size="48px" color="primary" text-color="white">
+        {{ iniciais }}
+      </q-avatar>
+      <div class="column">
+        <span class="text-weight-bold" style="font-size: 14px">{{ user }}</span>
+        <span class="text-grey-6" style="font-size: 12px">Administrador</span>
       </div>
-    </q-drawer>
+    </div>
+
+    <q-separator />
+
+    <!-- Menu -->
+    <q-list class="q-pa-sm q-mt-sm">
+      <q-item clickable v-ripple class="b-r-8" @click="$router.push('/Perfil'); drawerPerfil = false">
+        <q-item-section avatar><q-icon name="business" color="grey-7" size="20px" /></q-item-section>
+        <q-item-section><span style="font-size: 13px">Perfil da Empresa</span></q-item-section>
+      </q-item>
+
+      <q-item clickable v-ripple class="b-r-8" @click="toggleDark(); drawerPerfil = false">
+        <q-item-section avatar><q-icon :name="$q.dark.isActive ? 'light_mode' : 'dark_mode'" color="grey-7" size="20px" /></q-item-section>
+        <q-item-section><span style="font-size: 13px">{{ $q.dark.isActive ? 'Modo Claro' : 'Modo Escuro' }}</span></q-item-section>
+      </q-item>
+
+      <q-item clickable v-ripple class="b-r-8" @click="$router.push('/Configuracoes'); drawerPerfil = false">
+        <q-item-section avatar><q-icon name="settings" color="grey-7" size="20px" /></q-item-section>
+        <q-item-section><span style="font-size: 13px">Configurações</span></q-item-section>
+      </q-item>
+
+
+      <q-item clickable v-ripple class="b-r-8" disable>
+        <q-item-section avatar><q-icon name="support_agent" color="grey-4" size="20px" /></q-item-section>
+        <q-item-section>
+          <span style="font-size: 13px" class="text-grey-5">Helpdesk</span>
+          <span class="text-caption text-grey-4">Em breve</span>
+        </q-item-section>
+      </q-item>
+    </q-list>
+
+    <q-space />
+
+    <q-separator />
+
+    <q-list class="q-pa-sm">
+      <q-item clickable v-ripple class="b-r-8" @click="Sair()">
+        <q-item-section avatar><q-icon name="logout" color="negative" size="20px" /></q-item-section>
+        <q-item-section><span class="text-negative" style="font-size: 13px">Sair</span></q-item-section>
+      </q-item>
+    </q-list>
+
+  </div>
+</q-drawer>
     <!-- CONTEÚDO -->
     <q-page-container>
       <q-page class="bg-accent" padding>

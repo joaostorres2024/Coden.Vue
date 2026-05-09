@@ -1,34 +1,15 @@
 {
-      "columns" : [
-    {
-      "name": "id",
-      "label": "ID",
-      "field": "id",
-      "align": "left"
-    },
-    {
-      "name": "nome",
-      "label": "Nome",
-      "field": "nome",
-      "align": "left"
-    },
-    {
-      "name": "cnpj",
-      "label": "CNPJ",
-      "field": "cnpj",
-      "align": "left"
-    },
-    {
-      "name": "cep",
-      "label": "CEP",
-      "field": "cep",
-      "align": "left"
-    },
-    {
-      "name": "actions",
-      "label": "Ações",
-      "field": "actions",
-      "align": "center"
-    }
+  "columns": [
+    { "name": "nome", "label": "Razão Social", "field": "nome", "align": "left", "sortable": true },
+    { "name": "nome_fantasia", "label": "Nome Fantasia", "field": "nome_fantasia", "align": "left", "sortable": true },
+    { "name": "cnpj", "label": "CNPJ", "field": "cnpj", "align": "center" },
+    { "name": "inscricao_estadual", "label": "Inscrição Estadual", "field": "inscricao_estadual", "align": "center" },
+    { "name": "regime_tributario", "label": "Regime Tributário", "field": "regime_tributario", "align": "center" },
+    { "name": "cidade", "label": "Cidade", "field": "cidade", "align": "center", "sortable": true },
+    { "name": "uf", "label": "UF", "field": "uf", "align": "center" },
+    { "name": "telefone", "label": "Telefone", "field": "telefone", "align": "center" },
+    { "name": "email", "label": "E-mail", "field": "email", "align": "center" },
+    { "name": "responsavel", "label": "Responsável", "field": "responsavel", "align": "center" },
+    { "name": "actions", "label": "Ações", "field": "actions", "align": "center" }
   ]
 }

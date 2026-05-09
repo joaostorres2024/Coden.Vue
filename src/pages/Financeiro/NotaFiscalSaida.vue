@@ -20,35 +20,32 @@
 
       <q-card-section class="q-pa-lg">
 
-        <!-- Filtros -->
-        <div class="row q-col-gutter-md q-mb-md">
-          <div class="col-12 col-sm-3">
-            <q-input v-model="filtro.numeroNF" label="Número NF" outlined dense>
-            </q-input>
-          </div>
-          <div class="col-12 col-sm-3">
-            <q-input v-model="filtro.nomeCliente" label="Nome do Cliente" outlined dense>
-            </q-input>
-          </div>
-          <div class="col-12 col-sm-2">
-            <q-input v-model="filtro.de" label="De" type="date" outlined dense />
-          </div>
-          <div class="col-12 col-sm-2">
-            <q-input v-model="filtro.ate" label="Até" type="date" outlined dense />
-          </div>
-          <div class="col-12 col-sm-2">
-            <div class="row justify-end q-gutter-sm">
-              <q-btn unelevated class="bg-primary" @click="pesquisar()">
-                <q-icon name="search" color="white" />
-                <q-tooltip>Pesquisar</q-tooltip>
-              </q-btn>
-              <q-btn unelevated class="bg-primary" @click="limpar()">
-                <q-icon name="delete_sweep" color="white" />
-                <q-tooltip>Limpar</q-tooltip>
-              </q-btn>
-            </div>
-          </div>
-        </div>
+       <!-- Filtros -->
+<div class="row q-col-gutter-md q-mb-md">
+  <div class="col-12 col-sm-3">
+    <q-input v-model="filtro.numeroNF" label="Número NF" outlined dense />
+  </div>
+  <div class="col-12 col-sm-3">
+    <q-input v-model="filtro.nomeCliente" label="Nome do Cliente" outlined dense />
+  </div>
+  <div class="col-12 col-sm-2">
+    <q-input v-model="filtro.de" label="De" type="date" outlined dense />
+  </div>
+  <div class="col-12 col-sm-2">
+    <q-input v-model="filtro.ate" label="Até" type="date" outlined dense />
+  </div>
+</div>
+
+<!-- Botões -->
+<div class="row justify-start q-gutter-sm q-mb-md">
+  <q-btn
+    label="Limpar"
+    icon="delete_sweep"
+    flat
+    class="text-grey-7"
+    @click="limpar()"
+  />
+</div>
 
         <!-- Tabela -->
         <q-table

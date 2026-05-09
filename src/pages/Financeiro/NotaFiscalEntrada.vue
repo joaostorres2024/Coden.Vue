@@ -4,15 +4,10 @@
       class="col-11 col-md-10 col-lg-9 no-shadow border b-r-10"
       style="width: 1500px"
     >
-      <!-- Cabeçalho do Card -->
       <q-card-section class="bg-white text-black q-pb-none">
         <div class="text-h5 text-bold">NF Entrada</div>
         <q-toolbar class="q-pa-none">
-          <q-breadcrumbs
-            active-color="black"
-            style="font-size: 14px"
-            class="q-mb-md"
-          >
+          <q-breadcrumbs active-color="black" style="font-size: 14px" class="q-mb-md">
             <template v-slot:separator>
               <q-icon size="1.5em" name="chevron_right" color="black" />
             </template>
@@ -26,23 +21,36 @@
       <q-separator />
 
       <q-card-section class="q-pa-lg">
+
         <!-- Filtros -->
-        <div class="row items-center justify-between no-wrap">
-          <div class="row q-gutter-md col">
-            <q-input v-model="numeroNF" style="width: 200px" label="Número NF" outlined dense />
-            <q-input v-model="codigo" style="width: 250px" label="Código do Produto" outlined dense />
-            <q-input v-model="produto" style="width: 350px" label="Nome do Produto" outlined dense />
+        <div class="row q-col-gutter-md q-mb-md">
+          <div class="col-12 col-md-4">
+            <q-input v-model="numeroNF" label="Número NF" outlined dense />
           </div>
-          <div v-if="!formNotaFiscalEntrada" class="row q-gutter-sm">
-            <q-btn unelevated class="bg-positive" @click="mostrarFormulario()">
-              <q-icon name="add" color="white" />
-              <q-tooltip>Adicionar</q-tooltip>
-            </q-btn>
-            <q-btn unelevated class="bg-primary" @click="refreshTable()">
-              <q-icon name="delete_sweep" color="white" />
-              <q-tooltip>Limpar</q-tooltip>
-            </q-btn>
+          <div class="col-12 col-md-4">
+            <q-input v-model="codigo" label="Código do Produto" outlined dense />
           </div>
+          <div class="col-12 col-md-4">
+            <q-input v-model="produto" label="Nome do Produto" outlined dense />
+          </div>
+        </div>
+
+        <!-- Botões -->
+        <div v-if="!formNotaFiscalEntrada" class="row justify-end q-gutter-sm q-mb-md">
+          <q-btn
+            label="Adicionar"
+            icon="add"
+            color="positive"
+            unelevated
+            @click="mostrarFormulario()"
+          />
+          <q-btn
+            label="Limpar"
+            icon="delete_sweep"
+            flat
+            class="text-grey-7"
+            @click="refreshTable()"
+          />
         </div>
 
         <!-- Formulário -->
@@ -67,72 +75,72 @@
                 </template>
               </q-file>
             </div>
-            <div class="row q-col-gutter-md">
-              <div class="col-12 col-sm-3">
+            <div class="row q-col-gutter-md q-mb-md">
+              <div class="col-12 col-sm-4">
                 <q-input v-model="form.numeroNF" label="Número NF" outlined dense />
               </div>
-              <div class="col-12 col-sm-3">
+              <div class="col-12 col-sm-4">
                 <q-input v-model="form.serie" label="Série" outlined dense />
               </div>
-              <div class="col-12 col-sm-3">
+              <div class="col-12 col-sm-4">
                 <q-input v-model="form.dataEmissao" label="Data Emissão" type="date" outlined dense />
               </div>
-              <div class="col-12 col-sm-3">
+              <div class="col-12 col-sm-4">
                 <q-input v-model="dataHoje" label="Data Entrada" type="date" outlined dense readonly />
               </div>
             </div>
 
             <!-- Origem -->
-            <div class="text-h6 q-mt-lg q-mb-sm">Origem</div>
-            <div class="row q-col-gutter-md">
+            <div class="text-h6 q-mb-sm">Origem</div>
+            <div class="row q-col-gutter-md q-mb-md">
               <div class="col-12 col-sm-4">
                 <q-input v-model="form.fornecedor" label="Fornecedor" outlined dense />
               </div>
-              <div class="col-12 col-sm-3">
+              <div class="col-12 col-sm-4">
                 <q-input v-model="form.cnpjCpf" label="CNPJ/CPF" outlined dense />
               </div>
-              <div class="col-12 col-sm-3">
+              <div class="col-12 col-sm-4">
                 <q-input v-model="form.inscricaoEstadual" label="Inscrição Estadual" outlined dense />
               </div>
-              <div class="col-12 col-sm-2">
-                <q-select v-model="form.uf" label="UF" outlined dense :options="['DF', 'SP', 'RJ']" />
+              <div class="col-12 col-sm-4">
+                <q-select v-model="form.uf" label="UF" outlined dense :options="['DF', 'SP', 'RJ', 'MG']" />
               </div>
             </div>
 
             <!-- Produto -->
-            <div class="text-h6 q-mt-lg q-mb-sm">Produto</div>
-            <div class="row q-col-gutter-md">
+            <div class="text-h6 q-mb-sm">Produto</div>
+            <div class="row q-col-gutter-md q-mb-md">
               <div class="col-12 col-sm-4">
                 <q-input v-model="form.codigoProduto" label="Código do Produto" outlined dense />
               </div>
               <div class="col-12 col-sm-8">
                 <q-input v-model="form.nomeProduto" label="Nome do Produto" outlined dense />
               </div>
-              <div class="col-12 col-sm-2">
+              <div class="col-12 col-sm-4">
                 <q-input v-model="form.quantidade" label="Quantidade" outlined dense />
               </div>
-              <div class="col-12 col-sm-2">
+              <div class="col-12 col-sm-4">
                 <q-input v-model="form.valorUnitario" label="Valor Unitário" outlined dense />
               </div>
-              <div class="col-12 col-sm-2">
+              <div class="col-12 col-sm-4">
                 <q-input v-model="form.valorTotal" label="Valor Total" outlined dense />
               </div>
-              <div class="col-12 col-sm-2">
+              <div class="col-12 col-sm-4">
                 <q-input v-model="form.valorVenda" label="Preço de Venda" outlined dense />
               </div>
-              <div class="col-12 col-sm-2">
+              <div class="col-12 col-sm-4">
                 <q-input v-model="form.margem" label="Margem (%)" outlined dense readonly />
               </div>
-              <div class="col-12 col-sm-3">
+              <div class="col-12 col-sm-4">
                 <q-select v-model="form.grupo" label="Grupo" outlined dense :options="['Grupo 1', 'Grupo 2']" />
               </div>
-              <div class="col-12 col-sm-2">
+              <div class="col-12 col-sm-4">
                 <q-btn label="Criar Grupo" color="primary" unelevated class="full-width" />
               </div>
-              <div class="col-12 col-sm-3">
+              <div class="col-12 col-sm-4">
                 <q-input v-model="form.codigoBarras" label="Código de Barras" outlined dense />
               </div>
-              <div class="col-12 col-sm-2">
+              <div class="col-12 col-sm-4">
                 <q-btn label="Gerar" color="primary" unelevated class="full-width" />
               </div>
               <div class="col-12">
@@ -149,28 +157,28 @@
             </div>
 
             <!-- Tributação -->
-            <div class="text-h6 q-mt-lg q-mb-sm">Tributação</div>
-            <div class="row q-col-gutter-md">
+            <div class="text-h6 q-mb-sm">Tributação</div>
+            <div class="row q-col-gutter-md q-mb-md">
               <div class="col-12 col-sm-4">
                 <q-input v-model="form.origemTributaria" label="Origem" outlined dense />
               </div>
-              <div class="col-12 col-sm-2">
+              <div class="col-12 col-sm-4">
                 <q-input v-model="form.icms" label="ICMS" outlined dense />
               </div>
-              <div class="col-12 col-sm-2">
+              <div class="col-12 col-sm-4">
                 <q-input v-model="form.ipi" label="IPI" outlined dense />
               </div>
-              <div class="col-12 col-sm-2">
+              <div class="col-12 col-sm-4">
                 <q-input v-model="form.pis" label="PIS" outlined dense />
               </div>
-              <div class="col-12 col-sm-2">
+              <div class="col-12 col-sm-4">
                 <q-input v-model="form.cofins" label="COFINS" outlined dense />
               </div>
             </div>
 
             <!-- Observações Gerais -->
-            <div class="text-h6 q-mt-lg q-mb-sm">Observações Gerais</div>
-            <div class="row">
+            <div class="text-h6 q-mb-sm">Observações Gerais</div>
+            <div class="row q-mb-md">
               <div class="col-12">
                 <q-input
                   v-model="text"
@@ -185,14 +193,14 @@
 
             <!-- Botões -->
             <div class="row q-mt-xl q-gutter-md justify-end">
-              <q-btn label="Salvar Entrada" color="positive" unelevated type="submit" class="b-r-8" />
-              <q-btn label="Cancelar" color="negative" flat class="b-r-8" @click="abrirDialogCancelar()" />
+              <q-btn label="Salvar Entrada" color="positive" unelevated type="submit" />
+              <q-btn label="Cancelar" color="negative" flat @click="abrirDialogCancelar()" />
             </div>
           </q-form>
         </div>
 
         <!-- Tabela -->
-        <div v-if="!formNotaFiscalEntrada" class="q-mt-xl">
+        <div v-if="!formNotaFiscalEntrada" class="q-mt-lg">
           <q-table
             :data="rowsFiltradas"
             :columns="colunasNotaFiscalEntrada"
@@ -205,8 +213,12 @@
           >
             <template v-slot:body-cell-acoes="props">
               <q-td align="center">
-                <q-btn icon="picture_as_pdf" size="sm" color="negative" flat round />
-                <q-btn icon="description" size="sm" color="green" flat round />
+                <q-btn icon="picture_as_pdf" size="sm" color="negative" flat round>
+                  <q-tooltip>Exportar PDF</q-tooltip>
+                </q-btn>
+                <q-btn icon="description" size="sm" color="green" flat round>
+                  <q-tooltip>Ver Detalhes</q-tooltip>
+                </q-btn>
               </q-td>
             </template>
             <template v-slot:body-cell-valorUnitario="props">

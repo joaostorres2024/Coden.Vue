@@ -4,15 +4,10 @@
       class="col-11 col-md-10 col-lg-9 no-shadow border b-r-10"
       style="width: 1500px"
     >
-      <!-- Cabeçalho do Card -->
       <q-card-section class="bg-white text-black q-pb-none">
         <div class="text-h5 text-bold">Cadastro de Produtos</div>
         <q-toolbar class="q-pa-none">
-          <q-breadcrumbs
-            active-color="black"
-            style="font-size: 14px"
-            class="q-mb-md"
-          >
+          <q-breadcrumbs active-color="black" style="font-size: 14px" class="q-mb-md">
             <template v-slot:separator>
               <q-icon size="1.5em" name="chevron_right" color="black" />
             </template>
@@ -25,104 +20,77 @@
 
       <q-separator />
 
-      <!-- Corpo do Card -->
       <q-card-section class="q-pa-lg">
-        <!-- Filtros e Ações (Visíveis apenas quando não está em modo de formulário) -->
-        <div class="row items-center justify-between no-wrap">
-          <!-- Grupo de Inputs (Alinhado à Esquerda) -->
-          <div class="row q-gutter-md col">
-            <q-input
-              v-model="nome_produto"
-              style="width: 400px"
-              label="Nome do Produto"
-              outlined
-              dense
-            />
-            <q-input
-              v-model="codigo_produto"
-              style="width: 300px"
-              label="Código do Produto"
-              outlined
-              dense
-            />
-            <q-input
-              v-if="cadastroProdutoForm"
-              style="width: 300px"
-              label="Data de Cadastro"
-              type="date"
-              v-model="dataHoje"
-              outlined
-              dense
-            />
+
+        <!-- Filtros -->
+        <div class="row q-col-gutter-md q-mb-md">
+          <div class="col-12 col-md-4">
+            <q-input v-model="nome_produto" label="Nome do Produto" outlined dense />
           </div>
-
-          <!-- Grupo de Botões (Alinhado à Direita) -->
-          <div v-if="!cadastroProdutoForm" class="row q-gutter-sm">
-            <q-btn
-              unelevated
-              class="text-white bg-positive"
-              @click="mostrarFormulario()"
-            >
-              <q-icon name="add" color="white" />
-              <q-tooltip>Adicionar</q-tooltip>
-            </q-btn>
-
-            <q-btn unelevated class="bg-primary" @click="refreshTable()">
-              <q-icon name="delete_sweep" color="white" />
-              <q-tooltip>Limpar</q-tooltip>
-            </q-btn>
+          <div class="col-12 col-md-4">
+            <q-input v-model="codigo_produto" label="Código do Produto" outlined dense />
           </div>
         </div>
 
-        <!-- Formulário de Cadastro -->
+        <!-- Botões -->
+        <div v-if="!cadastroProdutoForm" class="row justify-start q-gutter-sm q-mb-lg">
+          <q-btn
+            label="Adicionar"
+            icon="add"
+            color="positive"
+            unelevated
+            @click="mostrarFormulario()"
+          />
+          <q-btn
+            label="Limpar"
+            icon="delete_sweep"
+            flat
+            class="text-grey-7"
+            @click="refreshTable()"
+          />
+        </div>
+
+        <!-- Formulário -->
         <div v-if="cadastroProdutoForm" class="q-mt-md">
           <q-form ref="formProduto" @submit.prevent="salvar()" greedy>
-            <!-- Seção: Dados Gerais -->
+
+            <!-- Dados Gerais -->
             <div class="text-h6 q-mb-sm">Dados Gerais</div>
-            <div class="row q-col-gutter-md items-center">
-              <div class="col-12 col-sm-3">
+            <div class="row q-col-gutter-md q-mb-md items-center">
+              <div class="col-12 col-sm-4">
                 <q-select
-  v-model="grupo"
-  :options="grupos"
-  option-label="nome"
-  option-value="id"
-  emit-value
-  map-options
-  label="Grupo"
-  outlined
-  dense
-/>
-              </div>
-              <div class="col-12 col-sm-2">
-                <q-btn
-  label="Criar Grupo"
-  color="primary"
-  unelevated
-  class="full-width"
-  @click="dialogCriarGrupo = true"
-/>
-              </div>
-              <div class="col-12 col-sm-3">
-                <q-input
-                  v-model="codigo_barras"
-                  label="Código de Barras"
+                  v-model="grupo"
+                  :options="grupos"
+                  option-label="nome"
+                  option-value="id"
+                  emit-value
+                  map-options
+                  label="Grupo"
                   outlined
                   dense
                 />
               </div>
               <div class="col-12 col-sm-2">
                 <q-btn
-                  label="Gerar"
+                  label="Criar Grupo"
                   color="primary"
                   unelevated
                   class="full-width"
+                  @click="dialogCriarGrupo = true"
                 />
+              </div>
+              <div class="col-12 col-sm-4">
+                <q-input v-model="codigo_barras" label="Código de Barras" outlined dense />
+              </div>
+              <div class="col-12 col-sm-2">
+                <q-btn label="Gerar" color="primary" unelevated class="full-width" />
               </div>
             </div>
 
-            <div class="text-h6 q-mt-lg q-mb-sm">Preço</div>
-            <div class="row q-col-gutter-md">
-              <div class="col-12 col-sm-3">
+            <!-- Preço -->
+            <div class="text-h6 q-mb-sm">Preço</div>
+            <div class="row q-col-gutter-md q-mb-md">
+              <div class="col-12 col-sm-4">
                 <q-input
                   v-model="preco_custo"
                   label="Preço de Custo *"
@@ -134,7 +102,7 @@
                   lazy-rules
                 />
               </div>
-              <div class="col-12 col-sm-3">
+              <div class="col-12 col-sm-4">
                 <q-input
                   v-model="preco_venda"
                   label="Preço de Venda *"
@@ -146,21 +114,15 @@
                   lazy-rules
                 />
               </div>
-              <div class="col-12 col-sm-3">
-                <q-input
-                  :value="margem_calculada"
-                  label="Margem (%)"
-                  outlined
-                  dense
-                  readonly
-                />
+              <div class="col-12 col-sm-4">
+                <q-input :value="margem_calculada" label="Margem (%)" outlined dense readonly />
               </div>
             </div>
 
-            <!-- Seção: Estoque e Fornecedor -->
-            <div class="text-h6 q-mt-lg q-mb-sm">Estoque e Fornecedor</div>
-            <div class="row q-col-gutter-md">
-              <div class="col-12 col-sm-2">
+            <!-- Estoque e Fornecedor -->
+            <div class="text-h6 q-mb-sm">Estoque e Fornecedor</div>
+            <div class="row q-col-gutter-md q-mb-md">
+              <div class="col-12 col-sm-4">
                 <q-input
                   v-model="estoque_atual"
                   label="Estoque Atual *"
@@ -171,7 +133,7 @@
                   lazy-rules
                 />
               </div>
-              <div class="col-12 col-sm-2">
+              <div class="col-12 col-sm-4">
                 <q-input
                   v-model="estoque_minimo"
                   label="Estoque Mínimo *"
@@ -182,7 +144,7 @@
                   lazy-rules
                 />
               </div>
-              <div class="col-12 col-sm-2">
+              <div class="col-12 col-sm-4">
                 <q-input
                   v-model="estoque_maximo"
                   label="Estoque Máximo *"
@@ -193,7 +155,7 @@
                   lazy-rules
                 />
               </div>
-              <div class="col-12 col-sm-3">
+              <div class="col-12 col-sm-4">
                 <q-input
                   v-model="fornecedor"
                   label="Fornecedor *"
@@ -204,7 +166,7 @@
                   lazy-rules
                 />
               </div>
-              <div class="col-12 col-sm-3">
+              <div class="col-12 col-sm-4">
                 <q-select
                   v-model="ativoInativo"
                   :options="ativoInativoOpcoes"
@@ -217,9 +179,9 @@
               </div>
             </div>
 
-            <!-- Seção: Observações -->
-            <div class="text-h6 q-mt-lg q-mb-sm">Observações</div>
-            <div class="row">
+            <!-- Observações -->
+            <div class="text-h6 q-mb-sm">Observações</div>
+            <div class="row q-mb-md">
               <div class="col-12">
                 <q-input
                   v-model="observacoes"
@@ -232,27 +194,15 @@
               </div>
             </div>
 
-            <!-- Botões do Formulário -->
+            <!-- Botões -->
             <div class="row q-mt-xl q-gutter-md justify-end">
-              <q-btn
-                label="Salvar Produto"
-                color="positive"
-                unelevated
-                type="submit"
-                class="b-r-8"
-              />
-              <q-btn
-                label="Cancelar"
-                color="negative"
-                class="b-r-8"
-                flat
-                @click="abrirDialogCancelar()"
-              />
+              <q-btn label="Salvar Produto" color="positive" unelevated type="submit"/>
+              <q-btn label="Cancelar" color="negative" flat @click="abrirDialogCancelar()" />
             </div>
           </q-form>
         </div>
 
-        <!-- Tabela de Resultados (Visível apenas quando não está em modo de formulário) -->
+        <!-- Tabela -->
         <div v-if="!cadastroProdutoForm" class="q-mt-xl">
           <q-table
             :data="rowsFiltradas"
@@ -264,17 +214,9 @@
             no-data-label="Nenhum registro encontrado"
             class="text-weight-medium"
           >
-            <!-- Coluna Ações -->
             <template v-slot:body-cell-acoes="props">
               <q-td align="center">
-                <q-btn
-                  icon="edit"
-                  size="sm"
-                  color="black"
-                  flat
-                  round
-                  @click="editar(props.row)"
-                >
+                <q-btn icon="edit" size="sm" color="black" flat round @click="editar(props.row)">
                   <q-tooltip>Editar</q-tooltip>
                 </q-btn>
                 <q-btn
@@ -301,19 +243,12 @@
                 </q-btn>
               </q-td>
             </template>
-
             <template v-slot:body-cell-preco="props">
-              <q-td :props="props" align="center">
-                {{ formatarReais(props.row.preco) }}
-              </q-td>
+              <q-td :props="props" align="center">{{ formatarReais(props.row.preco) }}</q-td>
             </template>
-
-            <!-- Coluna Status -->
             <template v-slot:body-cell-status="props">
               <q-td align="center">
-                <q-badge
-                  :color="props.row.status === 'Ativo' ? 'positive' : 'negative'"
-                >
+                <q-badge :color="props.row.status === 'Ativo' ? 'positive' : 'negative'">
                   {{ props.row.status }}
                 </q-badge>
               </q-td>
@@ -323,7 +258,7 @@
       </q-card-section>
     </q-card>
 
-    <!-- Dialogs -->
+    <!-- Dialog Cancelar -->
     <q-dialog v-model="dialogCancelar" persistent>
       <q-card style="min-width: 380px; border-radius: 12px" class="q-pa-sm">
         <q-card-section class="q-pb-none">
@@ -351,6 +286,8 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+
+    <!-- Dialog Inativar -->
     <q-dialog v-model="dialogExcluir" persistent>
       <q-card style="min-width: 380px; border-radius: 12px" class="q-pa-sm">
         <q-card-section class="q-pb-none">
@@ -358,8 +295,8 @@
         </q-card-section>
         <q-card-section class="text-grey-7" style="font-size: 14px">
           Tem certeza que deseja inativar o produto
-          <strong>{{ produtoParaExcluir?.nome_produto }}</strong
-          >? O produto não será excluído, mas ficará inativo no sistema.
+          <strong>{{ produtoParaExcluir?.nome_produto }}</strong>?
+          O produto não será excluído, mas ficará inativo no sistema.
         </q-card-section>
         <q-card-actions align="right" class="q-pa-md q-gutter-sm">
           <q-btn
@@ -380,20 +317,22 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+
+    <!-- Dialog Criar Grupo -->
     <q-dialog v-model="dialogCriarGrupo" persistent>
-  <q-card style="min-width: 350px; border-radius: 12px" class="q-pa-sm">
-    <q-card-section class="q-pb-none">
-      <div class="text-h6 text-bold">Criar Grupo</div>
-    </q-card-section>
-    <q-card-section>
-      <q-input v-model="novoGrupo" label="Nome do Grupo" outlined dense autofocus />
-    </q-card-section>
-    <q-card-actions align="right" class="q-pa-md q-gutter-sm">
-      <q-btn label="Cancelar" flat v-close-popup />
-      <q-btn label="Criar" unelevated color="primary" class="b-r-8" @click="salvarGrupo()" />
-    </q-card-actions>
-  </q-card>
-</q-dialog>
+      <q-card style="min-width: 350px; border-radius: 12px" class="q-pa-sm">
+        <q-card-section class="q-pb-none">
+          <div class="text-h6 text-bold">Criar Grupo</div>
+        </q-card-section>
+        <q-card-section>
+          <q-input v-model="novoGrupo" label="Nome do Grupo" outlined dense autofocus />
+        </q-card-section>
+        <q-card-actions align="right" class="q-pa-md q-gutter-sm">
+          <q-btn label="Cancelar" flat v-close-popup />
+          <q-btn label="Criar" unelevated color="primary" class="b-r-8" @click="salvarGrupo()" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
