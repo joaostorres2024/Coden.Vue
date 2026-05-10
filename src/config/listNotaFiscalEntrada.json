@@ -1,46 +1,11 @@
 {
   "columns": [
-    {
-      "name": "numeroNF",
-      "label": "Número NF",
-      "field": "numeroNF",
-      "align": "center"
-    },
-    {
-      "name": "produto",
-      "label": "Produto",
-      "field": "produto",
-      "align": "center"
-    },
-    {
-      "name": "quantidade",
-      "label": "Qtd",
-      "field": "quantidade",
-      "align": "center"
-    },
-    {
-      "name": "valorUnitario",
-      "label": "Valor Unitário",
-      "field": "valorUnitario",
-      "align": "center"
-    },
-    {
-      "name": "valorTotal",
-      "label": "Valor Total",
-      "field": "valorTotal",
-      "align": "center"
-    },
-    {
-      "name": "icms",
-      "label": "ICMS",
-      "field": "icms",
-      "align": "center"
-    },
-    {
-      "name": "acoes",
-      "label": "Ações",
-      "field": "acoes",
-      "align": "center"
-    }
+    { "name": "numero_nf", "label": "Número NF", "field": "numero_nf", "align": "center" },
+    { "name": "serie", "label": "Série", "field": "serie", "align": "center" },
+    { "name": "data_emissao", "label": "Data Emissão", "field": "data_emissao", "align": "center" },
+    { "name": "data_entrada", "label": "Data Entrada", "field": "data_entrada", "align": "center" },
+    { "name": "fornecedor", "label": "Fornecedor", "field": "fornecedor", "align": "center" },
+    { "name": "valor_total", "label": "Valor Total", "field": "valor_total", "align": "center" },
+    { "name": "acoes", "label": "Ações", "field": "acoes", "align": "center" }
   ]
 }

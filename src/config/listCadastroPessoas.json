@@ -16,7 +16,8 @@
       "name": "nome_cliente",
       "label": "Nome",
       "field": "nome_cliente",
-      "align": "center"
+      "align": "center",
+      "sortable": true
     },
     {
       "name": "documento",

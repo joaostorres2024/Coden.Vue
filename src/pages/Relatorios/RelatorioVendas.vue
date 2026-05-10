@@ -1,21 +1,13 @@
 <template>
-  <!-- Container principal para centralizar o card na tela -->
   <div class="row justify-center items-center">
-    <q-card
-      class="col-11 col-md-10 col-lg-9 no-shadow border b-r-10"
-      style="width: 1500px"
-    >
-      <!-- Cabeçalho do Card -->
-      <q-card-section class="bg-white text-primary q-pb-none">
+    <q-card class="col-11 col-md-10 col-lg-9 no-shadow border b-r-10" style="width: 1500px">
+
+      <q-card-section class="bg-white text-black q-pb-none">
         <div class="text-h5 text-bold">Relatório de Vendas</div>
         <q-toolbar class="q-pa-none">
-          <q-breadcrumbs
-            active-color="primary"
-            style="font-size: 14px"
-            class="q-mb-md"
-          >
+          <q-breadcrumbs active-color="black" style="font-size: 14px" class="q-mb-md">
             <template v-slot:separator>
-              <q-icon size="1.5em" name="chevron_right" color="primary" />
+              <q-icon size="1.5em" name="chevron_right" color="black" />
             </template>
             <q-breadcrumbs-el label="Home" icon="home" to="/" />
             <q-breadcrumbs-el label="Relatórios" icon="article" />
@@ -26,168 +18,179 @@
 
       <q-separator />
 
-      <!-- Corpo do Card -->
       <q-card-section class="q-pa-lg">
-        <div class="column q-col-gutter-md">
-          <!-- Filtros Superiores -->
-          <div class="row items-center q-col-gutter-md col-12 no-wrap">
-            <q-input
-              v-model="codigoProduto"
-              class="col-3"
-              label="Código do Produto"
+
+        <!-- Filtros -->
+        <div class="row q-col-gutter-md q-mb-md">
+          <div class="col-12 col-sm-4">
+            <q-input v-model="filtro.cliente" label="Cliente" outlined dense>
+            </q-input>
+          </div>
+          <div class="col-12 col-sm-4">
+            <q-input v-model="filtro.produto" label="Produto" outlined dense>
+            </q-input>
+          </div>
+          <div class="col-12 col-sm-4">
+            <q-select
+              v-model="filtro.forma_pagamento"
+              :options="opcoesPagamento"
+              option-label="label"
+              option-value="value"
+              emit-value
+              map-options
+              label="Forma de Pagamento"
               outlined
               dense
-            />
-            <q-input
-              v-model="nomeProduto"
-              class="col-3"
-              label="Nome do Produto"
-              outlined
-              dense
-            />
-            <q-input
-              v-model="nomeCliente"
-              class="col-3"
-              label="Cliente"
-              outlined
-              dense
-            />
-            <q-input
-              v-model="cpfCnpj"
-              class="col-3"
-              label="CPF/CNPJ"
-              outlined
-              dense
+              clearable
             />
           </div>
-
-          <!-- Filtros Inferiores e Botões (Estrutura col-9 e col-3) -->
-          <div class="row items-center q-col-gutter-md">
-            <!-- Inputs (col-9) -->
-            <div class="col-9">
-              <div class="row q-col-gutter-md items-center">
-                <div class="col-3">
-                  <q-input
-                    v-model="valorUnitario"
-                    label="Valor Unitário"
-                    outlined
-                    dense
-                  />
-                </div>
-
-                <div class="col-3">
-                  <q-input
-                    v-model="valorTotal"
-                    label="Valor Total"
-                    outlined
-                    dense
-                  />
-                </div>
-
-                <div class="col-3">
-                  <q-input
-                    v-model="periodoDe"
-                    label="Período: De"
-                    type="date"
-                    outlined
-                    dense
-                  />
-                </div>
-
-                <div class="col-3">
-                  <q-input
-                    v-model="periodoAte"
-                    label="Período: Até"
-                    type="date"
-                    outlined
-                    dense
-                  />
-                </div>
-              </div>
-            </div>
-
-            <!-- Botões (col-3) -->
-            <div class="col-3">
-              <div class="row justify-end items-center q-gutter-sm">
-                <q-btn
-                  unelevated
-                  class="btn-outline-primary"
-                  @click="pesquisar()"
-                >
-                  <q-icon name="search" color="primary" />
-                  <q-tooltip>Pesquisar</q-tooltip>
-                </q-btn>
-
-                <q-btn
-                  unelevated
-                  class="btn-outline-primary"
-                  @click="refreshTable()"
-                >
-                  <q-icon name="delete" color="primary" />
-                  <q-tooltip>Limpar</q-tooltip>
-                </q-btn>
-              </div>
-            </div>
+          <div class="col-12 col-sm-4">
+            <q-input v-model="filtro.de" label="De" type="date" outlined dense />
+          </div>
+          <div class="col-12 col-sm-4">
+            <q-input v-model="filtro.ate" label="Até" type="date" outlined dense />
           </div>
         </div>
 
-        <!-- Tabela de Resultados -->
-        <div class="q-mt-xl">
+        <!-- Botões -->
+        <div class="row justify-between items-center q-mb-lg">
+          <div class="row q-gutter-sm">
+            <q-btn
+              label="Gerar Relatório"
+              icon="summarize"
+              color="primary"
+              unelevated
+              class="b-r-8"
+              :loading="carregando"
+              @click="gerarRelatorio()"
+            />
+            <q-btn
+              label="Limpar"
+              icon="delete_sweep"
+              flat
+              class="text-grey-7 b-r-8"
+              @click="limparFiltros()"
+            />
+          </div>
+
+          <div v-if="gerado" class="row q-gutter-sm">
+            <q-btn
+              label="Exportar PDF"
+              icon="picture_as_pdf"
+              color="negative"
+              unelevated
+              class="b-r-8"
+              @click="exportarPDF()"
+            />
+            <q-btn
+              label="Exportar Excel"
+              icon="table_view"
+              color="positive"
+              unelevated
+              class="b-r-8"
+              @click="exportarExcel()"
+            />
+          </div>
+        </div>
+
+        <!-- Cards de Resumo -->
+        <div v-if="gerado" class="row q-col-gutter-md q-mb-lg q-mt-md">
+          <div class="col-6 col-sm-3">
+            <q-card flat bordered class="b-r-8 q-pa-md">
+              <div class="text-caption text-grey-6">Total de Vendas</div>
+              <div class="text-h5 text-bold text-black q-mt-xs">{{ rows.length }}</div>
+            </q-card>
+          </div>
+          <div class="col-6 col-sm-3">
+            <q-card flat bordered class="b-r-8 q-pa-md">
+              <div class="text-caption text-grey-6">Ticket Médio</div>
+              <div class="text-h6 text-bold text-black q-mt-xs">{{ ticketMedio }}</div>
+            </q-card>
+          </div>
+          <div class="col-6 col-sm-3">
+            <q-card flat bordered class="b-r-8 q-pa-md">
+              <div class="text-caption text-grey-6">Total Descontos</div>
+              <div class="text-h6 text-bold text-black q-mt-xs">{{ totalDescontos }}</div>
+            </q-card>
+          </div>
+          <div class="col-6 col-sm-3">
+            <q-card flat bordered class="b-r-8 q-pa-md">
+              <div class="text-caption text-grey-6">Total Geral</div>
+              <div class="text-h6 text-bold text-black q-mt-xs">{{ totalGeral }}</div>
+            </q-card>
+          </div>
+        </div>
+
+        <!-- Cards por Forma de Pagamento -->
+        <div v-if="gerado && totalPorForma.length" class="row q-col-gutter-md q-mb-lg">
+          <div
+            v-for="item in totalPorForma"
+            :key="item.forma"
+            class="col-6 col-sm-4"
+          >
+            <q-card flat bordered class="b-r-8 q-pa-md">
+              <div class="row items-center q-gutter-sm">
+                <q-icon :name="iconePagamento(item.forma)" :color="corPagamento(item.forma)" size="24px" />
+                <div>
+                  <div class="text-caption text-grey-6">{{ item.forma }}</div>
+                  <div class="text-weight-bold">{{ formatarReais(item.total) }}</div>
+                </div>
+              </div>
+            </q-card>
+          </div>
+        </div>
+
+        <!-- Tabela -->
+        <div v-if="gerado">
           <q-table
-            :data="rowsFiltradas"
+            data-gerar-vendas
+            :data="rows"
             :columns="colunasRelatorioVendas"
-            row-key="codigo"
+            row-key="id"
             flat
             bordered
-            no-data-label="Nenhum registro encontrado"
+            no-data-label="Nenhuma venda encontrada"
             class="text-weight-medium"
+            :rows-per-page-options="[10, 20, 50]"
           >
-            <!-- Coluna Ações -->
-            <template v-slot:body-cell-acoes="props">
-              <q-td align="center">
-                <q-btn
-                  icon="picture_as_pdf"
-                  size="sm"
-                  color="negative"
-                  flat
-                  round
-                  @click="gerarPdf(props.row)"
-                />
-                <q-btn
-                  icon="description"
-                  size="sm"
-                  color="green"
-                  flat
-                  round
-                  @click="verDetalhes(props.row)"
-                />
-              </q-td>
+            <template v-slot:body-cell-data="props">
+              <q-td align="center">{{ formatarData(props.row.data) }}</q-td>
             </template>
 
-            <!-- Colunas de Valor -->
-            <template v-slot:body-cell-valorUnitario="props">
-              <q-td :props="props" align="center">
-                {{ formatarReais(props.row.valorUnitario) }}
-              </q-td>
-            </template>
-            <template v-slot:body-cell-valorTotal="props">
-              <q-td :props="props" align="center">
-                {{ formatarReais(props.row.valorTotal) }}
-              </q-td>
-            </template>
-
-            <!-- Coluna Status -->
-            <template v-slot:body-cell-status="props">
+            <template v-slot:body-cell-forma_pagamento="props">
               <q-td align="center">
-                <q-badge
-                  :color="props.row.status === 'Ativo' ? 'positive' : 'negative'"
-                >
-                  {{ props.row.status }}
+                <q-badge :color="corPagamento(labelPagamento(props.row.forma_pagamento))">
+                  {{ labelPagamento(props.row.forma_pagamento) }}
                 </q-badge>
+              </q-td>
+            </template>
+
+            <template v-slot:body-cell-subtotal="props">
+              <q-td align="center">{{ formatarReais(props.row.subtotal) }}</q-td>
+            </template>
+
+            <template v-slot:body-cell-desconto="props">
+              <q-td align="center">
+                <span v-if="props.row.desconto > 0" class="text-negative">
+                  {{ formatarReais(props.row.desconto_total) }}
+                </span>
+                <span v-else class="text-grey-5">-</span>
+              </q-td>
+            </template>
+
+            <template v-slot:body-cell-total="props">
+              <q-td align="center" class="text-weight-bold text-positive">
+                {{ formatarReais(props.row.total) }}
               </q-td>
             </template>
           </q-table>
         </div>
+
+        <!-- Empty state -->
+        <div v-if="!gerado" class="column items-center q-py-xl text-grey-5">
+          <div>Selecione os filtros e clique em Gerar Relatório</div>
+        </div>
+
       </q-card-section>
     </q-card>
   </div>
@@ -196,84 +199,163 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import listRelatorioVendas from '../../config/listRelatorioVenda.json'
+import * as XLSX from 'xlsx'
+import vendasService from '../../services/vendasService'
 
 @Component
 export default class RelatorioVendasComponent extends Vue {
 
-  colunasRelatorioVendas = listRelatorioVendas.columns
-
-  // ===== data =====
-  codigoProduto = ''
-  nomeProduto = ''
-  nomeCliente = ''
-  cpfCnpj = ''
-  valorUnitario = ''
-  valorTotal = ''
-  periodoDe = ''
-  periodoAte = ''
-
-  rowsVendas = [
-    { dataVenda: '06/04/2026', codigoProduto: '001002003004', nomeProduto: 'GTA 5', nomeCliente: 'algumaCoisa', cpfCnpj: '098878881000110', valorUnitario: '179', valorTotal: '199' },
-    { dataVenda: '12/03/2026', codigoProduto: '009876543210', nomeProduto: 'Teclado Mecânico RGB', nomeCliente: 'Carlos Eduardo', cpfCnpj: '12345678900199', valorUnitario: '350', valorTotal: '700' },
-    { dataVenda: '28/02/2026', codigoProduto: '005544332211', nomeProduto: 'Mouse Gamer Pro', nomeCliente: 'Fernanda Lima', cpfCnpj: '98765432100011', valorUnitario: '149', valorTotal: '298' }
+  colunasRelatorioVendas = [
+    { name: 'codigo_venda', label: 'Cód. Venda', field: 'codigo_venda', align: 'left' },
+    { name: 'data', label: 'Data', field: 'data', align: 'center' },
+    { name: 'nome_cliente', label: 'Cliente', field: 'nome_cliente', align: 'left' },
+    { name: 'forma_pagamento', label: 'Pagamento', field: 'forma_pagamento', align: 'center' },
+    { name: 'subtotal', label: 'Subtotal', field: 'subtotal', align: 'center' },
+    { name: 'desconto_itens', label: 'Desconto', field: 'desconto_itens', align: 'center' },
+    { name: 'total', label: 'Total', field: 'total', align: 'center' }
   ]
 
-  rowsFiltradas: any[] = []
-
-  created() {
-    this.rowsFiltradas = this.rowsVendas
+  filtro = {
+    cliente: '',
+    produto: '',
+    forma_pagamento: '',
+    de: '',
+    ate: ''
   }
 
-  // ===== Métodos =====
-  formatarReais(valor: string | number): string {
-    const numero = typeof valor === 'string' ? parseFloat(valor) : valor
-    return numero.toLocaleString('pt-BR', {
-      style: 'currency',
-      currency: 'BRL'
+  opcoesPagamento = [
+    { label: 'Dinheiro', value: 'dinheiro' },
+    { label: 'Cartão', value: 'cartao' },
+    { label: 'PIX', value: 'pix' }
+  ]
+
+  rows: any[] = []
+  gerado = false
+  carregando = false
+
+  get ticketMedio() {
+    if (!this.rows.length) return 'R$ 0,00'
+    const total = this.rows.reduce((acc, v) => acc + parseFloat(v.total), 0)
+    return this.formatarReais(total / this.rows.length)
+  }
+
+  get totalDescontos() {
+    const total = this.rows.reduce((acc, v) => acc + parseFloat(v.desconto_total || 0), 0)
+    return this.formatarReais(total)
+  }
+
+  get totalGeral() {
+    const total = this.rows.reduce((acc, v) => acc + parseFloat(v.total), 0)
+    return this.formatarReais(total)
+  }
+
+  get totalPorForma() {
+    const mapa: Record<string, number> = {}
+    this.rows.forEach(v => {
+      const forma = this.labelPagamento(v.forma_pagamento)
+      mapa[forma] = (mapa[forma] || 0) + parseFloat(v.total)
     })
+    return Object.entries(mapa).map(([forma, total]) => ({ forma, total }))
   }
 
-  pesquisar() {
-    this.rowsFiltradas = this.rowsVendas.filter((row: any) => {
-      const codigoMatch = !this.codigoProduto || row.codigoProduto.toLowerCase().includes(this.codigoProduto.toLowerCase())
-      const nomeMatch = !this.nomeProduto || row.nomeProduto.toLowerCase().includes(this.nomeProduto.toLowerCase())
-      const clienteMatch = !this.nomeCliente || row.nomeCliente.toLowerCase().includes(this.nomeCliente.toLowerCase())
-      return codigoMatch && nomeMatch && clienteMatch
-    })
+  async gerarRelatorio() {
+    try {
+      this.carregando = true
+      this.rows = await vendasService.relatorioVendas({
+        de: this.filtro.de,
+        ate: this.filtro.ate,
+        cliente: this.filtro.cliente,
+        produto: this.filtro.produto,
+        forma_pagamento: this.filtro.forma_pagamento
+      })
+      this.gerado = true
+    } catch {
+      this.$q.notify({ type: 'negative', message: 'Erro ao gerar relatório!' })
+    } finally {
+      this.carregando = false
+    }
   }
 
-  refreshTable() {
-    this.codigoProduto = ""
-    this.nomeProduto = ""
-    this.nomeCliente = ""
-    this.cpfCnpj = ""
-    this.valorUnitario = ""
-    this.valorTotal = ""
-    this.periodoDe = ""
-    this.periodoAte = ""
-    this.rowsFiltradas = this.rowsVendas
+  limparFiltros() {
+    this.filtro = { cliente: '', produto: '', forma_pagamento: '', de: '', ate: '' }
+    this.gerado = false
+    this.rows = []
   }
 
-  gerarPdf(row: any) {
-    console.log('Gerar PDF:', row)
+  async exportarPDF() {
+    try {
+      await vendasService.relatorioVendasPDF({
+        de: this.filtro.de,
+        ate: this.filtro.ate,
+        cliente: this.filtro.cliente,
+        produto: this.filtro.produto,
+        forma_pagamento: this.filtro.forma_pagamento
+      })
+      this.$q.notify({ type: 'positive', message: 'PDF gerado com sucesso!' })
+    } catch {
+      this.$q.notify({ type: 'negative', message: 'Erro ao gerar PDF!' })
+    }
   }
 
-  verDetalhes(row: any) {
-    console.log('Ver Detalhes:', row)
+  exportarExcel() {
+    if (!this.rows.length) {
+      this.$q.notify({ type: 'warning', message: 'Nenhum dado para exportar!' })
+      return
+    }
+    const dados = this.rows.map(v => ({
+      'Cód. Venda': v.codigo_venda || '-',
+      'Data': this.formatarData(v.data),
+      'Cliente': v.nome_cliente || 'Consumidor Final',
+      'Forma de Pagamento': this.labelPagamento(v.forma_pagamento),
+      'Subtotal': v.subtotal,
+      'Desconto': v.desconto || 0,
+      'Total': v.total
+    }))
+    const ws = XLSX.utils.json_to_sheet(dados)
+    const wb = XLSX.utils.book_new()
+    XLSX.utils.book_append_sheet(wb, ws, 'Vendas')
+    ws['!cols'] = [
+      { wch: 12 }, { wch: 12 }, { wch: 30 }, { wch: 18 },
+      { wch: 14 }, { wch: 14 }, { wch: 14 }
+    ]
+    XLSX.writeFile(wb, `relatorio_vendas_${new Date().toLocaleDateString('pt-BR').replace(/\//g, '-')}.xlsx`)
+    this.$q.notify({ type: 'positive', message: 'Excel exportado com sucesso!' })
+  }
+
+labelPagamento(forma: string): string {
+  const mapa: Record<string, string> = {
+    pix: 'PIX',
+    cartao: 'Cartão',
+    dinheiro: 'Dinheiro',
+    pendente: 'Pendente'
+  }
+  return mapa[forma?.toLowerCase()] || forma || '-'
+}
+
+  corPagamento(forma: string): string {
+    const mapa: Record<string, string> = { PIX: 'teal', Cartão: 'blue', Dinheiro: 'green' }
+    return mapa[forma] || 'grey'
+  }
+
+  iconePagamento(forma: string): string {
+    const mapa: Record<string, string> = { PIX: 'pix', Cartão: 'credit_card', Dinheiro: 'payments' }
+    return mapa[forma] || 'attach_money'
+  }
+
+  formatarReais(valor: any): string {
+    const numero = typeof valor === 'string' ? parseFloat(valor) : Number(valor)
+    if (isNaN(numero)) return 'R$ 0,00'
+    return numero.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+  }
+
+  formatarData(data: any): string {
+    if (!data) return '-'
+    return new Date(data).toLocaleDateString('pt-BR')
   }
 }
 </script>
 
 <style scoped>
-.b-r-10 {
-  border-radius: 10px;
-}
-.border {
-  border: 1px solid #ccc;
-}
-.btn-outline-primary {
-  border: 1.5px solid #ccc;
-  background-color: #f0e9f5 !important;
-}
+.b-r-10 { border-radius: 10px; }
+.border { border: 1px solid #ccc; }
 </style>

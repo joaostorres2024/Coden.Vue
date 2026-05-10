@@ -60,7 +60,8 @@ module.exports = configure(function (/* ctx */) {
     build: {
       vueRouterMode: 'hash', // available values: 'hash', 'history'
       env: {
-       API_URL: process.env.API_URL
+       API_URL: process.env.API_URL,
+       GROQ_KEY: process.env.GROQ_KEY
       },
       // transpile: false,
 

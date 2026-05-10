@@ -152,7 +152,7 @@
             dense
           />
           <q-btn
-            class="btn-outline-primary text-primary"
+            class="bg-primary text-white"
             unelevated
             :loading="carregando"
             :label="'Conectar com ' + marketplaceSelecionado.nome"
@@ -223,7 +223,7 @@
             <div class="row q-col-gutter-md q-mb-md">
               <div class="col-6 col-md-3">
                 <q-card class="no-shadow border b-r-10 q-pa-md">
-                  <div class="text-h5 text-bold text-primary">
+                  <div class="text-h5 text-bold text-black">
                     {{ totalProdutos }}
                   </div>
                   <div class="text-caption text-grey-6">
@@ -233,7 +233,7 @@
               </div>
               <div class="col-6 col-md-3">
                 <q-card class="no-shadow border b-r-10 q-pa-md">
-                  <div class="text-h5 text-bold text-primary">
+                  <div class="text-h5 text-bold text-black">
                     {{ totalPedidos }}
                   </div>
                   <div class="text-caption text-grey-6">Total de pedidos</div>
@@ -243,12 +243,12 @@
             <div class="row items-center justify-between">
               <div class="text-caption text-grey-6">
                 Token expira em:
-                <strong class="text-primary">{{ tokenExpiraEm }}</strong>
+                <strong class="text-black">{{ tokenExpiraEm }}</strong>
               </div>
               <q-btn
                 label="Renovar token"
                 unelevated
-                class="btn-outline-primary text-primary"
+                class="bg-primary text-white"
               />
             </div>
           </q-tab-panel>

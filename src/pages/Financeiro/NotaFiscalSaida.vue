@@ -98,70 +98,113 @@
       </q-card-section>
     </q-card>
 
-    <!-- Dialog Detalhes -->
-    <q-dialog v-model="dialogDetalhes" persistent>
-      <q-card style="min-width: 600px; border-radius: 12px" class="q-pa-sm">
-        <q-card-section class="q-pb-none">
-          <div class="row items-center justify-between">
-            <div>
-              <div class="text-h6 text-bold">{{ nfSelecionada?.numero_nf }}</div>
-              <div class="text-caption text-grey-6">{{ formatarData(nfSelecionada?.data_emissao) }}</div>
-            </div>
-            <q-badge :color="corFormaPagamento(nfSelecionada?.forma_pagamento)" class="q-pa-sm">
-              {{ nfSelecionada?.forma_pagamento }}
+<!-- Dialog Detalhes -->
+<q-dialog v-model="dialogDetalhes" persistent>
+  <q-card style="min-width: 650px; max-width: 700px; border-radius: 12px">
+
+    <!-- Cabeçalho -->
+    <div class="q-pa-lg row items-center justify-between" style="background: #f8f9fa">
+      <div>
+        <div class="text-h6 text-bold">{{ nfSelecionada?.numero_nf }}</div>
+        <div class="text-caption text-grey-6">Emitida em {{ formatarData(nfSelecionada?.data_emissao) }}</div>
+        <div class="row q-gutter-sm q-mt-xs">
+          <q-badge :color="corFormaPagamento(nfSelecionada?.forma_pagamento)" class="q-pa-xs">
+            {{ labelFormaPagamento(nfSelecionada?.forma_pagamento) }}
+          </q-badge>
+          <q-badge :color="nfSelecionada?.status === 'emitida' ? 'positive' : 'negative'" class="q-pa-xs">
+            {{ labelStatus(nfSelecionada?.status) }}
+          </q-badge>
+        </div>
+      </div>
+      <div class="text-right">
+        <div class="text-caption text-grey-6">Venda vinculada</div>
+        <div class="text-weight-bold text-primary">{{ nfSelecionada?.codigo_venda || '-' }}</div>
+      </div>
+    </div>
+
+    <q-separator />
+
+    <q-card-section class="q-pa-lg">
+
+      <!-- Cliente -->
+      <div class="row q-col-gutter-md q-mb-md">
+        <div class="col-12">
+          <div class="text-caption text-grey-5 text-uppercase q-mb-xs">Cliente</div>
+          <div class="text-weight-bold">{{ nfSelecionada?.nome_cliente || 'Consumidor Final' }}</div>
+        </div>
+      </div>
+
+      <q-separator class="q-mb-md" />
+
+      <!-- Itens -->
+      <div class="text-caption text-grey-5 text-uppercase q-mb-sm">Itens</div>
+      <q-table
+        :data="nfSelecionada?.itens || []"
+        :columns="colunasItens"
+        flat
+        bordered
+        hide-bottom
+        dense
+        class="b-r-8"
+      >
+        <template v-slot:body-cell-preco_unitario="props">
+          <q-td align="center">{{ formatarReais(props.row.preco_unitario) }}</q-td>
+        </template>
+        <template v-slot:body-cell-desconto="props">
+          <q-td align="center">
+            <span v-if="props.row.desconto > 0" class="text-negative">
+              - {{ formatarReais(props.row.desconto) }}
+            </span>
+            <span v-else class="text-grey-5">-</span>
+          </q-td>
+        </template>
+        <template v-slot:body-cell-subtotal="props">
+          <q-td align="center" class="text-weight-medium">{{ formatarReais(props.row.subtotal) }}</q-td>
+        </template>
+      </q-table>
+
+      <!-- Totais -->
+      <div class="row justify-end q-mt-md">
+        <div class="column q-gutter-xs" style="min-width: 220px">
+          <div class="row justify-between">
+            <span class="text-caption text-grey-6">Subtotal</span>
+            <span class="text-caption">{{ formatarReais(nfSelecionada?.subtotal) }}</span>
+          </div>
+          <div class="row justify-between" v-if="nfSelecionada?.desconto > 0">
+            <span class="text-caption text-negative">Desconto</span>
+            <span class="text-caption text-negative">- {{ formatarReais(nfSelecionada?.desconto) }}</span>
+          </div>
+          <q-separator />
+          <div class="row justify-between items-center">
+            <span class="text-weight-bold">Total</span>
+            <span class="text-h6 text-weight-bold text-positive">{{ formatarReais(nfSelecionada?.total) }}</span>
+          </div>
+          <div class="row justify-between q-mt-xs">
+            <span class="text-caption text-grey-6">Forma de Pagamento</span>
+            <q-badge :color="corFormaPagamento(nfSelecionada?.forma_pagamento)">
+              {{ labelFormaPagamento(nfSelecionada?.forma_pagamento) }}
             </q-badge>
           </div>
-        </q-card-section>
+        </div>
+      </div>
 
-        <q-separator class="q-my-md" />
+    </q-card-section>
 
-        <q-card-section class="q-pt-none">
-          <div class="text-subtitle2 text-grey-6 q-mb-sm">CLIENTE</div>
-          <div class="text-body1 text-weight-medium">{{ nfSelecionada?.nome_cliente || 'Consumidor Final' }}</div>
+    <q-separator />
 
-          <div class="text-subtitle2 text-grey-6 q-mt-md q-mb-sm">ITENS</div>
-          <q-table
-            :data="nfSelecionada?.itens || []"
-            :columns="colunasItens"
-            flat
-            bordered
-            hide-bottom
-            dense
-          >
-            <template v-slot:body-cell-preco_unitario="props">
-              <q-td align="center">{{ formatarReais(props.row.preco_unitario) }}</q-td>
-            </template>
-            <template v-slot:body-cell-subtotal="props">
-              <q-td align="center">{{ formatarReais(props.row.subtotal) }}</q-td>
-            </template>
-          </q-table>
-
-          <q-separator class="bg-white q-my-md" />
-
-          <div class="row justify-end">
-            <div class="column items-end q-gutter-xs">
-              <div class="row justify-between" style="min-width: 200px">
-                <span class="text-caption text-grey-6">Subtotal</span>
-                <span>{{ formatarReais(nfSelecionada?.subtotal) }}</span>
-              </div>
-              <div class="row justify-between" style="min-width: 200px" v-if="nfSelecionada?.desconto > 0">
-                <span class="text-caption text-negative">Desconto</span>
-                <span class="text-negative">- {{ formatarReais(nfSelecionada?.desconto) }}</span>
-              </div>
-              <div class="row justify-between text-weight-bold text-body1" style="min-width: 200px">
-                <span>Total</span>
-                <span class="text-positive">{{ formatarReais(nfSelecionada?.total) }}</span>
-              </div>
-            </div>
-          </div>
-        </q-card-section>
-
-        <q-card-actions align="right" class="q-pa-md">
-          <q-btn label="Fechar" flat v-close-popup />
-          <q-btn label="Exportar PDF" icon="picture_as_pdf" color="negative" unelevated class="b-r-8" @click="gerarPDF(nfSelecionada)" />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+    <q-card-actions align="right" class="q-pa-md q-gutter-sm">
+      <q-btn label="Fechar" flat v-close-popup class="b-r-8" />
+      <q-btn
+        label="Exportar PDF"
+        icon="picture_as_pdf"
+        color="negative"
+        unelevated
+        class="b-r-8"
+        @click="gerarPDF(nfSelecionada)"
+      />
+    </q-card-actions>
+  </q-card>
+</q-dialog>
 
   </div>
 </template>
@@ -176,12 +219,13 @@ import nfSaidaService, { NfSaida } from '../../services/nfSaidaService'
 export default class ModuleComponent extends Vue {
   colunasNotaFiscalSaida = listNotaFiscalSaida.columns
 
-  colunasItens = [
-    { name: 'nome_produto', label: 'Produto', field: 'nome_produto', align: 'left' },
-    { name: 'quantidade', label: 'Qtd.', field: 'quantidade', align: 'center' },
-    { name: 'preco_unitario', label: 'Vlr. Unit.', field: 'preco_unitario', align: 'center' },
-    { name: 'subtotal', label: 'Subtotal', field: 'subtotal', align: 'center' }
-  ]
+colunasItens = [
+  { name: 'nome_produto', label: 'Produto', field: 'nome_produto', align: 'left' },
+  { name: 'quantidade', label: 'Qtd.', field: 'quantidade', align: 'center' },
+  { name: 'preco_unitario', label: 'Vlr. Unit.', field: 'preco_unitario', align: 'center' },
+  { name: 'desconto', label: 'Desconto', field: 'desconto', align: 'center' },
+  { name: 'subtotal', label: 'Subtotal', field: 'subtotal', align: 'center' }
+]
 
   filtro = {
     numeroNF: '',
@@ -190,8 +234,17 @@ export default class ModuleComponent extends Vue {
     ate: ''
   }
 
+  get rowsFiltradas() {
+  return this.rows.filter((nf: any) => {
+    const nfOk = !this.filtro.numeroNF || nf.numero_nf?.includes(this.filtro.numeroNF)
+    const clienteOk = !this.filtro.nomeCliente || nf.nome_cliente?.toLowerCase().includes(this.filtro.nomeCliente.toLowerCase())
+    const deOk = !this.filtro.de || new Date(nf.data_emissao) >= new Date(this.filtro.de)
+    const ateOk = !this.filtro.ate || new Date(nf.data_emissao) <= new Date(this.filtro.ate)
+    return nfOk && clienteOk && deOk && ateOk
+  })
+}
+
   rows: NfSaida[] = []
-  rowsFiltradas: NfSaida[] = []
   carregando = false
   dialogDetalhes = false
   nfSelecionada: NfSaida | null = null
@@ -204,22 +257,11 @@ export default class ModuleComponent extends Vue {
     try {
       this.carregando = true
       this.rows = await nfSaidaService.listar()
-      this.rowsFiltradas = this.rows
     } catch {
       this.$q.notify({ type: 'negative', message: 'Erro ao carregar NFs!' })
     } finally {
       this.carregando = false
     }
-  }
-
-  pesquisar() {
-    this.rowsFiltradas = this.rows.filter((nf: any) => {
-      const nfOk = !this.filtro.numeroNF || nf.numero_nf?.includes(this.filtro.numeroNF)
-      const clienteOk = !this.filtro.nomeCliente || nf.nome_cliente?.toLowerCase().includes(this.filtro.nomeCliente.toLowerCase())
-      const deOk = !this.filtro.de || new Date(nf.data_emissao) >= new Date(this.filtro.de)
-      const ateOk = !this.filtro.ate || new Date(nf.data_emissao) <= new Date(this.filtro.ate)
-      return nfOk && clienteOk && deOk && ateOk
-    })
   }
 
   labelStatus(status: string): string {
@@ -232,7 +274,6 @@ export default class ModuleComponent extends Vue {
 
   limpar() {
     this.filtro = { numeroNF: '', nomeCliente: '', de: '', ate: '' }
-    this.rowsFiltradas = this.rows
   }
 
   async verDetalhes(row: NfSaida) {

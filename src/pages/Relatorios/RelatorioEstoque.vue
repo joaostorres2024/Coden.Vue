@@ -81,14 +81,15 @@
         <!-- Botões de ação -->
         <div class="row justify-between items-center q-mb-lg">
           <div class="row q-gutter-sm">
-            <q-btn
-              label="Gerar Relatório"
-              icon="summarize"
-              color="primary"
-              unelevated
-              :loading="carregando"
-              @click="gerarRelatorio()"
-            />
+<q-btn
+  data-gerar-estoque
+  label="Gerar Relatório"
+  icon="summarize"
+  color="primary"
+  unelevated
+  :loading="carregando"
+  @click="gerarRelatorio()"
+/>
             <q-btn
               label="Limpar"
               icon="delete_sweep"
@@ -367,9 +368,24 @@ exportarExcel() {
     this.rowsFiltradas = []
   }
 
-  exportarPDF() {
-    this.$q.notify({ type: 'info', message: 'Exportação PDF em desenvolvimento!' })
+  async exportarPDF() {
+  if (this.rowsFiltradas.length === 0) {
+    this.$q.notify({ type: 'warning', message: 'Gere o relatório antes de exportar!' })
+    return
   }
+  try {
+    await productService.relatorioEstoquePDF({
+      codigo: this.filtro.codigo,
+      nome_produto: this.filtro.nomeProduto,
+      grupo_id: this.filtro.grupo,
+      status: this.filtro.status,
+      fornecedor: this.filtro.fornecedor
+    })
+    this.$q.notify({ type: 'positive', message: 'PDF gerado com sucesso!' })
+  } catch {
+    this.$q.notify({ type: 'negative', message: 'Erro ao gerar PDF!' })
+  }
+}
 
   formatarReais(valor: string | number): string {
     const numero = typeof valor === 'string' ? parseFloat(valor) : valor
@@ -381,7 +397,6 @@ exportarExcel() {
 
 <style scoped>
 .b-r-10 { border-radius: 10px; }
-.b-r-8 { border-radius: 8px; }
 .border { border: 1px solid #ccc; }
 .btn-outline-primary {
   border: 1.5px solid #ccc;

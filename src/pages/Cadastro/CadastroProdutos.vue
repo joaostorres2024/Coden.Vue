@@ -241,6 +241,16 @@
                 >
                   <q-tooltip>Reativar</q-tooltip>
                 </q-btn>
+                <q-btn
+  icon="delete_forever"
+  size="sm"
+  color="negative"
+  flat
+  round
+  @click="confirmarDeletar(props.row)"
+>
+  <q-tooltip>Excluir definitivamente</q-tooltip>
+</q-btn>
               </q-td>
             </template>
             <template v-slot:body-cell-preco="props">
@@ -286,6 +296,23 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+
+    <q-dialog v-model="dialogDeletar" persistent>
+  <q-card style="min-width: 380px; border-radius: 12px" class="q-pa-sm">
+    <q-card-section class="q-pb-none">
+      <div class="text-h6 text-bold">Excluir Produto</div>
+    </q-card-section>
+    <q-card-section class="text-grey-7" style="font-size: 14px">
+      Tem certeza que deseja <strong>excluir definitivamente</strong> o produto
+      <strong>{{ produtoParaDeletar?.nome_produto }}</strong>?
+      Essa ação não pode ser desfeita.
+    </q-card-section>
+    <q-card-actions align="right" class="q-pa-md q-gutter-sm">
+      <q-btn label="Voltar" unelevated style="border: 1px solid #ccc; border-radius: 8px; min-width: 100px" color="white" text-color="dark" v-close-popup />
+      <q-btn label="Sim, Excluir" unelevated color="negative" class="b-r-8" style="min-width: 130px" @click="executarDeletar()" />
+    </q-card-actions>
+  </q-card>
+</q-dialog>
 
     <!-- Dialog Inativar -->
     <q-dialog v-model="dialogExcluir" persistent>
@@ -562,6 +589,26 @@ confirmarCancelamento() {
 
 mostrarFormulario() {
   this.cadastroProdutoForm = true
+}
+
+dialogDeletar = false
+produtoParaDeletar: any = null
+
+confirmarDeletar(row: any) {
+  this.produtoParaDeletar = row
+  this.dialogDeletar = true
+}
+
+async executarDeletar() {
+  try {
+    await productService.deletarProduto(this.produtoParaDeletar.id)
+    this.$q.notify({ type: 'positive', message: 'Produto excluído com sucesso!' })
+    this.dialogDeletar = false
+    this.produtoParaDeletar = null
+    await this.carregarProdutos()
+  } catch (err: any) {
+    this.$q.notify({ type: 'negative', message: err.response?.data?.erro || 'Erro ao excluir produto!' })
+  }
 }
 }
 </script>
