@@ -21,7 +21,7 @@
       <q-card-section class="q-pa-lg">
 
         <!-- Saudação -->
-        <div class="text-h6 text-bold q-mb-lg">Bem-vindo, {{ user }} 👋</div>
+        <div class="text-h6 text-bold q-mb-lg">Bem-vindo, <span class="text-primary">{{ user }} 👋</span></div>
 
         <!-- Cards de Resumo -->
         <div class="row q-col-gutter-md q-mb-lg">
@@ -30,7 +30,7 @@
               <div class="row items-center justify-between">
                 <div>
                   <div class="text-caption text-grey-6">Vendas Hoje</div>
-                  <div class="text-h5 text-bold text-primary q-mt-xs">{{ resumo.vendasHoje }}</div>
+                  <div class="text-h5 text-bold text-black q-mt-xs">{{ resumo.vendasHoje }}</div>
                 </div>
                 <q-icon name="point_of_sale" size="40px" color="primary" style="opacity: 0.2" />
               </div>
@@ -41,7 +41,7 @@
               <div class="row items-center justify-between">
                 <div>
                   <div class="text-caption text-grey-6">Faturamento Hoje</div>
-                  <div class="text-h6 text-bold text-positive q-mt-xs">{{ resumo.faturamentoHoje }}</div>
+                  <div class="text-h6 text-bold text-black q-mt-xs">{{ resumo.faturamentoHoje }}</div>
                 </div>
                 <q-icon name="attach_money" size="40px" color="positive" style="opacity: 0.2" />
               </div>
@@ -52,7 +52,7 @@
               <div class="row items-center justify-between">
                 <div>
                   <div class="text-caption text-grey-6">Estoque Baixo</div>
-                  <div class="text-h5 text-bold text-warning q-mt-xs">{{ resumo.estoqueBaixo }}</div>
+                  <div class="text-h5 text-bold text-black q-mt-xs">{{ resumo.estoqueBaixo }}</div>
                 </div>
                 <q-icon name="inventory_2" size="40px" color="warning" style="opacity: 0.2" />
               </div>
@@ -63,7 +63,7 @@
               <div class="row items-center justify-between">
                 <div>
                   <div class="text-caption text-grey-6">Clientes Ativos</div>
-                  <div class="text-h5 text-bold text-primary q-mt-xs">{{ resumo.clientesAtivos }}</div>
+                  <div class="text-h5 text-bold text-black q-mt-xs">{{ resumo.clientesAtivos }}</div>
                 </div>
                 <q-icon name="groups" size="40px" color="primary" style="opacity: 0.2" />
               </div>

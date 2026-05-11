@@ -285,6 +285,69 @@
       </q-card>
     </q-dialog>
 
+    <!-- Dialog Loading/Sucesso -->
+<q-dialog v-model="dialogProcessando" persistent>
+  <q-card style="min-width: 340px; border-radius: 16px; text-align: center" class="q-pa-xl">
+
+    <!-- Ícone animado -->
+    <div style="position: relative; width: 72px; height: 72px; margin: 0 auto 1.5rem">
+
+<!-- Spinner -->
+<svg v-if="pagamentoStatus === 'loading'"
+  viewBox="0 0 72 72" width="72" height="72"
+  class="spinner-svg"
+  style="position: absolute; top: 0; left: 0">
+  <circle cx="36" cy="36" r="30" fill="none" stroke="#e0e0e0" stroke-width="5"/>
+  <circle cx="36" cy="36" r="30" fill="none" stroke="#1D9E75" stroke-width="5"
+    stroke-linecap="round" stroke-dasharray="60 128" stroke-dashoffset="0"
+    transform="rotate(-90 36 36)"/>
+</svg>
+
+      <!-- Check -->
+      <svg v-if="pagamentoStatus === 'success'" viewBox="0 0 72 72" width="72" height="72"
+        style="position: absolute; top: 0; left: 0">
+        <circle cx="36" cy="36" r="34" fill="#EAF3DE"/>
+        <polyline
+          points="20,37 31,48 52,24"
+          fill="none" stroke="#3B6D11" stroke-width="5"
+          stroke-linecap="round" stroke-linejoin="round"
+          :stroke-dasharray="54"
+          :stroke-dashoffset="checkOffset"
+          style="transition: stroke-dashoffset 0.5s ease"
+        />
+      </svg>
+    </div>
+
+    <!-- Textos -->
+    <div class="text-h6 text-bold q-mb-xs">
+      {{ pagamentoStatus === 'loading' ? 'Processando pagamento...' : 'Venda realizada!' }}
+    </div>
+    <div class="text-caption text-grey-6 q-mb-lg">
+      {{ pagamentoStatus === 'loading' ? 'Aguarde enquanto a venda é finalizada' : 'Deseja emitir a nota fiscal agora?' }}
+    </div>
+
+    <!-- Botões (só aparecem no sucesso) -->
+    <div v-if="pagamentoStatus === 'success'" class="row q-gutter-sm justify-center">
+      <q-btn
+        label="Ver Nota Fiscal"
+        icon="receipt_long"
+        color="positive"
+        unelevated
+        class="b-r-8"
+        @click="irParaNotaFiscal()"
+      />
+      <q-btn
+        label="Fechar"
+        flat
+        class="text-grey-7 b-r-8"
+        v-close-popup
+        @click="limparTela()"
+      />
+    </div>
+
+  </q-card>
+</q-dialog>
+
   </div>
 </template>
 
@@ -495,23 +558,39 @@ export default class VendasBalcaoComponent extends Vue {
     this.dialogPagamento = true
   }
 
-  async confirmarPagamento() {
-    if (!this.formaPagamentoSelecionada) {
-      this.$q.notify({ type: 'warning', message: 'Selecione a forma de pagamento!' })
-      return
-    }
-    try {
-      this.carregando = true
-      await vendasService.finalizarVenda(this.vendaAtual.id, this.formaPagamentoSelecionada)
-      this.$q.notify({ type: 'positive', message: 'Venda finalizada com sucesso!' })
-      this.dialogPagamento = false
-      this.limparTela()
-    } catch {
-      this.$q.notify({ type: 'negative', message: 'Erro ao finalizar venda!' })
-    } finally {
-      this.carregando = false
-    }
+dialogProcessando = false
+pagamentoStatus: 'loading' | 'success' = 'loading'
+checkOffset = 54
+
+async confirmarPagamento() {
+  if (!this.formaPagamentoSelecionada) {
+    this.$q.notify({ type: 'warning', message: 'Selecione a forma de pagamento!' })
+    return
   }
+  try {
+    this.dialogPagamento = false
+    this.pagamentoStatus = 'loading'
+    this.checkOffset = 54
+    this.dialogProcessando = true
+
+    await vendasService.finalizarVenda(this.vendaAtual.id, this.formaPagamentoSelecionada)
+
+    this.pagamentoStatus = 'success'
+    // Anima o check
+    setTimeout(() => { this.checkOffset = 0 }, 50)
+
+  } catch {
+    this.dialogProcessando = false
+    this.$q.notify({ type: 'negative', message: 'Erro ao finalizar venda!' })
+  }
+}
+
+irParaNotaFiscal() {
+  const vendaId = this.vendaAtual?.id
+  this.dialogProcessando = false
+  this.limparTela()
+  this.$router.push(`/NotaFiscalSaida`)  // ajuste a rota conforme seu projeto
+}
 
   abrirDialogCancelar() {
     this.dialogCancelar = true
@@ -579,4 +658,12 @@ export default class VendasBalcaoComponent extends Vue {
 <style scoped>
 .b-r-10 { border-radius: 10px; }
 .border { border: 1px solid #ccc; }
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.spinner-svg {
+  animation: spin 0.9s linear infinite;
+  transform-origin: center;
+}
 </style>
