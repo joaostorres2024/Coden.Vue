@@ -36,7 +36,8 @@ const routes: RouteConfig[] = [
       { path: 'VendaBalcao', component: () => import('../pages/Vendas/VendaBalcao.vue') },
       { path: 'Configuracoes', component: () => import('../pages/Configuracoes.vue') },
       { path: 'Perfil', component: () => import('../pages/Perfil.vue') },
-      { path: 'GerenciamentoCaixa', component: () => import('../pages/GerenciamentoCaixa.vue') }
+      { path: 'GerenciamentoCaixa', component: () => import('../pages/GerenciamentoCaixa.vue') },
+      { path: 'Ajuda', component: () => import('../pages/Ajuda.vue') }
     ]
   },
   {

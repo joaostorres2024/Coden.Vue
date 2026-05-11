@@ -81,6 +81,10 @@
             <q-item-section avatar><q-icon name="point_of_sale" /></q-item-section>
             <q-item-section>Vendas Balcão</q-item-section>
           </q-item>
+          <q-item class="menu-header text-white" clickable v-ripple @click="$router.push('/Ajuda')">
+            <q-item-section avatar><q-icon name="help" /></q-item-section>
+            <q-item-section>Ajuda</q-item-section>
+          </q-item>
         </q-list>
       </div>
     </q-drawer>
