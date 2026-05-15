@@ -51,7 +51,6 @@ export interface PedidoML {
 
 const mlService = {
 
-  // Retorna a URL de login do ML para abrir no navegador
   async getLoginUrl(): Promise<string> {
     const { data } = await api.get('/ml/auth/login')
     return data.url

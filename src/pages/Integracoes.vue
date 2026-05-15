@@ -2,8 +2,8 @@
   <div class="q-pa-md">
 
     <!-- Cabeçalho -->
-    <div class="text-bold text-black row items-center" style="font-size: 32px">
-      <q-icon name="webhook" class="q-mr-md" size="32px" />Integrações
+    <div class="text-bold text-black row items-center" style="font-size:28px">
+      <q-icon name="webhook" class="q-mr-md" size="28px" />Integrações
     </div>
     <p class="text-grey-7 text-body2 q-mb-md">
       Conecte e gerencie integrações com marketplaces e outras plataformas para sincronizar produtos, preços e pedidos automaticamente.

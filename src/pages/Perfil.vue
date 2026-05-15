@@ -2,8 +2,8 @@
   <div class="q-pa-md">
 
     <!-- Cabeçalho -->
-    <div class="text-bold text-black row items-center" style="font-size: 32px">
-      <q-icon name="account_circle" class="q-mr-md" size="32px" />Perfil da Empresa
+    <div class="text-bold text-black row items-center" style="font-size: 28px">
+      <q-icon name="account_circle" class="q-mr-md" size="28px" />Perfil da Empresa
     </div>
     <p class="text-grey-7 text-body2 q-mb-md">
       Gerencie os dados cadastrais, endereço, contato e configurações de segurança da sua empresa.

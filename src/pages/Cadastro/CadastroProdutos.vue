@@ -2,8 +2,8 @@
   <div class="q-pa-md">
 
     <!-- Cabeçalho -->
-    <div class="text-bold text-black row items-center" style="font-size: 32px">
-      <q-icon name="shelves" class="q-mr-md" size="32px" />Cadastro de Produtos
+    <div class="text-bold text-black row items-center" style="font-size: 28px">
+      <q-icon name="shelves" class="q-mr-md" size="28px" />Cadastro de Produtos
     </div>
     <p class="text-grey-7 text-body2 q-mb-md">
       Gerencie o catálogo de produtos do sistema. Aqui você pode adicionar, editar, inativar e excluir produtos, além de organizar por grupos.
