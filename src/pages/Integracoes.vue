@@ -103,7 +103,7 @@
           {{ marketplaceSelecionado.nome }} para realizar a autenticação e conectar sua conta com segurança.
         </p>
       </div>
-      <div class="row justify-end">
+      <div class="row justify-start">
         <q-btn label="Cancelar" color="negative" flat @click="abrirDialogCancelar()" />
       </div>
     </div>
@@ -205,7 +205,7 @@
             <q-btn unelevated label="Desconectar" class="bg-negative text-white" @click="desconectar()" />
           </q-card>
 
-          <div class="row justify-end q-gutter-sm">
+          <div class="row justify-start q-gutter-sm">
             <q-btn label="Cancelar" flat color="grey-7" />
             <q-btn label="Salvar configurações" unelevated color="primary" />
           </div>

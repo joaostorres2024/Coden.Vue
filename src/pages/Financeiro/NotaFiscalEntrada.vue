@@ -185,7 +185,7 @@
         </div>
 
         <!-- Botões -->
-        <div class="row justify-end q-gutter-sm">
+        <div class="row justify-start q-gutter-sm">
           <q-btn label="Salvar Entrada" icon="save" color="positive" unelevated type="submit" :loading="salvando" />
           <q-btn label="Cancelar" icon="close" color="negative" flat @click="abrirDialogCancelar()" />
         </div>

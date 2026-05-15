@@ -144,7 +144,7 @@
         </div>
 
         <!-- Botão Salvar -->
-        <div class="row justify-end q-mt-xl">
+        <div class="row justify-start q-mt-xl">
           <q-btn label="Salvar Alterações" color="positive" unelevated icon="save" :loading="salvando" @click="salvar()" />
         </div>
 

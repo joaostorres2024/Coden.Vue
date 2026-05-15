@@ -32,6 +32,7 @@ const routes: RouteConfig[] = [
       { path: 'RelatorioEstoque', component: () => import('../pages/Relatorios/RelatorioEstoque.vue') },
       { path: 'RelatorioVendas', component: () => import('../pages/Relatorios/RelatorioVendas.vue') },
       { path: 'Integracoes', component: () => import('../pages/Integracoes.vue') },
+      { path: 'Agentes', component: () => import('../pages/Agentes.vue') },
       { path: 'Whatsapp', component: () => import('../pages/Whatsapp.vue') },
       { path: 'VendaBalcao', component: () => import('../pages/Vendas/VendaBalcao.vue') },
       { path: 'Configuracoes', component: () => import('../pages/Configuracoes.vue') },

@@ -141,7 +141,7 @@
         </div>
 
         <!-- Botões -->
-        <div class="row q-mt-xl q-gutter-md justify-end">
+        <div class="row q-mt-xl q-gutter-md justify-start">
           <q-btn label="Salvar Produto" color="positive" unelevated type="submit" />
           <q-btn label="Cancelar" color="negative" flat @click="abrirDialogCancelar()" />
         </div>
