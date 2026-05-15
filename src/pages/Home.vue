@@ -1,216 +1,202 @@
 <template>
-  <div class="row justify-center items-center">
-    <q-card class="col-11 col-md-10 col-lg-9 no-shadow border b-r-10" style="width: 1500px">
+  <div class="q-pa-md">
 
-      <!-- HEADER -->
-      <q-card-section class="bg-white text-black q-pb-none">
-        <div class="text-h5 text-bold">Dashboard</div>
-        <q-toolbar class="q-pa-none">
-          <q-breadcrumbs active-color="black" style="font-size: 14px" class="q-mb-md">
-            <template v-slot:separator>
-              <q-icon size="1.5em" name="chevron_right" color="black" />
-            </template>
-            <q-breadcrumbs-el label="Home" icon="home" to="/" />
-            <q-breadcrumbs-el label="Dashboard" icon="dashboard" />
-          </q-breadcrumbs>
-        </q-toolbar>
-      </q-card-section>
+    <!-- Cabeçalho -->
+    <div class="text-bold text-black row items-center" style="font-size: 32px">
+      <q-icon name="dashboard" class="q-mr-md" size="32px" />Dashboard
+    </div>
+    <p class="text-grey-7 text-body2 q-mb-md">
+      Acompanhe em tempo real as principais métricas do sistema — vendas, faturamento, estoque e clientes ativos.
+    </p>
+    <q-separator class="q-mb-lg" />
 
-      <q-separator />
+    <!-- Saudação -->
+    <div class="text-h6 text-bold q-mb-lg">Bem-vindo, <span class="text-primary">{{ user }} 👋</span></div>
 
-      <q-card-section class="q-pa-lg">
-
-        <!-- Saudação -->
-        <div class="text-h6 text-bold q-mb-lg">Bem-vindo, <span class="text-primary">{{ user }} 👋</span></div>
-
-        <!-- Cards de Resumo -->
-        <div class="row q-col-gutter-md q-mb-lg">
-          <div class="col-12 col-sm-6 col-md-3">
-            <q-card flat bordered class="b-r-8 q-pa-md">
-              <div class="row items-center justify-between">
-                <div>
-                  <div class="text-caption text-grey-6">Vendas Hoje</div>
-                  <div class="text-h5 text-bold text-black q-mt-xs">{{ resumo.vendasHoje }}</div>
-                </div>
-                <q-icon name="point_of_sale" size="40px" color="primary" style="opacity: 0.2" />
-              </div>
-            </q-card>
-          </div>
-          <div class="col-12 col-sm-6 col-md-3">
-            <q-card flat bordered class="b-r-8 q-pa-md">
-              <div class="row items-center justify-between">
-                <div>
-                  <div class="text-caption text-grey-6">Faturamento Hoje</div>
-                  <div class="text-h6 text-bold text-black q-mt-xs">{{ resumo.faturamentoHoje }}</div>
-                </div>
-                <q-icon name="attach_money" size="40px" color="positive" style="opacity: 0.2" />
-              </div>
-            </q-card>
-          </div>
-          <div class="col-12 col-sm-6 col-md-3">
-            <q-card flat bordered class="b-r-8 q-pa-md">
-              <div class="row items-center justify-between">
-                <div>
-                  <div class="text-caption text-grey-6">Estoque Baixo</div>
-                  <div class="text-h5 text-bold text-black q-mt-xs">{{ resumo.estoqueBaixo }}</div>
-                </div>
-                <q-icon name="inventory_2" size="40px" color="warning" style="opacity: 0.2" />
-              </div>
-            </q-card>
-          </div>
-          <div class="col-12 col-sm-6 col-md-3">
-            <q-card flat bordered class="b-r-8 q-pa-md">
-              <div class="row items-center justify-between">
-                <div>
-                  <div class="text-caption text-grey-6">Clientes Ativos</div>
-                  <div class="text-h5 text-bold text-black q-mt-xs">{{ resumo.clientesAtivos }}</div>
-                </div>
-                <q-icon name="groups" size="40px" color="primary" style="opacity: 0.2" />
-              </div>
-            </q-card>
-          </div>
-        </div>
-
-        <div class="row q-col-gutter-md q-mb-lg">
-
-         <!-- Vendas por UF -->
-<div class="col-12 col-md-6">
-  <q-card flat bordered class="b-r-8">
-    <q-card-section class="q-pb-none">
-      <div class="text-subtitle1 text-weight-bold">Vendas por UF</div>
-      <div class="text-caption text-grey-6">Passe o mouse sobre o estado para ver os detalhes</div>
-    </q-card-section>
-    <q-card-section>
-      <div style="position: relative">
-        <svg
-          viewBox="0 0 800 900"
-          style="width: 100%; height: auto"
-          @mouseleave="tooltip.visible = false"
-        >
-          <g v-for="estado in estados" :key="estado.uf">
-            <path
-              :d="estado.path"
-              :fill="corEstado(estado.uf)"
-              stroke="white"
-              stroke-width="1.5"
-              style="cursor: pointer; transition: opacity 0.2s"
-              @mouseenter="mostrarTooltip($event, estado)"
-              @mouseleave="tooltip.visible = false"
-            />
-            <text
-              :x="estado.cx"
-              :y="estado.cy"
-              text-anchor="middle"
-              font-size="9"
-              font-weight="bold"
-              fill="white"
-              style="pointer-events: none; user-select: none"
-            >
-              {{ estado.uf }}
-            </text>
-          </g>
-        </svg>
-
-        <!-- Tooltip -->
-        <div
-          v-if="tooltip.visible"
-          :style="`position: absolute; top: ${tooltip.y}px; left: ${tooltip.x}px; transform: translate(-50%, -110%); pointer-events: none; z-index: 100`"
-          style="background: rgba(0,0,0,0.85); color: white; border-radius: 8px; padding: 8px 12px; font-size: 12px; white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,0.3)"
-        >
-          <div class="text-weight-bold" style="font-size: 14px">{{ tooltip.uf }}</div>
-          <div>Vendas: <strong>{{ tooltip.totalVendas }}</strong></div>
-          <div>Total: <strong>{{ tooltip.valorTotal }}</strong></div>
-        </div>
-
-        <!-- Legenda -->
-        <div class="row items-center q-gutter-sm q-mt-sm justify-center">
-          <div class="row items-center q-gutter-xs">
-            <div style="width: 12px; height: 12px; border-radius: 2px; background: #e3f2fd" />
-            <span class="text-caption text-grey-6">Sem vendas</span>
-          </div>
-          <div class="row items-center q-gutter-xs">
-            <div style="width: 12px; height: 12px; border-radius: 2px; background: #90caf9" />
-            <span class="text-caption text-grey-6">Baixo</span>
-          </div>
-          <div class="row items-center q-gutter-xs">
-            <div style="width: 12px; height: 12px; border-radius: 2px; background: #1565c0" />
-            <span class="text-caption text-grey-6">Alto</span>
-          </div>
-        </div>
-      </div>
-    </q-card-section>
-  </q-card>
-</div>
-
-          <!-- Últimas Vendas -->
-          <div class="col-12 col-md-6">
-            <q-card flat bordered class="b-r-8">
-              <q-card-section class="q-pb-none">
-                <div class="text-subtitle1 text-weight-bold">Últimas Vendas</div>
-                <div class="text-caption text-grey-6">Vendas mais recentes</div>
-              </q-card-section>
-              <q-card-section class="q-pt-sm">
-                <div v-if="ultimasVendas.length === 0" class="column items-center q-py-xl text-grey-5">
-                  <q-icon name="receipt_long" size="48px" />
-                  <div class="q-mt-sm">Nenhuma venda encontrada</div>
-                </div>
-                <q-list separator v-else>
-                  <q-item v-for="venda in ultimasVendas" :key="venda.id" class="q-px-none">
-                    <q-item-section avatar>
-                      <q-avatar :color="corPagamento(venda.forma_pagamento)" text-color="white" size="36px" icon="receipt" />
-                    </q-item-section>
-                    <q-item-section>
-                      <q-item-label class="text-weight-medium">{{ venda.nome_cliente || 'Consumidor Final' }}</q-item-label>
-                      <q-item-label caption>{{ formatarData(venda.data) }} — {{ labelPagamento(venda.forma_pagamento) }}</q-item-label>
-                    </q-item-section>
-                    <q-item-section side>
-                      <span class="text-weight-bold text-positive">{{ formatarReais(venda.total) }}</span>
-                    </q-item-section>
-                  </q-item>
-                </q-list>
-              </q-card-section>
-            </q-card>
-          </div>
-        </div>
-
-        <!-- Produtos com Estoque Baixo -->
-        <q-card flat bordered class="b-r-8">
-          <q-card-section class="q-pb-none">
-            <div class="row items-center justify-between">
-              <div>
-                <div class="text-subtitle1 text-weight-bold">⚠️ Produtos com Estoque Baixo</div>
-                <div class="text-caption text-grey-6">Produtos abaixo do estoque mínimo</div>
-              </div>
-              <q-btn label="Ver Relatório" icon="inventory" flat color="primary" class="b-r-8" @click="$router.push('/RelatorioEstoque')" />
+    <!-- Cards de Resumo -->
+    <div class="row q-col-gutter-md q-mb-lg">
+      <div class="col-12 col-sm-6 col-md-3">
+        <q-card flat bordered class="b-r-10 q-pa-md">
+          <div class="row items-center justify-between">
+            <div>
+              <div class="text-caption text-grey-6">Vendas Hoje</div>
+              <div class="text-h5 text-bold text-black q-mt-xs">{{ resumo.vendasHoje }}</div>
             </div>
+            <q-icon name="point_of_sale" size="40px" color="primary" style="opacity: 0.2" />
+          </div>
+        </q-card>
+      </div>
+      <div class="col-12 col-sm-6 col-md-3">
+        <q-card flat bordered class="b-r-10 q-pa-md">
+          <div class="row items-center justify-between">
+            <div>
+              <div class="text-caption text-grey-6">Faturamento Hoje</div>
+              <div class="text-h6 text-bold text-black q-mt-xs">{{ resumo.faturamentoHoje }}</div>
+            </div>
+            <q-icon name="attach_money" size="40px" color="positive" style="opacity: 0.2" />
+          </div>
+        </q-card>
+      </div>
+      <div class="col-12 col-sm-6 col-md-3">
+        <q-card flat bordered class="b-r-10 q-pa-md">
+          <div class="row items-center justify-between">
+            <div>
+              <div class="text-caption text-grey-6">Estoque Baixo</div>
+              <div class="text-h5 text-bold text-black q-mt-xs">{{ resumo.estoqueBaixo }}</div>
+            </div>
+            <q-icon name="inventory_2" size="40px" color="warning" style="opacity: 0.2" />
+          </div>
+        </q-card>
+      </div>
+      <div class="col-12 col-sm-6 col-md-3">
+        <q-card flat bordered class="b-r-10 q-pa-md">
+          <div class="row items-center justify-between">
+            <div>
+              <div class="text-caption text-grey-6">Clientes Ativos</div>
+              <div class="text-h5 text-bold text-black q-mt-xs">{{ resumo.clientesAtivos }}</div>
+            </div>
+            <q-icon name="groups" size="40px" color="primary" style="opacity: 0.2" />
+          </div>
+        </q-card>
+      </div>
+    </div>
+
+    <div class="row q-col-gutter-md q-mb-lg">
+
+      <!-- Vendas por UF -->
+      <div class="col-12 col-md-6">
+        <q-card flat bordered class="b-r-10">
+          <q-card-section class="q-pb-none">
+            <div class="text-subtitle1 text-weight-bold">Vendas por UF</div>
+            <div class="text-caption text-grey-6">Passe o mouse sobre o estado para ver os detalhes</div>
           </q-card-section>
           <q-card-section>
-            <div v-if="produtosBaixos.length === 0" class="column items-center q-py-md text-grey-5">
-              <q-icon name="check_circle" size="40px" color="positive" />
-              <div class="q-mt-sm text-positive">Todos os produtos estão com estoque adequado!</div>
+            <div style="position: relative">
+              <svg
+                viewBox="0 0 800 900"
+                style="width: 100%; height: auto"
+                @mouseleave="tooltip.visible = false"
+              >
+                <g v-for="estado in estados" :key="estado.uf">
+                  <path
+                    :d="estado.path"
+                    :fill="corEstado(estado.uf)"
+                    stroke="white"
+                    stroke-width="1.5"
+                    style="cursor: pointer; transition: opacity 0.2s"
+                    @mouseenter="mostrarTooltip($event, estado)"
+                    @mouseleave="tooltip.visible = false"
+                  />
+                  <text
+                    :x="estado.cx"
+                    :y="estado.cy"
+                    text-anchor="middle"
+                    font-size="9"
+                    font-weight="bold"
+                    fill="white"
+                    style="pointer-events: none; user-select: none"
+                  >
+                    {{ estado.uf }}
+                  </text>
+                </g>
+              </svg>
+
+              <!-- Tooltip -->
+              <div
+                v-if="tooltip.visible"
+                :style="`position: absolute; top: ${tooltip.y}px; left: ${tooltip.x}px; transform: translate(-50%, -110%); pointer-events: none; z-index: 100`"
+                style="background: rgba(0,0,0,0.85); color: white; border-radius: 8px; padding: 8px 12px; font-size: 12px; white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,0.3)"
+              >
+                <div class="text-weight-bold" style="font-size: 14px">{{ tooltip.uf }}</div>
+                <div>Vendas: <strong>{{ tooltip.totalVendas }}</strong></div>
+                <div>Total: <strong>{{ tooltip.valorTotal }}</strong></div>
+              </div>
+
+              <!-- Legenda -->
+              <div class="row items-center q-gutter-sm q-mt-sm justify-center">
+                <div class="row items-center q-gutter-xs">
+                  <div style="width: 12px; height: 12px; border-radius: 2px; background: #e3f2fd" />
+                  <span class="text-caption text-grey-6">Sem vendas</span>
+                </div>
+                <div class="row items-center q-gutter-xs">
+                  <div style="width: 12px; height: 12px; border-radius: 2px; background: #90caf9" />
+                  <span class="text-caption text-grey-6">Baixo</span>
+                </div>
+                <div class="row items-center q-gutter-xs">
+                  <div style="width: 12px; height: 12px; border-radius: 2px; background: #1565c0" />
+                  <span class="text-caption text-grey-6">Alto</span>
+                </div>
+              </div>
             </div>
-            <q-table
-              v-else
-              :data="produtosBaixos"
-              :columns="colunasBaixo"
-              flat
-              hide-bottom
-              dense
-              :rows-per-page-options="[5]"
-            >
-              <template v-slot:body-cell-situacao="props">
-                <q-td align="center">
-                  <q-badge :color="props.row.estoque_atual === 0 ? 'negative' : 'warning'">
-                    {{ props.row.estoque_atual === 0 ? 'Zerado' : 'Baixo' }}
-                  </q-badge>
-                </q-td>
-              </template>
-            </q-table>
           </q-card-section>
         </q-card>
+      </div>
 
+      <!-- Últimas Vendas -->
+      <div class="col-12 col-md-6">
+        <q-card flat bordered class="b-r-10">
+          <q-card-section class="q-pb-none">
+            <div class="text-subtitle1 text-weight-bold">Últimas Vendas</div>
+            <div class="text-caption text-grey-6">Vendas mais recentes</div>
+          </q-card-section>
+          <q-card-section class="q-pt-sm">
+            <div v-if="ultimasVendas.length === 0" class="column items-center q-py-xl text-grey-5">
+              <q-icon name="receipt_long" size="48px" />
+              <div class="q-mt-sm">Nenhuma venda encontrada</div>
+            </div>
+            <q-list separator v-else>
+              <q-item v-for="venda in ultimasVendas" :key="venda.id" class="q-px-none">
+                <q-item-section avatar>
+                  <q-avatar :color="corPagamento(venda.forma_pagamento)" text-color="white" size="36px" icon="receipt" />
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label class="text-weight-medium">{{ venda.nome_cliente || 'Consumidor Final' }}</q-item-label>
+                  <q-item-label caption>{{ formatarData(venda.data) }} — {{ labelPagamento(venda.forma_pagamento) }}</q-item-label>
+                </q-item-section>
+                <q-item-section side>
+                  <span class="text-weight-bold text-positive">{{ formatarReais(venda.total) }}</span>
+                </q-item-section>
+              </q-item>
+            </q-list>
+          </q-card-section>
+        </q-card>
+      </div>
+    </div>
+
+    <!-- Produtos com Estoque Baixo -->
+    <q-card flat bordered class="b-r-10">
+      <q-card-section class="q-pb-none">
+        <div class="row items-center justify-between">
+          <div>
+            <div class="text-subtitle1 text-weight-bold">⚠️ Produtos com Estoque Baixo</div>
+            <div class="text-caption text-grey-6">Produtos abaixo do estoque mínimo</div>
+          </div>
+          <q-btn label="Ver Relatório" icon="inventory" flat color="primary" @click="$router.push('/RelatorioEstoque')" />
+        </div>
+      </q-card-section>
+      <q-card-section>
+        <div v-if="produtosBaixos.length === 0" class="column items-center q-py-md text-grey-5">
+          <q-icon name="check_circle" size="40px" color="positive" />
+          <div class="q-mt-sm text-positive">Todos os produtos estão com estoque adequado!</div>
+        </div>
+        <q-table
+          v-else
+          :data="produtosBaixos"
+          :columns="colunasBaixo"
+          flat hide-bottom dense
+          :rows-per-page-options="[5]"
+        >
+          <template v-slot:body-cell-situacao="props">
+            <q-td align="center">
+              <q-badge :color="props.row.estoque_atual === 0 ? 'negative' : 'warning'">
+                {{ props.row.estoque_atual === 0 ? 'Zerado' : 'Baixo' }}
+              </q-badge>
+            </q-td>
+          </template>
+        </q-table>
       </q-card-section>
     </q-card>
+
   </div>
 </template>
 

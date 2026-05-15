@@ -1,198 +1,154 @@
 <template>
-  <div class="row justify-center items-center">
-    <q-card class="col-11 col-md-10 col-lg-9 no-shadow border b-r-10" style="width: 1500px">
+  <div class="q-pa-md">
 
-      <q-card-section class="bg-white text-black q-pb-none">
-        <div class="text-h5 text-bold">Relatório de Estoque</div>
-        <q-toolbar class="q-pa-none">
-          <q-breadcrumbs active-color="black" style="font-size: 14px" class="q-mb-md">
-            <template v-slot:separator>
-              <q-icon size="1.5em" name="chevron_right" color="black" />
-            </template>
-            <q-breadcrumbs-el label="Home" icon="home" to="/" />
-            <q-breadcrumbs-el label="Relatórios" icon="article" />
-            <q-breadcrumbs-el label="Relatório de Estoque" icon="inventory" />
-          </q-breadcrumbs>
-        </q-toolbar>
-      </q-card-section>
+    <!-- Cabeçalho -->
+    <div class="text-bold text-black row items-center" style="font-size: 32px">
+      <q-icon name="inventory" class="q-mr-md" size="32px" />Relatório de Estoque
+    </div>
+    <p class="text-grey-7 text-body2 q-mb-md">
+      Analise a situação atual do estoque por produto, grupo e fornecedor. Exporte os dados em PDF ou Excel.
+    </p>
+    <q-separator class="q-mb-lg" />
 
-      <q-separator />
+    <!-- Filtros -->
+    <div class="row q-col-gutter-md q-mb-md">
+      <div class="col-12 col-sm-4">
+        <q-input v-model="filtro.codigo" label="Código do Produto" outlined dense />
+      </div>
+      <div class="col-12 col-sm-4">
+        <q-input v-model="filtro.nomeProduto" label="Nome do Produto" outlined dense />
+      </div>
+      <div class="col-12 col-sm-4">
+        <q-select
+          v-model="filtro.grupo"
+          :options="grupos"
+          option-label="nome"
+          option-value="id"
+          emit-value map-options
+          label="Grupo"
+          outlined dense clearable
+        />
+      </div>
+      <div class="col-12 col-sm-4">
+        <q-select
+          v-model="filtro.status"
+          :options="opcoesStatus"
+          option-label="label"
+          option-value="value"
+          emit-value map-options
+          label="Status"
+          outlined dense clearable
+        />
+      </div>
+      <div class="col-12 col-sm-4">
+        <q-select
+          v-model="filtro.situacaoEstoque"
+          :options="opcoesSituacaoEstoque"
+          option-label="label"
+          option-value="value"
+          emit-value map-options
+          label="Situação do Estoque"
+          outlined dense clearable
+        />
+      </div>
+      <div class="col-12 col-sm-4">
+        <q-input v-model="filtro.fornecedor" label="Fornecedor" outlined dense />
+      </div>
+    </div>
 
-      <q-card-section class="q-pa-lg">
+    <!-- Botões de ação -->
+    <div class="row justify-between items-center q-mb-lg">
+      <div class="row q-gutter-sm">
+        <q-btn
+          label="Gerar Relatório"
+          icon="summarize"
+          color="primary"
+          unelevated
+          :loading="carregando"
+          @click="gerarRelatorio()"
+        />
+        <q-btn
+          label="Limpar"
+          icon="delete_sweep"
+          flat
+          class="text-grey-7"
+          @click="limparFiltros()"
+        />
+      </div>
+      <div v-if="gerado" class="row q-gutter-sm">
+        <q-btn label="Exportar PDF" icon="picture_as_pdf" color="negative" unelevated @click="exportarPDF()" />
+        <q-btn label="Exportar Excel" icon="table_view" color="positive" unelevated @click="exportarExcel()" />
+      </div>
+    </div>
 
-        <!-- Filtros -->
-        <div class="row q-col-gutter-md q-mb-md">
-          <div class="col-12 col-sm-4">
-            <q-input v-model="filtro.codigo" label="Código do Produto" outlined dense>
-            </q-input>
-          </div>
-          <div class="col-12 col-sm-4">
-            <q-input v-model="filtro.nomeProduto" label="Nome do Produto" outlined dense>
-            </q-input>
-          </div>
-          <div class="col-12 col-sm-4">
-            <q-select
-              v-model="filtro.grupo"
-              :options="grupos"
-              option-label="nome"
-              option-value="id"
-              emit-value
-              map-options
-              label="Grupo"
-              outlined
-              dense
-              clearable
-            />
-          </div>
-          <div class="col-12 col-sm-4">
-            <q-select
-              v-model="filtro.status"
-              :options="opcoesStatus"
-              option-label="label"
-              option-value="value"
-              emit-value
-              map-options
-              label="Status"
-              outlined
-              dense
-              clearable
-            />
-          </div>
-          <div class="col-12 col-sm-4">
-            <q-select
-              v-model="filtro.situacaoEstoque"
-              :options="opcoesSituacaoEstoque"
-              option-label="label"
-              option-value="value"
-              emit-value
-              map-options
-              label="Situação do Estoque"
-              outlined
-              dense
-              clearable
-            />
-          </div>
-          <div class="col-12 col-sm-4">
-            <q-input v-model="filtro.fornecedor" label="Fornecedor" outlined dense>
-            </q-input>
-          </div>
-        </div>
+    <!-- Cards de Resumo -->
+    <div v-if="gerado" class="row q-col-gutter-md q-mb-lg q-mt-md">
+      <div class="col-6 col-sm-3">
+        <q-card flat bordered class="b-r-10 q-pa-md">
+          <div class="text-caption text-grey-6">Total de Produtos</div>
+          <div class="text-h5 text-bold text-black q-mt-xs">{{ rowsFiltradas.length }}</div>
+        </q-card>
+      </div>
+      <div class="col-6 col-sm-3">
+        <q-card flat bordered class="b-r-10 q-pa-md">
+          <div class="text-caption text-grey-6">Produtos Ativos</div>
+          <div class="text-h5 text-bold text-black q-mt-xs">{{ totalAtivos }}</div>
+        </q-card>
+      </div>
+      <div class="col-6 col-sm-3">
+        <q-card flat bordered class="b-r-10 q-pa-md">
+          <div class="text-caption text-grey-6">Estoque Baixo</div>
+          <div class="text-h5 text-bold text-black q-mt-xs">{{ totalEstoqueBaixo }}</div>
+        </q-card>
+      </div>
+      <div class="col-6 col-sm-3">
+        <q-card flat bordered class="b-r-10 q-pa-md">
+          <div class="text-caption text-grey-6">Valor Total em Estoque</div>
+          <div class="text-h6 text-bold text-black q-mt-xs">{{ valorTotalEstoque }}</div>
+        </q-card>
+      </div>
+    </div>
 
-        <!-- Botões de ação -->
-        <div class="row justify-between items-center q-mb-lg">
-          <div class="row q-gutter-sm">
-<q-btn
-  data-gerar-estoque
-  label="Gerar Relatório"
-  icon="summarize"
-  color="primary"
-  unelevated
-  :loading="carregando"
-  @click="gerarRelatorio()"
-/>
-            <q-btn
-              label="Limpar"
-              icon="delete_sweep"
-              flat
-              class="text-grey-7"
-              @click="limparFiltros()"
-            />
-          </div>
+    <!-- Tabela -->
+    <div v-if="gerado">
+      <q-table
+        :data="rowsFiltradas"
+        :columns="colunasRelatorioEstoque"
+        row-key="id"
+        flat bordered
+        no-data-label="Nenhum produto encontrado com os filtros selecionados"
+        class="text-weight-medium"
+        :rows-per-page-options="[10, 20, 50]"
+      >
+        <template v-slot:body-cell-status="props">
+          <q-td align="center">
+            <q-badge :color="props.row.status === 'Ativo' ? 'positive' : 'negative'">
+              {{ props.row.status }}
+            </q-badge>
+          </q-td>
+        </template>
+        <template v-slot:body-cell-situacao_estoque="props">
+          <q-td align="center">
+            <q-badge :color="corSituacaoEstoque(props.row)">
+              {{ situacaoEstoque(props.row) }}
+            </q-badge>
+          </q-td>
+        </template>
+        <template v-slot:body-cell-preco_custo="props">
+          <q-td align="center">{{ formatarReais(props.row.preco_custo) }}</q-td>
+        </template>
+        <template v-slot:body-cell-preco="props">
+          <q-td align="center">{{ formatarReais(props.row.preco) }}</q-td>
+        </template>
+      </q-table>
+    </div>
 
-          <!-- Botões de exportação (só aparecem após gerar) -->
-          <div v-if="gerado" class="row q-gutter-sm">
-            <q-btn
-              label="Exportar PDF"
-              icon="picture_as_pdf"
-              color="negative"
-              unelevated
-              class="b-r-8"
-              @click="exportarPDF()"
-            />
-            <q-btn
-              label="Exportar Excel"
-              icon="table_view"
-              color="positive"
-              unelevated
-              class="b-r-8"
-              @click="exportarExcel()"
-            />
-          </div>
-        </div>
+    <!-- Empty state -->
+    <div v-if="!gerado" class="column items-center q-py-xl text-grey-5">
+      <q-icon name="summarize" size="48px" />
+      <div class="q-mt-sm">Selecione os filtros e clique em Gerar Relatório</div>
+    </div>
 
-        <!-- Cards de Resumo (só aparecem após gerar) -->
-        <div v-if="gerado" class="row q-col-gutter-md q-mb-lg q-mt-md">
-          <div class="col-6 col-sm-3">
-            <q-card flat bordered class="b-r-8 q-pa-md">
-              <div class="text-caption text-grey-6">Total de Produtos</div>
-              <div class="text-h5 text-bold text-black q-mt-xs">{{ rowsFiltradas.length }}</div>
-            </q-card>
-          </div>
-          <div class="col-6 col-sm-3">
-            <q-card flat bordered class="b-r-8 q-pa-md">
-              <div class="text-caption text-grey-6">Produtos Ativos</div>
-              <div class="text-h5 text-bold text-black q-mt-xs">{{ totalAtivos }}</div>
-            </q-card>
-          </div>
-          <div class="col-6 col-sm-3">
-            <q-card flat bordered class="b-r-8 q-pa-md">
-              <div class="text-caption text-grey-6">Estoque Baixo</div>
-              <div class="text-h5 text-bold text-black q-mt-xs">{{ totalEstoqueBaixo }}</div>
-            </q-card>
-          </div>
-          <div class="col-6 col-sm-3">
-            <q-card flat bordered class="b-r-8 q-pa-md">
-              <div class="text-caption text-grey-6">Valor Total em Estoque</div>
-              <div class="text-h6 text-bold text-black q-mt-xs">{{ valorTotalEstoque }}</div>
-            </q-card>
-          </div>
-        </div>
-
-        <!-- Tabela (só aparece após gerar) -->
-        <div v-if="gerado">
-          <q-table
-            :data="rowsFiltradas"
-            :columns="colunasRelatorioEstoque"
-            row-key="id"
-            flat
-            bordered
-            no-data-label="Nenhum produto encontrado com os filtros selecionados"
-            class="text-weight-medium"
-            :rows-per-page-options="[10, 20, 50]"
-          >
-            <template v-slot:body-cell-status="props">
-              <q-td align="center">
-                <q-badge :color="props.row.status === 'Ativo' ? 'positive' : 'negative'">
-                  {{ props.row.status }}
-                </q-badge>
-              </q-td>
-            </template>
-
-            <template v-slot:body-cell-situacao_estoque="props">
-              <q-td align="center">
-                <q-badge :color="corSituacaoEstoque(props.row)">
-                  {{ situacaoEstoque(props.row) }}
-                </q-badge>
-              </q-td>
-            </template>
-
-            <template v-slot:body-cell-preco_custo="props">
-              <q-td align="center">{{ formatarReais(props.row.preco_custo) }}</q-td>
-            </template>
-
-            <template v-slot:body-cell-preco="props">
-              <q-td align="center">{{ formatarReais(props.row.preco) }}</q-td>
-            </template>
-          </q-table>
-        </div>
-
-        <!-- Empty state antes de gerar -->
-        <div v-if="!gerado" class="column items-center q-py-xl text-grey-5">
-          <div>Selecione os filtros e clique em Gerar Relatório</div>
-        </div>
-
-      </q-card-section>
-    </q-card>
   </div>
 </template>
 

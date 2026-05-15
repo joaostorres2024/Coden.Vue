@@ -1,272 +1,200 @@
 <template>
-  <div class="row justify-center items-center">
-    <q-card
-      class="col-11 col-md-10 col-lg-9 no-shadow border b-r-10"
-      style="width: 1500px"
-    >
-      <q-card-section class="bg-white text-black q-pb-none">
-        <div class="text-h5 text-bold">Cadastro de Produtos</div>
-        <q-toolbar class="q-pa-none">
-          <q-breadcrumbs active-color="black" style="font-size: 14px" class="q-mb-md">
-            <template v-slot:separator>
-              <q-icon size="1.5em" name="chevron_right" color="black" />
-            </template>
-            <q-breadcrumbs-el label="Home" icon="home" to="/" />
-            <q-breadcrumbs-el label="Cadastro" icon="group" />
-            <q-breadcrumbs-el label="Cadastro Produtos" icon="shelves" />
-          </q-breadcrumbs>
-        </q-toolbar>
-      </q-card-section>
+  <div class="q-pa-md">
 
-      <q-separator />
+    <!-- Cabeçalho -->
+    <div class="text-bold text-black row items-center" style="font-size: 32px">
+      <q-icon name="shelves" class="q-mr-md" size="32px" />Cadastro de Produtos
+    </div>
+    <p class="text-grey-7 text-body2 q-mb-md">
+      Gerencie o catálogo de produtos do sistema. Aqui você pode adicionar, editar, inativar e excluir produtos, além de organizar por grupos.
+    </p>
+    <q-separator class="q-mb-lg" />
 
-      <q-card-section class="q-pa-lg">
+    <!-- Filtros -->
+    <div class="row q-col-gutter-md q-mb-md">
+      <div class="col-12 col-md-4">
+        <q-input v-model="nome_produto" label="Nome do Produto" outlined dense />
+      </div>
+      <div class="col-12 col-md-4">
+        <q-input v-model="codigo_produto" label="Código do Produto" outlined dense />
+      </div>
+    </div>
 
-        <!-- Filtros -->
-        <div class="row q-col-gutter-md q-mb-md">
-          <div class="col-12 col-md-4">
-            <q-input v-model="nome_produto" label="Nome do Produto" outlined dense />
+    <!-- Botões -->
+    <div v-if="!cadastroProdutoForm" class="row justify-start q-gutter-sm q-mb-lg">
+      <q-btn label="Adicionar" icon="add" color="positive" unelevated @click="mostrarFormulario()" />
+      <q-btn label="Limpar" icon="delete_sweep" flat class="text-grey-7" @click="refreshTable()" />
+    </div>
+
+    <!-- Formulário -->
+    <div v-if="cadastroProdutoForm" class="q-mt-md">
+      <q-form ref="formProduto" @submit.prevent="salvar()" greedy>
+
+        <!-- Dados Gerais -->
+        <div class="text-h6 q-mb-sm">Dados Gerais</div>
+        <div class="row q-col-gutter-md q-mb-md items-center">
+          <div class="col-12 col-sm-4">
+            <q-select
+              v-model="grupo"
+              :options="grupos"
+              option-label="nome"
+              option-value="id"
+              emit-value
+              map-options
+              label="Grupo"
+              outlined
+              dense
+            />
           </div>
-          <div class="col-12 col-md-4">
-            <q-input v-model="codigo_produto" label="Código do Produto" outlined dense />
+          <div class="col-12 col-sm-2">
+            <q-btn label="Criar Grupo" color="primary" unelevated class="full-width" @click="dialogCriarGrupo = true" />
+          </div>
+          <div class="col-12 col-sm-4">
+            <q-input v-model="codigo_barras" label="Código de Barras" outlined dense />
+          </div>
+          <div class="col-12 col-sm-2">
+            <q-btn label="Gerar" color="primary" unelevated class="full-width" />
+          </div>
+        </div>
+
+        <!-- Preço -->
+        <div class="text-h6 q-mb-sm">Preço</div>
+        <div class="row q-col-gutter-md q-mb-md">
+          <div class="col-12 col-sm-4">
+            <q-input
+              v-model="preco_custo"
+              label="Preço de Custo *"
+              outlined dense type="number"
+              :rules="[val => !!val || 'Preço de custo obrigatório']"
+              hide-bottom-space lazy-rules
+            />
+          </div>
+          <div class="col-12 col-sm-4">
+            <q-input
+              v-model="preco_venda"
+              label="Preço de Venda *"
+              outlined dense type="number"
+              :rules="[val => !!val || 'Preço de venda obrigatório']"
+              hide-bottom-space lazy-rules
+            />
+          </div>
+          <div class="col-12 col-sm-4">
+            <q-input :value="margem_calculada" label="Margem (%)" outlined dense readonly />
+          </div>
+        </div>
+
+        <!-- Estoque e Fornecedor -->
+        <div class="text-h6 q-mb-sm">Estoque e Fornecedor</div>
+        <div class="row q-col-gutter-md q-mb-md">
+          <div class="col-12 col-sm-4">
+            <q-input
+              v-model="estoque_atual"
+              label="Estoque Atual *"
+              outlined dense
+              :rules="[val => !!val || 'Estoque atual obrigatório']"
+              hide-bottom-space lazy-rules
+            />
+          </div>
+          <div class="col-12 col-sm-4">
+            <q-input
+              v-model="estoque_minimo"
+              label="Estoque Mínimo *"
+              outlined dense
+              :rules="[val => !!val || 'Estoque mínimo obrigatório']"
+              hide-bottom-space lazy-rules
+            />
+          </div>
+          <div class="col-12 col-sm-4">
+            <q-input
+              v-model="estoque_maximo"
+              label="Estoque Máximo *"
+              outlined dense
+              :rules="[val => !!val || 'Estoque máximo obrigatório']"
+              hide-bottom-space lazy-rules
+            />
+          </div>
+          <div class="col-12 col-sm-4">
+            <q-input
+              v-model="fornecedor"
+              label="Fornecedor *"
+              outlined dense
+              :rules="[val => !!val || 'Fornecedor obrigatório']"
+              hide-bottom-space lazy-rules
+            />
+          </div>
+          <div class="col-12 col-sm-4">
+            <q-select
+              v-model="ativoInativo"
+              :options="ativoInativoOpcoes"
+              label="Status"
+              outlined dense emit-value map-options
+            />
+          </div>
+        </div>
+
+        <!-- Observações -->
+        <div class="text-h6 q-mb-sm">Observações</div>
+        <div class="row q-mb-md">
+          <div class="col-12">
+            <q-input v-model="observacoes" type="textarea" outlined dense input-style="resize: none;" rows="5" />
           </div>
         </div>
 
         <!-- Botões -->
-        <div v-if="!cadastroProdutoForm" class="row justify-start q-gutter-sm q-mb-lg">
-          <q-btn
-            label="Adicionar"
-            icon="add"
-            color="positive"
-            unelevated
-            @click="mostrarFormulario()"
-          />
-          <q-btn
-            label="Limpar"
-            icon="delete_sweep"
-            flat
-            class="text-grey-7"
-            @click="refreshTable()"
-          />
+        <div class="row q-mt-xl q-gutter-md justify-end">
+          <q-btn label="Salvar Produto" color="positive" unelevated type="submit" />
+          <q-btn label="Cancelar" color="negative" flat @click="abrirDialogCancelar()" />
         </div>
+      </q-form>
+    </div>
 
-        <!-- Formulário -->
-        <div v-if="cadastroProdutoForm" class="q-mt-md">
-          <q-form ref="formProduto" @submit.prevent="salvar()" greedy>
-
-            <!-- Dados Gerais -->
-            <div class="text-h6 q-mb-sm">Dados Gerais</div>
-            <div class="row q-col-gutter-md q-mb-md items-center">
-              <div class="col-12 col-sm-4">
-                <q-select
-                  v-model="grupo"
-                  :options="grupos"
-                  option-label="nome"
-                  option-value="id"
-                  emit-value
-                  map-options
-                  label="Grupo"
-                  outlined
-                  dense
-                />
-              </div>
-              <div class="col-12 col-sm-2">
-                <q-btn
-                  label="Criar Grupo"
-                  color="primary"
-                  unelevated
-                  class="full-width"
-                  @click="dialogCriarGrupo = true"
-                />
-              </div>
-              <div class="col-12 col-sm-4">
-                <q-input v-model="codigo_barras" label="Código de Barras" outlined dense />
-              </div>
-              <div class="col-12 col-sm-2">
-                <q-btn label="Gerar" color="primary" unelevated class="full-width" />
-              </div>
-            </div>
-
-            <!-- Preço -->
-            <div class="text-h6 q-mb-sm">Preço</div>
-            <div class="row q-col-gutter-md q-mb-md">
-              <div class="col-12 col-sm-4">
-                <q-input
-                  v-model="preco_custo"
-                  label="Preço de Custo *"
-                  outlined
-                  dense
-                  type="number"
-                  :rules="[val => !!val || 'Preço de custo obrigatório']"
-                  hide-bottom-space
-                  lazy-rules
-                />
-              </div>
-              <div class="col-12 col-sm-4">
-                <q-input
-                  v-model="preco_venda"
-                  label="Preço de Venda *"
-                  outlined
-                  dense
-                  type="number"
-                  :rules="[val => !!val || 'Preço de venda obrigatório']"
-                  hide-bottom-space
-                  lazy-rules
-                />
-              </div>
-              <div class="col-12 col-sm-4">
-                <q-input :value="margem_calculada" label="Margem (%)" outlined dense readonly />
-              </div>
-            </div>
-
-            <!-- Estoque e Fornecedor -->
-            <div class="text-h6 q-mb-sm">Estoque e Fornecedor</div>
-            <div class="row q-col-gutter-md q-mb-md">
-              <div class="col-12 col-sm-4">
-                <q-input
-                  v-model="estoque_atual"
-                  label="Estoque Atual *"
-                  outlined
-                  dense
-                  :rules="[val => !!val || 'Estoque atual obrigatório']"
-                  hide-bottom-space
-                  lazy-rules
-                />
-              </div>
-              <div class="col-12 col-sm-4">
-                <q-input
-                  v-model="estoque_minimo"
-                  label="Estoque Mínimo *"
-                  outlined
-                  dense
-                  :rules="[val => !!val || 'Estoque mínimo obrigatório']"
-                  hide-bottom-space
-                  lazy-rules
-                />
-              </div>
-              <div class="col-12 col-sm-4">
-                <q-input
-                  v-model="estoque_maximo"
-                  label="Estoque Máximo *"
-                  outlined
-                  dense
-                  :rules="[val => !!val || 'Estoque máximo obrigatório']"
-                  hide-bottom-space
-                  lazy-rules
-                />
-              </div>
-              <div class="col-12 col-sm-4">
-                <q-input
-                  v-model="fornecedor"
-                  label="Fornecedor *"
-                  outlined
-                  dense
-                  :rules="[val => !!val || 'Fornecedor obrigatório']"
-                  hide-bottom-space
-                  lazy-rules
-                />
-              </div>
-              <div class="col-12 col-sm-4">
-                <q-select
-                  v-model="ativoInativo"
-                  :options="ativoInativoOpcoes"
-                  label="Status"
-                  outlined
-                  dense
-                  emit-value
-                  map-options
-                />
-              </div>
-            </div>
-
-            <!-- Observações -->
-            <div class="text-h6 q-mb-sm">Observações</div>
-            <div class="row q-mb-md">
-              <div class="col-12">
-                <q-input
-                  v-model="observacoes"
-                  type="textarea"
-                  outlined
-                  dense
-                  input-style="resize: none;"
-                  rows="5"
-                />
-              </div>
-            </div>
-
-            <!-- Botões -->
-            <div class="row q-mt-xl q-gutter-md justify-end">
-              <q-btn label="Salvar Produto" color="positive" unelevated type="submit"/>
-              <q-btn label="Cancelar" color="negative" flat @click="abrirDialogCancelar()" />
-            </div>
-          </q-form>
-        </div>
-
-        <!-- Tabela -->
-        <div v-if="!cadastroProdutoForm" class="q-mt-xl">
-          <q-table
-            :data="rowsFiltradas"
-            :columns="colunasCadastroProdutos"
-            row-key="codigo"
-            :rows-per-page-options="[10, 20, 50]"
-            flat
-            bordered
-            no-data-label="Nenhum registro encontrado"
-            class="text-weight-medium"
-          >
-            <template v-slot:body-cell-acoes="props">
-              <q-td align="center">
-                <q-btn icon="edit" size="sm" color="black" flat round @click="editar(props.row)">
-                  <q-tooltip>Editar</q-tooltip>
-                </q-btn>
-                <q-btn
-                  v-if="props.row.status === 'Ativo'"
-                  icon="inventory_2"
-                  size="sm"
-                  color="negative"
-                  flat
-                  round
-                  @click="confirmarExcluir(props.row)"
-                >
-                  <q-tooltip>Inativar</q-tooltip>
-                </q-btn>
-                <q-btn
-                  v-if="props.row.status === 'Inativo'"
-                  icon="inventory"
-                  size="sm"
-                  color="positive"
-                  flat
-                  round
-                  @click="reativarProduto(props.row)"
-                >
-                  <q-tooltip>Reativar</q-tooltip>
-                </q-btn>
-                <q-btn
-  icon="delete_forever"
-  size="sm"
-  color="negative"
-  flat
-  round
-  @click="confirmarDeletar(props.row)"
->
-  <q-tooltip>Excluir definitivamente</q-tooltip>
-</q-btn>
-              </q-td>
-            </template>
-            <template v-slot:body-cell-preco="props">
-              <q-td :props="props" align="center">{{ formatarReais(props.row.preco) }}</q-td>
-            </template>
-            <template v-slot:body-cell-status="props">
-              <q-td align="center">
-                <q-badge :color="props.row.status === 'Ativo' ? 'positive' : 'negative'">
-                  {{ props.row.status }}
-                </q-badge>
-              </q-td>
-            </template>
-          </q-table>
-        </div>
-      </q-card-section>
-    </q-card>
+    <!-- Tabela -->
+    <div v-if="!cadastroProdutoForm" class="q-mt-xl">
+      <q-table
+        :data="rowsFiltradas"
+        :columns="colunasCadastroProdutos"
+        row-key="codigo"
+        :rows-per-page-options="[10, 20, 50]"
+        flat bordered
+        no-data-label="Nenhum registro encontrado"
+        class="text-weight-medium"
+      >
+        <template v-slot:body-cell-acoes="props">
+          <q-td align="center">
+            <q-btn icon="edit" size="sm" color="black" flat round @click="editar(props.row)">
+              <q-tooltip>Editar</q-tooltip>
+            </q-btn>
+            <q-btn
+              v-if="props.row.status === 'Ativo'"
+              icon="inventory_2" size="sm" color="negative" flat round
+              @click="confirmarExcluir(props.row)"
+            >
+              <q-tooltip>Inativar</q-tooltip>
+            </q-btn>
+            <q-btn
+              v-if="props.row.status === 'Inativo'"
+              icon="inventory" size="sm" color="positive" flat round
+              @click="reativarProduto(props.row)"
+            >
+              <q-tooltip>Reativar</q-tooltip>
+            </q-btn>
+            <q-btn icon="delete_forever" size="sm" color="negative" flat round @click="confirmarDeletar(props.row)">
+              <q-tooltip>Excluir definitivamente</q-tooltip>
+            </q-btn>
+          </q-td>
+        </template>
+        <template v-slot:body-cell-preco="props">
+          <q-td :props="props" align="center">{{ formatarReais(props.row.preco) }}</q-td>
+        </template>
+        <template v-slot:body-cell-status="props">
+          <q-td align="center">
+            <q-badge :color="props.row.status === 'Ativo' ? 'positive' : 'negative'">
+              {{ props.row.status }}
+            </q-badge>
+          </q-td>
+        </template>
+      </q-table>
+    </div>
 
     <!-- Dialog Cancelar -->
     <q-dialog v-model="dialogCancelar" persistent>
@@ -278,41 +206,28 @@
           Deseja realmente cancelar? As alterações não salvas serão perdidas.
         </q-card-section>
         <q-card-actions align="right" class="q-pa-md q-gutter-sm">
-          <q-btn
-            label="Voltar"
-            unelevated
-            style="border: 1px solid #ccc; border-radius: 8px; min-width: 100px"
-            color="white"
-            text-color="dark"
-            v-close-popup
-          />
-          <q-btn
-            label="Sim, Cancelar"
-            unelevated
-            color="negative"
-            style="border-radius: 8px; min-width: 130px"
-            @click="confirmarCancelamento()"
-          />
+          <q-btn label="Voltar" unelevated style="border: 1px solid #ccc; border-radius: 8px; min-width: 100px" color="white" text-color="dark" v-close-popup />
+          <q-btn label="Sim, Cancelar" unelevated color="negative" style="border-radius: 8px; min-width: 130px" @click="confirmarCancelamento()" />
         </q-card-actions>
       </q-card>
     </q-dialog>
 
+    <!-- Dialog Deletar -->
     <q-dialog v-model="dialogDeletar" persistent>
-  <q-card style="min-width: 380px; border-radius: 12px" class="q-pa-sm">
-    <q-card-section class="q-pb-none">
-      <div class="text-h6 text-bold">Excluir Produto</div>
-    </q-card-section>
-    <q-card-section class="text-grey-7" style="font-size: 14px">
-      Tem certeza que deseja <strong>excluir definitivamente</strong> o produto
-      <strong>{{ produtoParaDeletar?.nome_produto }}</strong>?
-      Essa ação não pode ser desfeita.
-    </q-card-section>
-    <q-card-actions align="right" class="q-pa-md q-gutter-sm">
-      <q-btn label="Voltar" unelevated style="border: 1px solid #ccc; border-radius: 8px; min-width: 100px" color="white" text-color="dark" v-close-popup />
-      <q-btn label="Sim, Excluir" unelevated color="negative" class="b-r-8" style="min-width: 130px" @click="executarDeletar()" />
-    </q-card-actions>
-  </q-card>
-</q-dialog>
+      <q-card style="min-width: 380px; border-radius: 12px" class="q-pa-sm">
+        <q-card-section class="q-pb-none">
+          <div class="text-h6 text-bold">Excluir Produto</div>
+        </q-card-section>
+        <q-card-section class="text-grey-7" style="font-size: 14px">
+          Tem certeza que deseja <strong>excluir definitivamente</strong> o produto
+          <strong>{{ produtoParaDeletar?.nome_produto }}</strong>? Essa ação não pode ser desfeita.
+        </q-card-section>
+        <q-card-actions align="right" class="q-pa-md q-gutter-sm">
+          <q-btn label="Voltar" unelevated style="border: 1px solid #ccc; border-radius: 8px; min-width: 100px" color="white" text-color="dark" v-close-popup />
+          <q-btn label="Sim, Excluir" unelevated color="negative" style="border-radius: 8px; min-width: 130px" @click="executarDeletar()" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
 
     <!-- Dialog Inativar -->
     <q-dialog v-model="dialogExcluir" persistent>
@@ -326,21 +241,8 @@
           O produto não será excluído, mas ficará inativo no sistema.
         </q-card-section>
         <q-card-actions align="right" class="q-pa-md q-gutter-sm">
-          <q-btn
-            label="Voltar"
-            unelevated
-            style="border: 1px solid #ccc; border-radius: 8px; min-width: 100px"
-            color="white"
-            text-color="dark"
-            v-close-popup
-          />
-          <q-btn
-            label="Sim, Inativar"
-            unelevated
-            color="negative"
-            style="border-radius: 8px; min-width: 130px"
-            @click="executarExclusao()"
-          />
+          <q-btn label="Voltar" unelevated style="border: 1px solid #ccc; border-radius: 8px; min-width: 100px" color="white" text-color="dark" v-close-popup />
+          <q-btn label="Sim, Inativar" unelevated color="negative" style="border-radius: 8px; min-width: 130px" @click="executarExclusao()" />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -356,10 +258,11 @@
         </q-card-section>
         <q-card-actions align="right" class="q-pa-md q-gutter-sm">
           <q-btn label="Cancelar" flat v-close-popup />
-          <q-btn label="Criar" unelevated color="primary" class="b-r-8" @click="salvarGrupo()" />
+          <q-btn label="Criar" unelevated color="primary" style="border-radius: 8px" @click="salvarGrupo()" />
         </q-card-actions>
       </q-card>
     </q-dialog>
+
   </div>
 </template>
 

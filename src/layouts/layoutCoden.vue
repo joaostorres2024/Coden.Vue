@@ -27,67 +27,166 @@
       </q-toolbar>
     </q-header>
 
-    <!-- DRAWER ESQUERDO -->
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered :width="260" :content-class="$q.dark.isActive ? 'bg-dark' : 'bg-primary'">
-      <div class="col-12 column no-wrap full-height">
-        <q-list>
-          <q-item class="menu-header text-white" clickable v-ripple @click="$router.push('/')">
-            <q-item-section avatar><q-icon name="o_dashboard" /></q-item-section>
-            <q-item-section>Dashboard</q-item-section>
-          </q-item>
+<!-- DRAWER ESQUERDO -->
+<q-drawer v-model="leftDrawerOpen" show-if-above bordered :width="260" content-class="bg-primary">
+  <div class="column no-wrap full-height">
 
-          <q-expansion-item icon="o_group" label="Cadastro" header-class="menu-header text-white" expand-separator>
-            <q-item class="q-my-xs q-pl-lg text-white" clickable v-ripple @click="$router.push('/CadastroPessoas')">
-              <q-item-section avatar><q-icon name="o_groups" /></q-item-section>
-              <q-item-section>Cadastro Pessoas</q-item-section>
-            </q-item>
-            <q-item class="q-my-xs q-pl-lg text-white" clickable v-ripple @click="$router.push('/CadastroProdutos')">
-              <q-item-section avatar><q-icon name="shelves" /></q-item-section>
-              <q-item-section>Cadastro Produtos</q-item-section>
-            </q-item>
-          </q-expansion-item>
+    <q-separator class="q-mb-sm bg-primary" />
 
-          <q-expansion-item icon="o_paid" label="Financeiro" header-class="menu-header text-white" expand-separator>
-            <q-item class="q-my-xs q-pl-lg text-white" clickable v-ripple @click="$router.push('/NotaFiscalEntrada')">
-              <q-item-section avatar><q-icon name="trending_up" /></q-item-section>
-              <q-item-section>NF Entrada</q-item-section>
-            </q-item>
-            <q-item class="q-my-xs q-pl-lg text-white" clickable v-ripple @click="$router.push('/NotaFiscalSaida')">
-              <q-item-section avatar><q-icon name="trending_down" /></q-item-section>
-              <q-item-section>NF Saída</q-item-section>
-            </q-item>
-          </q-expansion-item>
+    <!-- Menu -->
+    <q-scroll-area style="flex: 1">
+      <q-list class="q-px-sm q-py-xs">
 
-          <q-expansion-item label="Relatórios" icon="o_article" header-class="menu-header text-white" expand-separator>
-            <q-item class="q-my-xs q-pl-lg text-white" clickable v-ripple @click="$router.push('/RelatorioEstoque')">
-              <q-item-section avatar><q-icon name="o_inventory" /></q-item-section>
-              <q-item-section>Relatório Estoque</q-item-section>
-            </q-item>
-            <q-item class="q-my-xs q-pl-lg text-white" clickable v-ripple @click="$router.push('/RelatorioVendas')">
-              <q-item-section avatar><q-icon name="o_sell" /></q-item-section>
-              <q-item-section>Relatório Vendas</q-item-section>
-            </q-item>
-          </q-expansion-item>
+        <!-- Dashboard -->
+        <q-item
+          clickable v-ripple
+          class="menu-item b-r-10 q-mb-xs text-white"
+          :class="$route.path === '/' ? 'menu-item-active' : ''"
+          @click="$router.push('/')"
+        >
+          <q-item-section avatar>
+            <q-icon name="o_dashboard" size="20px" color="white" />
+          </q-item-section>
+          <q-item-section class="menu-label">Dashboard</q-item-section>
+        </q-item>
 
-          <q-item class="menu-header text-white" clickable v-ripple @click="$router.push('/Integracoes')">
-            <q-item-section avatar><q-icon name="webhook" /></q-item-section>
-            <q-item-section>Integrações</q-item-section>
-          </q-item>
-          <q-item class="menu-header text-white" clickable v-ripple @click="$router.push('/Whatsapp')">
-            <q-item-section avatar><q-icon name="fab fa-whatsapp" /></q-item-section>
-            <q-item-section>Whatsapp</q-item-section>
-          </q-item>
-          <q-item class="menu-header text-white" clickable v-ripple @click="$router.push('/VendaBalcao')">
-            <q-item-section avatar><q-icon name="point_of_sale" /></q-item-section>
-            <q-item-section>Vendas Balcão</q-item-section>
-          </q-item>
-          <q-item class="menu-header text-white" clickable v-ripple @click="$router.push('/Ajuda')">
-            <q-item-section avatar><q-icon name="help" /></q-item-section>
-            <q-item-section>Ajuda</q-item-section>
-          </q-item>
-        </q-list>
-      </div>
-    </q-drawer>
+        <!-- Cadastro -->
+        <div class="menu-section-label q-px-sm q-mt-md q-mb-xs">CADASTRO</div>
+
+        <q-item
+          clickable v-ripple
+          class="menu-item b-r-10 q-mb-xs text-white"
+          :class="$route.path === '/CadastroPessoas' ? 'menu-item-active' : ''"
+          @click="$router.push('/CadastroPessoas')"
+        >
+          <q-item-section avatar>
+            <q-icon name="o_groups" size="20px" color="white" />
+          </q-item-section>
+          <q-item-section class="menu-label">Pessoas</q-item-section>
+        </q-item>
+
+        <q-item
+          clickable v-ripple
+          class="menu-item b-r-10 q-mb-xs text-white"
+          :class="$route.path === '/CadastroProdutos' ? 'menu-item-active' : ''"
+          @click="$router.push('/CadastroProdutos')"
+        >
+          <q-item-section avatar>
+            <q-icon name="shelves" size="20px" color="white" />
+          </q-item-section>
+          <q-item-section class="menu-label">Produtos</q-item-section>
+        </q-item>
+
+        <!-- Financeiro -->
+        <div class="menu-section-label q-px-sm q-mt-md q-mb-xs">FINANCEIRO</div>
+
+        <q-item
+          clickable v-ripple
+          class="menu-item b-r-10 q-mb-xs text-white"
+          :class="$route.path === '/NotaFiscalEntrada' ? 'menu-item-active' : ''"
+          @click="$router.push('/NotaFiscalEntrada')"
+        >
+          <q-item-section avatar>
+            <q-icon name="trending_up" size="20px" color="white" />
+          </q-item-section>
+          <q-item-section class="menu-label">NF Entrada</q-item-section>
+        </q-item>
+
+        <q-item
+          clickable v-ripple
+          class="menu-item b-r-10 q-mb-xs text-white"
+          :class="$route.path === '/NotaFiscalSaida' ? 'menu-item-active' : ''"
+          @click="$router.push('/NotaFiscalSaida')"
+        >
+          <q-item-section avatar>
+            <q-icon name="trending_down" size="20px" color="white" />
+          </q-item-section>
+          <q-item-section class="menu-label">NF Saída</q-item-section>
+        </q-item>
+
+        <!-- Relatórios -->
+        <div class="menu-section-label q-px-sm q-mt-md q-mb-xs">RELATÓRIOS</div>
+
+        <q-item
+          clickable v-ripple
+          class="menu-item b-r-10 q-mb-xs text-white"
+          :class="$route.path === '/RelatorioEstoque' ? 'menu-item-active' : ''"
+          @click="$router.push('/RelatorioEstoque')"
+        >
+          <q-item-section avatar>
+            <q-icon name="o_inventory" size="20px" color="white" />
+          </q-item-section>
+          <q-item-section class="menu-label">Estoque</q-item-section>
+        </q-item>
+
+        <q-item
+          clickable v-ripple
+          class="menu-item b-r-10 q-mb-xs text-white"
+          :class="$route.path === '/RelatorioVendas' ? 'menu-item-active' : ''"
+          @click="$router.push('/RelatorioVendas')"
+        >
+          <q-item-section avatar>
+            <q-icon name="o_sell" size="20px" color="white" />
+          </q-item-section>
+          <q-item-section class="menu-label">Vendas</q-item-section>
+        </q-item>
+
+        <!-- Outros -->
+        <div class="menu-section-label q-px-sm q-mt-md q-mb-xs">OUTROS</div>
+
+        <q-item
+          clickable v-ripple
+          class="menu-item b-r-10 q-mb-xs text-white"
+          :class="$route.path === '/VendaBalcao' ? 'menu-item-active' : ''"
+          @click="$router.push('/VendaBalcao')"
+        >
+          <q-item-section avatar>
+            <q-icon name="point_of_sale" size="20px" color="white" />
+          </q-item-section>
+          <q-item-section class="menu-label">Vendas Balcão</q-item-section>
+        </q-item>
+
+        <q-item
+          clickable v-ripple
+          class="menu-item b-r-10 q-mb-xs text-white"
+          :class="$route.path === '/Integracoes' ? 'menu-item-active' : ''"
+          @click="$router.push('/Integracoes')"
+        >
+          <q-item-section avatar>
+            <q-icon name="webhook" size="20px" color="white" />
+          </q-item-section>
+          <q-item-section class="menu-label">Integrações</q-item-section>
+        </q-item>
+
+        <q-item
+          clickable v-ripple
+          class="menu-item b-r-10 q-mb-xs text-white"
+          :class="$route.path === '/Whatsapp' ? 'menu-item-active' : ''"
+          @click="$router.push('/Whatsapp')"
+        >
+          <q-item-section avatar>
+            <q-icon name="fab fa-whatsapp" size="20px" color="white" />
+          </q-item-section>
+          <q-item-section class="menu-label">WhatsApp</q-item-section>
+        </q-item>
+
+        <q-item
+          clickable v-ripple
+          class="menu-item b-r-10 q-mb-xs text-white"
+          :class="$route.path === '/Ajuda' ? 'menu-item-active' : ''"
+          @click="$router.push('/Ajuda')"
+        >
+          <q-item-section avatar>
+            <q-icon name="help_outline" size="20px" color="white" />
+          </q-item-section>
+          <q-item-section class="menu-label">Ajuda</q-item-section>
+        </q-item>
+
+      </q-list>
+    </q-scroll-area>
+
+  </div>
+</q-drawer>
 
     <!-- OVERLAY PERFIL -->
     <template v-if="drawerPerfil">
@@ -138,12 +237,13 @@
     </q-drawer>
 
     <!-- CONTEÚDO -->
-    <q-page-container>
-      <q-page class="bg-accent" padding>
-        <router-view />
-      </q-page>
-    </q-page-container>
-
+<q-page-container>
+  <q-page class="bg-accent" padding>
+    <transition name="page" mode="out-in">
+      <router-view />
+    </transition>
+  </q-page>
+</q-page-container>
     <!-- FOOTER -->
     <q-footer bordered>
       <div class="row justify-center bg-grey-8">
@@ -471,5 +571,71 @@ REGRAS:
 .fade-up-leave-to {
   opacity: 0;
   transform: translateY(80px);
+}
+.page-enter-active {
+  animation: pageIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.page-leave-active {
+  animation: pageOut 0.25s cubic-bezier(0.55, 0, 1, 0.45) forwards;
+}
+
+@keyframes pageIn {
+  0% {
+    opacity: 0;
+    transform: translateY(12px) scale(0.99);
+    filter: blur(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes pageOut {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.99);
+    filter: blur(4px);
+  }
+}
+.menu-item {
+  color: white;
+  min-height: 40px;
+  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.18s ease;
+  will-change: transform;
+}
+.menu-item:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+.menu-item:active {
+  transform: translateY(1px);
+}
+.menu-item-active {
+  background: rgba(255, 255, 255, 0.22);
+  font-weight: 600;
+  transform: translateY(0) !important;
+}
+.menu-footer {
+  transition: background 0.18s ease;
+}
+.menu-footer:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+.menu-label {
+  font-size: 13px;
+}
+.menu-section-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.45);
 }
 </style>

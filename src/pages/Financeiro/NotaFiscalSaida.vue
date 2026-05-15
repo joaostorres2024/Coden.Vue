@@ -1,210 +1,177 @@
 <template>
-  <div class="row justify-center items-center">
-    <q-card class="col-11 col-md-10 col-lg-9 no-shadow border b-r-10" style="width: 1500px">
-
-      <q-card-section class="bg-white text-black q-pb-none">
-        <div class="text-h5 text-bold">NF Saída</div>
-        <q-toolbar class="q-pa-none">
-          <q-breadcrumbs active-color="black" style="font-size: 14px" class="q-mb-md">
-            <template v-slot:separator>
-              <q-icon size="1.5em" name="chevron_right" color="black" />
-            </template>
-            <q-breadcrumbs-el label="Home" icon="home" to="/" />
-            <q-breadcrumbs-el label="Financeiro" icon="paid" />
-            <q-breadcrumbs-el label="NF Saída" icon="trending_down" />
-          </q-breadcrumbs>
-        </q-toolbar>
-      </q-card-section>
-
-      <q-separator />
-
-      <q-card-section class="q-pa-lg">
-
-       <!-- Filtros -->
-<div class="row q-col-gutter-md q-mb-md">
-  <div class="col-12 col-sm-3">
-    <q-input v-model="filtro.numeroNF" label="Número NF" outlined dense />
-  </div>
-  <div class="col-12 col-sm-3">
-    <q-input v-model="filtro.nomeCliente" label="Nome do Cliente" outlined dense />
-  </div>
-  <div class="col-12 col-sm-2">
-    <q-input v-model="filtro.de" label="De" type="date" outlined dense />
-  </div>
-  <div class="col-12 col-sm-2">
-    <q-input v-model="filtro.ate" label="Até" type="date" outlined dense />
-  </div>
-</div>
-
-<!-- Botões -->
-<div class="row justify-start q-gutter-sm q-mb-md">
-  <q-btn
-    label="Limpar"
-    icon="delete_sweep"
-    flat
-    class="text-grey-7"
-    @click="limpar()"
-  />
-</div>
-
-        <!-- Tabela -->
-        <q-table
-          :data="rowsFiltradas"
-          :columns="colunasNotaFiscalSaida"
-          row-key="id"
-          flat
-          bordered
-          no-data-label="Nenhum registro encontrado"
-          class="text-weight-medium q-mt-xl"
-          :rows-per-page-options="[10, 20, 50]"
-          :loading="carregando"
-        >
-          <template v-slot:body-cell-total="props">
-            <q-td align="center">{{ formatarReais(props.row.total) }}</q-td>
-          </template>
-
-          <template v-slot:body-cell-data_emissao="props">
-            <q-td align="center">{{ formatarData(props.row.data_emissao) }}</q-td>
-          </template>
-
-          <template v-slot:body-cell-forma_pagamento="props">
-            <q-td align="center">
-              <q-badge :color="corFormaPagamento(props.row.forma_pagamento)">
-                {{ labelFormaPagamento(props.row.forma_pagamento) }}
-              </q-badge>
-            </q-td>
-          </template>
-
-          <template v-slot:body-cell-status="props">
-            <q-td align="center">
-              <q-badge :color="props.row.status === 'emitida' ? 'positive' : 'negative'">
-                {{ labelStatus(props.row.status) }}
-              </q-badge>
-            </q-td>
-          </template>
-
-          <template v-slot:body-cell-acoes="props">
-            <q-td align="center">
-              <q-btn icon="picture_as_pdf" size="sm" color="negative" flat round @click="gerarPDF(props.row)">
-                <q-tooltip>Exportar PDF</q-tooltip>
-              </q-btn>
-              <q-btn icon="topic" size="sm" color="blue" flat round @click="verDetalhes(props.row)">
-                <q-tooltip>Ver Detalhes</q-tooltip>
-              </q-btn>
-            </q-td>
-          </template>
-        </q-table>
-
-      </q-card-section>
-    </q-card>
-
-<!-- Dialog Detalhes -->
-<q-dialog v-model="dialogDetalhes" persistent>
-  <q-card style="min-width: 650px; max-width: 700px; border-radius: 12px">
+  <div class="q-pa-md">
 
     <!-- Cabeçalho -->
-    <div class="q-pa-lg row items-center justify-between" style="background: #f8f9fa">
-      <div>
-        <div class="text-h6 text-bold">{{ nfSelecionada?.numero_nf }}</div>
-        <div class="text-caption text-grey-6">Emitida em {{ formatarData(nfSelecionada?.data_emissao) }}</div>
-        <div class="row q-gutter-sm q-mt-xs">
-          <q-badge :color="corFormaPagamento(nfSelecionada?.forma_pagamento)" class="q-pa-xs">
-            {{ labelFormaPagamento(nfSelecionada?.forma_pagamento) }}
-          </q-badge>
-          <q-badge :color="nfSelecionada?.status === 'emitida' ? 'positive' : 'negative'" class="q-pa-xs">
-            {{ labelStatus(nfSelecionada?.status) }}
-          </q-badge>
-        </div>
+    <div class="text-bold text-black row items-center" style="font-size: 32px">
+      <q-icon name="trending_down" class="q-mr-md" size="32px" />NF Saída
+    </div>
+    <p class="text-grey-7 text-body2 q-mb-md">
+      Consulte e exporte as notas fiscais de saída vinculadas às vendas realizadas no sistema.
+    </p>
+    <q-separator class="q-mb-lg" />
+
+    <!-- Filtros -->
+    <div class="row q-col-gutter-md q-mb-md">
+      <div class="col-12 col-sm-3">
+        <q-input v-model="filtro.numeroNF" label="Número NF" outlined dense />
       </div>
-      <div class="text-right">
-        <div class="text-caption text-grey-6">Venda vinculada</div>
-        <div class="text-weight-bold text-primary">{{ nfSelecionada?.codigo_venda || '-' }}</div>
+      <div class="col-12 col-sm-3">
+        <q-input v-model="filtro.nomeCliente" label="Nome do Cliente" outlined dense />
+      </div>
+      <div class="col-12 col-sm-2">
+        <q-input v-model="filtro.de" label="De" type="date" outlined dense />
+      </div>
+      <div class="col-12 col-sm-2">
+        <q-input v-model="filtro.ate" label="Até" type="date" outlined dense />
       </div>
     </div>
 
-    <q-separator />
+    <!-- Botões -->
+    <div class="row justify-start q-gutter-sm q-mb-md">
+      <q-btn label="Limpar" icon="delete_sweep" flat class="text-grey-7" @click="limpar()" />
+    </div>
 
-    <q-card-section class="q-pa-lg">
+    <!-- Tabela -->
+    <q-table
+      :data="rowsFiltradas"
+      :columns="colunasNotaFiscalSaida"
+      row-key="id"
+      flat bordered
+      no-data-label="Nenhum registro encontrado"
+      class="text-weight-medium q-mt-xl"
+      :rows-per-page-options="[10, 20, 50]"
+      :loading="carregando"
+    >
+      <template v-slot:body-cell-total="props">
+        <q-td align="center">{{ formatarReais(props.row.total) }}</q-td>
+      </template>
+      <template v-slot:body-cell-data_emissao="props">
+        <q-td align="center">{{ formatarData(props.row.data_emissao) }}</q-td>
+      </template>
+      <template v-slot:body-cell-forma_pagamento="props">
+        <q-td align="center">
+          <q-badge :color="corFormaPagamento(props.row.forma_pagamento)">
+            {{ labelFormaPagamento(props.row.forma_pagamento) }}
+          </q-badge>
+        </q-td>
+      </template>
+      <template v-slot:body-cell-status="props">
+        <q-td align="center">
+          <q-badge :color="props.row.status === 'emitida' ? 'positive' : 'negative'">
+            {{ labelStatus(props.row.status) }}
+          </q-badge>
+        </q-td>
+      </template>
+      <template v-slot:body-cell-acoes="props">
+        <q-td align="center">
+          <q-btn icon="picture_as_pdf" size="sm" color="negative" flat round @click="gerarPDF(props.row)">
+            <q-tooltip>Exportar PDF</q-tooltip>
+          </q-btn>
+          <q-btn icon="topic" size="sm" color="blue" flat round @click="verDetalhes(props.row)">
+            <q-tooltip>Ver Detalhes</q-tooltip>
+          </q-btn>
+        </q-td>
+      </template>
+    </q-table>
 
-      <!-- Cliente -->
-      <div class="row q-col-gutter-md q-mb-md">
-        <div class="col-12">
-          <div class="text-caption text-grey-5 text-uppercase q-mb-xs">Cliente</div>
-          <div class="text-weight-bold">{{ nfSelecionada?.nome_cliente || 'Consumidor Final' }}</div>
+    <!-- Dialog Detalhes -->
+    <q-dialog v-model="dialogDetalhes" persistent>
+      <q-card style="min-width: 650px; max-width: 700px; border-radius: 12px">
+
+        <div class="q-pa-lg row items-center justify-between" style="background: #f8f9fa">
+          <div>
+            <div class="text-h6 text-bold">{{ nfSelecionada?.numero_nf }}</div>
+            <div class="text-caption text-grey-6">Emitida em {{ formatarData(nfSelecionada?.data_emissao) }}</div>
+            <div class="row q-gutter-sm q-mt-xs">
+              <q-badge :color="corFormaPagamento(nfSelecionada?.forma_pagamento)" class="q-pa-xs">
+                {{ labelFormaPagamento(nfSelecionada?.forma_pagamento) }}
+              </q-badge>
+              <q-badge :color="nfSelecionada?.status === 'emitida' ? 'positive' : 'negative'" class="q-pa-xs">
+                {{ labelStatus(nfSelecionada?.status) }}
+              </q-badge>
+            </div>
+          </div>
+          <div class="text-right">
+            <div class="text-caption text-grey-6">Venda vinculada</div>
+            <div class="text-weight-bold text-primary">{{ nfSelecionada?.codigo_venda || '-' }}</div>
+          </div>
         </div>
-      </div>
 
-      <q-separator class="q-mb-md" />
+        <q-separator />
 
-      <!-- Itens -->
-      <div class="text-caption text-grey-5 text-uppercase q-mb-sm">Itens</div>
-      <q-table
-        :data="nfSelecionada?.itens || []"
-        :columns="colunasItens"
-        flat
-        bordered
-        hide-bottom
-        dense
-        class="b-r-8"
-      >
-        <template v-slot:body-cell-preco_unitario="props">
-          <q-td align="center">{{ formatarReais(props.row.preco_unitario) }}</q-td>
-        </template>
-        <template v-slot:body-cell-desconto="props">
-          <q-td align="center">
-            <span v-if="props.row.desconto > 0" class="text-negative">
-              - {{ formatarReais(props.row.desconto) }}
-            </span>
-            <span v-else class="text-grey-5">-</span>
-          </q-td>
-        </template>
-        <template v-slot:body-cell-subtotal="props">
-          <q-td align="center" class="text-weight-medium">{{ formatarReais(props.row.subtotal) }}</q-td>
-        </template>
-      </q-table>
+        <q-card-section class="q-pa-lg">
 
-      <!-- Totais -->
-      <div class="row justify-end q-mt-md">
-        <div class="column q-gutter-xs" style="min-width: 220px">
-          <div class="row justify-between">
-            <span class="text-caption text-grey-6">Subtotal</span>
-            <span class="text-caption">{{ formatarReais(nfSelecionada?.subtotal) }}</span>
+          <div class="row q-col-gutter-md q-mb-md">
+            <div class="col-12">
+              <div class="text-caption text-grey-5 text-uppercase q-mb-xs">Cliente</div>
+              <div class="text-weight-bold">{{ nfSelecionada?.nome_cliente || 'Consumidor Final' }}</div>
+            </div>
           </div>
-          <div class="row justify-between" v-if="nfSelecionada?.desconto > 0">
-            <span class="text-caption text-negative">Desconto</span>
-            <span class="text-caption text-negative">- {{ formatarReais(nfSelecionada?.desconto) }}</span>
-          </div>
-          <q-separator />
-          <div class="row justify-between items-center">
-            <span class="text-weight-bold">Total</span>
-            <span class="text-h6 text-weight-bold text-positive">{{ formatarReais(nfSelecionada?.total) }}</span>
-          </div>
-          <div class="row justify-between q-mt-xs">
-            <span class="text-caption text-grey-6">Forma de Pagamento</span>
-            <q-badge :color="corFormaPagamento(nfSelecionada?.forma_pagamento)">
-              {{ labelFormaPagamento(nfSelecionada?.forma_pagamento) }}
-            </q-badge>
-          </div>
-        </div>
-      </div>
 
-    </q-card-section>
+          <q-separator class="q-mb-md" />
 
-    <q-separator />
+          <div class="text-caption text-grey-5 text-uppercase q-mb-sm">Itens</div>
+          <q-table
+            :data="nfSelecionada?.itens || []"
+            :columns="colunasItens"
+            flat bordered hide-bottom dense
+          >
+            <template v-slot:body-cell-preco_unitario="props">
+              <q-td align="center">{{ formatarReais(props.row.preco_unitario) }}</q-td>
+            </template>
+            <template v-slot:body-cell-desconto="props">
+              <q-td align="center">
+                <span v-if="props.row.desconto > 0" class="text-negative">
+                  - {{ formatarReais(props.row.desconto) }}
+                </span>
+                <span v-else class="text-grey-5">-</span>
+              </q-td>
+            </template>
+            <template v-slot:body-cell-subtotal="props">
+              <q-td align="center" class="text-weight-medium">{{ formatarReais(props.row.subtotal) }}</q-td>
+            </template>
+          </q-table>
 
-    <q-card-actions align="right" class="q-pa-md q-gutter-sm">
-      <q-btn label="Fechar" flat v-close-popup class="b-r-8" />
-      <q-btn
-        label="Exportar PDF"
-        icon="picture_as_pdf"
-        color="negative"
-        unelevated
-        class="b-r-8"
-        @click="gerarPDF(nfSelecionada)"
-      />
-    </q-card-actions>
-  </q-card>
-</q-dialog>
+          <div class="row justify-end q-mt-md">
+            <div class="column q-gutter-xs" style="min-width: 220px">
+              <div class="row justify-between">
+                <span class="text-caption text-grey-6">Subtotal</span>
+                <span class="text-caption">{{ formatarReais(nfSelecionada?.subtotal) }}</span>
+              </div>
+              <div class="row justify-between" v-if="nfSelecionada?.desconto > 0">
+                <span class="text-caption text-negative">Desconto</span>
+                <span class="text-caption text-negative">- {{ formatarReais(nfSelecionada?.desconto) }}</span>
+              </div>
+              <q-separator />
+              <div class="row justify-between items-center">
+                <span class="text-weight-bold">Total</span>
+                <span class="text-h6 text-weight-bold text-positive">{{ formatarReais(nfSelecionada?.total) }}</span>
+              </div>
+              <div class="row justify-between q-mt-xs">
+                <span class="text-caption text-grey-6">Forma de Pagamento</span>
+                <q-badge :color="corFormaPagamento(nfSelecionada?.forma_pagamento)">
+                  {{ labelFormaPagamento(nfSelecionada?.forma_pagamento) }}
+                </q-badge>
+              </div>
+            </div>
+          </div>
+
+        </q-card-section>
+
+        <q-separator />
+
+        <q-card-actions align="right" class="q-pa-md q-gutter-sm">
+          <q-btn label="Fechar" flat v-close-popup />
+          <q-btn
+            label="Exportar PDF"
+            icon="picture_as_pdf"
+            color="negative"
+            unelevated
+            @click="gerarPDF(nfSelecionada)"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
 
   </div>
 </template>

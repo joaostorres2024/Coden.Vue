@@ -1,265 +1,156 @@
 <template>
-  <div class="row justify-center items-center">
-    <q-card class="col-11 col-md-10 col-lg-9 no-shadow border b-r-10" style="width: 1500px">
+  <div class="q-pa-md">
 
-      <q-card-section class="bg-white text-black q-pb-none">
-        <div class="text-h5 text-bold">Perfil da Empresa</div>
-        <q-toolbar class="q-pa-none">
-          <q-breadcrumbs active-color="black" style="font-size: 14px" class="q-mb-md">
-            <template v-slot:separator>
-              <q-icon size="1.5em" name="chevron_right" color="black" />
-            </template>
-            <q-breadcrumbs-el label="Home" icon="home" to="/" />
-            <q-breadcrumbs-el label="Perfil" icon="account_circle" />
-          </q-breadcrumbs>
-        </q-toolbar>
-      </q-card-section>
+    <!-- Cabeçalho -->
+    <div class="text-bold text-black row items-center" style="font-size: 32px">
+      <q-icon name="account_circle" class="q-mr-md" size="32px" />Perfil da Empresa
+    </div>
+    <p class="text-grey-7 text-body2 q-mb-md">
+      Gerencie os dados cadastrais, endereço, contato e configurações de segurança da sua empresa.
+    </p>
+    <q-separator class="q-mb-lg" />
 
-      <q-separator />
+    <div class="row q-col-gutter-lg">
 
-      <q-card-section class="q-pa-lg">
-        <div class="row q-col-gutter-lg">
+      <!-- Coluna Esquerda -->
+      <div class="col-12 col-md-3">
 
-          <!-- Coluna Esquerda: Foto + Configurações -->
-          <div class="col-12 col-md-3">
-
-            <!-- Foto de Perfil -->
-            <q-card flat bordered class="b-r-8 q-pa-md text-center q-mb-md">
-              <div class="column items-center q-gutter-sm">
-                <q-avatar
-                  size="120px"
-                  font-size="60px"
-                  color="grey-3"
-                  text-color="primary"
-                  icon="business"
-                  class="shadow-1"
-                />
-                <div class="text-subtitle2 text-weight-bold">{{ form.nome || 'Empresa' }}</div>
-                <div class="text-caption text-grey-6">{{ form.regime_tributario || '-' }}</div>
-                <q-file
-                  v-model="fotoPerfil"
-                  accept=".jpg,.jpeg,.png"
-                  label="Alterar Logo"
-                  outlined
-                  dense
-                  class="full-width q-mt-sm"
-                >
-                  <template v-slot:prepend>
-                    <q-icon name="image" />
-                  </template>
-                </q-file>
-              </div>
-            </q-card>
-
-            <!-- Segurança -->
-            <q-card flat bordered class="b-r-8 q-pa-md q-mb-md">
-              <div class="text-subtitle1 text-weight-bold q-mb-md">
-                <q-icon name="lock" class="q-mr-xs" />Segurança
-              </div>
-              <div class="column q-gutter-sm">
-                <q-input
-                  v-model="senha.atual"
-                  label="Senha Atual"
-                  type="password"
-                  outlined
-                  dense
-                />
-                <q-input
-                  v-model="senha.nova"
-                  label="Nova Senha"
-                  type="password"
-                  outlined
-                  dense
-                />
-                <q-input
-                  v-model="senha.confirmar"
-                  label="Confirmar Nova Senha"
-                  type="password"
-                  outlined
-                  dense
-                />
-                <q-btn
-                  label="Alterar Senha"
-                  color="primary"
-                  unelevated
-                  class="full-width b-r-8 q-mt-sm"
-                  icon="lock_reset"
-                  @click="alterarSenha()"
-                />
-              </div>
-            </q-card>
-
-            <!-- Notificações -->
-            <q-card flat bordered class="b-r-8 q-pa-md q-mb-md">
-              <div class="text-subtitle1 text-weight-bold q-mb-md">
-                <q-icon name="notifications" class="q-mr-xs" />Notificações
-              </div>
-              <div class="column q-gutter-sm">
-                <q-toggle
-                  v-model="notificacoes.vendas"
-                  label="Novas vendas"
-                  color="primary"
-                  dense
-                />
-                <q-toggle
-                  v-model="notificacoes.estoque"
-                  label="Estoque baixo"
-                  color="primary"
-                  dense
-                />
-                <q-toggle
-                  v-model="notificacoes.nf"
-                  label="Notas fiscais"
-                  color="primary"
-                  dense
-                />
-                <q-toggle
-                  v-model="notificacoes.sistema"
-                  label="Atualizações do sistema"
-                  color="primary"
-                  dense
-                />
-              </div>
-            </q-card>
-
-            <!-- Helpdesk -->
-            <q-card flat bordered class="b-r-8 q-pa-md">
-              <div class="text-subtitle1 text-weight-bold q-mb-sm">
-                <q-icon name="support_agent" class="q-mr-xs" />Suporte
-              </div>
-              <div class="text-caption text-grey-6 q-mb-md">
-                Precisa de ajuda? Acesse nosso helpdesk.
-              </div>
-              <q-btn
-                label="Acessar Helpdesk"
-                color="primary"
-                outline
-                class="full-width b-r-8"
-                icon="open_in_new"
-                disable
-              >
-                <q-tooltip>Em breve</q-tooltip>
-              </q-btn>
-            </q-card>
-
+        <!-- Foto de Perfil -->
+        <q-card flat bordered class="b-r-10 q-pa-md text-center q-mb-md">
+          <div class="column items-center q-gutter-sm">
+            <q-avatar size="120px" font-size="60px" color="grey-3" text-color="primary" icon="business" class="shadow-1" />
+            <div class="text-subtitle2 text-weight-bold">{{ form.nome || 'Empresa' }}</div>
+            <div class="text-caption text-grey-6">{{ form.regime_tributario || '-' }}</div>
+            <q-file v-model="fotoPerfil" accept=".jpg,.jpeg,.png" label="Alterar Logo" outlined dense class="full-width q-mt-sm">
+              <template v-slot:prepend><q-icon name="image" /></template>
+            </q-file>
           </div>
+        </q-card>
 
-          <!-- Coluna Direita: Dados da Empresa -->
-          <div class="col-12 col-md-9">
+        <!-- Segurança -->
+        <q-card flat bordered class="b-r-10 q-pa-md q-mb-md">
+          <div class="text-subtitle1 text-weight-bold q-mb-md">
+            <q-icon name="lock" class="q-mr-xs" />Segurança
+          </div>
+          <div class="column q-gutter-sm">
+            <q-input v-model="senha.atual" label="Senha Atual" type="password" outlined dense />
+            <q-input v-model="senha.nova" label="Nova Senha" type="password" outlined dense />
+            <q-input v-model="senha.confirmar" label="Confirmar Nova Senha" type="password" outlined dense />
+            <q-btn label="Alterar Senha" color="primary" unelevated class="full-width q-mt-sm" icon="lock_reset" @click="alterarSenha()" />
+          </div>
+        </q-card>
 
-            <!-- Dados da Empresa -->
-            <div class="text-h6 q-mb-md">Dados da Empresa</div>
-            <div class="row q-col-gutter-md q-mb-lg">
-              <div class="col-12 col-sm-4">
-                <q-input v-model="form.nome" label="Razão Social" outlined dense />
-              </div>
-              <div class="col-12 col-sm-4">
-                <q-input v-model="form.nome_fantasia" label="Nome Fantasia" outlined dense />
-              </div>
-              <div class="col-12 col-sm-4">
-                <q-input v-model="form.cnpj" label="CNPJ" outlined dense mask="##.###.###/####-##" />
-              </div>
-              <div class="col-12 col-sm-4">
-                <q-input v-model="form.inscricao_estadual" label="Inscrição Estadual" outlined dense />
-              </div>
-              <div class="col-12 col-sm-4">
-                <q-input v-model="form.inscricao_municipal" label="Inscrição Municipal" outlined dense />
-              </div>
-              <div class="col-12 col-sm-4">
-                <q-select
-                  v-model="form.regime_tributario"
-                  :options="opcoesRegime"
-                  label="Regime Tributário"
-                  outlined
-                  dense
-                  emit-value
-                  map-options
-                />
-              </div>
-            </div>
+        <!-- Notificações -->
+        <q-card flat bordered class="b-r-10 q-pa-md q-mb-md">
+          <div class="text-subtitle1 text-weight-bold q-mb-md">
+            <q-icon name="notifications" class="q-mr-xs" />Notificações
+          </div>
+          <div class="column q-gutter-sm">
+            <q-toggle v-model="notificacoes.vendas" label="Novas vendas" color="primary" dense />
+            <q-toggle v-model="notificacoes.estoque" label="Estoque baixo" color="primary" dense />
+            <q-toggle v-model="notificacoes.nf" label="Notas fiscais" color="primary" dense />
+            <q-toggle v-model="notificacoes.sistema" label="Atualizações do sistema" color="primary" dense />
+          </div>
+        </q-card>
 
-            <!-- Endereço -->
-            <div class="text-h6 q-mb-md">Endereço</div>
-            <div class="row q-col-gutter-md q-mb-lg">
-              <div class="col-12 col-sm-4">
-                <q-input
-                  v-model="form.cep"
-                  label="CEP"
-                  outlined
-                  dense
-                  mask="#####-###"
-                  @input="buscarCep(form.cep)"
-                />
-              </div>
-              <div class="col-12 col-sm-4">
-                <q-input v-model="form.endereco" label="Endereço" outlined dense />
-              </div>
-              <div class="col-12 col-sm-4">
-                <q-input v-model="form.numero" label="Número" outlined dense />
-              </div>
-              <div class="col-12 col-sm-4">
-                <q-input v-model="form.complemento" label="Complemento" outlined dense />
-              </div>
-              <div class="col-12 col-sm-4">
-                <q-input v-model="form.bairro" label="Bairro" outlined dense />
-              </div>
-              <div class="col-12 col-sm-4">
-                <q-input v-model="form.cidade" label="Cidade" outlined dense />
-              </div>
-              <div class="col-12 col-sm-4">
-                <q-select
-                  v-model="form.uf"
-                  :options="opcoesUF"
-                  label="UF"
-                  outlined
-                  dense
-                  emit-value
-                  map-options
-                />
-              </div>
-            </div>
+        <!-- Suporte -->
+        <q-card flat bordered class="b-r-10 q-pa-md">
+          <div class="text-subtitle1 text-weight-bold q-mb-sm">
+            <q-icon name="support_agent" class="q-mr-xs" />Suporte
+          </div>
+          <div class="text-caption text-grey-6 q-mb-md">Precisa de ajuda? Acesse nosso helpdesk.</div>
+          <q-btn label="Acessar Helpdesk" color="primary" outline class="full-width" icon="open_in_new" disable>
+            <q-tooltip>Em breve</q-tooltip>
+          </q-btn>
+        </q-card>
 
-            <!-- Contato -->
-            <div class="text-h6 q-mb-md">Contato</div>
-            <div class="row q-col-gutter-md q-mb-lg">
-              <div class="col-12 col-sm-4">
-                <q-input v-model="form.telefone" label="Telefone" outlined dense mask="(##) #####-####" />
-              </div>
-              <div class="col-12 col-sm-4">
-                <q-input v-model="form.email" label="E-mail" outlined dense />
-              </div>
-              <div class="col-12 col-sm-4">
-                <q-input v-model="form.site" label="Site" outlined dense />
-              </div>
-            </div>
+      </div>
 
-            <!-- Responsável -->
-            <div class="text-h6 q-mb-md">Responsável</div>
-            <div class="row q-col-gutter-md q-mb-lg">
-              <div class="col-12 col-sm-4">
-                <q-input v-model="form.responsavel" label="Nome do Responsável" outlined dense />
-              </div>
-              <div class="col-12 col-sm-4">
-                <q-input v-model="form.cargo" label="Cargo" outlined dense />
-              </div>
-            </div>
+      <!-- Coluna Direita -->
+      <div class="col-12 col-md-9">
 
-            <!-- Botão Salvar -->
-            <div class="row justify-end q-mt-xl">
-              <q-btn
-                label="Salvar Alterações"
-                color="positive"
-                unelevated
-                icon="save"
-                :loading="salvando"
-                @click="salvar()"
-              />
-            </div>
-
+        <!-- Dados da Empresa -->
+        <div class="text-h6 q-mb-md">Dados da Empresa</div>
+        <div class="row q-col-gutter-md q-mb-lg">
+          <div class="col-12 col-sm-4">
+            <q-input v-model="form.nome" label="Razão Social" outlined dense />
+          </div>
+          <div class="col-12 col-sm-4">
+            <q-input v-model="form.nome_fantasia" label="Nome Fantasia" outlined dense />
+          </div>
+          <div class="col-12 col-sm-4">
+            <q-input v-model="form.cnpj" label="CNPJ" outlined dense mask="##.###.###/####-##" />
+          </div>
+          <div class="col-12 col-sm-4">
+            <q-input v-model="form.inscricao_estadual" label="Inscrição Estadual" outlined dense />
+          </div>
+          <div class="col-12 col-sm-4">
+            <q-input v-model="form.inscricao_municipal" label="Inscrição Municipal" outlined dense />
+          </div>
+          <div class="col-12 col-sm-4">
+            <q-select v-model="form.regime_tributario" :options="opcoesRegime" label="Regime Tributário" outlined dense emit-value map-options />
           </div>
         </div>
-      </q-card-section>
-    </q-card>
+
+        <!-- Endereço -->
+        <div class="text-h6 q-mb-md">Endereço</div>
+        <div class="row q-col-gutter-md q-mb-lg">
+          <div class="col-12 col-sm-4">
+            <q-input v-model="form.cep" label="CEP" outlined dense mask="#####-###" @input="buscarCep(form.cep)" />
+          </div>
+          <div class="col-12 col-sm-4">
+            <q-input v-model="form.endereco" label="Endereço" outlined dense />
+          </div>
+          <div class="col-12 col-sm-4">
+            <q-input v-model="form.numero" label="Número" outlined dense />
+          </div>
+          <div class="col-12 col-sm-4">
+            <q-input v-model="form.complemento" label="Complemento" outlined dense />
+          </div>
+          <div class="col-12 col-sm-4">
+            <q-input v-model="form.bairro" label="Bairro" outlined dense />
+          </div>
+          <div class="col-12 col-sm-4">
+            <q-input v-model="form.cidade" label="Cidade" outlined dense />
+          </div>
+          <div class="col-12 col-sm-4">
+            <q-select v-model="form.uf" :options="opcoesUF" label="UF" outlined dense emit-value map-options />
+          </div>
+        </div>
+
+        <!-- Contato -->
+        <div class="text-h6 q-mb-md">Contato</div>
+        <div class="row q-col-gutter-md q-mb-lg">
+          <div class="col-12 col-sm-4">
+            <q-input v-model="form.telefone" label="Telefone" outlined dense mask="(##) #####-####" />
+          </div>
+          <div class="col-12 col-sm-4">
+            <q-input v-model="form.email" label="E-mail" outlined dense />
+          </div>
+          <div class="col-12 col-sm-4">
+            <q-input v-model="form.site" label="Site" outlined dense />
+          </div>
+        </div>
+
+        <!-- Responsável -->
+        <div class="text-h6 q-mb-md">Responsável</div>
+        <div class="row q-col-gutter-md q-mb-lg">
+          <div class="col-12 col-sm-4">
+            <q-input v-model="form.responsavel" label="Nome do Responsável" outlined dense />
+          </div>
+          <div class="col-12 col-sm-4">
+            <q-input v-model="form.cargo" label="Cargo" outlined dense />
+          </div>
+        </div>
+
+        <!-- Botão Salvar -->
+        <div class="row justify-end q-mt-xl">
+          <q-btn label="Salvar Alterações" color="positive" unelevated icon="save" :loading="salvando" @click="salvar()" />
+        </div>
+
+      </div>
+    </div>
+
   </div>
 </template>
 

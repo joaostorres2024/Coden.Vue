@@ -1,198 +1,156 @@
 <template>
-  <div class="row justify-center items-center">
-    <q-card class="col-11 col-md-10 col-lg-9 no-shadow border b-r-10" style="width: 1500px">
+  <div class="q-pa-md">
 
-      <q-card-section class="bg-white text-black q-pb-none">
-        <div class="text-h5 text-bold">Relatório de Vendas</div>
-        <q-toolbar class="q-pa-none">
-          <q-breadcrumbs active-color="black" style="font-size: 14px" class="q-mb-md">
-            <template v-slot:separator>
-              <q-icon size="1.5em" name="chevron_right" color="black" />
-            </template>
-            <q-breadcrumbs-el label="Home" icon="home" to="/" />
-            <q-breadcrumbs-el label="Relatórios" icon="article" />
-            <q-breadcrumbs-el label="Relatório de Vendas" icon="sell" />
-          </q-breadcrumbs>
-        </q-toolbar>
-      </q-card-section>
+    <!-- Cabeçalho -->
+    <div class="text-bold text-black row items-center" style="font-size: 32px">
+      <q-icon name="sell" class="q-mr-md" size="32px" />Relatório de Vendas
+    </div>
+    <p class="text-grey-7 text-body2 q-mb-md">
+      Analise as vendas por período, cliente, produto e forma de pagamento. Exporte os dados em PDF ou Excel.
+    </p>
+    <q-separator class="q-mb-lg" />
 
-      <q-separator />
+    <!-- Filtros -->
+    <div class="row q-col-gutter-md q-mb-md">
+      <div class="col-12 col-sm-4">
+        <q-input v-model="filtro.cliente" label="Cliente" outlined dense />
+      </div>
+      <div class="col-12 col-sm-4">
+        <q-input v-model="filtro.produto" label="Produto" outlined dense />
+      </div>
+      <div class="col-12 col-sm-4">
+        <q-select
+          v-model="filtro.forma_pagamento"
+          :options="opcoesPagamento"
+          option-label="label"
+          option-value="value"
+          emit-value map-options
+          label="Forma de Pagamento"
+          outlined dense clearable
+        />
+      </div>
+      <div class="col-12 col-sm-4">
+        <q-input v-model="filtro.de" label="De" type="date" outlined dense />
+      </div>
+      <div class="col-12 col-sm-4">
+        <q-input v-model="filtro.ate" label="Até" type="date" outlined dense />
+      </div>
+    </div>
 
-      <q-card-section class="q-pa-lg">
+    <!-- Botões -->
+    <div class="row justify-between items-center q-mb-lg">
+      <div class="row q-gutter-sm">
+        <q-btn
+          label="Gerar Relatório"
+          icon="summarize"
+          color="primary"
+          unelevated
+          :loading="carregando"
+          @click="gerarRelatorio()"
+        />
+        <q-btn
+          label="Limpar"
+          icon="delete_sweep"
+          flat
+          class="text-grey-7"
+          @click="limparFiltros()"
+        />
+      </div>
+      <div v-if="gerado" class="row q-gutter-sm">
+        <q-btn label="Exportar PDF" icon="picture_as_pdf" color="negative" unelevated @click="exportarPDF()" />
+        <q-btn label="Exportar Excel" icon="table_view" color="positive" unelevated @click="exportarExcel()" />
+      </div>
+    </div>
 
-        <!-- Filtros -->
-        <div class="row q-col-gutter-md q-mb-md">
-          <div class="col-12 col-sm-4">
-            <q-input v-model="filtro.cliente" label="Cliente" outlined dense>
-            </q-input>
+    <!-- Cards de Resumo -->
+    <div v-if="gerado" class="row q-col-gutter-md q-mb-lg q-mt-md">
+      <div class="col-6 col-sm-3">
+        <q-card flat bordered class="b-r-10 q-pa-md">
+          <div class="text-caption text-grey-6">Total de Vendas</div>
+          <div class="text-h5 text-bold text-black q-mt-xs">{{ rows.length }}</div>
+        </q-card>
+      </div>
+      <div class="col-6 col-sm-3">
+        <q-card flat bordered class="b-r-10 q-pa-md">
+          <div class="text-caption text-grey-6">Ticket Médio</div>
+          <div class="text-h6 text-bold text-black q-mt-xs">{{ ticketMedio }}</div>
+        </q-card>
+      </div>
+      <div class="col-6 col-sm-3">
+        <q-card flat bordered class="b-r-10 q-pa-md">
+          <div class="text-caption text-grey-6">Total Descontos</div>
+          <div class="text-h6 text-bold text-black q-mt-xs">{{ totalDescontos }}</div>
+        </q-card>
+      </div>
+      <div class="col-6 col-sm-3">
+        <q-card flat bordered class="b-r-10 q-pa-md">
+          <div class="text-caption text-grey-6">Total Geral</div>
+          <div class="text-h6 text-bold text-black q-mt-xs">{{ totalGeral }}</div>
+        </q-card>
+      </div>
+    </div>
+
+    <!-- Cards por Forma de Pagamento -->
+    <div v-if="gerado && totalPorForma.length" class="row q-col-gutter-md q-mb-lg">
+      <div v-for="item in totalPorForma" :key="item.forma" class="col-6 col-sm-4">
+        <q-card flat bordered class="b-r-10 q-pa-md">
+          <div class="row items-center q-gutter-sm">
+            <q-icon :name="iconePagamento(item.forma)" :color="corPagamento(item.forma)" size="24px" />
+            <div>
+              <div class="text-caption text-grey-6">{{ item.forma }}</div>
+              <div class="text-weight-bold">{{ formatarReais(item.total) }}</div>
+            </div>
           </div>
-          <div class="col-12 col-sm-4">
-            <q-input v-model="filtro.produto" label="Produto" outlined dense>
-            </q-input>
-          </div>
-          <div class="col-12 col-sm-4">
-            <q-select
-              v-model="filtro.forma_pagamento"
-              :options="opcoesPagamento"
-              option-label="label"
-              option-value="value"
-              emit-value
-              map-options
-              label="Forma de Pagamento"
-              outlined
-              dense
-              clearable
-            />
-          </div>
-          <div class="col-12 col-sm-4">
-            <q-input v-model="filtro.de" label="De" type="date" outlined dense />
-          </div>
-          <div class="col-12 col-sm-4">
-            <q-input v-model="filtro.ate" label="Até" type="date" outlined dense />
-          </div>
-        </div>
+        </q-card>
+      </div>
+    </div>
 
-        <!-- Botões -->
-        <div class="row justify-between items-center q-mb-lg">
-          <div class="row q-gutter-sm">
-            <q-btn
-              label="Gerar Relatório"
-              icon="summarize"
-              color="primary"
-              unelevated
-              class="b-r-8"
-              :loading="carregando"
-              @click="gerarRelatorio()"
-            />
-            <q-btn
-              label="Limpar"
-              icon="delete_sweep"
-              flat
-              class="text-grey-7 b-r-8"
-              @click="limparFiltros()"
-            />
-          </div>
+    <!-- Tabela -->
+    <div v-if="gerado">
+      <q-table
+        :data="rows"
+        :columns="colunasRelatorioVendas"
+        row-key="id"
+        flat bordered
+        no-data-label="Nenhuma venda encontrada"
+        class="text-weight-medium"
+        :rows-per-page-options="[10, 20, 50]"
+      >
+        <template v-slot:body-cell-data="props">
+          <q-td align="center">{{ formatarData(props.row.data) }}</q-td>
+        </template>
+        <template v-slot:body-cell-forma_pagamento="props">
+          <q-td align="center">
+            <q-badge :color="corPagamento(labelPagamento(props.row.forma_pagamento))">
+              {{ labelPagamento(props.row.forma_pagamento) }}
+            </q-badge>
+          </q-td>
+        </template>
+        <template v-slot:body-cell-subtotal="props">
+          <q-td align="center">{{ formatarReais(props.row.subtotal) }}</q-td>
+        </template>
+        <template v-slot:body-cell-desconto="props">
+          <q-td align="center">
+            <span v-if="props.row.desconto > 0" class="text-negative">
+              {{ formatarReais(props.row.desconto_total) }}
+            </span>
+            <span v-else class="text-grey-5">-</span>
+          </q-td>
+        </template>
+        <template v-slot:body-cell-total="props">
+          <q-td align="center" class="text-weight-bold text-positive">
+            {{ formatarReais(props.row.total) }}
+          </q-td>
+        </template>
+      </q-table>
+    </div>
 
-          <div v-if="gerado" class="row q-gutter-sm">
-            <q-btn
-              label="Exportar PDF"
-              icon="picture_as_pdf"
-              color="negative"
-              unelevated
-              class="b-r-8"
-              @click="exportarPDF()"
-            />
-            <q-btn
-              label="Exportar Excel"
-              icon="table_view"
-              color="positive"
-              unelevated
-              class="b-r-8"
-              @click="exportarExcel()"
-            />
-          </div>
-        </div>
+    <!-- Empty state -->
+    <div v-if="!gerado" class="column items-center q-py-xl text-grey-5">
+      <q-icon name="summarize" size="48px" />
+      <div class="q-mt-sm">Selecione os filtros e clique em Gerar Relatório</div>
+    </div>
 
-        <!-- Cards de Resumo -->
-        <div v-if="gerado" class="row q-col-gutter-md q-mb-lg q-mt-md">
-          <div class="col-6 col-sm-3">
-            <q-card flat bordered class="b-r-8 q-pa-md">
-              <div class="text-caption text-grey-6">Total de Vendas</div>
-              <div class="text-h5 text-bold text-black q-mt-xs">{{ rows.length }}</div>
-            </q-card>
-          </div>
-          <div class="col-6 col-sm-3">
-            <q-card flat bordered class="b-r-8 q-pa-md">
-              <div class="text-caption text-grey-6">Ticket Médio</div>
-              <div class="text-h6 text-bold text-black q-mt-xs">{{ ticketMedio }}</div>
-            </q-card>
-          </div>
-          <div class="col-6 col-sm-3">
-            <q-card flat bordered class="b-r-8 q-pa-md">
-              <div class="text-caption text-grey-6">Total Descontos</div>
-              <div class="text-h6 text-bold text-black q-mt-xs">{{ totalDescontos }}</div>
-            </q-card>
-          </div>
-          <div class="col-6 col-sm-3">
-            <q-card flat bordered class="b-r-8 q-pa-md">
-              <div class="text-caption text-grey-6">Total Geral</div>
-              <div class="text-h6 text-bold text-black q-mt-xs">{{ totalGeral }}</div>
-            </q-card>
-          </div>
-        </div>
-
-        <!-- Cards por Forma de Pagamento -->
-        <div v-if="gerado && totalPorForma.length" class="row q-col-gutter-md q-mb-lg">
-          <div
-            v-for="item in totalPorForma"
-            :key="item.forma"
-            class="col-6 col-sm-4"
-          >
-            <q-card flat bordered class="b-r-8 q-pa-md">
-              <div class="row items-center q-gutter-sm">
-                <q-icon :name="iconePagamento(item.forma)" :color="corPagamento(item.forma)" size="24px" />
-                <div>
-                  <div class="text-caption text-grey-6">{{ item.forma }}</div>
-                  <div class="text-weight-bold">{{ formatarReais(item.total) }}</div>
-                </div>
-              </div>
-            </q-card>
-          </div>
-        </div>
-
-        <!-- Tabela -->
-        <div v-if="gerado">
-          <q-table
-            data-gerar-vendas
-            :data="rows"
-            :columns="colunasRelatorioVendas"
-            row-key="id"
-            flat
-            bordered
-            no-data-label="Nenhuma venda encontrada"
-            class="text-weight-medium"
-            :rows-per-page-options="[10, 20, 50]"
-          >
-            <template v-slot:body-cell-data="props">
-              <q-td align="center">{{ formatarData(props.row.data) }}</q-td>
-            </template>
-
-            <template v-slot:body-cell-forma_pagamento="props">
-              <q-td align="center">
-                <q-badge :color="corPagamento(labelPagamento(props.row.forma_pagamento))">
-                  {{ labelPagamento(props.row.forma_pagamento) }}
-                </q-badge>
-              </q-td>
-            </template>
-
-            <template v-slot:body-cell-subtotal="props">
-              <q-td align="center">{{ formatarReais(props.row.subtotal) }}</q-td>
-            </template>
-
-            <template v-slot:body-cell-desconto="props">
-              <q-td align="center">
-                <span v-if="props.row.desconto > 0" class="text-negative">
-                  {{ formatarReais(props.row.desconto_total) }}
-                </span>
-                <span v-else class="text-grey-5">-</span>
-              </q-td>
-            </template>
-
-            <template v-slot:body-cell-total="props">
-              <q-td align="center" class="text-weight-bold text-positive">
-                {{ formatarReais(props.row.total) }}
-              </q-td>
-            </template>
-          </q-table>
-        </div>
-
-        <!-- Empty state -->
-        <div v-if="!gerado" class="column items-center q-py-xl text-grey-5">
-          <div>Selecione os filtros e clique em Gerar Relatório</div>
-        </div>
-
-      </q-card-section>
-    </q-card>
   </div>
 </template>
 
