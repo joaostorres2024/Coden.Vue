@@ -3,7 +3,7 @@
 
     <!-- Cabeçalho -->
     <div class="text-bold text-black row items-center" style="font-size: 28px">
-      <q-icon name="trending_up" class="q-mr-md" size="28px" />NF Entrada
+      <q-icon name="trending_up" class="q-mr-md text-primary" size="28px" />NF Entrada
     </div>
     <p class="text-grey-7 text-body2 q-mb-md">
       Registre e consulte as notas fiscais de entrada. Adicione produtos manualmente ou importe via XML para atualizar o estoque automaticamente.

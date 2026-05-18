@@ -250,7 +250,7 @@
 
     <!-- CONTEÚDO -->
 <q-page-container>
-  <q-page class="bg-accent" padding>
+  <q-page class="bg-accent q-px-lg">
     <transition name="page" mode="out-in">
       <router-view />
     </transition>

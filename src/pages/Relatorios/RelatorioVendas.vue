@@ -3,7 +3,7 @@
 
     <!-- Cabeçalho -->
     <div class="text-bold text-black row items-center" style="font-size: 28px">
-      <q-icon name="sell" class="q-mr-md" size="28px" />Relatório de Vendas
+      <q-icon name="sell" class="q-mr-md text-primary" size="28px" />Relatório de Vendas
     </div>
     <p class="text-grey-7 text-body2 q-mb-md">
       Analise as vendas por período, cliente, produto e forma de pagamento. Exporte os dados em PDF ou Excel.

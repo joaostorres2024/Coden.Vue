@@ -3,7 +3,7 @@
 
     <!-- Cabeçalho -->
     <div class="text-bold text-black row items-center" style="font-size: 28px">
-      <q-icon name="trending_down" class="q-mr-md" size="28px" />NF Saída
+      <q-icon name="trending_down" class="q-mr-md text-primary" size="28px" />NF Saída
     </div>
     <p class="text-grey-7 text-body2 q-mb-md">
       Consulte e exporte as notas fiscais de saída vinculadas às vendas realizadas no sistema.

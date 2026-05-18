@@ -2,7 +2,7 @@
   <div class="q-pa-md">
     <!-- Cabeçalho -->
     <div class="text-bold text-black row items-center" style="font-size: 28px">
-      <q-icon name="group" class="q-mr-md" si\e="28px" />Cadastro de Pessoas
+      <q-icon name="group" class="q-mr-md text-primary" si\e="28px" />Cadastro de Pessoas
     </div>
     <p class="text-grey-7 text-body2 q-mb-md">
       Gerencie os cadastros de pessoas físicas e jurídicas. Aqui você pode

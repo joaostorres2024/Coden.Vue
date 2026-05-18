@@ -3,7 +3,7 @@
 
     <!-- Cabeçalho -->
     <div class="text-bold text-black row items-center" style="font-size:28px">
-      <q-icon name="inventory" class="q-mr-md" size="28px" />Relatório de Estoque
+      <q-icon name="inventory" class="q-mr-md text-primary" size="28px" />Relatório de Estoque
     </div>
     <p class="text-grey-7 text-body2 q-mb-md">
       Analise a situação atual do estoque por produto, grupo e fornecedor. Exporte os dados em PDF ou Excel.
