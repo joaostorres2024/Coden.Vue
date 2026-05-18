@@ -614,7 +614,7 @@ REGRAS:
   100% {
     opacity: 0;
     transform: translateY(-8px) scale(0.99);
-    filter: blur(4px);
+    filter: blur(2px);
   }
 }
 .menu-item {

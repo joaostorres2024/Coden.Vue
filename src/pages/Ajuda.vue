@@ -238,7 +238,7 @@
               </q-item>
               <q-item class="q-px-none">
                 <q-item-section avatar style="min-width: 28px">
-                  <q-icon name="swap_horiz" size="16px" class="text-grey-5" />
+                  <q-icon name="person" size="16px" class="text-grey-5" />
                 </q-item-section>
                 <q-item-section>
                   <span style="font-size: 14px; color: #555; line-height: 1.6">
@@ -307,7 +307,7 @@
               label="Falar com Suporte"
               icon="support_agent"
               color="positive"
-              size="sm"
+              size="md"
               style="border-radius: 8px"
             />
           </div>
@@ -336,7 +336,7 @@ export default class AjudaComponent extends Vue {
  ]
  secoes = [
    { icon: 'person_outline',   titulo: 'Dados Gerais',     desc: 'Nome, documento, data de nascimento ou razão social e nome do responsável. Inclui o campo de status (Ativo / Inativo).' },
-   { icon: 'phone_outlined',   titulo: 'Dados de Contato', desc: 'E-mail, telefone celular principal e secundário, e telefone fixo.' },
+   { icon: 'phone',   titulo: 'Dados de Contato', desc: 'E-mail, telefone celular principal e secundário, e telefone fixo.' },
    { icon: 'location_on',      titulo: 'Dados de Endereço', desc: 'CEP com preenchimento automático de logradouro, bairro, cidade e UF. Informe o número manualmente.' },
    { icon: 'notes',            titulo: 'Observações',      desc: 'Campo livre para anotações internas ou informações complementares ao cadastro.' }
  ]
