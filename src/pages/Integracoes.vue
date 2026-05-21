@@ -399,43 +399,7 @@ marketplaces = [
     nome: 'Shopee',
     tipo: 'Marketplace',
     conectado: false,
-    emBreve: true,
     logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Shopee_logo.svg/1920px-Shopee_logo.svg.png'
-  },
-  {
-    nome: 'TikTok Shop',
-    tipo: 'Marketplace',
-    conectado: false,
-    emBreve: true,
-    logo: 'https://static.vecteezy.com/system/resources/previews/066/712/310/non_2x/tiktok-shop-icon-logo-symbol-free-png.png'
-  },
-  {
-    nome: 'AliExpress',
-    tipo: 'Marketplace',
-    conectado: false,
-    emBreve: true,
-    logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcyMCDXXve6oLBgLWoSxK2kGafMQn1pQNtCQ&s'
-  },
-  {
-    nome: 'Amazon',
-    tipo: 'Marketplace',
-    conectado: false,
-    emBreve: true,
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/d/de/Amazon_icon.png'
-  },
-  {
-    nome: 'Temu',
-    tipo: 'Marketplace',
-    conectado: false,
-    emBreve: true,
-    logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/5/5f/Temu_app_logo.svg/330px-Temu_app_logo.svg.png'
-  },
-  {
-    nome: 'Alibaba',
-    tipo: 'Marketplace',
-    conectado: false,
-    emBreve: true,
-    logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLb-jfCtY-1qAE3w2cVLS_bkYVjF0tZjmOBQ&s'
   },
   {
     nome: 'Shopify',

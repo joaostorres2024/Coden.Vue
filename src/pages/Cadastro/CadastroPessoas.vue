@@ -29,17 +29,17 @@
       </div>
     </div>
 
-    <div class="row q-col-gutter-md q-mb-md">
+    <q-form class="row q-col-gutter-md q-mb-md">
       <div class="col-12 col-md-4">
         <q-input v-model="nome" label="Nome Completo" outlined dense />
       </div>
       <div class="col-12 col-md-4">
-        <q-input v-model="documento" label="CNPJ/CPF" outlined dense />
+        <q-input v-model="documento" label="CNPJ/CPF" outlined dense/>
       </div>
       <div class="col-12 col-md-4">
-        <q-input v-model="codigo" label="Código do Cliente" outlined dense />
+        <q-input v-model="codigo" label="Código do Cliente" outlined dense/>
       </div>
-    </div>
+    </q-form>
 
     <!-- Botões -->
     <div
@@ -72,11 +72,10 @@
             <div class="col-12 col-sm-4">
               <q-input
                 v-model="dtaNascimento"
-                label="Data de Nascimento *"
+                label="Data de Nascimento"
                 type="date"
                 outlined
                 dense
-                :rules="[val => !!val || 'Data de nascimento obrigatória']"
                 hide-bottom-space
                 lazy-rules
               />
@@ -90,10 +89,9 @@
             <div class="col-12 col-sm-4">
               <q-input
                 v-model="razaoSocial"
-                label="Razão Social *"
+                label="Nome Fantasia"
                 outlined
                 dense
-                :rules="[val => !!val || 'Razão social obrigatória']"
                 hide-bottom-space
                 lazy-rules
               />
@@ -130,10 +128,9 @@
           <div class="col-12 col-sm-4">
             <q-input
               v-model="email"
-              label="E-mail *"
+              label="E-mail"
               outlined
               dense
-              :rules="mostrarFormCadastroPJ ? [val => !!val || 'E-mail obrigatório'] : []"
               hide-bottom-space
               lazy-rules
             />
@@ -179,11 +176,10 @@
           <div class="col-12 col-sm-4">
             <q-input
               v-model="cep"
-              label="CEP *"
+              label="CEP"
               mask="#####-###"
               outlined
               dense
-              :rules="[val => !!val || 'CEP obrigatório']"
               hide-bottom-space
               lazy-rules
               @input="buscarCep(cep)"
@@ -192,10 +188,9 @@
           <div class="col-12 col-sm-4">
             <q-input
               v-model="endereco"
-              label="Endereço *"
+              label="Endereço"
               outlined
               dense
-              :rules="[val => !!val || 'Endereço obrigatório']"
               hide-bottom-space
               lazy-rules
             />
@@ -203,10 +198,9 @@
           <div class="col-12 col-sm-4">
             <q-input
               v-model="numero"
-              label="Número *"
+              label="Número"
               outlined
               dense
-              :rules="[val => !!val || 'Número obrigatório']"
               hide-bottom-space
               lazy-rules
             />
@@ -214,10 +208,9 @@
           <div class="col-12 col-sm-4">
             <q-input
               v-model="bairro"
-              label="Bairro *"
+              label="Bairro"
               outlined
               dense
-              :rules="[val => !!val || 'Bairro obrigatório']"
               hide-bottom-space
               lazy-rules
             />
@@ -225,10 +218,9 @@
           <div class="col-12 col-sm-4">
             <q-input
               v-model="cidade"
-              label="Cidade *"
+              label="Cidade"
               outlined
               dense
-              :rules="[val => !!val || 'Cidade obrigatória']"
               hide-bottom-space
               lazy-rules
             />
@@ -237,12 +229,11 @@
             <q-select
               v-model="ufSelect"
               :options="uf_select"
-              label="UF *"
+              label="UF"
               outlined
               dense
               emit-value
               map-options
-              :rules="[val => !!val || 'UF obrigatória']"
               hide-bottom-space
               lazy-rules
             />
@@ -465,10 +456,33 @@ export default class ModuleComponent extends Vue {
     { label: 'Inativo', value: 'Inativo' }
   ]
   uf_select = [
-    { label: 'DF', value: 'DF' },
-    { label: 'SP', value: 'SP' },
-    { label: 'RJ', value: 'RJ' },
-    { label: 'MG', value: 'MG' }
+  { label: 'AC', value: 'AC' },
+  { label: 'AL', value: 'AL' },
+  { label: 'AM', value: 'AM' },
+  { label: 'AP', value: 'AP' },
+  { label: 'BA', value: 'BA' },
+  { label: 'CE', value: 'CE' },
+  { label: 'DF', value: 'DF' },
+  { label: 'ES', value: 'ES' },
+  { label: 'GO', value: 'GO' },
+  { label: 'MA', value: 'MA' },
+  { label: 'MG', value: 'MG' },
+  { label: 'MS', value: 'MS' },
+  { label: 'MT', value: 'MT' },
+  { label: 'PA', value: 'PA' },
+  { label: 'PB', value: 'PB' },
+  { label: 'PE', value: 'PE' },
+  { label: 'PI', value: 'PI' },
+  { label: 'PR', value: 'PR' },
+  { label: 'RJ', value: 'RJ' },
+  { label: 'RN', value: 'RN' },
+  { label: 'RO', value: 'RO' },
+  { label: 'RR', value: 'RR' },
+  { label: 'RS', value: 'RS' },
+  { label: 'SC', value: 'SC' },
+  { label: 'SE', value: 'SE' },
+  { label: 'SP', value: 'SP' },
+  { label: 'TO', value: 'TO' }
   ]
 
   async created() {
