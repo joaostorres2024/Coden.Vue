@@ -6,20 +6,6 @@ const routes: RouteConfig[] = [
     component: () => import('pages/Login.vue')
   },
   {
-    path: '/adminLogin',
-    component: () => import('pages/Admin/AdminLogin.vue')
-  },
-  {
-    path: '/admin',
-    component: () => import('layouts/layoutAdmin.vue'),
-    meta: { requiresAuth: true },
-    children: [
-      { path: '', component: () => import('pages/Admin/Admin.vue') },
-      { path: '/AdminUsuario', component: () => import('pages/Admin/AdminUsuario.vue') },
-      { path: '/AdminEstabelecimento', component: () => import('pages/Admin/AdminEstabelecimento.vue') }
-    ]
-  },
-  {
     path: '/',
     component: () => import('layouts/layoutCoden.vue'),
     meta: { requiresAuth: true },

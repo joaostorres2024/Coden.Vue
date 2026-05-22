@@ -61,7 +61,7 @@
     <div v-if="procurarProduto">
 
       <!-- Banner do Cliente -->
-      <div class="row items-center justify-between q-pa-md q-mb-lg b-r-10 border">
+      <div class="row items-center justify-between q-pa-md q-mb-lg border">
         <div class="row items-center q-gutter-md">
           <q-avatar color="primary" text-color="white" icon="person" size="42px" />
           <div>

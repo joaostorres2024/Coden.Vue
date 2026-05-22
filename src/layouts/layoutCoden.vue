@@ -158,7 +158,7 @@
           <q-item-section class="menu-label">Integrações</q-item-section>
         </q-item>
 
-                <q-item
+        <q-item
           clickable v-ripple
           class="menu-item b-r-10 q-mb-xs text-white"
           :class="$route.path === '/Agentes' ? 'menu-item-active' : ''"
@@ -265,115 +265,6 @@
       </div>
     </q-footer>
 
-    <!-- ===== CHAT IA FLUTUANTE ===== -->
-    <transition name="fade-up">
-      <div
-        v-if="dialogIA"
-        style="
-          position: fixed;
-          bottom: 120px;
-          right: 18px;
-          width: 370px;
-          max-height: 520px;
-          border-radius: 16px;
-          box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-          background: white;
-          z-index: 3000;
-          display: flex;
-          flex-direction: column;
-        "
-      >
-        <!-- Header -->
-        <div
-          class="row items-center justify-between bg-primary q-pa-md"
-          style="border-radius: 16px 16px 0 0; flex-shrink: 0"
-        >
-          <div class="row items-center q-gutter-sm">
-            <q-icon name="auto_awesome" color="white" size="20px" />
-            <span class="text-white text-weight-bold">Assistente Coden</span>
-          </div>
-          <q-btn icon="close" flat round dense color="white" @click="dialogIA = false" />
-        </div>
-
-        <!-- Mensagens -->
-        <div ref="chatBox" style="flex: 1; overflow-y: auto; padding: 16px; max-height: 360px">
-          <div v-if="mensagens.length === 0" class="column items-center q-py-lg">
-            <q-icon name="auto_awesome" size="48px" color="purple-3" />
-            <div class="text-body2 q-mt-md text-center text-grey-7">
-              Olá! Sou o assistente do Coden ERP. Como posso ajudar?
-            </div>
-            <div class="row q-gutter-xs q-mt-md flex-wrap justify-center">
-              <q-chip clickable color="primary" text-color="white" size="sm" @click="perguntaRapida('Como cadastrar um produto?')">Cadastrar produto</q-chip>
-              <q-chip clickable color="primary" text-color="white" size="sm" @click="perguntaRapida('Como emitir uma NF de saída?')">NF de saída</q-chip>
-              <q-chip clickable color="primary" text-color="white" size="sm" @click="perguntaRapida('Como realizar uma venda balcão?')">Venda balcão</q-chip>
-<q-chip clickable color="primary" text-color="white" size="sm" @click="perguntaRapida('Gerar relatório de estoque')">📦 Relatório Estoque</q-chip>
-<q-chip clickable color="primary" text-color="white" size="sm" @click="perguntaRapida('Gerar relatório de vendas')">💰 Relatório Vendas</q-chip>
-<q-chip clickable color="primary" text-color="white" size="sm" @click="perguntaRapida('Nova venda')">🛒 Nova Venda</q-chip>
-            </div>
-          </div>
-
-          <div v-for="(msg, i) in mensagens" :key="i" class="q-mb-sm">
-            <!-- Usuário -->
-            <div v-if="msg.tipo === 'user'" class="row justify-end">
-              <div style="background: #6c3fc5; color: white; border-radius: 12px 12px 0 12px; padding: 8px 12px; max-width: 80%; font-size: 13px; line-height: 1.4">
-                {{ msg.texto }}
-              </div>
-            </div>
-            <!-- IA -->
-            <div v-else class="row justify-start items-end q-gutter-xs">
-              <q-avatar size="28px" color="primary" text-color="white" icon="auto_awesome" style="flex-shrink: 0" />
-              <div style="background: #f3f4f6; border-radius: 12px 12px 12px 0; padding: 8px 12px; max-width: 80%; font-size: 13px; line-height: 1.4">
-                {{ msg.texto }}
-              </div>
-            </div>
-          </div>
-
-          <!-- Loading -->
-          <div v-if="iaCarregando" class="row justify-start items-end q-gutter-xs q-mt-sm">
-            <q-avatar size="28px" color="primary" text-color="white" icon="auto_awesome" style="flex-shrink: 0" />
-            <div style="background: #f3f4f6; border-radius: 12px; padding: 8px 12px">
-              <q-spinner-dots color="primary" size="20px" />
-            </div>
-          </div>
-        </div>
-
-        <!-- Input -->
-        <div style="border-top: 1px solid #e5e7eb; padding: 8px; display: flex; gap: 8px; align-items: center; flex-shrink: 0">
-          <q-input
-            v-model="perguntaAtual"
-            placeholder="Digite sua pergunta..."
-            outlined
-            dense
-            style="flex: 1"
-            :disable="iaCarregando"
-            @keyup.enter="enviarPergunta()"
-          />
-          <q-btn
-            icon="send"
-            color="primary"
-            round
-            unelevated
-            size="sm"
-            :loading="iaCarregando"
-            :disable="!perguntaAtual.trim()"
-            @click="enviarPergunta()"
-          />
-        </div>
-      </div>
-    </transition>
-
-    <!-- ===== BOTÃO FLUTUANTE IA ===== -->
-    <q-page-sticky position="bottom-right" :offset="[18, 18]" style="z-index: 3001">
-      <q-btn
-        fab
-        :icon="dialogIA ? 'close' : 'auto_awesome'"
-        :color="dialogIA ? 'grey-7' : 'primary'"
-        @click="dialogIA = !dialogIA"
-      >
-        <q-tooltip>{{ dialogIA ? 'Fechar' : 'Assistente IA' }}</q-tooltip>
-      </q-btn>
-    </q-page-sticky>
-
   </q-layout>
 </template>
 
@@ -387,12 +278,6 @@ export default class ModuleComponent extends Vue {
   leftDrawerOpen = true
   drawerPerfil = false
   user = ''
-
-  // ===== IA =====
-  dialogIA = false
-  perguntaAtual = ''
-  iaCarregando = false
-  mensagens: { tipo: 'user' | 'ia', texto: string }[] = []
 
   created() {
     const token = localStorage.getItem('token')
@@ -419,154 +304,6 @@ export default class ModuleComponent extends Vue {
     this.$router.push('/login')
   }
 
-  perguntaRapida(texto: string) {
-    this.perguntaAtual = texto
-    this.enviarPergunta()
-  }
-
-async enviarPergunta() {
-  if (!this.perguntaAtual.trim()) return
-
-  const pergunta = this.perguntaAtual
-  this.perguntaAtual = ''
-  this.mensagens.push({ tipo: 'user', texto: pergunta })
-  this.iaCarregando = true
-
-  await this.$nextTick()
-  const chatBox = this.$refs.chatBox as HTMLElement
-  if (chatBox) chatBox.scrollTop = chatBox.scrollHeight
-
-  try {
-    const perguntaLower = pergunta.toLowerCase()
-
-    // ===== AÇÕES DO SISTEMA =====
-
-    // Relatório de Estoque
-    if (perguntaLower.includes('estoque') && (perguntaLower.includes('relatório') || perguntaLower.includes('relatorio') || perguntaLower.includes('gere') || perguntaLower.includes('gerar'))) {
-      this.mensagens.push({ tipo: 'ia', texto: 'Redirecionando para o Relatório de Estoque...' })
-      this.dialogIA = false
-      await this.$router.push('/RelatorioEstoque')
-      // Aguarda a tela carregar e clica no botão
-      setTimeout(() => {
-        const btn = document.querySelector('[data-gerar-estoque]') as HTMLElement
-        if (btn) btn.click()
-      }, 800)
-      this.iaCarregando = false
-      if (chatBox) chatBox.scrollTop = chatBox.scrollHeight
-      return
-    }
-
-    if (perguntaLower.includes('vendas') && (perguntaLower.includes('relatório') || perguntaLower.includes('relatorio') || perguntaLower.includes('gere') || perguntaLower.includes('gerar'))) {
-      this.mensagens.push({ tipo: 'ia', texto: 'Redirecionando para o Relatório de Vendas...' })
-      this.dialogIA = false
-      await this.$router.push('/RelatorioVendas')
-      // Aguarda a tela carregar e clica no botão
-      setTimeout(() => {
-        const btn = document.querySelector('[data-gerar-vendas]') as HTMLElement
-        if (btn) btn.click()
-      }, 800)
-      this.iaCarregando = false
-      if (chatBox) chatBox.scrollTop = chatBox.scrollHeight
-      return
-    }
-
-// Cadastrar Produto
-if ((perguntaLower.includes('cadastrar') || perguntaLower.includes('adicionar')) && perguntaLower.includes('produto')) {
-  this.mensagens.push({ tipo: 'ia', texto: '📦 Redirecionando para o Cadastro de Produtos...' })
-  await this.$router.push('/CadastroProdutos')
-  this.iaCarregando = false
-  return
-}
-
-// Cadastrar Cliente
-if ((perguntaLower.includes('cadastrar') || perguntaLower.includes('adicionar')) && (perguntaLower.includes('cliente') || perguntaLower.includes('pessoa'))) {
-  this.mensagens.push({ tipo: 'ia', texto: '👤 Redirecionando para o Cadastro de Pessoas...' })
-  await this.$router.push('/CadastroPessoas')
-  this.iaCarregando = false
-  return
-}
-
-// Nova Venda
-if (perguntaLower.includes('nova venda') || perguntaLower.includes('realizar venda') || perguntaLower.includes('iniciar venda')) {
-  this.mensagens.push({ tipo: 'ia', texto: '🛒 Redirecionando para Vendas Balcão...' })
-  await this.$router.push('/VendaBalcao')
-  this.iaCarregando = false
-  return
-}
-
-// NF Entrada
-if (perguntaLower.includes('nf entrada') || perguntaLower.includes('nota fiscal entrada')) {
-  this.mensagens.push({ tipo: 'ia', texto: '📄 Redirecionando para NF Entrada...' })
-  await this.$router.push('/NotaFiscalEntrada')
-  this.iaCarregando = false
-  return
-}
-
-// NF Saída
-if (perguntaLower.includes('nf saída') || perguntaLower.includes('nf saida') || perguntaLower.includes('nota fiscal saída')) {
-  this.mensagens.push({ tipo: 'ia', texto: '📄 Redirecionando para NF Saída...' })
-  await this.$router.push('/NotaFiscalSaida')
-  this.iaCarregando = false
-  return
-}
-
-    // ===== RESPOSTA NORMAL DA IA =====
-    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.GROQ_KEY}`
-      },
-      body: JSON.stringify({
-        model: 'llama-3.1-8b-instant',
-        messages: [
-          {
-            role: 'system',
-            content: `Você é um assistente especializado do ERP Coden, sistema de gestão empresarial brasileiro.
-
-SOBRE O SISTEMA:
-- Cadastro de Pessoas (clientes PF e PJ)
-- Cadastro de Produtos (com grupos, estoque, preço de custo e venda)
-- Vendas Balcão (seleciona cliente → adiciona produtos → finaliza com pagamento)
-- NF Entrada (cadastra nota fiscal de entrada e produtos automaticamente)
-- NF Saída (gerada automaticamente ao finalizar uma venda)
-- Relatório de Estoque e Relatório de Vendas
-- Formas de pagamento: Dinheiro, Cartão, PIX
-
-COMANDOS QUE ENTENDO:
-- "Gerar relatório de estoque" → redireciono para a tela
-- "Gerar relatório de vendas" → redireciono para a tela
-- "Cadastrar produto" → redireciono para a tela
-- "Cadastrar cliente" → redireciono para a tela
-- "Nova venda" → redireciono para Vendas Balcão
-
-REGRAS:
-- Responda SEMPRE em português brasileiro
-- Seja direto e objetivo, máximo 3 parágrafos
-- Use emojis para facilitar a leitura`
-          },
-          {
-            role: 'user',
-            content: pergunta
-          }
-        ],
-        max_tokens: 500,
-        temperature: 0.7
-      })
-    })
-
-    const data = await response.json()
-    const resposta = data.choices[0].message.content
-    this.mensagens.push({ tipo: 'ia', texto: resposta })
-
-  } catch {
-    this.mensagens.push({ tipo: 'ia', texto: 'Desculpe, ocorreu um erro ao consultar a IA. Tente novamente.' })
-  } finally {
-    this.iaCarregando = false
-    await this.$nextTick()
-    if (chatBox) chatBox.scrollTop = chatBox.scrollHeight
-  }
-}
 }
 </script>
 
@@ -575,15 +312,6 @@ REGRAS:
 .margin-auto { margin-top: auto; }
 .q-expansion-item__toggle-icon { color: white; }
 
-.fade-up-enter-active,
-.fade-up-leave-active {
-  transition: all 0.2s ease;
-}
-.fade-up-enter,
-.fade-up-leave-to {
-  opacity: 0;
-  transform: translateY(80px);
-}
 .page-enter-active {
   animation: pageIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
