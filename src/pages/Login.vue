@@ -29,10 +29,10 @@
           />
 
           <q-input
-            v-model="senha"
             :type="verSenha ? 'text' : 'password'"
             class="full-width"
             label="Senha"
+            v-model="senha"
             outlined
             dense
           >

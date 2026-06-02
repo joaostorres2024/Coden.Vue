@@ -1,12 +1,16 @@
 <template>
   <div class="q-pa-md">
-
     <!-- Cabeçalho -->
     <div class="text-bold text-black row items-center" style="font-size: 28px">
-      <q-icon name="point_of_sale" class="q-mr-md text-primary" size="28px" />Vendas Balcão
+      <q-icon
+        name="point_of_sale"
+        class="q-mr-md text-primary"
+        size="28px"
+      />Vendas Balcão
     </div>
     <p class="text-grey-7 text-body2 q-mb-md">
-      Realize vendas presenciais, adicione produtos ao carrinho, aplique descontos e finalize o pagamento com emissão de nota fiscal.
+      Realize vendas presenciais, adicione produtos ao carrinho, aplique
+      descontos e finalize o pagamento com emissão de nota fiscal.
     </p>
     <q-separator class="q-mb-lg" />
 
@@ -25,21 +29,35 @@
       </div>
 
       <div class="row justify-start q-gutter-sm q-mb-md">
-        <q-btn label="Limpar" icon="delete_sweep" flat class="text-grey-7" @click="refreshTable()" />
+        <q-btn
+          label="Limpar"
+          icon="delete_sweep"
+          flat
+          class="text-grey-7"
+          @click="refreshTable()"
+        />
       </div>
 
       <q-table
         :data="rowsFiltradas"
         :columns="colunaCliente"
         row-key="id"
-        flat bordered
+        flat
+        bordered
         no-data-label="Nenhum registro encontrado"
         class="text-weight-medium"
         :rows-per-page-options="[10, 20, 50]"
       >
         <template v-slot:body-cell-acoes="props">
           <q-td align="center">
-            <q-btn icon="point_of_sale" size="sm" color="warning" flat round @click="realizarVenda(props.row)">
+            <q-btn
+              icon="point_of_sale"
+              size="sm"
+              color="warning"
+              flat
+              round
+              @click="realizarVenda(props.row)"
+            >
               <q-tooltip>Iniciar Venda</q-tooltip>
             </q-btn>
           </q-td>
@@ -49,7 +67,9 @@
         </template>
         <template v-slot:body-cell-status="props">
           <q-td align="center">
-            <q-badge :color="props.row.status === 'Ativo' ? 'positive' : 'negative'">
+            <q-badge
+              :color="props.row.status === 'Ativo' ? 'positive' : 'negative'"
+            >
               {{ props.row.status }}
             </q-badge>
           </q-td>
@@ -59,154 +79,287 @@
 
     <!-- TELA 2: FLUXO DE VENDA -->
     <div v-if="procurarProduto">
-
       <!-- Banner do Cliente -->
       <div class="row items-center justify-between q-pa-md q-mb-lg border">
         <div class="row items-center q-gutter-md">
-          <q-avatar color="primary" text-color="white" icon="person" size="42px" />
+          <q-avatar
+            color="primary"
+            text-color="white"
+            icon="person"
+            size="42px"
+          />
           <div>
-            <div class="text-weight-bold text-body1">{{ clienteSelecionado?.nome_cliente }}</div>
+            <div class="text-weight-bold text-body1">
+              {{ clienteSelecionado?.nome_cliente }}
+            </div>
             <div class="text-caption text-grey-6">
-              {{ clienteSelecionado?.codigo_cliente }} &nbsp;|&nbsp; {{ formatarDocumento(clienteSelecionado) }}
+              {{ clienteSelecionado?.codigo_cliente }} &nbsp;|&nbsp;
+              {{ formatarDocumento(clienteSelecionado) }}
             </div>
           </div>
         </div>
-        <q-btn flat dense icon="close" color="negative" label="Cancelar Venda" @click="abrirDialogCancelar()" />
+        <q-btn
+          flat
+          dense
+          icon="close"
+          color="negative"
+          label="Cancelar Venda"
+          @click="abrirDialogCancelar()"
+        />
       </div>
 
       <!-- Busca de Produtos -->
       <div class="row q-col-gutter-md q-mb-md">
         <div class="col-12 col-md-4">
-          <q-input v-model="codigoProduto" label="Código do Produto" outlined dense />
+          <q-input
+            v-model="codigoProduto"
+            label="Código do Produto"
+            outlined
+            dense
+          />
         </div>
         <div class="col-12 col-md-4">
-          <q-input v-model="nomeProduto" label="Nome do Produto" outlined dense />
+          <q-input
+            v-model="nomeProduto"
+            label="Nome do Produto"
+            outlined
+            dense
+          />
         </div>
         <div class="col-12 col-md-4">
-          <q-btn label="Limpar" icon="delete_sweep" flat class="text-grey-7" @click="codigoProduto = ''; nomeProduto = ''" />
+          <q-btn
+            label="Limpar"
+            icon="delete_sweep"
+            flat
+            class="text-grey-7"
+            @click="codigoProduto = ''; nomeProduto = ''"
+          />
         </div>
       </div>
 
       <!-- Tabela de Produtos -->
-      <div class="row items-center text-subtitle1 text-weight-bold q-ml-xs q-mb-md">
+      <div
+        class="row items-center text-subtitle1 text-weight-bold q-ml-xs q-mb-md"
+      >
         <q-icon name="inventory_2" class="q-mr-md" />Produtos disponíveis
       </div>
       <q-table
         :data="rowsProdutoFiltradas"
         :columns="colunaProduto"
         row-key="id"
-        flat bordered
+        flat
+        bordered
         class="text-weight-medium"
         no-data-label="Nenhum produto encontrado"
         :rows-per-page-options="[10, 15, 30]"
       >
         <template v-slot:body-cell-acoes="props">
           <q-td align="center">
-            <q-btn icon="shopping_cart" size="sm" color="positive" flat round @click="adicionarProduto(props.row)">
+            <q-btn
+              icon="shopping_cart"
+              size="sm"
+              color="positive"
+              flat
+              round
+              @click="adicionarProduto(props.row)"
+            >
               <q-tooltip>Adicionar ao carrinho</q-tooltip>
             </q-btn>
           </q-td>
         </template>
         <template v-slot:body-cell-valorUnitario="props">
-          <q-td align="center">{{ formatarReais(props.row.valorUnitario) }}</q-td>
+          <q-td
+            align="center"
+            >{{ formatarReais(props.row.valorUnitario) }}</q-td
+          >
         </template>
       </q-table>
 
       <!-- Carrinho -->
       <div v-if="produtosAdicionados.length > 0" class="q-mt-lg">
-        <div class="row items-center text-subtitle1 text-weight-bold q-ml-xs q-mb-md">
-          <q-icon name="shopping_cart" class="q-mr-md" />Carrinho
-          <q-badge color="primary" class="q-ml-sm">{{ produtosAdicionados.length }}</q-badge>
-        </div>
-
-        <q-card flat bordered class="b-r-10">
-
-          <!-- Itens -->
-          <div class="q-pa-md">
-            <div
-              v-for="item in produtosAdicionados"
-              :key="item.item_id"
-              class="row items-center q-py-sm"
-              style="border-bottom: 1px solid #f0f0f0"
-            >
-              <div class="col">
-                <div class="text-weight-bold text-body2" style="font-size: 16px">{{ item.nome }}</div>
-                <div class="text-caption text-grey-6">{{ formatarReais(item.valorUnitario) }} / un.</div>
-                <div v-if="item.desconto > 0" class="text-caption text-negative">
-                  Desconto: - {{ formatarReais(item.desconto) }}
-                </div>
-              </div>
-
-              <div class="row items-center q-gutter-xs q-mx-md">
-                <q-btn icon="remove" size="xs" flat round dense color="grey-7" @click="alterarQuantidade(item, item.quantidade - 1)" />
-                <span class="text-weight-bold" style="min-width: 24px; text-align: center">{{ item.quantidade }}</span>
-                <q-btn icon="add" size="xs" flat round dense color="grey-7" @click="alterarQuantidade(item, item.quantidade + 1)" />
-              </div>
-
-              <div class="row items-center q-gutter-sm">
-                <q-btn-toggle
-                  v-model="item.tipoDesconto"
-                  dense unelevated
-                  toggle-color="primary"
-                  color="white"
-                  text-color="grey-7"
-                  size="md"
-                  :options="[{ label: 'R$', value: 'valor' }, { label: '%', value: 'percent' }]"
-                  class="border b-r-10"
-                />
-                <q-input
-                  v-model.number="item.descontoInput"
-                  type="number"
-                  dense outlined
-                  style="width: 80px"
-                  min="0"
-                  @change="aplicarDesconto(item)"
-                />
-                <span class="text-weight-bold text-positive" style="min-width: 90px; text-align: right">
-                  {{ formatarReais(item.total) }}
-                </span>
-                <q-btn icon="delete" size="xs" flat round color="negative" @click="removerProduto(item)" />
-              </div>
-            </div>
-          </div>
-
-          <!-- Totais -->
-          <div class="q-pa-md row justify-end">
-            <div class="column q-gutter-xs" style="min-width: 220px">
-              <div class="row justify-between text-caption text-grey-7">
-                <span>Subtotal</span>
-                <span>{{ valorBruto }}</span>
-              </div>
-              <div class="row justify-between text-caption text-negative" v-if="descontoReais !== 'R$\u00a00,00'">
-                <span>Desconto</span>
-                <span>- {{ descontoReais }}</span>
-              </div>
-              <q-separator />
-              <div class="row justify-between text-weight-bold text-body1">
-                <span>Total</span>
-                <span class="text-positive">{{ valorTotalVenda }}</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Botões -->
-          <div class="q-pa-md q-pt-none row q-gutter-sm">
-            <q-btn
-              label="Realizar Pagamento"
-              icon="credit_card"
-              color="positive"
-              unelevated
-              class="col"
-              size="md"
-              @click="abrirDialogPagamento()"
+        <!-- Header do carrinho -->
+        <div class="row items-center justify-between q-mb-md">
+          <div class="row items-center q-gutter-sm">
+            <q-icon name="shopping_cart" size="20px" color="grey-7" />
+            <span style="font-size: 15px; font-weight: 500">Carrinho</span>
+            <q-badge
+              color="primary"
+              rounded
+              :label="produtosAdicionados.length"
+              style="font-size: 10px"
             />
-            <q-btn icon="close" color="negative" flat round @click="abrirDialogCancelar()">
-              <q-tooltip>Cancelar Venda</q-tooltip>
-            </q-btn>
           </div>
-        </q-card>
+        </div>
+        <q-separator class="q-mb-md" />
+        <!-- ── Itens ── -->
+        <div class="q-mb-md">
+          <div
+            v-for="item in produtosAdicionados"
+            :key="item.item_id"
+            class="row items-center q-py-md"
+            style="border-bottom: 0.5px solid #f0f0f0"
+          >
+            <!-- Nome + preço -->
+            <div class="col">
+              <div style="font-size: 14px; font-weight: 500; color: #222">
+                {{ item.nome }}
+              </div>
+              <div style="font-size: 12px; color: #999; margin-top: 2px">
+                {{ formatarReais(item.valorUnitario) }} / un.
+              </div>
+              <div
+                v-if="item.desconto > 0"
+                style="font-size: 12px; color: #c0392b; margin-top: 2px"
+              >
+                Desconto: - {{ formatarReais(item.desconto) }}
+              </div>
+            </div>
+            <!-- Quantidade -->
+            <div
+              class="row items-center q-mx-md"
+              style="
+                border: 0.5px solid #ddd;
+                border-radius: 8px;
+                overflow: hidden;
+              "
+            >
+              <q-btn
+                icon="remove"
+                size="xs"
+                flat
+                dense
+                color="grey-7"
+                style="padding: 4px 8px; border-radius: 0"
+                @click="alterarQuantidade(item, item.quantidade - 1)"
+              />
+              <span
+                style="
+                  min-width: 28px;
+                  text-align: center;
+                  font-size: 14px;
+                  font-weight: 500;
+                  padding: 0 4px;
+                "
+              >
+                {{ item.quantidade }}
+              </span>
+              <q-btn
+                icon="add"
+                size="xs"
+                flat
+                dense
+                color="grey-7"
+                style="padding: 4px 8px; border-radius: 0"
+                @click="alterarQuantidade(item, item.quantidade + 1)"
+              />
+            </div>
+            <!-- Desconto -->
+            <div class="row items-center q-gutter-md q-mr-md">
+              <q-btn-toggle
+                v-model="item.tipoDesconto"
+                dense
+                unelevated
+                toggle-color="primary"
+                color="white"
+                text-color="grey-7"
+                size="sm"
+                :options="[{ label: 'R$', value: 'valor' }, { label: '%', value: 'percent' }]"
+                style="
+                  border: 0.5px solid #ddd;
+                  border-radius: 8px;
+                  overflow: hidden;
+                "
+              />
+              <q-input
+                v-model.number="item.descontoInput"
+                type="number"
+                dense
+                outlined
+                style="width: 72px"
+                min="0"
+                @change="aplicarDesconto(item)"
+              />
+            </div>
+            <!-- Total + excluir -->
+            <div class="row items-center q-gutter-sm">
+              <span
+                style="
+                  min-width: 90px;
+                  text-align: right;
+                  font-size: 14px;
+                  font-weight: 500;
+                  color: #1d9e75;
+                "
+              >
+                {{ formatarReais(item.total) }}
+              </span>
+              <q-btn
+                icon="delete_outline"
+                size="sm"
+                flat
+                round
+                color="negative"
+                @click="removerProduto(item)"
+              >
+                <q-tooltip>Remover item</q-tooltip>
+              </q-btn>
+            </div>
+          </div>
+        </div>
+        <!-- ── Totais ── -->
+        <div class="row justify-end q-mb-lg">
+          <div style="min-width: 240px">
+            <div
+              class="row justify-between q-mb-xs"
+              style="font-size: 13px; color: #999"
+            >
+              <span>Subtotal</span>
+              <span>{{ valorBruto }}</span>
+            </div>
+            <div
+              v-if="descontoReais !== 'R$\u00a00,00'"
+              class="row justify-between q-mb-xs"
+              style="font-size: 13px; color: #c0392b"
+            >
+              <span>Desconto</span>
+              <span>- {{ descontoReais }}</span>
+            </div>
+            <q-separator class="q-my-sm" />
+            <div class="row justify-between items-center">
+              <span style="font-size: 14px; font-weight: 500; color: #222"
+                >Total</span
+              >
+              <span
+                style="font-size: 18px; font-weight: 500; color: #1d9e75"
+                >{{ valorTotalVenda }}</span
+              >
+            </div>
+          </div>
+        </div>
+        <!-- ── Ações ── -->
+        <div class="row q-gutter-sm items-center">
+          <q-btn
+            label="Realizar Pagamento"
+            icon="credit_card"
+            color="positive"
+            unelevated
+            class="col"
+            style="border-radius: 8px; font-size: 14px"
+            size="md"
+            @click="abrirDialogPagamento()"
+          />
+          <q-btn
+            icon="close"
+            color="negative"
+            flat
+            round
+            style="border: 0.5px solid #ffcccc; border-radius: 8px"
+            @click="abrirDialogCancelar()"
+          >
+            <q-tooltip>Cancelar Venda</q-tooltip>
+          </q-btn>
+        </div>
       </div>
-
     </div>
 
     <!-- Dialog Cancelar -->
@@ -216,11 +369,25 @@
           <div class="text-h6 text-bold">Cancelar Venda</div>
         </q-card-section>
         <q-card-section class="text-grey-7" style="font-size: 14px">
-          Deseja realmente cancelar a venda? Todos os itens adicionados serão removidos e o estoque será restaurado.
+          Deseja realmente cancelar a venda? Todos os itens adicionados serão
+          removidos e o estoque será restaurado.
         </q-card-section>
         <q-card-actions align="right" class="q-pa-md q-gutter-sm">
-          <q-btn label="Voltar" unelevated style="border: 1px solid #ccc; border-radius: 8px; min-width: 100px" color="white" text-color="dark" v-close-popup />
-          <q-btn label="Sim, Cancelar" unelevated color="negative" style="border-radius: 8px; min-width: 130px" @click="confirmarCancelamento()" />
+          <q-btn
+            label="Voltar"
+            unelevated
+            style="border: 1px solid #ccc; border-radius: 8px; min-width: 100px"
+            color="white"
+            text-color="dark"
+            v-close-popup
+          />
+          <q-btn
+            label="Sim, Cancelar"
+            unelevated
+            color="negative"
+            style="border-radius: 8px; min-width: 130px"
+            @click="confirmarCancelamento()"
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -230,47 +397,116 @@
       <q-card style="min-width: 380px; border-radius: 12px" class="q-pa-sm">
         <q-card-section class="q-pb-none">
           <div class="text-h6 text-bold">Forma de Pagamento</div>
-          <div class="text-caption text-grey-6 q-mt-xs">Total a pagar: <strong class="text-positive">{{ valorTotalVenda }}</strong></div>
+          <div class="text-caption text-grey-6 q-mt-xs">
+            Total a pagar:
+            <strong class="text-positive">{{ valorTotalVenda }}</strong>
+          </div>
         </q-card-section>
         <q-card-section>
           <div class="row q-gutter-sm justify-center q-mt-sm">
             <q-card
               v-for="forma in formasPagamento"
               :key="forma.value"
-              flat bordered
+              flat
+              bordered
               class="cursor-pointer b-r-10 q-pa-md text-center"
               :style="formaPagamentoSelecionada === forma.value ? 'border: 2px solid var(--q-primary)' : ''"
               style="min-width: 100px"
               @click="formaPagamentoSelecionada = forma.value"
             >
-              <q-icon :name="forma.icon" :color="formaPagamentoSelecionada === forma.value ? 'primary' : 'grey-6'" size="28px" />
-              <div class="text-caption q-mt-xs" :class="formaPagamentoSelecionada === forma.value ? 'text-primary text-weight-bold' : 'text-grey-6'">
+              <q-icon
+                :name="forma.icon"
+                :color="formaPagamentoSelecionada === forma.value ? 'primary' : 'grey-6'"
+                size="28px"
+              />
+              <div
+                class="text-caption q-mt-xs"
+                :class="formaPagamentoSelecionada === forma.value ? 'text-primary text-weight-bold' : 'text-grey-6'"
+              >
                 {{ forma.label }}
               </div>
             </q-card>
           </div>
         </q-card-section>
         <q-card-actions align="right" class="q-pa-md q-gutter-sm">
-          <q-btn label="Voltar" unelevated style="border: 1px solid #ccc; border-radius: 8px; min-width: 100px" color="white" text-color="dark" v-close-popup />
-          <q-btn label="Confirmar Pagamento" unelevated color="positive" style="border-radius: 8px; min-width: 160px" :loading="carregando" @click="confirmarPagamento()" />
+          <q-btn
+            label="Voltar"
+            unelevated
+            style="border: 1px solid #ccc; border-radius: 8px; min-width: 100px"
+            color="white"
+            text-color="dark"
+            v-close-popup
+          />
+          <q-btn
+            label="Confirmar Pagamento"
+            unelevated
+            color="positive"
+            style="border-radius: 8px; min-width: 160px"
+            :loading="carregando"
+            @click="confirmarPagamento()"
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>
 
     <!-- Dialog Processando/Sucesso -->
     <q-dialog v-model="dialogProcessando" persistent>
-      <q-card style="min-width: 340px; border-radius: 16px; text-align: center" class="q-pa-xl">
-        <div style="position: relative; width: 72px; height: 72px; margin: 0 auto 1.5rem">
-          <svg v-if="pagamentoStatus === 'loading'" viewBox="0 0 72 72" width="72" height="72" class="spinner-svg" style="position: absolute; top: 0; left: 0">
-            <circle cx="36" cy="36" r="30" fill="none" stroke="#e0e0e0" stroke-width="5"/>
-            <circle cx="36" cy="36" r="30" fill="none" stroke="#1D9E75" stroke-width="5" stroke-linecap="round" stroke-dasharray="60 128" stroke-dashoffset="0" transform="rotate(-90 36 36)"/>
+      <q-card
+        style="min-width: 340px; border-radius: 16px; text-align: center"
+        class="q-pa-xl"
+      >
+        <div
+          style="
+            position: relative;
+            width: 72px;
+            height: 72px;
+            margin: 0 auto 1.5rem;
+          "
+        >
+          <svg
+            v-if="pagamentoStatus === 'loading'"
+            viewBox="0 0 72 72"
+            width="72"
+            height="72"
+            class="spinner-svg"
+            style="position: absolute; top: 0; left: 0"
+          >
+            <circle
+              cx="36"
+              cy="36"
+              r="30"
+              fill="none"
+              stroke="#e0e0e0"
+              stroke-width="5"
+            />
+            <circle
+              cx="36"
+              cy="36"
+              r="30"
+              fill="none"
+              stroke="#1D9E75"
+              stroke-width="5"
+              stroke-linecap="round"
+              stroke-dasharray="60 128"
+              stroke-dashoffset="0"
+              transform="rotate(-90 36 36)"
+            />
           </svg>
-          <svg v-if="pagamentoStatus === 'success'" viewBox="0 0 72 72" width="72" height="72" style="position: absolute; top: 0; left: 0">
-            <circle cx="36" cy="36" r="34" fill="#EAF3DE"/>
+          <svg
+            v-if="pagamentoStatus === 'success'"
+            viewBox="0 0 72 72"
+            width="72"
+            height="72"
+            style="position: absolute; top: 0; left: 0"
+          >
+            <circle cx="36" cy="36" r="34" fill="#EAF3DE" />
             <polyline
               points="20,37 31,48 52,24"
-              fill="none" stroke="#3B6D11" stroke-width="5"
-              stroke-linecap="round" stroke-linejoin="round"
+              fill="none"
+              stroke="#3B6D11"
+              stroke-width="5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
               :stroke-dasharray="54"
               :stroke-dashoffset="checkOffset"
               style="transition: stroke-dashoffset 0.5s ease"
@@ -285,13 +521,27 @@
           {{ pagamentoStatus === 'loading' ? 'Aguarde enquanto a venda é finalizada' : 'Deseja emitir a nota fiscal agora?' }}
         </div>
 
-        <div v-if="pagamentoStatus === 'success'" class="row q-gutter-sm justify-center">
-          <q-btn label="Ver Nota Fiscal" icon="receipt_long" color="positive" unelevated @click="irParaNotaFiscal()" />
-          <q-btn label="Fechar" flat class="text-grey-7" v-close-popup @click="limparTela()" />
+        <div
+          v-if="pagamentoStatus === 'success'"
+          class="row q-gutter-sm justify-center"
+        >
+          <q-btn
+            label="Ver Nota Fiscal"
+            icon="receipt_long"
+            color="positive"
+            unelevated
+            @click="irParaNotaFiscal()"
+          />
+          <q-btn
+            label="Fechar"
+            flat
+            class="text-grey-7"
+            v-close-popup
+            @click="limparTela()"
+          />
         </div>
       </q-card>
     </q-dialog>
-
   </div>
 </template>
 
@@ -600,10 +850,16 @@ irParaNotaFiscal() {
 </script>
 
 <style scoped>
-.b-r-10 { border-radius: 10px; }
-.border { border: 1px solid #ccc; }
+.b-r-10 {
+  border-radius: 10px;
+}
+.border {
+  border: 1px solid #ccc;
+}
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .spinner-svg {

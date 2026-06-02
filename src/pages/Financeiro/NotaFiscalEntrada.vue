@@ -86,7 +86,7 @@
         </div>
 
         <div v-for="(item, index) in itens" :key="index" class="q-mb-md">
-          <q-card flat bordered class="q-pa-md b-r-10">
+          <q-card flat bordered class="q-pa-md">
             <div class="row items-center justify-between q-mb-sm">
               <span class="text-weight-bold text-grey-7">Produto {{ index + 1 }}</span>
               <q-btn
@@ -140,22 +140,6 @@
             </div>
           </q-card>
         </div>
-
-        <!-- Total da NF -->
-        <div class="row justify-end q-mb-lg">
-          <div class="column q-gutter-xs" style="min-width: 220px">
-            <div class="row q-mt-md justify-between text-caption text-grey-6">
-              <span>Total de Produtos</span>
-              <span>{{ itens.length }}</span>
-            </div>
-            <q-separator />
-            <div class="row justify-between text-weight-bold text-body1">
-              <span>Valor Total NF</span>
-              <span class="text-positive">{{ formatarReais(valorTotalNF) }}</span>
-            </div>
-          </div>
-        </div>
-
         <!-- Tributação -->
         <div class="text-h6 q-mb-md">Tributação</div>
         <div class="row q-col-gutter-md q-mb-lg">
@@ -183,6 +167,30 @@
             <q-input v-model="form.observacoes" type="textarea" outlined dense input-style="resize: none;" rows="3" />
           </div>
         </div>
+
+<div class="row justify-end q-mb-lg">
+  <q-card unelevated class="q-pa-md summary-card no-shadow">
+    
+    <div class="column q-gutter-sm" style="min-width: 300px">
+      
+      <div class="row justify-between items-center text-caption text-grey-6">
+        <span>Total de Produtos</span>
+        <span class="text-weight-medium">{{ itens.length }}</span>
+      </div>
+
+      <q-separator spaced />
+
+      <div class="row justify-between items-center text-body1 text-weight-bold">
+        <span>Valor Total NF</span>
+        <span class="text-positive text-h6">
+          {{ formatarReais(valorTotalNF) }}
+        </span>
+      </div>
+
+    </div>
+
+  </q-card>
+</div>
 
         <!-- Botões -->
         <div class="row justify-start q-gutter-sm">

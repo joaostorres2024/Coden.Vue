@@ -114,7 +114,7 @@
           @click="$router.push('/RelatorioEstoque')"
         >
           <q-item-section avatar>
-            <q-icon name="o_inventory" size="20px" color="white" />
+            <q-icon name="o_inventory_2" size="20px" color="white" />
           </q-item-section>
           <q-item-section class="menu-label">Estoque</q-item-section>
         </q-item>
@@ -180,18 +180,6 @@
             <q-icon name="fab fa-whatsapp" size="20px" color="white" />
           </q-item-section>
           <q-item-section class="menu-label">WhatsApp</q-item-section>
-        </q-item>
-
-        <q-item
-          clickable v-ripple
-          class="menu-item b-r-10 q-mb-xs text-white"
-          :class="$route.path === '/Ajuda' ? 'menu-item-active' : ''"
-          @click="$router.push('/Ajuda')"
-        >
-          <q-item-section avatar>
-            <q-icon name="help_outline" size="20px" color="white" />
-          </q-item-section>
-          <q-item-section class="menu-label">Ajuda</q-item-section>
         </q-item>
 
       </q-list>

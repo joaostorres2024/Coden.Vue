@@ -398,6 +398,7 @@ marketplaces = [
   {
     nome: 'Shopee',
     tipo: 'Marketplace',
+    emBreve: true,
     conectado: false,
     logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Shopee_logo.svg/1920px-Shopee_logo.svg.png'
   },
