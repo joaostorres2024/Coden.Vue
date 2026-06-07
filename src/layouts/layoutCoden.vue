@@ -158,30 +158,6 @@
           <q-item-section class="menu-label">Integrações</q-item-section>
         </q-item>
 
-        <q-item
-          clickable v-ripple
-          class="menu-item b-r-10 q-mb-xs text-white"
-          :class="$route.path === '/Agentes' ? 'menu-item-active' : ''"
-          @click="$router.push('/Agentes')"
-        >
-          <q-item-section avatar>
-            <q-icon name="support_agent" size="20px" color="white" />
-          </q-item-section>
-          <q-item-section class="menu-label">Agentes de IA</q-item-section>
-        </q-item>
-
-        <q-item
-          clickable v-ripple
-          class="menu-item b-r-10 q-mb-xs text-white"
-          :class="$route.path === '/Whatsapp' ? 'menu-item-active' : ''"
-          @click="$router.push('/Whatsapp')"
-        >
-          <q-item-section avatar>
-            <q-icon name="fab fa-whatsapp" size="20px" color="white" />
-          </q-item-section>
-          <q-item-section class="menu-label">WhatsApp</q-item-section>
-        </q-item>
-
       </q-list>
     </q-scroll-area>
 

@@ -27,17 +27,23 @@
         <div>
           <div class="text-bold q-pb-md" style="font-size: 18px">Minhas Integrações</div>
           <div v-if="minhasIntegracoes.length" class="row q-col-gutter-md">
-            <div v-for="m in minhasIntegracoes" :key="m.nome" class="col-12 col-sm-6 col-md-4">
-              <q-card class="row items-center justify-between q-pa-md b-r-10 border no-shadow">
+            <div v-for="m in minhasIntegracoes" :key="m.nome" class="col-12 col-sm-6 col-md-3">
+              <q-card class="column items-center q-pa-lg b-r-16 border no-shadow mp-card">
                 <q-inner-loading :showing="verificandoConexao" />
-                <div class="row items-center q-col-gutter-md">
-                  <img :src="m.logo" style="width: 50px" />
-                  <div class="column">
-                    <p class="text-h6 text-bold q-ma-none">{{ m.nome }}</p>
-                    <p class="q-ma-none">{{ m.tipo }}</p>
-                  </div>
-                </div>
-                <q-btn label="Gerenciar" unelevated class="bg-primary text-white" @click="irParaDashboard(m)" />
+                <img :src="m.logo" class="mp-logo q-mb-md" />
+                <p class="text-bold q-ma-none text-center" style="font-size: 22px;">{{ m.nome }}</p>
+                <p class="text-body2 text-grey-6 q-mt-xs q-mb-md">{{ m.tipo }}</p>
+                <q-badge color="positive" class="q-mb-md q-px-sm q-py-xs">
+                  <q-icon name="circle" size="8px" class="q-mr-xs" />
+                  Conectado
+                </q-badge>
+                <q-btn
+                  label="Gerenciar"
+                  unelevated
+                  class="bg-primary text-white full-width"
+                  style="border-radius: 8px"
+                  @click="irParaDashboard(m)"
+                />
               </q-card>
             </div>
           </div>
@@ -48,25 +54,22 @@
         <div class="q-mt-xl">
           <div class="text-bold q-pb-md" style="font-size: 18px">Integrações disponíveis</div>
           <div v-if="integracoesDisponiveis.length" class="row q-col-gutter-md">
-            <div v-for="m in integracoesDisponiveis" :key="m.nome" class="col-12 col-sm-6 col-md-4">
-              <q-card class="row items-center justify-between q-pa-md b-r-10 border no-shadow">
-                <div class="row items-center q-col-gutter-md">
-                  <img :src="m.logo" style="width: 50px" />
-                  <div class="column">
-                    <p class="text-h6 text-bold q-ma-none">{{ m.nome }}</p>
-                    <p class="q-ma-none">{{ m.tipo }}</p>
-                  </div>
-                </div>
-                <div class="column items-center q-gutter-xs">
-                  <q-badge v-if="m.emBreve" color="positive" class="q-mb-xs">Em breve</q-badge>
-                  <q-btn
-                    :label="m.emBreve ? 'Indisponível' : 'Adicionar'"
-                    unelevated
-                    :disable="m.emBreve"
-                    class="bg-primary text-white"
-                    @click="!m.emBreve && irParaConectar(m)"
-                  />
-                </div>
+            <div v-for="m in integracoesDisponiveis" :key="m.nome" class="col-12 col-sm-6 col-md-3">
+              <q-card class="column items-center q-pa-lg b-r-16 border no-shadow mp-card">
+                <img :src="m.logo" class="mp-logo q-mb-md" />
+                <p class="text-bold q-ma-none text-center" style="font-size: 22px;">{{ m.nome }}</p>
+                <p class="text-body2 text-grey-6 q-mt-xs" :class="m.emBreve ? 'q-mb-md' : 'q-mb-lg'">{{ m.tipo }}</p>
+                <q-badge v-if="m.emBreve" color="positive" class="q-mb-md q-px-sm q-py-xs">
+                  Em breve
+                </q-badge>
+                <q-btn
+                  :label="m.emBreve ? 'Indisponível' : 'Adicionar'"
+                  unelevated
+                  :disable="m.emBreve"
+                  class="bg-primary text-white full-width"
+                  style="border-radius: 8px"
+                  @click="!m.emBreve && irParaConectar(m)"
+                />
               </q-card>
             </div>
           </div>
@@ -130,16 +133,17 @@
         indicator-color="primary"
         class="q-mb-md"
       >
-        <q-tab name="visao" label="Visão Geral" />
-        <q-tab name="config" label="Configurações" />
-        <q-tab name="logs" label="Logs" />
+        <q-tab name="dashboard" label="Dashboard" />
         <q-tab name="produtos" label="Produtos" />
+        <q-tab name="pedidos" label="Pedidos" />
+        <q-tab name="notafiscal" label="Nota Fiscal" />
+        <q-tab name="config" label="Configurações" />
       </q-tabs>
 
       <q-tab-panels v-model="abaAtiva" animated>
 
-        <!-- ABA: VISÃO GERAL -->
-        <q-tab-panel name="visao" class="q-pa-none">
+        <!-- ABA: DASHBOARD -->
+        <q-tab-panel name="dashboard" class="q-pa-none">
           <div class="row q-col-gutter-md q-mb-md">
             <div class="col-6 col-md-3">
               <q-card class="no-shadow border b-r-10 q-pa-md">
@@ -153,6 +157,18 @@
                 <div class="text-caption text-grey-6">Total de pedidos</div>
               </q-card>
             </div>
+            <div class="col-6 col-md-3">
+              <q-card class="no-shadow border b-r-10 q-pa-md">
+                <div class="text-h5 text-bold text-black">{{ totalNotasFiscais }}</div>
+                <div class="text-caption text-grey-6">Notas fiscais emitidas</div>
+              </q-card>
+            </div>
+            <div class="col-6 col-md-3">
+              <q-card class="no-shadow border b-r-10 q-pa-md">
+                <div class="text-h5 text-bold text-black">{{ receitaTotal }}</div>
+                <div class="text-caption text-grey-6">Receita total</div>
+              </q-card>
+            </div>
           </div>
           <div class="row items-center justify-between">
             <div class="text-caption text-grey-6">
@@ -160,85 +176,6 @@
             </div>
             <q-btn label="Renovar token" unelevated class="bg-primary text-white" />
           </div>
-        </q-tab-panel>
-
-        <!-- ABA: CONFIGURAÇÕES -->
-        <q-tab-panel name="config" class="q-pa-none">
-          <q-card class="no-shadow border b-r-10 q-pa-md q-mb-md">
-            <div class="text-caption text-grey-6 q-mb-md">SINCRONIZAÇÃO</div>
-            <div class="column q-gutter-sm">
-              <q-toggle v-model="config.sincEstoque" label="Sincronizar estoque automaticamente" color="primary" />
-              <q-toggle v-model="config.sincPrecos" label="Sincronizar preços automaticamente" color="primary" />
-              <q-toggle v-model="config.publicarAuto" label="Publicar novos produtos automaticamente" color="primary" />
-              <q-separator class="q-my-sm" />
-              <div class="row items-center q-gutter-md">
-                <span class="text-body2 text-grey-7">Frequência de sincronização</span>
-                <q-select v-model="config.frequencia" :options="opcoesFrequencia" outlined dense style="min-width: 200px" />
-              </div>
-            </div>
-          </q-card>
-
-          <q-card class="no-shadow border b-r-10 q-pa-md q-mb-md">
-            <div class="text-caption text-grey-6 q-mb-md">REGRAS DE PREÇO</div>
-            <div class="row q-gutter-md items-center">
-              <q-select v-model="config.tipoAjuste" :options="opcoesTipoAjuste" label="Tipo de ajuste" outlined dense class="col-3" />
-              <q-input v-model="config.valorAjuste" label="Valor (%)" type="number" outlined dense class="col-2" />
-              <span class="text-caption text-grey-6">
-                Ex: produto R$100 → R${{ 100 + Number(config.valorAjuste) }} no {{ marketplaceSelecionado.nome }}
-              </span>
-            </div>
-          </q-card>
-
-          <q-card class="no-shadow border b-r-10 q-pa-md q-mb-md">
-            <div class="text-caption text-grey-6 q-mb-md">MAPEAMENTO DE CATEGORIAS</div>
-            <div class="column q-gutter-sm">
-              <div v-for="(cat, i) in config.categorias" :key="i" class="row items-center q-gutter-md">
-                <span class="text-body2 text-grey-7" style="min-width: 140px">{{ cat.origem }}</span>
-                <q-icon name="arrow_forward" color="grey-5" />
-                <q-select v-model="cat.destino" :options="cat.opcoes" outlined dense style="min-width: 220px" />
-              </div>
-            </div>
-          </q-card>
-
-          <q-card class="no-shadow border b-r-10 q-pa-md q-mb-md">
-            <div class="text-caption text-grey-6 q-mb-md">DESCONECTAR INTEGRAÇÃO</div>
-            <q-btn unelevated label="Desconectar" class="bg-negative text-white" @click="desconectar()" />
-          </q-card>
-
-          <div class="row justify-start q-gutter-sm">
-            <q-btn label="Cancelar" flat color="grey-7" />
-            <q-btn label="Salvar configurações" unelevated color="primary" />
-          </div>
-        </q-tab-panel>
-
-        <!-- ABA: LOGS -->
-        <q-tab-panel name="logs" class="q-pa-none">
-          <div class="row items-center justify-between q-mb-md">
-            <q-btn-toggle
-              v-model="filtroLog"
-              unelevated
-              toggle-color="primary"
-              color="white"
-              text-color="grey-7"
-              :options="[
-                { label: 'Todos', value: 'todos' },
-                { label: 'Erros', value: 'erro' },
-                { label: 'Avisos', value: 'aviso' },
-                { label: 'Sucesso', value: 'sucesso' }
-              ]"
-              dense
-              class="border b-r-10"
-            />
-            <q-select
-              v-model="periodoLog"
-              :options="['Últimas 24h', 'Últimos 7 dias', 'Últimos 30 dias']"
-              outlined dense
-              style="min-width: 160px"
-            />
-          </div>
-          <q-card class="no-shadow border b-r-10">
-            <q-list separator />
-          </q-card>
         </q-tab-panel>
 
         <!-- ABA: PRODUTOS -->
@@ -298,6 +235,166 @@
           </q-card>
         </q-tab-panel>
 
+        <!-- ABA: PEDIDOS -->
+        <q-tab-panel name="pedidos" class="q-pa-none">
+          <div class="row items-center justify-between q-mb-md q-gutter-sm">
+            <q-input v-model="buscaPedido" label="Pesquisar pedido..." outlined dense style="min-width: 240px">
+              <template v-slot:prepend><q-icon name="search" /></template>
+            </q-input>
+            <div class="row q-gutter-sm items-center">
+              <q-select
+                v-model="filtroPedido"
+                :options="[
+                  { label: 'Todos os status', value: 'todos' },
+                  { label: 'Pago', value: 'paid' },
+                  { label: 'Pendente', value: 'pending' },
+                  { label: 'Cancelado', value: 'cancelled' }
+                ]"
+                option-label="label"
+                option-value="value"
+                emit-value map-options
+                outlined dense
+                style="min-width: 160px"
+              />
+              <q-btn label="Sincronizar pedidos" unelevated color="primary" icon="sync" @click="carregarPedidos()" />
+            </div>
+          </div>
+
+          <q-card class="no-shadow border b-r-10">
+            <q-inner-loading :showing="carregandoPedidos" />
+            <q-table
+              flat
+              :data="pedidosFiltrados"
+              :columns="colunasPedidos"
+              :hide-bottom="pedidosFiltrados.length > 0"
+              bordered
+              no-data-label="Nenhum pedido encontrado"
+              class="text-weight-medium"
+            >
+              <template v-slot:body-cell-status="props">
+                <q-td :props="props">
+                  <q-badge :color="props.value === 'paid' ? 'positive' : props.value === 'pending' ? 'orange' : 'negative'">
+                    {{ props.value === 'paid' ? 'Pago' : props.value === 'pending' ? 'Pendente' : 'Cancelado' }}
+                  </q-badge>
+                </q-td>
+              </template>
+              <template v-slot:body-cell-total="props">
+                <q-td :props="props" align="center">{{ formatarReais(props.row.total) }}</q-td>
+              </template>
+              <template v-slot:body-cell-acoes="props">
+                <q-td :props="props">
+                  <q-btn flat dense icon="open_in_new" color="primary" :href="props.row.permalink" target="_blank" />
+                </q-td>
+              </template>
+            </q-table>
+          </q-card>
+        </q-tab-panel>
+
+        <!-- ABA: NOTA FISCAL -->
+        <q-tab-panel name="notafiscal" class="q-pa-none">
+          <div class="row items-center justify-between q-mb-md q-gutter-sm">
+            <q-input v-model="buscaNF" label="Pesquisar nota fiscal..." outlined dense style="min-width: 240px">
+              <template v-slot:prepend><q-icon name="search" /></template>
+            </q-input>
+            <div class="row q-gutter-sm items-center">
+              <q-select
+                v-model="filtroNF"
+                :options="[
+                  { label: 'Todos os status', value: 'todos' },
+                  { label: 'Emitida', value: 'emitida' },
+                  { label: 'Pendente', value: 'pendente' },
+                  { label: 'Cancelada', value: 'cancelada' }
+                ]"
+                option-label="label"
+                option-value="value"
+                emit-value map-options
+                outlined dense
+                style="min-width: 160px"
+              />
+              <q-btn label="Emitir NF-e" unelevated color="primary" icon="receipt_long" />
+            </div>
+          </div>
+
+          <q-card class="no-shadow border b-r-10">
+            <q-table
+              flat
+              :data="notasFiscaisFiltradas"
+              :columns="colunasNotaFiscal"
+              :hide-bottom="notasFiscaisFiltradas.length > 0"
+              bordered
+              no-data-label="Nenhuma nota fiscal encontrada"
+              class="text-weight-medium"
+            >
+              <template v-slot:body-cell-status="props">
+                <q-td :props="props">
+                  <q-badge :color="props.value === 'emitida' ? 'positive' : props.value === 'pendente' ? 'orange' : 'negative'">
+                    {{ props.value === 'emitida' ? 'Emitida' : props.value === 'pendente' ? 'Pendente' : 'Cancelada' }}
+                  </q-badge>
+                </q-td>
+              </template>
+              <template v-slot:body-cell-valor="props">
+                <q-td :props="props" align="center">{{ formatarReais(props.row.valor) }}</q-td>
+              </template>
+              <template v-slot:body-cell-acoes="props">
+                <q-td :props="props">
+                  <q-btn flat dense icon="download" color="primary" title="Baixar XML" />
+                  <q-btn flat dense icon="picture_as_pdf" color="secondary" title="Baixar DANFE" />
+                  <q-btn flat dense icon="cancel" color="negative" title="Cancelar NF" v-if="props.row.status === 'emitida'" />
+                </q-td>
+              </template>
+            </q-table>
+          </q-card>
+        </q-tab-panel>
+
+        <!-- ABA: CONFIGURAÇÕES -->
+        <q-tab-panel name="config" class="q-pa-none">
+          <q-card class="no-shadow border b-r-10 q-pa-md q-mb-md">
+            <div class="text-caption text-grey-6 q-mb-md">SINCRONIZAÇÃO</div>
+            <div class="column q-gutter-sm">
+              <q-toggle v-model="config.sincEstoque" label="Sincronizar estoque automaticamente" color="primary" />
+              <q-toggle v-model="config.sincPrecos" label="Sincronizar preços automaticamente" color="primary" />
+              <q-toggle v-model="config.publicarAuto" label="Publicar novos produtos automaticamente" color="primary" />
+              <q-separator class="q-my-sm" />
+              <div class="row items-center q-gutter-md">
+                <span class="text-body2 text-grey-7">Frequência de sincronização</span>
+                <q-select v-model="config.frequencia" :options="opcoesFrequencia" outlined dense style="min-width: 200px" />
+              </div>
+            </div>
+          </q-card>
+
+          <q-card class="no-shadow border b-r-10 q-pa-md q-mb-md">
+            <div class="text-caption text-grey-6 q-mb-md">REGRAS DE PREÇO</div>
+            <div class="row q-gutter-md items-center">
+              <q-select v-model="config.tipoAjuste" :options="opcoesTipoAjuste" label="Tipo de ajuste" outlined dense class="col-3" />
+              <q-input v-model="config.valorAjuste" label="Valor (%)" type="number" outlined dense class="col-2" />
+              <span class="text-caption text-grey-6">
+                Ex: produto R$100 → R${{ 100 + Number(config.valorAjuste) }} no {{ marketplaceSelecionado.nome }}
+              </span>
+            </div>
+          </q-card>
+
+          <q-card class="no-shadow border b-r-10 q-pa-md q-mb-md">
+            <div class="text-caption text-grey-6 q-mb-md">MAPEAMENTO DE CATEGORIAS</div>
+            <div class="column q-gutter-sm">
+              <div v-for="(cat, i) in config.categorias" :key="i" class="row items-center q-gutter-md">
+                <span class="text-body2 text-grey-7" style="min-width: 140px">{{ cat.origem }}</span>
+                <q-icon name="arrow_forward" color="grey-5" />
+                <q-select v-model="cat.destino" :options="cat.opcoes" outlined dense style="min-width: 220px" />
+              </div>
+            </div>
+          </q-card>
+
+          <q-card class="no-shadow border b-r-10 q-pa-md q-mb-md">
+            <div class="text-caption text-grey-6 q-mb-md">DESCONECTAR INTEGRAÇÃO</div>
+            <q-btn unelevated label="Desconectar" class="bg-negative text-white" @click="desconectar()" />
+          </q-card>
+
+          <div class="row justify-start q-gutter-sm">
+            <q-btn label="Cancelar" flat color="grey-7" />
+            <q-btn label="Salvar configurações" unelevated color="primary" />
+          </div>
+        </q-tab-panel>
+
       </q-tab-panels>
     </div>
 
@@ -341,12 +438,11 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import gridProdutosMercadoLivre from '../config/produtosMercadoLivre.json'
 import mlService, { StatusML, ProdutoML, PedidoML } from '../services/mlService'
-import { NOMEM } from 'dns'
 
 @Component
 export default class ModuleComponent extends Vue {
   tela: 'inicio' | 'conectar' | 'dashboard' = 'inicio'
-  abaAtiva = 'visao'
+  abaAtiva = 'dashboard'
   dialogCancelar = false
   dialogDesconectar = false
   carregando = false
@@ -358,12 +454,50 @@ export default class ModuleComponent extends Vue {
   formularioIntegracao: any = { nome: '' }
 
   busca = ''
+
+  // Produtos
   buscaProduto = ''
   filtroProduto = 'todos'
-  filtroLog = 'todos'
-  periodoLog = 'Últimas 24h'
+  carregandoProdutos = false
+  produtos: ProdutoML[] = []
+  totalProdutos = 0
+
+  // Pedidos
+  buscaPedido = ''
+  filtroPedido = 'todos'
+  carregandoPedidos = false
+  pedidos: PedidoML[] = []
+  totalPedidos = 0
+
+  // Nota Fiscal
+  buscaNF = ''
+  filtroNF = 'todos'
+  notasFiscais: any[] = []
+  totalNotasFiscais = 0
+
+  // Dashboard
+  receitaTotal = 'R$ 0,00'
 
   colunaProdutosMercadoLivre = gridProdutosMercadoLivre.columns
+
+  colunasPedidos = [
+    { name: 'id', label: 'Nº Pedido', field: 'id', align: 'left' },
+    { name: 'comprador', label: 'Comprador', field: 'comprador', align: 'left' },
+    { name: 'status', label: 'Status', field: 'status', align: 'center' },
+    { name: 'total', label: 'Total', field: 'total', align: 'center' },
+    { name: 'data', label: 'Data', field: 'data', align: 'center' },
+    { name: 'acoes', label: 'Ações', field: 'acoes', align: 'center' }
+  ]
+
+  colunasNotaFiscal = [
+    { name: 'numero', label: 'Nº NF-e', field: 'numero', align: 'left' },
+    { name: 'pedido', label: 'Pedido', field: 'pedido', align: 'left' },
+    { name: 'destinatario', label: 'Destinatário', field: 'destinatario', align: 'left' },
+    { name: 'valor', label: 'Valor', field: 'valor', align: 'center' },
+    { name: 'status', label: 'Status', field: 'status', align: 'center' },
+    { name: 'emissao', label: 'Emissão', field: 'emissao', align: 'center' },
+    { name: 'acoes', label: 'Ações', field: 'acoes', align: 'center' }
+  ]
 
   config = {
     sincEstoque: true,
@@ -378,45 +512,21 @@ export default class ModuleComponent extends Vue {
   opcoesFrequencia = ['A cada 30 minutos', 'A cada 1 hora', 'A cada 4 horas', 'Diariamente']
   opcoesTipoAjuste = ['Sem ajuste', 'Markup (%)', 'Desconto (%)', 'Preço fixo']
 
-  // Produtos vindos da API do ML
-  produtos: ProdutoML[] = []
-  totalProdutos = 0
-  carregandoProdutos = false
-
-  // Pedidos vindos da API do ML
-  pedidos: PedidoML[] = []
-  totalPedidos = 0
-
-marketplaces = [
-  {
-    nome: 'Mercado Livre',
-    tipo: 'Marketplace',
-    conectado: false,
-    emBreve: false,
-    logo: 'https://cdn.iconscout.com/icon/free/png-256/free-mercado-livre-icon-svg-download-png-14549372.png'
-  },
-  {
-    nome: 'Shopee',
-    tipo: 'Marketplace',
-    emBreve: true,
-    conectado: false,
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Shopee_logo.svg/1920px-Shopee_logo.svg.png'
-  },
-  {
-    nome: 'Shopify',
-    tipo: 'Marketplace',
-    conectado: false,
-    emBreve: true,
-    logo: 'https://img.icons8.com/color/512/shopify.png'
-  }
-]
+  marketplaces = [
+    {
+      nome: 'Mercado Livre',
+      tipo: 'Marketplace',
+      conectado: false,
+      emBreve: false,
+      logo: 'https://cdn.iconscout.com/icon/free/png-256/free-mercado-livre-icon-svg-download-png-14549372.png'
+    }
+  ]
 
   // ─── LIFECYCLE ─────────────────────────────────────────────────────────────
 
-async created() {
-  await this.verificarConexaoML()
-}
-
+  async created() {
+    await this.verificarConexaoML()
+  }
 
   // ─── COMPUTED ──────────────────────────────────────────────────────────────
 
@@ -427,22 +537,42 @@ async created() {
     )
   }
 
-  formatarReais(valor: string | number): string {
-    const numero = typeof valor === 'string' ? parseFloat(valor) : valor
-    return numero.toLocaleString('pt-BR', {
-      style: 'currency',
-      currency: 'BRL'
+  get minhasIntegracoes() {
+    return this.marketplacesFiltrados.filter(m => m.conectado)
+  }
+
+  get integracoesDisponiveis() {
+    return this.marketplacesFiltrados.filter(m => !m.conectado)
+  }
+
+  get produtosFiltrados() {
+    return this.produtos.filter(p => {
+      const matchBusca = !this.buscaProduto ||
+        p.title.toLowerCase().includes(this.buscaProduto.toLowerCase())
+      const matchFiltro = this.filtroProduto === 'todos' || p.status === this.filtroProduto
+      return matchBusca && matchFiltro
     })
   }
 
-get produtosFiltrados() {
-  return this.produtos.filter(p => {
-    const matchBusca = !this.buscaProduto ||
-      p.title.toLowerCase().includes(this.buscaProduto.toLowerCase())
-    const matchFiltro = this.filtroProduto === 'todos' || p.status === this.filtroProduto
-    return matchBusca && matchFiltro
-  })
-}
+  get pedidosFiltrados() {
+    return this.pedidos.filter((p: any) => {
+      const matchBusca = !this.buscaPedido ||
+        String(p.id).toLowerCase().includes(this.buscaPedido.toLowerCase()) ||
+        (p.comprador || '').toLowerCase().includes(this.buscaPedido.toLowerCase())
+      const matchFiltro = this.filtroPedido === 'todos' || p.status === this.filtroPedido
+      return matchBusca && matchFiltro
+    })
+  }
+
+  get notasFiscaisFiltradas() {
+    return this.notasFiscais.filter((nf: any) => {
+      const matchBusca = !this.buscaNF ||
+        String(nf.numero).toLowerCase().includes(this.buscaNF.toLowerCase()) ||
+        (nf.destinatario || '').toLowerCase().includes(this.buscaNF.toLowerCase())
+      const matchFiltro = this.filtroNF === 'todos' || nf.status === this.filtroNF
+      return matchBusca && matchFiltro
+    })
+  }
 
   get tokenExpiraEm() {
     if (!this.statusML?.expira_em) return '-'
@@ -451,27 +581,30 @@ get produtosFiltrados() {
 
   // ─── MÉTODOS ───────────────────────────────────────────────────────────────
 
-async verificarConexaoML() {
-  const index = this.marketplaces.findIndex(m => m.nome === 'Mercado Livre')
-
-  try {
-    this.statusML = await mlService.getStatus()
-    Vue.set(this.marketplaces, index, {
-      ...this.marketplaces[index],
-      conectado: this.statusML.conectado ?? false
-    })
-
-    if (this.statusML?.conectado) {
-      await this.carregarProdutos()
-      await this.carregarPedidos()
-    }
-  } catch {
-    Vue.set(this.marketplaces, index, {
-      ...this.marketplaces[index],
-      conectado: false
-    })
+  formatarReais(valor: string | number): string {
+    const numero = typeof valor === 'string' ? parseFloat(valor) : valor
+    return numero.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
   }
-}
+
+  async verificarConexaoML() {
+    const index = this.marketplaces.findIndex(m => m.nome === 'Mercado Livre')
+    try {
+      this.statusML = await mlService.getStatus()
+      Vue.set(this.marketplaces, index, {
+        ...this.marketplaces[index],
+        conectado: this.statusML.conectado ?? false
+      })
+      if (this.statusML?.conectado) {
+        await this.carregarProdutos()
+        await this.carregarPedidos()
+      }
+    } catch {
+      Vue.set(this.marketplaces, index, {
+        ...this.marketplaces[index],
+        conectado: false
+      })
+    }
+  }
 
   async irParaConectar(marketplace: any) {
     this.marketplaceSelecionado = marketplace
@@ -479,90 +612,82 @@ async verificarConexaoML() {
     this.tela = 'conectar'
   }
 
-async conectarML() {
-  try {
-    this.verificandoConexao = true
-    const url = await mlService.getLoginUrl()
+  async conectarML() {
+    try {
+      this.verificandoConexao = true
+      const url = await mlService.getLoginUrl()
 
-    this.$q.dialog({
-      title: 'Conectar Mercado Livre',
-      message: 'Uma janela de autenticação será aberta. Caso queira conectar uma conta diferente, certifique-se de estar deslogado do Mercado Livre antes de continuar.',
-      ok: { label: 'Continuar', color: 'primary', unelevated: true },
-      cancel: { label: 'Cancelar', flat: true }
-    }).onOk(() => {
-      const largura = 600
-      const altura = 700
-      const left = window.screenX + (window.outerWidth - largura) / 2
-      const top = window.screenY + (window.outerHeight - altura) / 2
+      this.$q.dialog({
+        title: 'Conectar Mercado Livre',
+        message: 'Uma janela de autenticação será aberta. Caso queira conectar uma conta diferente, certifique-se de estar deslogado do Mercado Livre antes de continuar.',
+        ok: { label: 'Continuar', color: 'primary', unelevated: true },
+        cancel: { label: 'Cancelar', flat: true }
+      }).onOk(() => {
+        const largura = 600
+        const altura = 700
+        const left = window.screenX + (window.outerWidth - largura) / 2
+        const top = window.screenY + (window.outerHeight - altura) / 2
 
-      const popup = window.open(
-        url,
-        'ml_auth',
-        `width=${largura},height=${altura},left=${left},top=${top},toolbar=no,menubar=no,scrollbars=yes`
-      )
+        const popup = window.open(
+          url,
+          'ml_auth',
+          `width=${largura},height=${altura},left=${left},top=${top},toolbar=no,menubar=no,scrollbars=yes`
+        )
 
-const intervalo = setInterval(async () => {
-  if (popup?.closed) {
-    clearInterval(intervalo)
-
-    await new Promise(resolve => setTimeout(resolve, 2000))
-
-
-    await this.verificarConexaoML()
-    if (this.statusML?.conectado) {
-      this.irParaDashboard(this.marketplaceSelecionado)
-    } else {
-      this.$q.notify({ message: 'Conexão não detectada, tente novamente', color: 'warning' })
+        const intervalo = setInterval(async () => {
+          if (popup?.closed) {
+            clearInterval(intervalo)
+            await new Promise(resolve => setTimeout(resolve, 2000))
+            await this.verificarConexaoML()
+            if (this.statusML?.conectado) {
+              this.irParaDashboard(this.marketplaceSelecionado)
+            } else {
+              this.$q.notify({ message: 'Conexão não detectada, tente novamente', color: 'warning' })
+            }
+          }
+        }, 1000)
+      })
+    } catch (err) {
+      this.$q.notify({ message: 'Erro ao conectar com o Mercado Livre', color: 'negative' })
+    } finally {
+      this.verificandoConexao = false
     }
   }
-}, 1000)
-    })
-  } catch (err) {
-    this.$q.notify({ message: 'Erro ao conectar com o Mercado Livre', color: 'negative' })
-  } finally {
-    this.verificandoConexao = false
+
+  async irParaDashboard(marketplace: any) {
+    this.marketplaceSelecionado = marketplace
+    this.abaAtiva = 'dashboard'
+    this.tela = 'dashboard'
+    const index = this.marketplaces.findIndex(x => x.nome === marketplace.nome)
+    Vue.set(this.marketplaces, index, { ...this.marketplaces[index], conectado: true })
+    await this.carregarProdutos()
+    await this.carregarPedidos()
   }
-}
 
-async irParaDashboard(marketplace: any) {
-  this.marketplaceSelecionado = marketplace
-  this.abaAtiva = 'visao'
-  this.tela = 'dashboard'
-  const index = this.marketplaces.findIndex(x => x.nome === marketplace.nome)
-  Vue.set(this.marketplaces, index, { ...this.marketplaces[index], conectado: true })
-  await this.carregarProdutos()
-  await this.carregarPedidos()
-}
-
-get minhasIntegracoes() {
-  return this.marketplacesFiltrados.filter(m => m.conectado)
-}
-
-get integracoesDisponiveis() {
-  return this.marketplacesFiltrados.filter(m => !m.conectado)
-}
-
-async carregarProdutos() {
-  try {
-    this.carregandoProdutos = true
-    const resultado = await mlService.listarProdutos()
-    this.totalProdutos = resultado.total
-    this.produtos = resultado.produtos
-  } catch (err) {
-    console.error('Erro ao carregar produtos:', err)
-    this.$q.notify({ message: 'Erro ao carregar produtos', color: 'negative' })
-  } finally {
-    this.carregandoProdutos = false
+  async carregarProdutos() {
+    try {
+      this.carregandoProdutos = true
+      const resultado = await mlService.listarProdutos()
+      this.totalProdutos = resultado.total
+      this.produtos = resultado.produtos
+    } catch (err) {
+      console.error('Erro ao carregar produtos:', err)
+      this.$q.notify({ message: 'Erro ao carregar produtos', color: 'negative' })
+    } finally {
+      this.carregandoProdutos = false
+    }
   }
-}
 
   async carregarPedidos() {
     try {
+      this.carregandoPedidos = true
       const resultado = await mlService.listarPedidos()
       this.pedidos = resultado.pedidos
       this.totalPedidos = resultado.total
     } catch (err) {
       console.error('Erro ao carregar pedidos', err)
+    } finally {
+      this.carregandoPedidos = false
     }
   }
 
@@ -590,15 +715,15 @@ async carregarProdutos() {
     this.dialogDesconectar = true
   }
 
-async confirmarDesconexao() {
-  await mlService.desconectar()
-  const index = this.marketplaces.findIndex(x => x.nome === this.marketplaceSelecionado?.nome)
-  Vue.set(this.marketplaces, index, { ...this.marketplaces[index], conectado: false })
-  this.statusML = null
-  this.dialogDesconectar = false
-  this.tela = 'inicio'
-  this.$q.notify({ message: 'Desconectado com sucesso!', color: 'positive' })
-}
+  async confirmarDesconexao() {
+    await mlService.desconectar()
+    const index = this.marketplaces.findIndex(x => x.nome === this.marketplaceSelecionado?.nome)
+    Vue.set(this.marketplaces, index, { ...this.marketplaces[index], conectado: false })
+    this.statusML = null
+    this.dialogDesconectar = false
+    this.tela = 'inicio'
+    this.$q.notify({ message: 'Desconectado com sucesso!', color: 'positive' })
+  }
 
   abrirDialogCancelar() {
     this.dialogCancelar = true
@@ -617,6 +742,20 @@ async confirmarDesconexao() {
 }
 .b-r-10 {
   border-radius: 10px;
+}
+.b-r-16 {
+  border-radius: 16px;
+}
+.mp-card {
+  transition: border-color 0.15s;
+}
+.mp-card:hover {
+  border-color: #aaa;
+}
+.mp-logo {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
 }
 .btn-outline-primary {
   border: 1.5px solid #ccc;
