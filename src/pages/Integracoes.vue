@@ -144,32 +144,88 @@
 
         <!-- ABA: DASHBOARD -->
         <q-tab-panel name="dashboard" class="q-pa-none">
-          <div class="row q-col-gutter-md q-mb-md">
-            <div class="col-6 col-md-3">
-              <q-card class="no-shadow border b-r-10 q-pa-md">
-                <div class="text-h5 text-bold text-black">{{ totalProdutos }}</div>
-                <div class="text-caption text-grey-6">Produtos sincronizados</div>
-              </q-card>
+
+          <!-- Filtro de período -->
+          <div class="row q-col-gutter-md q-mb-md items-center">
+            <div class="col-auto">
+              <q-input
+                v-model="inicioPeriodoStr"
+                label="Data início"
+                outlined dense
+                mask="##/##/####"
+                placeholder="DD/MM/AAAA"
+              >
+                <template v-slot:append>
+                  <q-icon name="event" class="cursor-pointer">
+                    <q-popup-proxy>
+                      <q-date v-model="inicioPeriodoStr" mask="DD/MM/YYYY" />
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+              </q-input>
             </div>
-            <div class="col-6 col-md-3">
-              <q-card class="no-shadow border b-r-10 q-pa-md">
-                <div class="text-h5 text-bold text-black">{{ totalPedidos }}</div>
-                <div class="text-caption text-grey-6">Total de pedidos</div>
-              </q-card>
+            <div class="col-auto">
+              <q-input
+                v-model="fimPeriodoStr"
+                label="Data fim"
+                outlined dense
+                mask="##/##/####"
+                placeholder="DD/MM/AAAA"
+              >
+                <template v-slot:append>
+                  <q-icon name="event" class="cursor-pointer">
+                    <q-popup-proxy>
+                      <q-date v-model="fimPeriodoStr" mask="DD/MM/YYYY" />
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+              </q-input>
             </div>
-            <div class="col-6 col-md-3">
-              <q-card class="no-shadow border b-r-10 q-pa-md">
-                <div class="text-h5 text-bold text-black">{{ totalNotasFiscais }}</div>
-                <div class="text-caption text-grey-6">Notas fiscais emitidas</div>
-              </q-card>
-            </div>
-            <div class="col-6 col-md-3">
-              <q-card class="no-shadow border b-r-10 q-pa-md">
-                <div class="text-h5 text-bold text-black">{{ receitaTotal }}</div>
-                <div class="text-caption text-grey-6">Receita total</div>
-              </q-card>
+            <div class="col-auto">
+              <q-btn label="Filtrar" unelevated color="primary" icon="filter_list" @click="aplicarFiltroDashboard" />
             </div>
           </div>
+
+          <!-- Cards de métricas -->
+          <div class="row q-col-gutter-md q-mb-md">
+
+            <div class="col-6 col-md-2">
+              <q-card class="no-shadow border b-r-10 q-pa-md">
+                <div class="text-h5 text-bold">{{ totalProdutos }}</div>
+                <div class="text-caption text-grey-6">Produtos Sincronizados</div>
+              </q-card>
+            </div>
+
+            <div class="col-6 col-md-2">
+              <q-card class="no-shadow border b-r-10 q-pa-md">
+                <div class="text-h5 text-bold">{{ totalPedidosDoPeriodo }}</div>
+                <div class="text-caption text-grey-6">Total de Pedidos</div>
+              </q-card>
+            </div>
+
+            <div class="col-6 col-md-2">
+              <q-card class="no-shadow border b-r-10 q-pa-md">
+                <div class="text-h5 text-bold text-positive">{{ pedidosConcluidosDoPeriodo }}</div>
+                <div class="text-caption text-grey-6">Concluídos</div>
+              </q-card>
+            </div>
+
+            <div class="col-6 col-md-2">
+              <q-card class="no-shadow border b-r-10 q-pa-md">
+                <div class="text-h5 text-bold text-negative">{{ pedidosCanceladosDoPeriodo }}</div>
+                <div class="text-caption text-grey-6">Cancelados</div>
+              </q-card>
+            </div>
+
+            <div class="col-6 col-md-4">
+              <q-card class="no-shadow border b-r-10 q-pa-md">
+                <div class="text-h5 text-bold">{{ receitaTotalDoPeriodo }}</div>
+                <div class="text-caption text-grey-6">Receita Total</div>
+              </q-card>
+            </div>
+
+          </div>
+
           <div class="row items-center justify-between">
             <div class="text-caption text-grey-6">
               Token expira em: <strong class="text-black">{{ tokenExpiraEm }}</strong>
@@ -237,10 +293,36 @@
 
         <!-- ABA: PEDIDOS -->
         <q-tab-panel name="pedidos" class="q-pa-none">
-          <div class="row items-center justify-between q-mb-md q-gutter-sm">
+          <div class="row items-center justify-between q-mb-md q-gutter-sm flex-wrap">
+
+            <!-- Busca -->
             <q-input v-model="buscaPedido" label="Pesquisar pedido..." outlined dense style="min-width: 240px">
               <template v-slot:prepend><q-icon name="search" /></template>
             </q-input>
+
+            <!-- Filtros de data -->
+            <q-input
+              v-model="inicioPedidoStr"
+              label="Data início"
+              type="date"
+              outlined dense
+              mask="##/##/####"
+              placeholder="DD/MM/AAAA"
+              style="min-width: 150px"
+            >
+            </q-input>
+
+            <q-input
+              v-model="fimPedidoStr"
+              label="Data fim"
+              outlined dense
+              type="date"
+              mask="##/##/####"
+              placeholder="DD/MM/AAAA"
+              style="min-width: 150px"
+            >
+            </q-input>
+
             <div class="row q-gutter-sm items-center">
               <q-select
                 v-model="filtroPedido"
@@ -271,6 +353,9 @@
               no-data-label="Nenhum pedido encontrado"
               class="text-weight-medium"
             >
+              <template v-slot:body-cell-comprador="props">
+                <q-td :props="props">{{ props.row.buyer ? props.row.buyer.nickname : '-' }}</q-td>
+              </template>
               <template v-slot:body-cell-status="props">
                 <q-td :props="props">
                   <q-badge :color="props.value === 'paid' ? 'positive' : props.value === 'pending' ? 'orange' : 'negative'">
@@ -279,7 +364,10 @@
                 </q-td>
               </template>
               <template v-slot:body-cell-total="props">
-                <q-td :props="props" align="center">{{ formatarReais(props.row.total) }}</q-td>
+                <q-td :props="props" align="center">{{ formatarReais(props.row.total_amount) }}</q-td>
+              </template>
+              <template v-slot:body-cell-data="props">
+                <q-td :props="props" align="center">{{ formatarData(props.row.date_created) }}</q-td>
               </template>
               <template v-slot:body-cell-acoes="props">
                 <q-td :props="props">
@@ -438,6 +526,7 @@ import Vue from 'vue'
 import Component from 'vue-class-component'
 import gridProdutosMercadoLivre from '../config/produtosMercadoLivre.json'
 import mlService, { StatusML, ProdutoML, PedidoML } from '../services/mlService'
+import moment from 'moment'
 
 @Component
 export default class ModuleComponent extends Vue {
@@ -447,6 +536,15 @@ export default class ModuleComponent extends Vue {
   dialogDesconectar = false
   carregando = false
 
+  // ─── PERÍODO DASHBOARD ────────────────────────────────────────────────────
+  // Datas reativas usadas pelos computeds do dashboard
+  inicioPeriodo = moment().startOf('month')
+  fimPeriodo = moment().endOf('month')
+
+  // Strings dos inputs (só são aplicadas ao clicar em "Filtrar")
+  inicioPeriodoStr = moment().startOf('month').format('DD/MM/YYYY')
+  fimPeriodoStr = moment().endOf('month').format('DD/MM/YYYY')
+
   marketplaceSelecionado: any = null
   statusML: StatusML | null = null
   verificandoConexao = false
@@ -455,58 +553,58 @@ export default class ModuleComponent extends Vue {
 
   busca = ''
 
-  // Produtos
+  // ─── PRODUTOS ─────────────────────────────────────────────────────────────
   buscaProduto = ''
   filtroProduto = 'todos'
   carregandoProdutos = false
   produtos: ProdutoML[] = []
   totalProdutos = 0
 
-  // Pedidos
+  // ─── PEDIDOS ──────────────────────────────────────────────────────────────
   buscaPedido = ''
   filtroPedido = 'todos'
+  // Filtro de data específico da aba Pedidos (aplicado em tempo real)
+  inicioPedidoStr = ''
+  fimPedidoStr = ''
   carregandoPedidos = false
   pedidos: PedidoML[] = []
   totalPedidos = 0
 
-  // Nota Fiscal
+  // ─── NOTA FISCAL ──────────────────────────────────────────────────────────
   buscaNF = ''
   filtroNF = 'todos'
   notasFiscais: any[] = []
   totalNotasFiscais = 0
 
-  // Dashboard
-  receitaTotal = 'R$ 0,00'
-
   colunaProdutosMercadoLivre = gridProdutosMercadoLivre.columns
 
   colunasPedidos = [
-    { name: 'id', label: 'Nº Pedido', field: 'id', align: 'left' },
-    { name: 'comprador', label: 'Comprador', field: 'comprador', align: 'left' },
-    { name: 'status', label: 'Status', field: 'status', align: 'center' },
-    { name: 'total', label: 'Total', field: 'total', align: 'center' },
-    { name: 'data', label: 'Data', field: 'data', align: 'center' },
-    { name: 'acoes', label: 'Ações', field: 'acoes', align: 'center' }
+    { name: 'id',         label: 'Nº Pedido',  field: 'id',           align: 'left'   },
+    { name: 'comprador',  label: 'Comprador',  field: 'comprador',    align: 'left'   },
+    { name: 'status',     label: 'Status',     field: 'status',       align: 'center' },
+    { name: 'total',      label: 'Total',      field: 'total_amount', align: 'center' },
+    { name: 'data',       label: 'Data',       field: 'date_created', align: 'center' },
+    { name: 'acoes',      label: 'Ações',      field: 'acoes',        align: 'center' }
   ]
 
   colunasNotaFiscal = [
-    { name: 'numero', label: 'Nº NF-e', field: 'numero', align: 'left' },
-    { name: 'pedido', label: 'Pedido', field: 'pedido', align: 'left' },
-    { name: 'destinatario', label: 'Destinatário', field: 'destinatario', align: 'left' },
-    { name: 'valor', label: 'Valor', field: 'valor', align: 'center' },
-    { name: 'status', label: 'Status', field: 'status', align: 'center' },
-    { name: 'emissao', label: 'Emissão', field: 'emissao', align: 'center' },
-    { name: 'acoes', label: 'Ações', field: 'acoes', align: 'center' }
+    { name: 'numero',       label: 'Nº NF-e',       field: 'numero',       align: 'left'   },
+    { name: 'pedido',       label: 'Pedido',         field: 'pedido',       align: 'left'   },
+    { name: 'destinatario', label: 'Destinatário',   field: 'destinatario', align: 'left'   },
+    { name: 'valor',        label: 'Valor',          field: 'valor',        align: 'center' },
+    { name: 'status',       label: 'Status',         field: 'status',       align: 'center' },
+    { name: 'emissao',      label: 'Emissão',        field: 'emissao',      align: 'center' },
+    { name: 'acoes',        label: 'Ações',          field: 'acoes',        align: 'center' }
   ]
 
   config = {
-    sincEstoque: true,
-    sincPrecos: true,
+    sincEstoque:  true,
+    sincPrecos:   true,
     publicarAuto: false,
-    frequencia: 'A cada 1 hora',
-    tipoAjuste: 'Markup (%)',
-    valorAjuste: 10,
-    categorias: [] as any[]
+    frequencia:   'A cada 1 hora',
+    tipoAjuste:   'Markup (%)',
+    valorAjuste:  10,
+    categorias:   [] as any[]
   }
 
   opcoesFrequencia = ['A cada 30 minutos', 'A cada 1 hora', 'A cada 4 horas', 'Diariamente']
@@ -524,28 +622,28 @@ export default class ModuleComponent extends Vue {
 
   // ─── LIFECYCLE ─────────────────────────────────────────────────────────────
 
-  async created() {
+  async created () {
     await this.verificarConexaoML()
   }
 
   // ─── COMPUTED ──────────────────────────────────────────────────────────────
 
-  get marketplacesFiltrados() {
+  get marketplacesFiltrados () {
     if (!this.busca) return this.marketplaces
     return this.marketplaces.filter(m =>
       m.nome.toLowerCase().startsWith(this.busca.toLowerCase())
     )
   }
 
-  get minhasIntegracoes() {
+  get minhasIntegracoes () {
     return this.marketplacesFiltrados.filter(m => m.conectado)
   }
 
-  get integracoesDisponiveis() {
+  get integracoesDisponiveis () {
     return this.marketplacesFiltrados.filter(m => !m.conectado)
   }
 
-  get produtosFiltrados() {
+  get produtosFiltrados () {
     return this.produtos.filter(p => {
       const matchBusca = !this.buscaProduto ||
         p.title.toLowerCase().includes(this.buscaProduto.toLowerCase())
@@ -554,17 +652,34 @@ export default class ModuleComponent extends Vue {
     })
   }
 
-  get pedidosFiltrados() {
+  // Pedidos filtrados: busca por texto + status + intervalo de datas (aplicado em tempo real)
+  get pedidosFiltrados () {
+    const inicio = this.inicioPedidoStr
+      ? moment(this.inicioPedidoStr, 'DD/MM/YYYY')
+      : null
+    const fim = this.fimPedidoStr
+      ? moment(this.fimPedidoStr, 'DD/MM/YYYY')
+      : null
+
     return this.pedidos.filter((p: any) => {
       const matchBusca = !this.buscaPedido ||
         String(p.id).toLowerCase().includes(this.buscaPedido.toLowerCase()) ||
-        (p.comprador || '').toLowerCase().includes(this.buscaPedido.toLowerCase())
+        ((p.buyer?.nickname ?? '').toLowerCase().includes(this.buscaPedido.toLowerCase()))
+
       const matchFiltro = this.filtroPedido === 'todos' || p.status === this.filtroPedido
-      return matchBusca && matchFiltro
+
+      let matchData = true
+      if (inicio?.isValid() || fim?.isValid()) {
+        const data = moment(p.date_created)
+        if (inicio?.isValid()) matchData = matchData && data.isSameOrAfter(inicio, 'day')
+        if (fim?.isValid())    matchData = matchData && data.isSameOrBefore(fim, 'day')
+      }
+
+      return matchBusca && matchFiltro && matchData
     })
   }
 
-  get notasFiscaisFiltradas() {
+  get notasFiscaisFiltradas () {
     return this.notasFiscais.filter((nf: any) => {
       const matchBusca = !this.buscaNF ||
         String(nf.numero).toLowerCase().includes(this.buscaNF.toLowerCase()) ||
@@ -574,19 +689,67 @@ export default class ModuleComponent extends Vue {
     })
   }
 
-  get tokenExpiraEm() {
+  get tokenExpiraEm () {
     if (!this.statusML?.expira_em) return '-'
     return new Date(this.statusML.expira_em).toLocaleDateString('pt-BR')
   }
 
+  // ─── COMPUTEDS DO PERÍODO (DASHBOARD) ─────────────────────────────────────
+  // Dependem de inicioPeriodo / fimPeriodo, que só são atualizados ao clicar "Filtrar"
+
+  get pedidosDoPeriodo () {
+    return this.pedidos.filter((p: any) => {
+      if (!p.date_created) return false
+      const data = moment(p.date_created)
+      return (
+        data.isSameOrAfter(this.inicioPeriodo, 'day') &&
+        data.isSameOrBefore(this.fimPeriodo, 'day')
+      )
+    })
+  }
+
+  get totalPedidosDoPeriodo () {
+    return this.pedidosDoPeriodo.length
+  }
+
+  get pedidosConcluidosDoPeriodo () {
+    return this.pedidosDoPeriodo.filter((p: any) => p.status === 'paid').length
+  }
+
+  get pedidosCanceladosDoPeriodo () {
+    return this.pedidosDoPeriodo.filter((p: any) => p.status === 'cancelled').length
+  }
+
+  get receitaTotalDoPeriodo () {
+    const total = this.pedidosDoPeriodo
+      .filter((p: any) => p.status === 'paid')
+      .reduce((acc: number, p: any) => acc + Number(p.total_amount || 0), 0)
+    return this.formatarReais(total)
+  }
+
   // ─── MÉTODOS ───────────────────────────────────────────────────────────────
 
-  formatarReais(valor: string | number): string {
+  // Aplica o filtro de período do Dashboard (chamado pelo botão "Filtrar")
+  aplicarFiltroDashboard () {
+    const inicio = moment(this.inicioPeriodoStr, 'DD/MM/YYYY')
+    const fim    = moment(this.fimPeriodoStr,    'DD/MM/YYYY')
+    if (inicio.isValid()) this.inicioPeriodo = inicio
+    if (fim.isValid())    this.fimPeriodo    = fim
+  }
+
+  formatarReais (valor: string | number): string {
     const numero = typeof valor === 'string' ? parseFloat(valor) : valor
+    if (isNaN(numero)) return 'R$ 0,00'
     return numero.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
   }
 
-  async verificarConexaoML() {
+  formatarData (valor: string): string {
+    if (!valor) return '-'
+    const data = moment(valor)
+    return data.isValid() ? data.format('DD/MM/YYYY') : valor
+  }
+
+  async verificarConexaoML () {
     const index = this.marketplaces.findIndex(m => m.nome === 'Mercado Livre')
     try {
       this.statusML = await mlService.getStatus()
@@ -606,27 +769,27 @@ export default class ModuleComponent extends Vue {
     }
   }
 
-  async irParaConectar(marketplace: any) {
+  async irParaConectar (marketplace: any) {
     this.marketplaceSelecionado = marketplace
-    this.formularioIntegracao = { nome: marketplace.nome }
+    this.formularioIntegracao   = { nome: marketplace.nome }
     this.tela = 'conectar'
   }
 
-  async conectarML() {
+  async conectarML () {
     try {
       this.verificandoConexao = true
       const url = await mlService.getLoginUrl()
 
       this.$q.dialog({
-        title: 'Conectar Mercado Livre',
+        title:   'Conectar Mercado Livre',
         message: 'Uma janela de autenticação será aberta. Caso queira conectar uma conta diferente, certifique-se de estar deslogado do Mercado Livre antes de continuar.',
-        ok: { label: 'Continuar', color: 'primary', unelevated: true },
+        ok:     { label: 'Continuar', color: 'primary', unelevated: true },
         cancel: { label: 'Cancelar', flat: true }
       }).onOk(() => {
         const largura = 600
-        const altura = 700
-        const left = window.screenX + (window.outerWidth - largura) / 2
-        const top = window.screenY + (window.outerHeight - altura) / 2
+        const altura  = 700
+        const left    = window.screenX + (window.outerWidth  - largura) / 2
+        const top     = window.screenY + (window.outerHeight - altura)  / 2
 
         const popup = window.open(
           url,
@@ -654,22 +817,22 @@ export default class ModuleComponent extends Vue {
     }
   }
 
-  async irParaDashboard(marketplace: any) {
+  async irParaDashboard (marketplace: any) {
     this.marketplaceSelecionado = marketplace
     this.abaAtiva = 'dashboard'
-    this.tela = 'dashboard'
-    const index = this.marketplaces.findIndex(x => x.nome === marketplace.nome)
+    this.tela     = 'dashboard'
+    const index   = this.marketplaces.findIndex(x => x.nome === marketplace.nome)
     Vue.set(this.marketplaces, index, { ...this.marketplaces[index], conectado: true })
     await this.carregarProdutos()
     await this.carregarPedidos()
   }
 
-  async carregarProdutos() {
+  async carregarProdutos () {
     try {
       this.carregandoProdutos = true
-      const resultado = await mlService.listarProdutos()
-      this.totalProdutos = resultado.total
-      this.produtos = resultado.produtos
+      const resultado         = await mlService.listarProdutos()
+      this.totalProdutos      = resultado.total
+      this.produtos           = resultado.produtos
     } catch (err) {
       console.error('Erro ao carregar produtos:', err)
       this.$q.notify({ message: 'Erro ao carregar produtos', color: 'negative' })
@@ -678,12 +841,12 @@ export default class ModuleComponent extends Vue {
     }
   }
 
-  async carregarPedidos() {
+  async carregarPedidos () {
     try {
       this.carregandoPedidos = true
-      const resultado = await mlService.listarPedidos()
-      this.pedidos = resultado.pedidos
-      this.totalPedidos = resultado.total
+      const resultado        = await mlService.listarPedidos()
+      this.pedidos           = resultado.pedidos
+      this.totalPedidos      = resultado.total
     } catch (err) {
       console.error('Erro ao carregar pedidos', err)
     } finally {
@@ -691,7 +854,7 @@ export default class ModuleComponent extends Vue {
     }
   }
 
-  async pausarProduto(itemId: string) {
+  async pausarProduto (itemId: string) {
     try {
       await mlService.pausarProduto(itemId)
       this.$q.notify({ message: 'Produto pausado!', color: 'positive' })
@@ -701,7 +864,7 @@ export default class ModuleComponent extends Vue {
     }
   }
 
-  async ativarProduto(itemId: string) {
+  async ativarProduto (itemId: string) {
     try {
       await mlService.ativarProduto(itemId)
       this.$q.notify({ message: 'Produto ativado!', color: 'positive' })
@@ -711,27 +874,27 @@ export default class ModuleComponent extends Vue {
     }
   }
 
-  desconectar() {
+  desconectar () {
     this.dialogDesconectar = true
   }
 
-  async confirmarDesconexao() {
+  async confirmarDesconexao () {
     await mlService.desconectar()
     const index = this.marketplaces.findIndex(x => x.nome === this.marketplaceSelecionado?.nome)
     Vue.set(this.marketplaces, index, { ...this.marketplaces[index], conectado: false })
-    this.statusML = null
+    this.statusML          = null
     this.dialogDesconectar = false
-    this.tela = 'inicio'
+    this.tela              = 'inicio'
     this.$q.notify({ message: 'Desconectado com sucesso!', color: 'positive' })
   }
 
-  abrirDialogCancelar() {
+  abrirDialogCancelar () {
     this.dialogCancelar = true
   }
 
-  confirmarCancelamento() {
+  confirmarCancelamento () {
     this.dialogCancelar = false
-    this.tela = 'inicio'
+    this.tela           = 'inicio'
   }
 }
 </script>

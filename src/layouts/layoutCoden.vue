@@ -145,13 +145,13 @@
           <q-item
             clickable v-ripple
             class="menu-item b-r-10 q-mb-xs text-white"
-            :class="$route.path === '/VendaBalcao' ? 'menu-item-active' : ''"
-            @click="$router.push('/VendaBalcao')"
+            :class="$route.path === '/VendaDireta' ? 'menu-item-active' : ''"
+            @click="$router.push('/VendaDireta')"
           >
             <q-item-section avatar>
               <q-icon name="point_of_sale" size="20px" color="white" />
             </q-item-section>
-            <q-item-section class="menu-label">Vendas Balcão</q-item-section>
+            <q-item-section class="menu-label">Venda Direta</q-item-section>
           </q-item>
 
           <q-item
