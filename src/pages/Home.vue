@@ -18,14 +18,9 @@
       <div class="col-12 col-sm-2">
         <q-input v-model="dataFim" label="Até" type="date" outlined dense />
       </div>
-      <div class="col-12 col-sm-2 row items-end">
-        <q-btn
-          label="Filtrar"
-          icon="search"
-          color="primary"
-          unelevated
-          @click="carregarDados()"
-        />
+      <div class="col-12 col-sm-6 q-gutter-sm row items-end">
+        <q-btn label="Filtrar" icon="search" color="primary" unelevated @click="carregarDados()" />
+        <q-btn label="Limpar" icon="delete_sweep" flat class="text-grey-7" @click="refreshTable()" />
       </div>
     </div>
 
@@ -47,51 +42,64 @@
       </div>
     </div>
 
-    <!-- Metas + Situação -->
+    <!-- Gráfico + Situação -->
     <div class="row q-col-gutter-md q-mb-lg">
 
-      <!-- Metas em andamento -->
+      <!-- Gráfico com Tabs -->
       <div class="col-12 col-md-8">
-        <q-card flat bordered class="b-r-10 q-pa-md" style="position: relative;">
-          <q-inner-loading :showing="carregandoMetas" size="24px" />
-          <div class="row items-center justify-between q-mb-md">
-            <div class="text-subtitle1 text-bold">Metas em andamento</div>
-            <q-btn
-              label="Nova meta"
-              icon="add"
-              color="primary"
-              unelevated
-              size="sm"
-              @click="dialogNovaMeta = true"
-            />
-          </div>
+        <q-card flat bordered class="b-r-10" style="position: relative;">
+          <q-tabs
+            v-model="abaGrafico"
+            dense
+            align="left"
+            class="text-grey-7 q-px-md q-pt-sm"
+            active-color="primary"
+            indicator-color="primary"
+          >
+            <q-tab name="vendas" label="Vendas por dia" />
+            <q-tab name="clientes" label="Vendas por cliente" />
+          </q-tabs>
 
-          <div v-if="!carregandoMetas && metas.length" class="column q-gutter-md">
-            <div v-for="meta in metas" :key="meta.id">
-              <div class="row items-center justify-between q-mb-xs">
-                <span class="text-body2 text-weight-medium">{{ meta.nome }}</span>
-                <span class="text-caption text-grey-6">
-                  {{ formatarReais(meta.atual) }} / {{ formatarReais(meta.objetivo) }}
-                </span>
-              </div>
-              <q-linear-progress
-                :value="meta.atual / meta.objetivo"
-                color="primary"
-                track-color="grey-3"
-                rounded
-                size="8px"
-              />
-              <div class="row justify-between q-mt-xs">
-                <span class="text-caption text-grey-6">{{ Math.round((meta.atual / meta.objetivo) * 100) }}%</span>
-                <span class="text-caption text-grey-6">Faltam {{ formatarReais(meta.objetivo - meta.atual) }}</span>
-              </div>
-            </div>
-          </div>
+          <q-separator />
 
-          <div v-if="!carregandoMetas && !metas.length" class="column items-center q-py-lg text-grey-5">
-            <q-icon name="flag" size="36px" />
-            <div class="q-mt-sm text-body2">Nenhuma meta cadastrada</div>
-          </div>
+          <q-tab-panels v-model="abaGrafico" animated>
+
+            <!-- Aba: Gráfico de linha -->
+            <q-tab-panel name="vendas" class="q-pa-md">
+              <div style="height: 260px; position: relative;">
+                <canvas ref="graficoVendas" style="width: 100%; height: 100%;"></canvas>
+              </div>
+            </q-tab-panel>
+
+            <!-- Aba: Vendas por Cliente -->
+            <q-tab-panel name="clientes" class="q-pa-none">
+              <q-inner-loading :showing="carregandoClientes" size="28px" />
+              <q-table
+                :data="vendasClientes"
+                :columns="colunasClientes"
+                row-key="nome_cliente"
+                flat
+                dense
+                :loading="carregandoClientes"
+                no-data-label="Nenhuma venda encontrada"
+                class="q-px-sm"
+                style="max-height: 320px;"
+                virtual-scroll
+              >
+                <template v-slot:body-cell-total="props">
+                  <q-td :props="props" class="text-bold text-positive">
+                    {{ formatarReais(props.value) }}
+                  </q-td>
+                </template>
+                <template v-slot:body-cell-data="props">
+                  <q-td :props="props">
+                    {{ formatarData(props.value) }}
+                  </q-td>
+                </template>
+              </q-table>
+            </q-tab-panel>
+
+          </q-tab-panels>
         </q-card>
       </div>
 
@@ -125,18 +133,10 @@
       </div>
     </div>
 
-    <!-- Gráfico -->
-    <q-card flat bordered class="b-r-10 q-mb-lg" style="position: relative;">
-      <q-inner-loading size="24px" />
-      <div class="q-pa-md">
-        <div class="text-subtitle1 text-bold q-mb-md">Valor total de pedidos por dia</div>>
-      </div>
-    </q-card>
-
     <!-- Resumo Financeiro -->
     <div class="text-subtitle1 text-bold q-mb-md">Resumo financeiro</div>
-    <div class="row q-col-gutter-md">
-      <div class="col-6 col-sm-4 col-md-2" v-for="fin in financeiro" :key="fin.label">
+    <div class="row q-col-gutter-md q-mb-lg">
+      <div class="col-6 col-sm-4 col-md-3" v-for="fin in financeiro" :key="fin.label">
         <q-card flat bordered class="b-r-10 q-pa-md text-center" style="position: relative;">
           <q-inner-loading :showing="carregando" size="20px" />
           <div
@@ -151,38 +151,89 @@
       </div>
     </div>
 
-    <!-- Dialog Nova Meta -->
-    <q-dialog v-model="dialogNovaMeta" persistent>
-      <q-card style="min-width: 380px; border-radius: 12px" class="q-pa-sm">
-        <q-card-section class="q-pb-none">
-          <div class="text-h6 text-bold">Nova Meta</div>
-        </q-card-section>
-        <q-card-section>
-          <div class="column q-gutter-md">
-            <q-input v-model="novaMeta.nome" label="Nome da meta" outlined dense />
-            <q-input v-model.number="novaMeta.objetivo" label="Valor objetivo (R$)" type="number" outlined dense />
-          </div>
-        </q-card-section>
-        <q-card-actions align="right" class="q-pa-md q-gutter-sm">
-          <q-btn
-            label="Cancelar"
-            unelevated
-            style="border: 1px solid #ccc; border-radius: 8px; min-width: 100px"
-            color="white"
-            text-color="dark"
-            v-close-popup
-          />
-          <q-btn
-            label="Salvar"
-            unelevated
-            color="primary"
-            style="border-radius: 8px; min-width: 100px"
-            :loading="salvandoMeta"
-            @click="salvarMeta()"
-          />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
+    <!-- Relatório de Estoque -->
+    <div class="row items-center justify-between q-mb-md">
+      <div class="text-subtitle1 text-bold">Relatório de estoque</div>
+    </div>
+
+    <!-- Filtros de estoque -->
+    <div class="row q-col-gutter-md q-mb-md items-center">
+      <div class="col-12 col-sm-4">
+        <q-input
+          v-model="filtroEstoque.nome_produto"
+          label="Buscar produto"
+          outlined
+          dense
+          clearable
+          @keyup.enter="carregarEstoque()"
+          @clear="carregarEstoque()"
+        >
+          <template v-slot:append>
+            <q-icon name="search" class="cursor-pointer" @click="carregarEstoque()" />
+          </template>
+        </q-input>
+      </div>
+      <div class="col-12 col-sm-3">
+        <q-select
+          v-model="filtroEstoque.status"
+          :options="opcoesStatusEstoque"
+          label="Status"
+          outlined
+          dense
+          clearable
+          emit-value
+          map-options
+          @input="carregarEstoque()"
+        />
+      </div>
+      <div class="col-12 col-sm-2">
+        <q-btn label="Filtrar" icon="search" color="primary" unelevated dense @click="carregarEstoque()" />
+      </div>
+    </div>
+
+    <q-card flat bordered class="b-r-10 q-mb-xl" style="position: relative;">
+      <q-inner-loading :showing="carregandoEstoque" size="28px" />
+      <q-table
+        :data="estoque"
+        :columns="colunasEstoque"
+        row-key="id"
+        flat
+        dense
+        :loading="carregandoEstoque"
+        no-data-label="Nenhum produto encontrado"
+        :rows-per-page-options="[10, 20, 50]"
+      >
+        <!-- Estoque atual com alerta se abaixo do mínimo -->
+        <template v-slot:body-cell-estoque_atual="props">
+          <q-td :props="props">
+            <div class="row items-center q-gutter-xs">
+              <q-icon
+                v-if="props.row.estoque_minimo && props.value <= props.row.estoque_minimo"
+                name="warning"
+                color="warning"
+                size="16px"
+              >
+                <q-tooltip>Estoque abaixo do mínimo</q-tooltip>
+              </q-icon>
+              <span
+                :class="props.row.estoque_minimo && props.value <= props.row.estoque_minimo
+                  ? 'text-warning text-bold'
+                  : 'text-black'"
+              >
+                {{ props.value ?? '—' }}
+              </span>
+            </div>
+          </q-td>
+        </template>
+
+        <!-- Preço formatado -->
+        <template v-slot:body-cell-preco="props">
+          <q-td :props="props" class="text-bold">
+            {{ formatarReais(props.value) }}
+          </q-td>
+        </template>
+      </q-table>
+    </q-card>
 
   </div>
 </template>
@@ -190,8 +241,11 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import * as Chart from 'chart.js'
-// import dashboardService from '../../services/dashboardService'
+import { Watch } from 'vue-property-decorator'
+import Chart from 'chart.js'
+import dashboardService from '../services/dashboardService'
+import vendasService from '../services/vendasService'
+import productService from '../services/productService'
 
 @Component
 export default class ModuleComponent extends Vue {
@@ -201,9 +255,13 @@ export default class ModuleComponent extends Vue {
   dataFim    = ''
 
   // ── Loading ──────────────────────────────────────────────
-  carregando      = false
-  carregandoMetas = false
-  salvandoMeta    = false
+  carregando         = false
+  carregandoClientes = false
+  carregandoEstoque  = false
+  exportandoPDF      = false
+
+  // ── Tabs do gráfico ──────────────────────────────────────
+  abaGrafico = 'vendas'
 
   // ── Métricas ─────────────────────────────────────────────
   metricas = [
@@ -212,11 +270,6 @@ export default class ModuleComponent extends Vue {
     { label: 'Produtos Vendidos', icon: 'inventory_2',   valor: '', variacao: '', falta: '' },
     { label: 'Ticket Médio',      icon: 'trending_up',   valor: '', variacao: '', falta: '' }
   ]
-
-  // ── Metas ────────────────────────────────────────────────
-  dialogNovaMeta = false
-  novaMeta = { nome: '', objetivo: 0 }
-  metas: any[] = []
 
   // ── Situação dos pedidos ──────────────────────────────────
   situacoes = [
@@ -235,22 +288,91 @@ export default class ModuleComponent extends Vue {
     { label: 'Faturamento s/ Frete', valor: '', variacao: '', positivo: true  },
     { label: 'Preço de Custo',       valor: '', variacao: '', positivo: true  },
     { label: 'Markup',               valor: '', variacao: '', positivo: true  },
-    { label: 'Impostos',             valor: '', variacao: '', positivo: false },
-    { label: 'Taxa Venda',           valor: '', variacao: '', positivo: false },
     { label: 'Lucro',                valor: '', variacao: '', positivo: false }
+  ]
+
+  // ── Vendas por Cliente ────────────────────────────────────
+  vendasClientes: any[] = []
+
+  colunasClientes = [
+    { name: 'nome_cliente', label: 'Cliente', field: 'nome_cliente', align: 'left' as const,   sortable: true },
+    { name: 'total',        label: 'Valor',   field: 'total',        align: 'right' as const,  sortable: true },
+    { name: 'data',         label: 'Data',    field: 'data',         align: 'center' as const, sortable: true }
+  ]
+
+  // ── Estoque ───────────────────────────────────────────────
+  estoque: any[] = []
+
+  filtroEstoque = {
+    nome_produto: '',
+    status: ''
+  }
+
+  opcoesStatusEstoque = [
+    { label: 'Ativo',    value: 'ativo'    },
+    { label: 'Inativo',  value: 'inativo'  },
+    { label: 'Suspenso', value: 'suspenso' }
+  ]
+
+  colunasEstoque = [
+    {
+      name: 'nome_produto',
+      label: 'Produto',
+      field: 'nome_produto',
+      align: 'left' as const,
+      sortable: true
+    },
+    {
+      name: 'estoque_atual',
+      label: 'Estoque Atual',
+      field: 'estoque_atual',
+      align: 'center' as const,
+      sortable: true
+    },
+    {
+      name: 'estoque_minimo',
+      label: 'Estoque Mínimo',
+      field: 'estoque_minimo',
+      align: 'center' as const,
+      sortable: true
+    },
+    {
+      name: 'preco',
+      label: 'Preço',
+      field: 'preco',
+      align: 'right' as const,
+      sortable: true
+    }
   ]
 
   // ── Gráfico ───────────────────────────────────────────────
   chart: any = null
 
-  // ── Lifecycle ────────────────────────────────────────────
-  async created () {
-    // await this.carregarDados()
-    // await this.carregarMetas()
+  // ── Watcher: troca de aba ────────────────────────────────
+  @Watch('abaGrafico')
+  onAbaGraficoChange (aba: string) {
+    if (aba === 'clientes') {
+      this.carregarVendasClientes()
+    } else if (aba === 'vendas') {
+      this.$nextTick(() => {
+        setTimeout(() => {
+          if (this.chart) {
+            this.chart.destroy()
+            this.chart = null
+          }
+          this.carregarDados()
+        }, 150)
+      })
+    }
   }
 
-  mounted () {
-    this.inicializarGrafico([], [])
+  // ── Lifecycle ────────────────────────────────────────────
+
+  async mounted () {
+    await Promise.all([
+      this.carregarDados(),
+      this.carregarEstoque()
+    ])
   }
 
   beforeDestroy () {
@@ -260,168 +382,203 @@ export default class ModuleComponent extends Vue {
   // ── Métodos ───────────────────────────────────────────────
 
   async carregarDados () {
-    // try {
-    //   this.carregando = true
-    //   const [metricas, situacao, grafico, financeiro] = await Promise.all([
-    //     dashboardService.getMetricas(this.dataInicio, this.dataFim),
-    //     dashboardService.getSituacaoPedidos(this.dataInicio, this.dataFim),
-    //     dashboardService.getGraficoVendas(this.dataInicio, this.dataFim),
-    //     dashboardService.getResumoFinanceiro(this.dataInicio, this.dataFim)
-    //   ])
-    //   this.aplicarMetricas(metricas)
-    //   this.aplicarSituacao(situacao)
-    //   this.aplicarFinanceiro(financeiro)
-    //   this.atualizarGrafico(grafico)
-    // } catch {
-    //   this.$q.notify({ type: 'negative', message: 'Erro ao carregar dados do dashboard!' })
-    // } finally {
-    //   this.carregando = false
-    // }
+    try {
+      this.carregando = true
+
+      const [metricas, situacao, grafico, financeiro] = await Promise.all([
+        dashboardService.getMetricas(this.dataInicio, this.dataFim),
+        dashboardService.getSituacaoPedidos(),
+        dashboardService.getGraficoVendas(this.dataInicio, this.dataFim),
+        dashboardService.getFinanceiro(
+          this.dataInicio || undefined,
+          this.dataFim    || undefined
+        )
+      ])
+
+      this.metricas[0].valor = this.formatarReais(metricas.totalVendas)
+      this.metricas[1].valor = String(metricas.totalPedidos)
+      this.metricas[2].valor = String(metricas.produtosVendidos)
+      this.metricas[3].valor = this.formatarReais(metricas.ticketMedio)
+
+      this.aplicarSituacao(situacao)
+      this.atualizarGrafico(grafico)
+      this.aplicarFinanceiro(financeiro)
+
+    } catch (error) {
+      this.$q.notify({ type: 'negative', message: 'Erro ao carregar dashboard' })
+    } finally {
+      this.carregando = false
+    }
   }
 
-  async carregarMetas () {
-    // try {
-    //   this.carregandoMetas = true
-    //   this.metas = await dashboardService.getMetas()
-    // } catch {
-    //   this.$q.notify({ type: 'negative', message: 'Erro ao carregar metas!' })
-    // } finally {
-    //   this.carregandoMetas = false
-    // }
+  async carregarEstoque () {
+    try {
+      this.carregandoEstoque = true
+
+      const dados = await productService.relatorioEstoque({
+        nome_produto: this.filtroEstoque.nome_produto || undefined,
+        status:       this.filtroEstoque.status       || undefined
+      })
+
+      this.estoque = dados
+
+    } catch (error) {
+      this.$q.notify({ type: 'negative', message: 'Erro ao carregar estoque' })
+    } finally {
+      this.carregandoEstoque = false
+    }
   }
 
-  aplicarMetricas (data: any) {
-    this.metricas[0].valor    = this.formatarReais(data.totalVendas)
-    this.metricas[0].variacao = data.variacaoVendas
-    this.metricas[0].falta    = this.formatarReais(data.metaFaltaVendas)
+  async exportarEstoquePDF () {
+    try {
+      this.exportandoPDF = true
 
-    this.metricas[1].valor    = String(data.totalPedidos)
-    this.metricas[1].variacao = data.variacaoPedidos
-    this.metricas[1].falta    = data.metaFaltaPedidos + ' pedidos'
+      await productService.relatorioEstoquePDF({
+        nome_produto: this.filtroEstoque.nome_produto || undefined,
+        status:       this.filtroEstoque.status       || undefined
+      })
 
-    this.metricas[2].valor    = String(data.totalProdutosVendidos)
-    this.metricas[2].variacao = data.variacaoProdutos
-    this.metricas[2].falta    = data.metaFaltaProdutos + ' unidades'
-
-    this.metricas[3].valor    = this.formatarReais(data.ticketMedio)
-    this.metricas[3].variacao = data.variacaoTicket
-    this.metricas[3].falta    = this.formatarReais(data.metaFaltaTicket)
+    } catch (error) {
+      this.$q.notify({ type: 'negative', message: 'Erro ao exportar PDF' })
+    } finally {
+      this.exportandoPDF = false
+    }
   }
 
-  aplicarSituacao (data: any) {
-    this.situacoes[0].valor = data.cancelados
-    this.situacoes[1].valor = data.emAberto
-    this.situacoes[2].valor = data.emAndamento
-    this.situacoes[3].valor = data.verificados
+  async carregarVendasClientes () {
+    try {
+      this.carregandoClientes = true
+
+      const dados = await vendasService.relatorioVendas({
+        de:  this.dataInicio || undefined,
+        ate: this.dataFim    || undefined
+      })
+
+      this.vendasClientes = dados.map((v: any) => ({
+        nome_cliente: v.nome_cliente || v.cliente || '—',
+        total:        v.total        ?? v.valor   ?? 0,
+        data:         v.data         ?? v.created_at ?? ''
+      }))
+
+    } catch (error) {
+      this.$q.notify({ type: 'negative', message: 'Erro ao carregar vendas por cliente' })
+    } finally {
+      this.carregandoClientes = false
+    }
+  }
+
+  aplicarSituacao (dados: any[]) {
+    this.situacoes.forEach(s => { s.valor = 0 })
+    dados.forEach(item => {
+      switch (item.status) {
+        case 'cancelada':  this.situacoes[0].valor = item.valor; break
+        case 'aberta':     this.situacoes[1].valor = item.valor; break
+        case 'andamento':  this.situacoes[2].valor = item.valor; break
+        case 'concluida':  this.situacoes[3].valor = item.valor; break
+      }
+    })
   }
 
   aplicarFinanceiro (data: any) {
-    this.financeiro[0].valor    = this.formatarReais(data.faturamentoSemFrete)
-    this.financeiro[0].variacao = data.variacaoFaturamento
-    this.financeiro[0].positivo = data.variacaoFaturamento?.startsWith('+') ?? true
-
-    this.financeiro[1].valor    = this.formatarReais(data.precoCusto)
-    this.financeiro[1].variacao = data.variacaoCusto
-    this.financeiro[1].positivo = data.variacaoCusto?.startsWith('+') ?? true
-
+    this.financeiro[0].valor = this.formatarReais(data.faturamentoSemFrete)
+    this.financeiro[1].valor = this.formatarReais(data.precoCusto)
     this.financeiro[2].valor    = data.markup + '%'
-    this.financeiro[2].variacao = data.variacaoMarkup
-    this.financeiro[2].positivo = data.variacaoMarkup?.startsWith('+') ?? true
-
-    this.financeiro[3].label    = `Impostos (${data.percentualImpostos}%)`
-    this.financeiro[3].valor    = this.formatarReais(data.impostos)
-    this.financeiro[3].variacao = data.variacaoImpostos
-
-    this.financeiro[4].label    = `Taxa Venda (${data.percentualTaxa}%)`
-    this.financeiro[4].valor    = this.formatarReais(data.taxaVenda)
-    this.financeiro[4].variacao = data.variacaoTaxa
-
-    this.financeiro[5].label    = `Lucro (${data.percentualLucro}%)`
-    this.financeiro[5].valor    = this.formatarReais(data.lucro)
-    this.financeiro[5].variacao = data.variacaoLucro
-    this.financeiro[5].positivo = data.variacaoLucro?.startsWith('+') ?? false
+    this.financeiro[2].positivo = data.markup >= 0
+    this.financeiro[3].label    = `Lucro (${data.percentualLucro}%)`
+    this.financeiro[3].valor    = this.formatarReais(data.lucro)
+    this.financeiro[3].positivo = data.lucro >= 0
   }
 
   atualizarGrafico (data: any[]) {
     const labels = data.map((d: any) => d.data)
     const dados  = data.map((d: any) => d.valor)
-    this.inicializarGrafico(labels, dados)
-  }
-
-  inicializarGrafico (labels: string[], dados: number[]) {
-    const canvas = this.$refs.graficoVendas as HTMLCanvasElement
-    if (!canvas) return
-    if (this.chart) this.chart.destroy()
-
-    this.chart = new (Chart as any)(canvas, {
-      type: 'line',
-      data: {
-        labels,
-        datasets: [{
-          data: dados,
-          borderColor: '#1976D2',
-          backgroundColor: 'rgba(25,118,210,0.07)',
-          borderWidth: 2,
-          fill: true,
-          tension: 0.4,
-          pointRadius: 3,
-          pointBackgroundColor: '#1976D2',
-          pointBorderColor: '#fff',
-          pointBorderWidth: 2
-        }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        legend: { display: false },
-        scales: {
-          xAxes: [{
-            gridLines: { color: '#f5f5f5' },
-            ticks: { fontSize: 11, fontColor: '#aaa', padding: 8 }
-          }],
-          yAxes: [{
-            gridLines: { color: '#f5f5f5' },
-            ticks: {
-              fontSize: 11,
-              fontColor: '#aaa',
-              padding: 8,
-              callback: (v: number) => 'R$ ' + v.toLocaleString('pt-BR')
-            }
-          }]
-        },
-        tooltips: {
-          backgroundColor: '#fff',
-          titleFontColor: '#999',
-          bodyFontColor: '#222',
-          borderColor: '#eee',
-          borderWidth: 1,
-          callbacks: {
-            label: (item: any) =>
-              ' R$ ' + Number(item.yLabel).toLocaleString('pt-BR', { minimumFractionDigits: 2 })
-          }
-        }
-      }
+    this.$nextTick(() => {
+      setTimeout(() => {
+        this.inicializarGrafico(labels, dados)
+      }, 100)
     })
   }
 
-  async salvarMeta () {
-    if (!this.novaMeta.nome || !this.novaMeta.objetivo) {
-      this.$q.notify({ type: 'warning', message: 'Preencha todos os campos!' })
-      return
-    }
-    // try {
-    //   this.salvandoMeta = true
-    //   await dashboardService.criarMeta(this.novaMeta)
-    //   this.$q.notify({ type: 'positive', message: 'Meta criada com sucesso!' })
-    //   this.novaMeta = { nome: '', objetivo: 0 }
-    //   this.dialogNovaMeta = false
-    //   await this.carregarMetas()
-    // } catch {
-    //   this.$q.notify({ type: 'negative', message: 'Erro ao salvar meta!' })
-    // } finally {
-    //   this.salvandoMeta = false
-    // }
+inicializarGrafico (labels: string[], dados: number[]) {
+  const canvas = this.$refs.graficoVendas as HTMLCanvasElement
+  if (!canvas) return
+
+  if (this.chart) {
+    this.chart.destroy()
+    this.chart = null
   }
+
+  const dark       = this.$q.dark.isActive
+  const gridColor  = dark ? '#2a2a42' : '#f5f5f5'
+  const tickColor  = dark ? '#7070a0' : '#aaaaaa'
+  const tooltipBg  = dark ? '#1a1a2e' : '#ffffff'
+  const tooltipBorder = dark ? '#2a2a42' : '#eeeeee'
+
+  this.chart = new Chart(canvas, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        data: dados,
+        borderColor: '#1976D2',
+        backgroundColor: dark
+          ? 'rgba(25,118,210,0.15)'
+          : 'rgba(25,118,210,0.07)',
+        borderWidth: 2,
+        fill: true,
+        tension: 0.4,
+        pointRadius: 3,
+        pointBackgroundColor: '#1976D2',
+        pointBorderColor: dark ? '#1a1a2e' : '#ffffff',
+        pointBorderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      legend: { display: false },
+      scales: {
+        xAxes: [{
+          gridLines: { color: gridColor },
+          ticks: { fontSize: 11, fontColor: tickColor, padding: 8 }
+        }],
+        yAxes: [{
+          gridLines: { color: gridColor },
+          ticks: {
+            fontSize: 11,
+            fontColor: tickColor,
+            padding: 8,
+            callback: (v: number) => 'R$ ' + v.toLocaleString('pt-BR')
+          }
+        }]
+      },
+      tooltips: {
+        backgroundColor: tooltipBg,
+        titleFontColor: tickColor,
+        bodyFontColor: dark ? '#e8e8f0' : '#222222',
+        borderColor: tooltipBorder,
+        borderWidth: 1,
+        callbacks: {
+          label: (item: any) =>
+            ' R$ ' + Number(item.yLabel).toLocaleString('pt-BR', { minimumFractionDigits: 2 })
+        }
+      }
+    }
+  })
+}
+
+@Watch('$q.dark.isActive')
+onDarkModeChange () {
+  this.$nextTick(() => {
+    setTimeout(() => {
+      if (this.chart) {
+        this.chart.destroy()
+        this.chart = null
+      }
+      this.carregarDados()
+    }, 100)
+  })
+}
 
   irParaPedidos () {
     // this.$router.push('/pedidos')
@@ -430,6 +587,29 @@ export default class ModuleComponent extends Vue {
   formatarReais (valor: number): string {
     if (!valor && valor !== 0) return '—'
     return valor.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
+  }
+
+  formatarData (data: string): string {
+    if (!data) return '—'
+    const d = new Date(data)
+    if (isNaN(d.getTime())) return data
+    return d.toLocaleDateString('pt-BR')
+  }
+
+  async refreshTable () {
+    this.limparCampos()
+    await Promise.all([
+      this.carregarDados(),
+      this.carregarEstoque()
+    ])
+    if (this.abaGrafico === 'clientes') {
+      await this.carregarVendasClientes()
+    }
+  }
+
+  limparCampos () {
+    this.dataInicio = ''
+    this.dataFim    = ''
   }
 }
 </script>

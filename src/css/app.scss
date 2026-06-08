@@ -15,3 +15,100 @@ body {
   font-family: $font-family-plus-jakarta;
   font-weight: 400;
 }
+
+body.body--dark {
+
+  // Página e conteúdo principal
+  background: $dark-page;
+
+  // Força fundo escuro na área de conteúdo do layout
+  .q-page,
+  .q-page-container {
+    background: $dark-page !important;
+  }
+
+  // Cards e superfícies — inclui os sem borda
+  .q-card,
+  .q-card--flat {
+    background: $dark-card !important;
+    border-color: $dark-separator !important;
+    color: #e8e8f0;
+  }
+
+  // Corrige especificamente o fundo branco do gráfico
+  canvas {
+    filter: invert(0); // garante que o canvas não inverta
+  }
+
+  // Textos gerais
+  .text-black  { color: #e8e8f0 !important; }
+  .text-grey-6 { color: #9090b0 !important; }
+  .text-grey-7 { color: #a0a0c0 !important; }
+  .text-grey-5 { color: #7070a0 !important; }
+
+  // Inputs e selects
+  .q-field--outlined .q-field__control {
+    background: $dark-card !important;
+    &:before { border-color: $dark-separator !important; }
+  }
+  .q-field__label,
+  .q-field__native,
+  .q-field__input { color: #e8e8f0 !important; }
+
+  // Separadores
+  .q-separator { background: $dark-separator; }
+
+  // Tabs
+  .q-tabs       { background: $dark-card; color: #9090b0; }
+  .q-tab-panel  { background: $dark-card !important; }
+  .q-tab-panels { background: $dark-card !important; }
+
+  // Tabelas
+  .q-table {
+    background: $dark-card;
+    color: #e8e8f0;
+
+    thead tr th {
+      background: $dark-card;
+      color: #9090b0;
+      border-color: $dark-separator;
+    }
+    tbody tr td   { border-color: $dark-separator; }
+    tbody tr:hover td { background: rgba(255,255,255,0.04); }
+  }
+
+  // Progress track
+  .q-linear-progress__track { background: $dark-separator !important; }
+
+  // Badges outline
+  .q-badge--outline {
+    border-color: $positive;
+    color: $positive;
+  }
+
+  // Botões flat cinza
+  .q-btn--flat.text-grey-7 { color: #9090b0 !important; }
+
+  // Inner loading overlay
+  .q-inner-loading { background: rgba(26, 26, 46, 0.7) !important; }
+
+body.body--dark {
+
+  input[type="date"],
+  input[type="date"]::-webkit-datetime-edit,
+  input[type="date"]::-webkit-datetime-edit-fields-wrapper,
+  input[type="date"]::-webkit-datetime-edit-text,
+  input[type="date"]::-webkit-datetime-edit-day-field,
+  input[type="date"]::-webkit-datetime-edit-month-field,
+  input[type="date"]::-webkit-datetime-edit-year-field {
+    color: #e8e8f0 !important;
+    color-scheme: dark;
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+  }
+}
+}
+
