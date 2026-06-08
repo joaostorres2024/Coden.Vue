@@ -246,12 +246,13 @@ import Chart from 'chart.js'
 import dashboardService from '../services/dashboardService'
 import vendasService from '../services/vendasService'
 import productService from '../services/productService'
+import moment from 'moment'
 
 @Component
 export default class ModuleComponent extends Vue {
 
   // ── Filtros ──────────────────────────────────────────────
-  dataInicio = ''
+  dataInicio = moment().startOf('month').format('YYYY-MM-DD')
   dataFim    = ''
 
   // ── Loading ──────────────────────────────────────────────
