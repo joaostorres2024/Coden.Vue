@@ -59,7 +59,7 @@
     </div>
 
     <!-- TELA 2: FLUXO DE VENDA -->
-    <div v-if="procurarProduto">
+    <div v-if="procurarProduto" :style="finalizacaoVenda ? 'margin-right: 380px; transition: margin-right 0.25s ease' : 'transition: margin-right 0.25s ease'">
       <!-- Banner do Cliente -->
       <div class="row items-center justify-between q-pa-md q-mb-lg border">
         <div class="row items-center q-gutter-md">
@@ -72,7 +72,19 @@
             </div>
           </div>
         </div>
-        <q-btn flat dense icon="close" color="negative" label="Cancelar Venda" @click="abrirDialogCancelar()" />
+        <div class="row items-center q-gutter-sm">
+          <q-btn
+            v-if="produtosAdicionados.length > 0"
+            flat dense
+            icon="shopping_cart"
+            color="primary"
+            label="Ver carrinho"
+            @click="drawerCarrinho = true"
+          >
+            <q-badge color="primary" floating rounded :label="produtosAdicionados.length" />
+          </q-btn>
+          <q-btn flat dense icon="close" color="negative" label="Cancelar Venda" @click="abrirDialogCancelar()" />
+        </div>
       </div>
 
       <!-- Busca de Produtos -->
@@ -113,58 +125,95 @@
           <q-td align="center">{{ formatarReais(props.row.valorUnitario) }}</q-td>
         </template>
       </q-table>
+    </div>
 
-      <!-- Carrinho -->
-      <div v-if="produtosAdicionados.length > 0" class="q-mt-lg">
-        <div class="row items-center justify-between q-mb-md">
+    <!-- ══════════════════════════════════════════════
+         DRAWER: Carrinho (lado direito)
+    ══════════════════════════════════════════════ -->
+    <q-drawer
+      v-model="drawerCarrinho"
+      side="right"
+      bordered
+      overlay
+      :width="380"
+      class="column"
+    >
+      <div class="column full-height">
+
+        <!-- Cabeçalho do drawer -->
+        <div class="row items-center justify-between q-pa-md" style="border-bottom: 0.5px solid #e0e0e0">
           <div class="row items-center q-gutter-sm">
             <q-icon name="shopping_cart" size="20px" color="grey-7" />
             <span style="font-size: 15px; font-weight: 500">Carrinho</span>
             <q-badge color="primary" rounded :label="produtosAdicionados.length" style="font-size: 10px" />
           </div>
+          <q-btn icon="close" flat dense round size="sm" color="grey-7" @click="drawerCarrinho = false" />
         </div>
-        <q-separator class="q-mb-md" />
-        <div class="q-mb-md">
-          <div
-            v-for="item in produtosAdicionados"
-            :key="item.item_id"
-            class="row items-center q-py-md"
-            style="border-bottom: 0.5px solid #f0f0f0"
-          >
-            <div class="col">
-              <div style="font-size: 14px; font-weight: 500; color: #222">{{ item.nome }}</div>
-              <div style="font-size: 12px; color: #999; margin-top: 2px">{{ formatarReais(item.valorUnitario) }} / un.</div>
-              <div v-if="item.desconto > 0" style="font-size: 12px; color: #c0392b; margin-top: 2px">
-                Desconto: - {{ formatarReais(item.desconto) }}
+
+        <!-- Itens do carrinho (scrollável) -->
+        <q-scroll-area class="col">
+          <div class="q-pa-md">
+            <div v-if="produtosAdicionados.length === 0" class="text-center text-grey-6 q-pa-xl">
+              <q-icon name="shopping_cart" size="40px" color="grey-4" />
+              <div class="q-mt-sm" style="font-size: 13px">Nenhum produto adicionado ainda</div>
+            </div>
+
+            <div
+              v-for="item in produtosAdicionados"
+              :key="item.item_id"
+              class="q-py-md"
+              style="border-bottom: 0.5px solid #f0f0f0"
+            >
+              <div class="row items-start justify-between">
+                <div class="col">
+                  <div style="font-size: 14px; font-weight: 500; color: #222">{{ item.nome }}</div>
+                  <div style="font-size: 12px; color: #999; margin-top: 2px">{{ formatarReais(item.valorUnitario) }} / un.</div>
+                  <div v-if="item.desconto > 0" style="font-size: 12px; color: #c0392b; margin-top: 2px">
+                    Desconto: - {{ formatarReais(item.desconto) }}
+                  </div>
+                </div>
+                <q-btn icon="delete_outline" size="sm" flat round dense color="negative" @click="removerProduto(item)">
+                  <q-tooltip>Remover item</q-tooltip>
+                </q-btn>
+              </div>
+
+              <div class="row items-center justify-between q-mt-sm">
+                <!-- Quantidade -->
+                <div class="row items-center" style="border: 0.5px solid #ddd; border-radius: 8px; overflow: hidden;">
+                  <q-btn icon="remove" size="xs" flat dense color="grey-7" style="padding: 4px 8px; border-radius: 0" @click="alterarQuantidade(item, item.quantidade - 1)" />
+                  <span style="min-width: 28px; text-align: center; font-size: 14px; font-weight: 500; padding: 0 4px;">{{ item.quantidade }}</span>
+                  <q-btn icon="add" size="xs" flat dense color="grey-7" style="padding: 4px 8px; border-radius: 0" @click="alterarQuantidade(item, item.quantidade + 1)" />
+                </div>
+
+                <span style="font-size: 14px; font-weight: 500; color: #1d9e75;">
+                  {{ formatarReais(item.total) }}
+                </span>
+              </div>
+
+              <!-- Desconto -->
+              <div class="row items-center q-gutter-sm q-mt-sm">
+                <q-btn-toggle
+                  v-model="item.tipoDesconto"
+                  dense unelevated toggle-color="primary" color="white" text-color="grey-7" size="sm"
+                  :options="[{ label: 'R$', value: 'valor' }, { label: '%', value: 'percent' }]"
+                  style="border: 0.5px solid #ddd; border-radius: 8px; overflow: hidden;"
+                />
+                <q-input
+                  v-model.number="item.descontoInput"
+                  type="number" dense outlined
+                  style="width: 90px"
+                  label="Desconto"
+                  min="0"
+                  @change="aplicarDesconto(item)"
+                />
               </div>
             </div>
-            <div class="row items-center q-mx-md" style="border: 0.5px solid #ddd; border-radius: 8px; overflow: hidden;">
-              <q-btn icon="remove" size="xs" flat dense color="grey-7" style="padding: 4px 8px; border-radius: 0" @click="alterarQuantidade(item, item.quantidade - 1)" />
-              <span style="min-width: 28px; text-align: center; font-size: 14px; font-weight: 500; padding: 0 4px;">{{ item.quantidade }}</span>
-              <q-btn icon="add" size="xs" flat dense color="grey-7" style="padding: 4px 8px; border-radius: 0" @click="alterarQuantidade(item, item.quantidade + 1)" />
-            </div>
-            <div class="row items-center q-gutter-md q-mr-md">
-              <q-btn-toggle
-                v-model="item.tipoDesconto"
-                dense unelevated toggle-color="primary" color="white" text-color="grey-7" size="sm"
-                :options="[{ label: 'R$', value: 'valor' }, { label: '%', value: 'percent' }]"
-                style="border: 0.5px solid #ddd; border-radius: 8px; overflow: hidden;"
-              />
-              <q-input v-model.number="item.descontoInput" type="number" dense outlined style="width: 72px" min="0" @change="aplicarDesconto(item)" />
-            </div>
-            <div class="row items-center q-gutter-sm">
-              <span style="min-width: 90px; text-align: right; font-size: 14px; font-weight: 500; color: #1d9e75;">
-                {{ formatarReais(item.total) }}
-              </span>
-              <q-btn icon="delete_outline" size="sm" flat round color="negative" @click="removerProduto(item)">
-                <q-tooltip>Remover item</q-tooltip>
-              </q-btn>
-            </div>
           </div>
-        </div>
-        <!-- Totais -->
-        <div class="row justify-end q-mb-lg">
-          <div style="min-width: 240px">
+        </q-scroll-area>
+
+        <!-- Totais + Ações (fixo no rodapé do drawer) -->
+        <div v-if="produtosAdicionados.length > 0" class="q-pa-md" style="border-top: 0.5px solid #e0e0e0">
+          <div class="q-mb-md">
             <div class="row justify-between q-mb-xs" style="font-size: 13px; color: #999">
               <span>Subtotal</span><span>{{ valorBruto }}</span>
             </div>
@@ -177,25 +226,41 @@
               <span style="font-size: 18px; font-weight: 500; color: #1d9e75">{{ valorTotalVenda }}</span>
             </div>
           </div>
-        </div>
-        <!-- Ações -->
-        <div class="row q-gutter-sm items-center">
-          <q-btn
-            label="Realizar Pagamento"
-            icon="credit_card"
-            color="positive"
-            unelevated
-            class="col"
-            style="border-radius: 8px; font-size: 14px"
-            size="md"
-            @click="abrirDialogPagamento()"
-          />
-          <q-btn icon="close" color="negative" flat round style="border: 0.5px solid #ffcccc; border-radius: 8px" @click="abrirDialogCancelar()">
-            <q-tooltip>Cancelar Venda</q-tooltip>
-          </q-btn>
+
+          <div class="row q-gutter-sm items-center">
+            <q-btn
+              label="Realizar Pagamento"
+              icon="credit_card"
+              color="positive"
+              unelevated
+              class="col"
+              style="border-radius: 8px; font-size: 14px"
+              size="md"
+              @click="abrirDialogPagamento()"
+            />
+            <q-btn icon="close" color="negative" flat round style="border: 0.5px solid #ffcccc; border-radius: 8px" @click="abrirDialogCancelar()">
+              <q-tooltip>Cancelar Venda</q-tooltip>
+            </q-btn>
+          </div>
         </div>
       </div>
-    </div>
+    </q-drawer>
+
+    <!-- Botão flutuante para reabrir o carrinho quando fechado -->
+    <q-page-sticky
+      v-if="procurarProduto && produtosAdicionados.length > 0 && !drawerCarrinho"
+      position="bottom-right"
+      :offset="[24, 24]"
+    >
+      <q-btn
+        fab
+        color="primary"
+        icon="shopping_cart"
+        @click="drawerCarrinho = true"
+      >
+        <q-badge color="negative" floating rounded :label="produtosAdicionados.length" />
+      </q-btn>
+    </q-page-sticky>
 
     <!-- ══════════════════════════════════════════════
          Dialog: Seleção de Forma de Pagamento
@@ -479,6 +544,9 @@ export default class VendasBalcaoComponent extends Vue {
   codigoProduto = ''
   nomeProduto   = ''
 
+  // ── Drawer do carrinho ───────────────────────────────────
+  drawerCarrinho = false
+
   // ── Dialogs ──────────────────────────────────────────────
   dialogCancelar    = false
   dialogPagamento   = false
@@ -611,6 +679,7 @@ export default class VendasBalcaoComponent extends Vue {
       const itens = await vendasService.listarItens(this.vendaAtual.id)
       this.atualizarCarrinho(itens)
       this.finalizacaoVenda = true
+      this.drawerCarrinho = true
       this.$q.notify({ type: 'positive', message: 'Produto adicionado!' })
     } catch (err: any) {
       this.$q.notify({ type: 'negative', message: err.response?.data?.error || 'Erro ao adicionar produto' })
@@ -664,7 +733,10 @@ export default class VendasBalcaoComponent extends Vue {
     try {
       await vendasService.removerItem(row.item_id)
       this.produtosAdicionados = this.produtosAdicionados.filter(p => p.item_id !== row.item_id)
-      if (this.produtosAdicionados.length === 0) this.finalizacaoVenda = false
+      if (this.produtosAdicionados.length === 0) {
+        this.finalizacaoVenda = false
+        this.drawerCarrinho = false
+      }
       this.$q.notify({ type: 'positive', message: 'Produto removido!' })
     } catch {
       this.$q.notify({ type: 'negative', message: 'Erro ao remover produto' })
@@ -853,6 +925,7 @@ export default class VendasBalcaoComponent extends Vue {
   limparTela () {
     this.procurarProduto  = false
     this.finalizacaoVenda = false
+    this.drawerCarrinho   = false
     this.produtosAdicionados = []
     this.clienteSelecionado = null
     this.vendaAtual = null
