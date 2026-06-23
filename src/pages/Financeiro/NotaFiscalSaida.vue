@@ -2,33 +2,70 @@
   <div class="q-pa-md">
 
     <!-- Cabeçalho -->
-    <div class="text-bold text-black row items-center" style="font-size: 28px">
+    <div class="text-bold text-black row items-center nfs-cabecalho" style="font-size: 28px">
       <q-icon name="trending_down" class="q-mr-md text-primary" size="28px" />NF Saída
     </div>
-    <p class="text-grey-7 text-body2 q-mb-md">
+    <p class="text-grey-7 text-body2 q-mb-md nfs-subtitulo">
       Consulte e exporte as notas fiscais de saída vinculadas às vendas realizadas no sistema.
     </p>
     <q-separator class="q-mb-lg" />
 
     <!-- Filtros -->
-    <div class="row q-col-gutter-md q-mb-md">
+    <div class="row q-col-gutter-md q-mb-md nfs-filtros">
       <div class="col-12 col-sm-3">
-        <q-input v-model="filtro.numeroNF" label="Número NF" outlined dense />
+        <q-input
+          v-model="filtro.numeroNF"
+          label="Número NF"
+          outlined
+          dense
+          input-id="nfs-input-filtro-numero"
+          class="nfs-input-filtro-numero"
+        />
       </div>
       <div class="col-12 col-sm-3">
-        <q-input v-model="filtro.nomeCliente" label="Nome do Cliente" outlined dense />
+        <q-input
+          v-model="filtro.nomeCliente"
+          label="Nome do Cliente"
+          outlined
+          dense
+          input-id="nfs-input-filtro-cliente"
+          class="nfs-input-filtro-cliente"
+        />
       </div>
       <div class="col-12 col-sm-2">
-        <q-input v-model="filtro.de" label="De" type="date" outlined dense />
+        <q-input
+          v-model="filtro.de"
+          label="De"
+          type="date"
+          outlined
+          dense
+          input-id="nfs-input-filtro-de"
+          class="nfs-input-filtro-de"
+        />
       </div>
       <div class="col-12 col-sm-2">
-        <q-input v-model="filtro.ate" label="Até" type="date" outlined dense />
+        <q-input
+          v-model="filtro.ate"
+          label="Até"
+          type="date"
+          outlined
+          dense
+          input-id="nfs-input-filtro-ate"
+          class="nfs-input-filtro-ate"
+        />
       </div>
     </div>
 
     <!-- Botões -->
-    <div class="row justify-start q-gutter-sm q-mb-md">
-      <q-btn label="Limpar" icon="delete_sweep" flat class="text-grey-7" @click="limpar()" />
+    <div class="row justify-start q-gutter-sm q-mb-md nfs-acoes">
+      <q-btn
+        id="nfs-btn-limpar"
+        class="nfs-btn-limpar text-grey-7"
+        label="Limpar"
+        icon="delete_sweep"
+        flat
+        @click="limpar()"
+      />
     </div>
 
     <!-- Tabela -->
@@ -36,9 +73,10 @@
       :data="rowsFiltradas"
       :columns="colunasNotaFiscalSaida"
       row-key="id"
-      flat bordered
+      flat
+      bordered
       no-data-label="Nenhum registro encontrado"
-      class="text-weight-medium q-mt-xl"
+      class="text-weight-medium q-mt-xl nfs-tabela-lista"
       :rows-per-page-options="[10, 20, 50]"
       :loading="carregando"
     >
@@ -50,24 +88,46 @@
       </template>
       <template v-slot:body-cell-forma_pagamento="props">
         <q-td align="center">
-          <q-badge :color="corFormaPagamento(props.row.forma_pagamento)">
+          <q-badge
+            :color="corFormaPagamento(props.row.forma_pagamento)"
+            class="nfs-badge-forma-pagamento"
+          >
             {{ labelFormaPagamento(props.row.forma_pagamento) }}
           </q-badge>
         </q-td>
       </template>
       <template v-slot:body-cell-status="props">
         <q-td align="center">
-          <q-badge :color="props.row.status === 'emitida' ? 'positive' : 'negative'">
+          <q-badge
+            :color="props.row.status === 'emitida' ? 'positive' : 'negative'"
+            class="nfs-badge-status"
+          >
             {{ labelStatus(props.row.status) }}
           </q-badge>
         </q-td>
       </template>
       <template v-slot:body-cell-acoes="props">
         <q-td align="center">
-          <q-btn icon="picture_as_pdf" size="sm" color="negative" flat round @click="gerarPDF(props.row)">
+          <q-btn
+            icon="picture_as_pdf"
+            size="sm"
+            color="negative"
+            flat
+            round
+            class="nfs-btn-exportar-pdf"
+            @click="gerarPDF(props.row)"
+          >
             <q-tooltip>Exportar PDF</q-tooltip>
           </q-btn>
-          <q-btn icon="topic" size="sm" color="blue" flat round @click="verDetalhes(props.row)">
+          <q-btn
+            icon="topic"
+            size="sm"
+            color="blue"
+            flat
+            round
+            class="nfs-btn-ver-detalhes"
+            @click="verDetalhes(props.row)"
+          >
             <q-tooltip>Ver Detalhes</q-tooltip>
           </q-btn>
         </q-td>
@@ -75,7 +135,7 @@
     </q-table>
 
     <!-- Dialog Detalhes -->
-    <q-dialog v-model="dialogDetalhes" persistent>
+    <q-dialog v-model="dialogDetalhes" persistent class="nfs-dialog-detalhes">
       <q-card style="min-width: 650px; max-width: 700px; border-radius: 12px">
 
         <div class="q-pa-lg row items-center justify-between" style="background: #f8f9fa">
@@ -83,10 +143,16 @@
             <div class="text-h6 text-bold">{{ nfSelecionada?.numero_nf }}</div>
             <div class="text-caption text-grey-6">Emitida em {{ formatarData(nfSelecionada?.data_emissao) }}</div>
             <div class="row q-gutter-sm q-mt-xs">
-              <q-badge :color="corFormaPagamento(nfSelecionada?.forma_pagamento)" class="q-pa-xs">
+              <q-badge
+                :color="corFormaPagamento(nfSelecionada?.forma_pagamento)"
+                class="q-pa-xs nfs-detalhes-badge-pagamento"
+              >
                 {{ labelFormaPagamento(nfSelecionada?.forma_pagamento) }}
               </q-badge>
-              <q-badge :color="nfSelecionada?.status === 'emitida' ? 'positive' : 'negative'" class="q-pa-xs">
+              <q-badge
+                :color="nfSelecionada?.status === 'emitida' ? 'positive' : 'negative'"
+                class="q-pa-xs nfs-detalhes-badge-status"
+              >
                 {{ labelStatus(nfSelecionada?.status) }}
               </q-badge>
             </div>
@@ -100,11 +166,10 @@
         <q-separator />
 
         <q-card-section class="q-pa-lg">
-
           <div class="row q-col-gutter-md q-mb-md">
             <div class="col-12">
               <div class="text-caption text-grey-5 text-uppercase q-mb-xs">Cliente</div>
-              <div class="text-weight-bold">{{ nfSelecionada?.nome_cliente || 'Consumidor Final' }}</div>
+              <div class="text-weight-bold nfs-detalhes-cliente">{{ nfSelecionada?.nome_cliente || 'Consumidor Final' }}</div>
             </div>
           </div>
 
@@ -114,7 +179,11 @@
           <q-table
             :data="nfSelecionada?.itens || []"
             :columns="colunasItens"
-            flat bordered hide-bottom dense
+            flat
+            bordered
+            hide-bottom
+            dense
+            class="nfs-tabela-detalhes"
           >
             <template v-slot:body-cell-preco_unitario="props">
               <q-td align="center">{{ formatarReais(props.row.preco_unitario) }}</q-td>
@@ -132,37 +201,44 @@
             </template>
           </q-table>
 
-          <div class="row justify-end q-mt-md">
+          <div class="row justify-end q-mt-md nfs-detalhes-resumo">
             <div class="column q-gutter-xs" style="min-width: 220px">
               <div class="row justify-between">
                 <span class="text-caption text-grey-6">Subtotal</span>
-                <span class="text-caption">{{ formatarReais(nfSelecionada?.subtotal) }}</span>
+                <span class="text-caption nfs-detalhes-subtotal">{{ formatarReais(nfSelecionada?.subtotal) }}</span>
               </div>
               <div class="row justify-between" v-if="nfSelecionada?.desconto > 0">
                 <span class="text-caption text-negative">Desconto</span>
-                <span class="text-caption text-negative">- {{ formatarReais(nfSelecionada?.desconto) }}</span>
+                <span class="text-caption text-negative nfs-detalhes-desconto">- {{ formatarReais(nfSelecionada?.desconto) }}</span>
               </div>
               <q-separator />
               <div class="row justify-between items-center">
                 <span class="text-weight-bold">Total</span>
-                <span class="text-h6 text-weight-bold text-positive">{{ formatarReais(nfSelecionada?.total) }}</span>
+                <span class="text-h6 text-weight-bold text-positive nfs-detalhes-total">{{ formatarReais(nfSelecionada?.total) }}</span>
               </div>
               <div class="row justify-between q-mt-xs">
                 <span class="text-caption text-grey-6">Forma de Pagamento</span>
-                <q-badge :color="corFormaPagamento(nfSelecionada?.forma_pagamento)">
+                <q-badge :color="corFormaPagamento(nfSelecionada?.forma_pagamento)" class="nfs-detalhes-forma-pagamento">
                   {{ labelFormaPagamento(nfSelecionada?.forma_pagamento) }}
                 </q-badge>
               </div>
             </div>
           </div>
-
         </q-card-section>
 
         <q-separator />
 
         <q-card-actions align="right" class="q-pa-md q-gutter-sm">
-          <q-btn label="Fechar" flat v-close-popup />
           <q-btn
+            id="nfs-dialog-detalhes-fechar"
+            class="nfs-dialog-detalhes-fechar"
+            label="Fechar"
+            flat
+            v-close-popup
+          />
+          <q-btn
+            id="nfs-dialog-detalhes-exportar-pdf"
+            class="nfs-dialog-detalhes-exportar-pdf"
             label="Exportar PDF"
             icon="picture_as_pdf"
             color="negative"

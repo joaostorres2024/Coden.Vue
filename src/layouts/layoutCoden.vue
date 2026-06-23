@@ -1,244 +1,316 @@
-  <template>
-    <q-layout view="hHh Lpr lFf">
-      <!-- CABEÇALHO -->
-      <q-header unelevated :class="$q.dark.isActive ? 'bg-dark' : 'bg-white'">
-        <q-toolbar>
-          <q-btn flat dense round color="black" icon="menu" aria-label="Menu" @click="leftDrawerOpen = !leftDrawerOpen" />
-          <q-toolbar-title>
-<img
-  style="width: 90px; vertical-align: middle; margin-top: -10px"
-  :src="$q.dark.isActive
-    ? require('../assets/Logo Coden Branca.png')
-    : require('../assets/Logo Coden.png')"
-  alt="Logo Coden"
-  @click="$router.push('/')"
-  class="cursor-pointer q-mr-lg"
-/>
-            <span class="text-bold text-black"> Olá, </span>
-            <span class="text-bold text-primary">{{ user }}</span>
-          </q-toolbar-title>
-          <q-space />
-          <div class="row items-center q-gutter-sm cursor-pointer q-mr-sm" @click="drawerPerfil = !drawerPerfil">
-            <q-avatar size="36px" color="primary" text-color="white">{{ iniciais }}</q-avatar>
-            <div class="column" style="line-height: 1.2">
-              <span class="text-black text-weight-bold" style="font-size: 13px">{{ user }}</span>
-              <span class="text-grey-6" style="font-size: 11px">Configurações e Perfil</span>
-            </div>
-            <q-icon name="expand_more" color="black" />
-          </div>
-        </q-toolbar>
-      </q-header>
+<template>
+  <q-layout view="hHh Lpr lFf">
 
-  <!-- DRAWER ESQUERDO -->
-<q-drawer
-  v-model="leftDrawerOpen"
-  show-if-above
-  bordered
-  :width="260"
-  :content-class="$q.dark.isActive ? 'bg-dark' : 'bg-primary'"
->
-    <div class="column no-wrap full-height">
-
-      <q-separator class="q-mb-sm bg-grey-8" />
-
-      <!-- Menu -->
-      <q-scroll-area style="flex: 1">
-        <q-list class="q-px-sm q-py-xs">
-
-          <!-- Dashboard -->
-          <q-item
-            clickable v-ripple
-            class="menu-item b-r-10 q-mb-xs text-white"
-            :class="$route.path === '/' ? 'menu-item-active' : ''"
+    <!-- CABEÇALHO -->
+    <q-header unelevated :class="$q.dark.isActive ? 'bg-dark' : 'bg-white'" class="layout-header">
+      <q-toolbar>
+        <q-btn
+          id="layout-btn-menu"
+          flat
+          dense
+          round
+          color="black"
+          icon="menu"
+          aria-label="Menu"
+          class="layout-btn-menu"
+          @click="leftDrawerOpen = !leftDrawerOpen"
+        />
+        <q-toolbar-title>
+          <img
+            style="width: 90px; vertical-align: middle; margin-top: -10px"
+            :src="$q.dark.isActive
+              ? require('../assets/Logo Coden Branca.png')
+              : require('../assets/Logo Coden.png')"
+            alt="Logo Coden"
+            class="cursor-pointer q-mr-lg layout-logo"
+            id="layout-logo"
             @click="$router.push('/')"
-          >
-            <q-item-section avatar>
-              <q-icon name="o_dashboard" size="20px" color="white" />
-            </q-item-section>
-            <q-item-section class="menu-label">Dashboard</q-item-section>
-          </q-item>
-
-          <!-- Cadastro -->
-          <div class="menu-section-label q-px-sm q-mt-md q-mb-xs">CADASTRO</div>
-
-          <q-item
-            clickable v-ripple
-            class="menu-item b-r-10 q-mb-xs text-white"
-            :class="$route.path === '/CadastroPessoas' ? 'menu-item-active' : ''"
-            @click="$router.push('/CadastroPessoas')"
-          >
-            <q-item-section avatar>
-              <q-icon name="o_groups" size="20px" color="white" />
-            </q-item-section>
-            <q-item-section class="menu-label">Pessoas</q-item-section>
-          </q-item>
-
-          <q-item
-            clickable v-ripple
-            class="menu-item b-r-10 q-mb-xs text-white"
-            :class="$route.path === '/CadastroProdutos' ? 'menu-item-active' : ''"
-            @click="$router.push('/CadastroProdutos')"
-          >
-            <q-item-section avatar>
-              <q-icon name="shelves" size="20px" color="white" />
-            </q-item-section>
-            <q-item-section class="menu-label">Produtos</q-item-section>
-          </q-item>
-
-          <!-- Financeiro -->
-          <div class="menu-section-label q-px-sm q-mt-md q-mb-xs">FINANCEIRO</div>
-
-          <q-item
-            clickable v-ripple
-            class="menu-item b-r-10 q-mb-xs text-white"
-            :class="$route.path === '/NotaFiscalEntrada' ? 'menu-item-active' : ''"
-            @click="$router.push('/NotaFiscalEntrada')"
-          >
-            <q-item-section avatar>
-              <q-icon name="trending_up" size="20px" color="white" />
-            </q-item-section>
-            <q-item-section class="menu-label">NF Entrada</q-item-section>
-          </q-item>
-
-          <q-item
-            clickable v-ripple
-            class="menu-item b-r-10 q-mb-xs text-white"
-            :class="$route.path === '/NotaFiscalSaida' ? 'menu-item-active' : ''"
-            @click="$router.push('/NotaFiscalSaida')"
-          >
-            <q-item-section avatar>
-              <q-icon name="trending_down" size="20px" color="white" />
-            </q-item-section>
-            <q-item-section class="menu-label">NF Saída</q-item-section>
-          </q-item>
-
-          <!-- Relatórios -->
-          <div class="menu-section-label q-px-sm q-mt-md q-mb-xs">RELATÓRIOS</div>
-
-          <q-item
-            clickable v-ripple
-            class="menu-item b-r-10 q-mb-xs text-white"
-            :class="$route.path === '/RelatorioEstoque' ? 'menu-item-active' : ''"
-            @click="$router.push('/RelatorioEstoque')"
-          >
-            <q-item-section avatar>
-              <q-icon name="o_inventory_2" size="20px" color="white" />
-            </q-item-section>
-            <q-item-section class="menu-label">Estoque</q-item-section>
-          </q-item>
-
-          <q-item
-            clickable v-ripple
-            class="menu-item b-r-10 q-mb-xs text-white"
-            :class="$route.path === '/RelatorioVendas' ? 'menu-item-active' : ''"
-            @click="$router.push('/RelatorioVendas')"
-          >
-            <q-item-section avatar>
-              <q-icon name="o_sell" size="20px" color="white" />
-            </q-item-section>
-            <q-item-section class="menu-label">Vendas</q-item-section>
-          </q-item>
-
-          <!-- Outros -->
-          <div class="menu-section-label q-px-sm q-mt-md q-mb-xs">OUTROS</div>
-
-          <q-item
-            clickable v-ripple
-            class="menu-item b-r-10 q-mb-xs text-white"
-            :class="$route.path === '/VendaDireta' ? 'menu-item-active' : ''"
-            @click="$router.push('/VendaDireta')"
-          >
-            <q-item-section avatar>
-              <q-icon name="point_of_sale" size="20px" color="white" />
-            </q-item-section>
-            <q-item-section class="menu-label">Venda Direta</q-item-section>
-          </q-item>
-
-          <q-item
-            clickable v-ripple
-            class="menu-item b-r-10 q-mb-xs text-white"
-            :class="$route.path === '/Integracoes' ? 'menu-item-active' : ''"
-            @click="$router.push('/Integracoes')"
-          >
-            <q-item-section avatar>
-              <q-icon name="webhook" size="20px" color="white" />
-            </q-item-section>
-            <q-item-section class="menu-label">Integrações</q-item-section>
-          </q-item>
-
-        </q-list>
-      </q-scroll-area>
-
-    </div>
-  </q-drawer>
-
-      <!-- OVERLAY PERFIL -->
-      <template v-if="drawerPerfil">
-        <div class="fixed-full" style="z-index: 1999; background: transparent" @click="drawerPerfil = false" />
-      </template>
-
-      <!-- DRAWER PERFIL -->
-      <q-drawer v-model="drawerPerfil" side="right" overlay bordered :width="260" :breakpoint="0" style="z-index: 2000">
-        <div class="column full-height">
-          <div class="q-pa-lg row items-center q-gutter-md">
-            <q-avatar size="48px" color="primary" text-color="white">{{ iniciais }}</q-avatar>
-            <div class="column">
-              <span class="text-weight-bold" style="font-size: 14px">{{ user }}</span>
-              <span class="text-grey-6" style="font-size: 12px">Administrador</span>
-            </div>
+          />
+          <span class="text-bold text-black"> Olá, </span>
+          <span class="text-bold text-primary layout-usuario-nome">{{ user }}</span>
+        </q-toolbar-title>
+        <q-space />
+        <div
+          class="row items-center q-gutter-sm cursor-pointer q-mr-sm layout-perfil-trigger"
+          id="layout-perfil-trigger"
+          @click="drawerPerfil = !drawerPerfil"
+        >
+          <q-avatar size="36px" color="primary" text-color="white" class="layout-avatar">{{ iniciais }}</q-avatar>
+          <div class="column" style="line-height: 1.2">
+            <span class="text-black text-weight-bold layout-perfil-nome" style="font-size: 13px">{{ user }}</span>
+            <span class="text-grey-6" style="font-size: 11px">Configurações e Perfil</span>
           </div>
-          <q-separator />
-          <q-list class="q-pa-sm q-mt-sm">
-            <q-item clickable v-ripple class="b-r-8" @click="$router.push('/Perfil'); drawerPerfil = false">
-              <q-item-section avatar><q-icon name="business" color="grey-7" size="20px" /></q-item-section>
-              <q-item-section><span style="font-size: 13px">Perfil da Empresa</span></q-item-section>
-            </q-item>
-            <q-item clickable v-ripple class="b-r-8" @click="toggleDark(); drawerPerfil = false">
-              <q-item-section avatar><q-icon :name="$q.dark.isActive ? 'light_mode' : 'dark_mode'" color="grey-7" size="20px" /></q-item-section>
-              <q-item-section><span style="font-size: 13px">{{ $q.dark.isActive ? 'Modo Claro' : 'Modo Escuro' }}</span></q-item-section>
-            </q-item>
-            <q-item clickable v-ripple class="b-r-8" @click="$router.push('/Configuracoes'); drawerPerfil = false">
-              <q-item-section avatar><q-icon name="settings" color="grey-7" size="20px" /></q-item-section>
-              <q-item-section><span style="font-size: 13px">Configurações</span></q-item-section>
-            </q-item>
-            <q-item clickable v-ripple class="b-r-8" disable>
-              <q-item-section avatar><q-icon name="support_agent" color="grey-4" size="20px" /></q-item-section>
-              <q-item-section>
-                <span style="font-size: 13px" class="text-grey-5">Helpdesk</span>
-                <span class="text-caption text-grey-4">Em breve</span>
+          <q-icon name="expand_more" color="black" />
+        </div>
+      </q-toolbar>
+    </q-header>
+
+    <!-- DRAWER ESQUERDO -->
+    <q-drawer
+      v-model="leftDrawerOpen"
+      show-if-above
+      bordered
+      :width="260"
+      :content-class="$q.dark.isActive ? 'bg-dark' : 'bg-primary'"
+      class="layout-drawer-menu"
+    >
+      <div class="column no-wrap full-height">
+        <q-separator class="q-mb-sm bg-grey-8" />
+
+        <q-scroll-area style="flex: 1">
+          <q-list class="q-px-sm q-py-xs">
+
+            <!-- Dashboard -->
+            <q-item
+              id="layout-menu-dashboard"
+              clickable
+              v-ripple
+              class="menu-item b-r-10 q-mb-xs text-white layout-menu-dashboard"
+              :class="$route.path === '/' ? 'menu-item-active' : ''"
+              @click="$router.push('/')"
+            >
+              <q-item-section avatar>
+                <q-icon name="o_dashboard" size="20px" color="white" />
               </q-item-section>
+              <q-item-section class="menu-label">Dashboard</q-item-section>
             </q-item>
-          </q-list>
-          <q-space />
-          <q-separator />
-          <q-list class="q-pa-sm">
-            <q-item clickable v-ripple class="b-r-8" @click="Sair()">
-              <q-item-section avatar><q-icon name="logout" color="negative" size="20px" /></q-item-section>
-              <q-item-section><span class="text-negative" style="font-size: 13px">Sair</span></q-item-section>
+
+            <!-- Cadastro -->
+            <div class="menu-section-label q-px-sm q-mt-md q-mb-xs">CADASTRO</div>
+
+            <q-item
+              id="layout-menu-pessoas"
+              clickable
+              v-ripple
+              class="menu-item b-r-10 q-mb-xs text-white layout-menu-pessoas"
+              :class="$route.path === '/CadastroPessoas' ? 'menu-item-active' : ''"
+              @click="$router.push('/CadastroPessoas')"
+            >
+              <q-item-section avatar>
+                <q-icon name="o_groups" size="20px" color="white" />
+              </q-item-section>
+              <q-item-section class="menu-label">Pessoas</q-item-section>
             </q-item>
+
+            <q-item
+              id="layout-menu-produtos"
+              clickable
+              v-ripple
+              class="menu-item b-r-10 q-mb-xs text-white layout-menu-produtos"
+              :class="$route.path === '/CadastroProdutos' ? 'menu-item-active' : ''"
+              @click="$router.push('/CadastroProdutos')"
+            >
+              <q-item-section avatar>
+                <q-icon name="shelves" size="20px" color="white" />
+              </q-item-section>
+              <q-item-section class="menu-label">Produtos</q-item-section>
+            </q-item>
+
+            <!-- Financeiro -->
+            <div class="menu-section-label q-px-sm q-mt-md q-mb-xs">FINANCEIRO</div>
+
+            <q-item
+              id="layout-menu-nf-entrada"
+              clickable
+              v-ripple
+              class="menu-item b-r-10 q-mb-xs text-white layout-menu-nf-entrada"
+              :class="$route.path === '/NotaFiscalEntrada' ? 'menu-item-active' : ''"
+              @click="$router.push('/NotaFiscalEntrada')"
+            >
+              <q-item-section avatar>
+                <q-icon name="trending_up" size="20px" color="white" />
+              </q-item-section>
+              <q-item-section class="menu-label">NF Entrada</q-item-section>
+            </q-item>
+
+            <q-item
+              id="layout-menu-nf-saida"
+              clickable
+              v-ripple
+              class="menu-item b-r-10 q-mb-xs text-white layout-menu-nf-saida"
+              :class="$route.path === '/NotaFiscalSaida' ? 'menu-item-active' : ''"
+              @click="$router.push('/NotaFiscalSaida')"
+            >
+              <q-item-section avatar>
+                <q-icon name="trending_down" size="20px" color="white" />
+              </q-item-section>
+              <q-item-section class="menu-label">NF Saída</q-item-section>
+            </q-item>
+
+            <!-- Relatórios -->
+            <div class="menu-section-label q-px-sm q-mt-md q-mb-xs">RELATÓRIOS</div>
+
+            <q-item
+              id="layout-menu-rel-estoque"
+              clickable
+              v-ripple
+              class="menu-item b-r-10 q-mb-xs text-white layout-menu-rel-estoque"
+              :class="$route.path === '/RelatorioEstoque' ? 'menu-item-active' : ''"
+              @click="$router.push('/RelatorioEstoque')"
+            >
+              <q-item-section avatar>
+                <q-icon name="o_inventory_2" size="20px" color="white" />
+              </q-item-section>
+              <q-item-section class="menu-label">Estoque</q-item-section>
+            </q-item>
+
+            <q-item
+              id="layout-menu-rel-vendas"
+              clickable
+              v-ripple
+              class="menu-item b-r-10 q-mb-xs text-white layout-menu-rel-vendas"
+              :class="$route.path === '/RelatorioVendas' ? 'menu-item-active' : ''"
+              @click="$router.push('/RelatorioVendas')"
+            >
+              <q-item-section avatar>
+                <q-icon name="o_sell" size="20px" color="white" />
+              </q-item-section>
+              <q-item-section class="menu-label">Vendas</q-item-section>
+            </q-item>
+
+            <!-- Outros -->
+            <div class="menu-section-label q-px-sm q-mt-md q-mb-xs">OUTROS</div>
+
+            <q-item
+              id="layout-menu-venda-direta"
+              clickable
+              v-ripple
+              class="menu-item b-r-10 q-mb-xs text-white layout-menu-venda-direta"
+              :class="$route.path === '/VendaDireta' ? 'menu-item-active' : ''"
+              @click="$router.push('/VendaDireta')"
+            >
+              <q-item-section avatar>
+                <q-icon name="point_of_sale" size="20px" color="white" />
+              </q-item-section>
+              <q-item-section class="menu-label">Venda Direta</q-item-section>
+            </q-item>
+
+            <q-item
+              id="layout-menu-integracoes"
+              clickable
+              v-ripple
+              class="menu-item b-r-10 q-mb-xs text-white layout-menu-integracoes"
+              :class="$route.path === '/Integracoes' ? 'menu-item-active' : ''"
+              @click="$router.push('/Integracoes')"
+            >
+              <q-item-section avatar>
+                <q-icon name="webhook" size="20px" color="white" />
+              </q-item-section>
+              <q-item-section class="menu-label">Integrações</q-item-section>
+            </q-item>
+
           </q-list>
-        </div>
-      </q-drawer>
+        </q-scroll-area>
+      </div>
+    </q-drawer>
 
-      <!-- CONTEÚDO -->
-  <q-page-container>
-    <q-page class="bg-accent q-px-lg">
-      <transition name="page" mode="out-in">
-        <router-view />
-      </transition>
-    </q-page>
-  </q-page-container>
-      <!-- FOOTER -->
-      <q-footer bordered>
-        <div class="row justify-center bg-grey-8">
-          © 2026 Coden —
-          <a href="" style="text-decoration: underline; color: white">Todos os direitos reservados</a>
-          | Versão Alpha
-        </div>
-      </q-footer>
+    <!-- OVERLAY PERFIL -->
+    <template v-if="drawerPerfil">
+      <div class="fixed-full" style="z-index: 1999; background: transparent" @click="drawerPerfil = false" />
+    </template>
 
-    </q-layout>
-  </template>
+    <!-- DRAWER PERFIL -->
+    <q-drawer
+      v-model="drawerPerfil"
+      side="right"
+      overlay
+      bordered
+      :width="260"
+      :breakpoint="0"
+      style="z-index: 2000"
+      class="layout-drawer-perfil"
+    >
+      <div class="column full-height">
+        <div class="q-pa-lg row items-center q-gutter-md layout-perfil-header">
+          <q-avatar size="48px" color="primary" text-color="white" class="layout-perfil-avatar">{{ iniciais }}</q-avatar>
+          <div class="column">
+            <span class="text-weight-bold layout-perfil-drawer-nome" style="font-size: 14px">{{ user }}</span>
+            <span class="text-grey-6" style="font-size: 12px">Administrador</span>
+          </div>
+        </div>
+        <q-separator />
+        <q-list class="q-pa-sm q-mt-sm">
+          <q-item
+            id="layout-perfil-ir-perfil"
+            clickable
+            v-ripple
+            class="b-r-8 layout-perfil-ir-perfil"
+            @click="$router.push('/Perfil'); drawerPerfil = false"
+          >
+            <q-item-section avatar><q-icon name="business" color="grey-7" size="20px" /></q-item-section>
+            <q-item-section><span style="font-size: 13px">Perfil da Empresa</span></q-item-section>
+          </q-item>
+          <q-item
+            id="layout-perfil-toggle-dark"
+            clickable
+            v-ripple
+            class="b-r-8 layout-perfil-toggle-dark"
+            @click="toggleDark(); drawerPerfil = false"
+          >
+            <q-item-section avatar><q-icon :name="$q.dark.isActive ? 'light_mode' : 'dark_mode'" color="grey-7" size="20px" /></q-item-section>
+            <q-item-section><span style="font-size: 13px">{{ $q.dark.isActive ? 'Modo Claro' : 'Modo Escuro' }}</span></q-item-section>
+          </q-item>
+          <q-item
+            id="layout-perfil-ir-config"
+            clickable
+            v-ripple
+            class="b-r-8 layout-perfil-ir-config"
+            @click="$router.push('/Configuracoes'); drawerPerfil = false"
+          >
+            <q-item-section avatar><q-icon name="settings" color="grey-7" size="20px" /></q-item-section>
+            <q-item-section><span style="font-size: 13px">Configurações</span></q-item-section>
+          </q-item>
+          <q-item
+            id="layout-perfil-helpdesk"
+            clickable
+            v-ripple
+            class="b-r-8 layout-perfil-helpdesk"
+            disable
+          >
+            <q-item-section avatar><q-icon name="support_agent" color="grey-4" size="20px" /></q-item-section>
+            <q-item-section>
+              <span style="font-size: 13px" class="text-grey-5">Helpdesk</span>
+              <span class="text-caption text-grey-4">Em breve</span>
+            </q-item-section>
+          </q-item>
+        </q-list>
+        <q-space />
+        <q-separator />
+        <q-list class="q-pa-sm">
+          <q-item
+            id="layout-perfil-sair"
+            clickable
+            v-ripple
+            class="b-r-8 layout-perfil-sair"
+            @click="Sair()"
+          >
+            <q-item-section avatar><q-icon name="logout" color="negative" size="20px" /></q-item-section>
+            <q-item-section><span class="text-negative" style="font-size: 13px">Sair</span></q-item-section>
+          </q-item>
+        </q-list>
+      </div>
+    </q-drawer>
+
+    <!-- CONTEÚDO -->
+    <q-page-container>
+      <q-page class="bg-accent q-px-lg">
+        <transition name="page" mode="out-in">
+          <router-view />
+        </transition>
+      </q-page>
+    </q-page-container>
+
+    <!-- FOOTER -->
+    <q-footer bordered class="layout-footer">
+      <div class="row justify-center bg-grey-8">
+        © 2026 Coden —
+        <a href="" style="text-decoration: underline; color: white">Todos os direitos reservados</a>
+        | Versão Alpha
+      </div>
+    </q-footer>
+
+  </q-layout>
+</template>
 
   <script lang="ts">
   import Vue from 'vue'

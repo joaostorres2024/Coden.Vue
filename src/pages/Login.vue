@@ -15,41 +15,45 @@
         class="column q-pa-lg items-left justify-center"
         style="width: 100%; max-width: 420px"
       >
-        <div class="text-h5 text-bold">Bem-vindo ao sistema Coden!</div>
+        <div class="text-h5 text-bold login-titulo">Bem-vindo ao sistema Coden!</div>
 
-        <div>Faça login para continuar.</div>
+        <div class="login-subtitulo">Faça login para continuar.</div>
 
-        <form @submit.prevent="realizarLogin">
+        <form id="login-form" @submit.prevent="realizarLogin">
           <q-input
             v-model="email"
-            class="full-width q-my-md"
+            class="full-width q-my-md login-input-email"
             label="E-mail"
             outlined
             dense
+            input-id="login-input-email"
           />
 
           <q-input
             :type="verSenha ? 'text' : 'password'"
-            class="full-width"
+            class="full-width login-input-senha"
             label="Senha"
             v-model="senha"
             outlined
             dense
+            input-id="login-input-senha"
           >
             <template v-slot:append>
               <q-icon
                 :name="verSenha ? 'visibility_off' : 'visibility'"
-                class="cursor-pointer"
+                class="cursor-pointer login-toggle-senha"
+                id="login-toggle-senha"
                 @click="verSenha = !verSenha"
               />
             </template>
           </q-input>
 
           <q-btn
-            class="full-width q-mt-md bg-primary text-white text-bold"
+            class="full-width q-mt-md bg-primary text-white text-bold login-btn-entrar"
             label="Entrar"
             type="submit"
             :loading="loading"
+            id="login-btn-entrar"
           />
         </form>
       </div>
@@ -69,7 +73,7 @@ export default class LoginComponent extends Vue {
   senha = ''
   erro = ''
   loading = false
-verSenha = false
+  verSenha = false
 
   async realizarLogin() {
     this.erro = ''
@@ -79,13 +83,13 @@ verSenha = false
       await authService.login({ email: this.email, senha: this.senha })
       this.$router.push('/')
       this.$q.notify({ color: 'positive', message: 'Bem-vindo ' + this.email, icon: 'check' })
-} catch (err: any) {
-  this.$q.notify({
-    color: 'negative',
-    message: err.response?.data || 'Erro ao realizar login',
-    icon: 'error'
-  })
-} finally {
+    } catch (err: any) {
+      this.$q.notify({
+        color: 'negative',
+        message: err.response?.data || 'Erro ao realizar login',
+        icon: 'error'
+      })
+    } finally {
       this.loading = false
     }
   }

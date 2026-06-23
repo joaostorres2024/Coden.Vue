@@ -2,77 +2,118 @@
   <div class="q-pa-md">
 
     <!-- Cabeçalho -->
-    <div class="text-bold text-black row items-center" style="font-size: 28px">
+    <div class="text-bold text-black row items-center dashboard-cabecalho" style="font-size: 28px">
       <q-icon name="dashboard" class="q-mr-md text-primary" size="28px" />Dashboard
     </div>
-    <p class="text-grey-7 text-body2 q-mb-md">
+    <p class="text-grey-7 text-body2 q-mb-md dashboard-subtitulo">
       Acompanhe os principais indicadores e métricas do seu negócio em tempo real.
     </p>
     <q-separator class="q-mb-lg" />
 
     <!-- Filtro de datas -->
-    <div class="row q-col-gutter-md q-mb-lg items-center">
+    <div class="row q-col-gutter-md q-mb-lg items-center dashboard-filtro-datas">
       <div class="col-12 col-sm-2">
-        <q-input v-model="dataInicio" label="De" type="date" outlined dense />
+        <q-input
+          v-model="dataInicio"
+          label="De"
+          type="date"
+          outlined
+          dense
+          input-id="dashboard-input-data-inicio"
+          class="dashboard-input-data-inicio"
+        />
       </div>
       <div class="col-12 col-sm-2">
-        <q-input v-model="dataFim" label="Até" type="date" outlined dense />
+        <q-input
+          v-model="dataFim"
+          label="Até"
+          type="date"
+          outlined
+          dense
+          input-id="dashboard-input-data-fim"
+          class="dashboard-input-data-fim"
+        />
       </div>
-      <div class="col-12 col-sm-6 q-gutter-sm row items-end">
-        <q-btn label="Filtrar" icon="search" color="primary" unelevated @click="carregarDados()" />
-        <q-btn label="Limpar" icon="delete_sweep" flat class="text-grey-7" @click="refreshTable()" />
+      <div class="col-12 col-sm-6 q-gutter-sm row items-end dashboard-filtro-acoes">
+        <q-btn
+          id="dashboard-btn-filtrar"
+          class="dashboard-btn-filtrar"
+          label="Filtrar"
+          icon="search"
+          color="primary"
+          unelevated
+          @click="carregarDados()"
+        />
+        <q-btn
+          id="dashboard-btn-limpar"
+          class="dashboard-btn-limpar text-grey-7"
+          label="Limpar"
+          icon="delete_sweep"
+          flat
+          @click="refreshTable()"
+        />
       </div>
     </div>
 
     <!-- Cards de Métricas -->
-    <div class="row q-col-gutter-md q-mb-lg">
-      <div class="col-6 col-sm-3" v-for="metrica in metricas" :key="metrica.label">
-        <q-card flat bordered class="b-r-10 q-pa-md" style="position: relative;">
+    <div class="row q-col-gutter-md q-mb-lg dashboard-metricas">
+      <div class="col-6 col-sm-3 dashboard-metrica-item" v-for="metrica in metricas" :key="metrica.label">
+        <q-card flat bordered class="b-r-10 q-pa-md dashboard-metrica-card" style="position: relative;">
           <q-inner-loading :showing="carregando" size="24px" />
           <div class="row items-center justify-between q-mb-xs">
-            <div class="text-caption text-grey-6 text-weight-medium">{{ metrica.label }}</div>
+            <div class="text-caption text-grey-6 text-weight-medium dashboard-metrica-label">{{ metrica.label }}</div>
             <q-icon :name="metrica.icon" size="20px" color="primary" />
           </div>
-          <div class="text-h5 text-bold text-black">{{ metrica.valor || '—' }}</div>
+          <div class="text-h5 text-bold text-black dashboard-metrica-valor">{{ metrica.valor || '—' }}</div>
           <div class="row items-center justify-between q-mt-xs">
-            <q-badge v-if="metrica.variacao" color="positive" outline>{{ metrica.variacao }}</q-badge>
-            <div class="text-caption text-grey-5">{{ metrica.falta ? 'Faltam ' + metrica.falta : '' }}</div>
+            <q-badge v-if="metrica.variacao" color="positive" outline class="dashboard-metrica-variacao">{{ metrica.variacao }}</q-badge>
+            <div class="text-caption text-grey-5 dashboard-metrica-falta">{{ metrica.falta ? 'Faltam ' + metrica.falta : '' }}</div>
           </div>
         </q-card>
       </div>
     </div>
 
     <!-- Gráfico + Situação -->
-    <div class="row q-col-gutter-md q-mb-lg">
+    <div class="row q-col-gutter-md q-mb-lg dashboard-grafico-situacao">
 
       <!-- Gráfico com Tabs -->
       <div class="col-12 col-md-8">
-        <q-card flat bordered class="b-r-10" style="position: relative;">
+        <q-card flat bordered class="b-r-10 dashboard-grafico-card" style="position: relative;">
           <q-tabs
             v-model="abaGrafico"
             dense
             align="left"
-            class="text-grey-7 q-px-md q-pt-sm"
+            class="text-grey-7 q-px-md q-pt-sm dashboard-tabs"
             active-color="primary"
             indicator-color="primary"
           >
-            <q-tab name="vendas" label="Vendas por dia" />
-            <q-tab name="clientes" label="Vendas por cliente" />
+            <q-tab
+              id="dashboard-tab-vendas"
+              class="dashboard-tab-vendas"
+              name="vendas"
+              label="Vendas por dia"
+            />
+            <q-tab
+              id="dashboard-tab-clientes"
+              class="dashboard-tab-clientes"
+              name="clientes"
+              label="Vendas por cliente"
+            />
           </q-tabs>
 
           <q-separator />
 
-          <q-tab-panels v-model="abaGrafico" animated>
+          <q-tab-panels v-model="abaGrafico" animated class="dashboard-tab-panels">
 
             <!-- Aba: Gráfico de linha -->
-            <q-tab-panel name="vendas" class="q-pa-md">
+            <q-tab-panel name="vendas" class="q-pa-md dashboard-panel-vendas">
               <div style="height: 260px; position: relative;">
                 <canvas ref="graficoVendas" style="width: 100%; height: 100%;"></canvas>
               </div>
             </q-tab-panel>
 
             <!-- Aba: Vendas por Cliente -->
-            <q-tab-panel name="clientes" class="q-pa-none">
+            <q-tab-panel name="clientes" class="q-pa-none dashboard-panel-clientes">
               <q-inner-loading :showing="carregandoClientes" size="28px" />
               <q-table
                 :data="vendasClientes"
@@ -82,7 +123,7 @@
                 dense
                 :loading="carregandoClientes"
                 no-data-label="Nenhuma venda encontrada"
-                class="q-px-sm"
+                class="q-px-sm dashboard-tabela-clientes"
                 style="max-height: 320px;"
                 virtual-scroll
               >
@@ -105,14 +146,22 @@
 
       <!-- Situação dos Pedidos -->
       <div class="col-12 col-md-4">
-        <q-card flat bordered class="b-r-10 q-pa-md" style="position: relative;">
+        <q-card flat bordered class="b-r-10 q-pa-md dashboard-situacao-card" style="position: relative;">
           <q-inner-loading :showing="carregando" size="24px" />
           <div class="row items-center justify-between q-mb-md">
-            <div class="text-subtitle1 text-bold">Situação</div>
-            <q-btn label="Todos os pedidos" flat size="sm" color="primary" @click="irParaPedidos()" />
+            <div class="text-subtitle1 text-bold dashboard-situacao-titulo">Situação</div>
+            <q-btn
+              id="dashboard-btn-todos-pedidos"
+              class="dashboard-btn-todos-pedidos"
+              label="Todos os pedidos"
+              flat
+              size="sm"
+              color="primary"
+              @click="irParaPedidos()"
+            />
           </div>
-          <div class="column q-gutter-md">
-            <div v-for="sit in situacoes" :key="sit.label">
+          <div class="column q-gutter-md dashboard-situacao-lista">
+            <div class="dashboard-situacao-item" v-for="sit in situacoes" :key="sit.label">
               <div class="row items-center justify-between q-mb-xs">
                 <div class="row items-center q-gutter-xs">
                   <div :style="'width:8px;height:8px;border-radius:50%;background:' + sit.cor" />
@@ -126,6 +175,7 @@
                 track-color="grey-2"
                 rounded
                 size="6px"
+                class="dashboard-situacao-progresso"
               />
             </div>
           </div>
@@ -134,30 +184,30 @@
     </div>
 
     <!-- Resumo Financeiro -->
-    <div class="text-subtitle1 text-bold q-mb-md">Resumo financeiro</div>
-    <div class="row q-col-gutter-md q-mb-lg">
-      <div class="col-6 col-sm-4 col-md-3" v-for="fin in financeiro" :key="fin.label">
-        <q-card flat bordered class="b-r-10 q-pa-md text-center" style="position: relative;">
+    <div class="text-subtitle1 text-bold q-mb-md dashboard-financeiro-titulo">Resumo financeiro</div>
+    <div class="row q-col-gutter-md q-mb-lg dashboard-financeiro">
+      <div class="col-6 col-sm-4 col-md-3 dashboard-financeiro-item" v-for="fin in financeiro" :key="fin.label">
+        <q-card flat bordered class="b-r-10 q-pa-md text-center dashboard-financeiro-card" style="position: relative;">
           <q-inner-loading :showing="carregando" size="20px" />
           <div
-            class="text-caption text-weight-bold q-mb-xs"
+            class="text-caption text-weight-bold q-mb-xs dashboard-financeiro-variacao"
             :class="fin.positivo ? 'text-positive' : 'text-negative'"
           >
             {{ fin.variacao || '—' }}
           </div>
-          <div class="text-body1 text-bold text-black">{{ fin.valor || '—' }}</div>
-          <div class="text-caption text-grey-6 q-mt-xs">{{ fin.label }}</div>
+          <div class="text-body1 text-bold text-black dashboard-financeiro-valor">{{ fin.valor || '—' }}</div>
+          <div class="text-caption text-grey-6 q-mt-xs dashboard-financeiro-label">{{ fin.label }}</div>
         </q-card>
       </div>
     </div>
 
     <!-- Relatório de Estoque -->
-    <div class="row items-center justify-between q-mb-md">
-      <div class="text-subtitle1 text-bold">Relatório de estoque</div>
+    <div class="row items-center justify-between q-mb-md dashboard-estoque-cabecalho">
+      <div class="text-subtitle1 text-bold dashboard-estoque-titulo">Relatório de estoque</div>
     </div>
 
     <!-- Filtros de estoque -->
-    <div class="row q-col-gutter-md q-mb-md items-center">
+    <div class="row q-col-gutter-md q-mb-md items-center dashboard-estoque-filtros">
       <div class="col-12 col-sm-4">
         <q-input
           v-model="filtroEstoque.nome_produto"
@@ -165,11 +215,18 @@
           outlined
           dense
           clearable
+          input-id="dashboard-input-estoque-produto"
+          class="dashboard-input-estoque-produto"
           @keyup.enter="carregarEstoque()"
           @clear="carregarEstoque()"
         >
           <template v-slot:append>
-            <q-icon name="search" class="cursor-pointer" @click="carregarEstoque()" />
+            <q-icon
+              id="dashboard-icon-buscar-estoque"
+              class="cursor-pointer dashboard-icon-buscar-estoque"
+              name="search"
+              @click="carregarEstoque()"
+            />
           </template>
         </q-input>
       </div>
@@ -183,15 +240,26 @@
           clearable
           emit-value
           map-options
+          id="dashboard-select-estoque-status"
+          class="dashboard-select-estoque-status"
           @input="carregarEstoque()"
         />
       </div>
       <div class="col-12 col-sm-2">
-        <q-btn label="Filtrar" icon="search" color="primary" unelevated dense @click="carregarEstoque()" />
+        <q-btn
+          id="dashboard-btn-filtrar-estoque"
+          class="dashboard-btn-filtrar-estoque"
+          label="Filtrar"
+          icon="search"
+          color="primary"
+          unelevated
+          dense
+          @click="carregarEstoque()"
+        />
       </div>
     </div>
 
-    <q-card flat bordered class="b-r-10 q-mb-xl" style="position: relative;">
+    <q-card flat bordered class="b-r-10 q-mb-xl dashboard-estoque-card" style="position: relative;">
       <q-inner-loading :showing="carregandoEstoque" size="28px" />
       <q-table
         :data="estoque"
@@ -202,8 +270,8 @@
         :loading="carregandoEstoque"
         no-data-label="Nenhum produto encontrado"
         :rows-per-page-options="[10, 20, 50]"
+        class="dashboard-tabela-estoque"
       >
-        <!-- Estoque atual com alerta se abaixo do mínimo -->
         <template v-slot:body-cell-estoque_atual="props">
           <q-td :props="props">
             <div class="row items-center q-gutter-xs">
@@ -212,6 +280,7 @@
                 name="warning"
                 color="warning"
                 size="16px"
+                class="dashboard-estoque-alerta"
               >
                 <q-tooltip>Estoque abaixo do mínimo</q-tooltip>
               </q-icon>
@@ -226,7 +295,6 @@
           </q-td>
         </template>
 
-        <!-- Preço formatado -->
         <template v-slot:body-cell-preco="props">
           <q-td :props="props" class="text-bold">
             {{ formatarReais(props.value) }}

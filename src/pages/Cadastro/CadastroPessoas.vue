@@ -1,17 +1,17 @@
 <template>
   <div class="q-pa-md">
     <!-- Cabeçalho -->
-    <div class="text-bold text-black row items-center" style="font-size: 28px">
-      <q-icon name="group" class="q-mr-md text-primary" si\e="28px" />Cadastro de Pessoas
+    <div class="text-bold text-black row items-center pessoas-cabecalho" style="font-size: 28px">
+      <q-icon name="group" class="q-mr-md text-primary" size="28px" />Cadastro de Pessoas
     </div>
-    <p class="text-grey-7 text-body2 q-mb-md">
+    <p class="text-grey-7 text-body2 q-mb-md pessoas-subtitulo">
       Gerencie os cadastros de pessoas físicas e jurídicas. Aqui você pode
       adicionar, editar, inativar e reativar clientes do sistema.
     </p>
     <q-separator class="q-mb-lg" />
 
     <!-- Filtros -->
-    <div class="row q-col-gutter-md q-mb-md">
+    <div class="row q-col-gutter-md q-mb-md pessoas-filtros">
       <div class="col-12 col-md-3">
         <q-select
           v-model="tipoPessoa"
@@ -25,28 +25,32 @@
           ref="selectTipoPessoa"
           hide-bottom-space
           lazy-rules
+          id="pessoas-select-tipo"
+          class="pessoas-select-tipo"
         />
       </div>
     </div>
 
-    <q-form class="row q-col-gutter-md q-mb-md">
+    <q-form class="row q-col-gutter-md q-mb-md pessoas-form-filtro">
       <div class="col-12 col-md-4">
-        <q-input v-model="nome" label="Nome Completo" outlined dense />
+        <q-input v-model="nome" label="Nome Completo" outlined dense input-id="pessoas-input-nome" class="pessoas-input-nome" />
       </div>
       <div class="col-12 col-md-4">
-        <q-input v-model="documento" label="CNPJ/CPF" outlined dense/>
+        <q-input v-model="documento" label="CNPJ/CPF" outlined dense input-id="pessoas-input-documento" class="pessoas-input-documento" />
       </div>
       <div class="col-12 col-md-4">
-        <q-input v-model="codigo" label="Código do Cliente" outlined dense/>
+        <q-input v-model="codigo" label="Código do Cliente" outlined dense input-id="pessoas-input-codigo" class="pessoas-input-codigo" />
       </div>
     </q-form>
 
     <!-- Botões -->
     <div
       v-if="!mostrarFormCadastroPF && !mostrarFormCadastroPJ"
-      class="row justify-start q-gutter-sm q-mb-lg"
+      class="row justify-start q-gutter-sm q-mb-lg pessoas-acoes"
     >
       <q-btn
+        id="pessoas-btn-adicionar"
+        class="pessoas-btn-adicionar"
         label="Adicionar"
         icon="add"
         color="positive"
@@ -54,20 +58,22 @@
         @click="mostrarFormulario()"
       />
       <q-btn
+        id="pessoas-btn-limpar"
+        class="pessoas-btn-limpar text-grey-7"
         label="Limpar"
         icon="delete_sweep"
         flat
-        class="text-grey-7"
         @click="refreshTable()"
       />
     </div>
 
     <!-- Formulário -->
-    <div v-if="mostrarFormCadastroPF || mostrarFormCadastroPJ" class="q-mt-md">
+    <div v-if="mostrarFormCadastroPF || mostrarFormCadastroPJ" class="q-mt-md pessoas-form-cadastro">
       <q-form ref="formCadastro" @submit.prevent="salvar()" greedy>
+
         <!-- Dados Gerais -->
         <div class="text-h6 q-mb-sm">Dados Gerais</div>
-        <div class="row q-col-gutter-md">
+        <div class="row q-col-gutter-md pessoas-dados-gerais">
           <template v-if="mostrarFormCadastroPF">
             <div class="col-12 col-sm-4">
               <q-input
@@ -78,10 +84,19 @@
                 dense
                 hide-bottom-space
                 lazy-rules
+                input-id="pessoas-input-nascimento"
+                class="pessoas-input-nascimento"
               />
             </div>
             <div class="col-12 col-sm-4">
-              <q-input v-model="nmeSocial" label="Nome Social" outlined dense />
+              <q-input
+                v-model="nmeSocial"
+                label="Nome Social"
+                outlined
+                dense
+                input-id="pessoas-input-nome-social"
+                class="pessoas-input-nome-social"
+              />
             </div>
           </template>
 
@@ -94,6 +109,8 @@
                 dense
                 hide-bottom-space
                 lazy-rules
+                input-id="pessoas-input-razao-social"
+                class="pessoas-input-razao-social"
               />
             </div>
             <div class="col-12 col-sm-4">
@@ -105,6 +122,8 @@
                 :rules="[val => !!val || 'Nome do responsável obrigatório']"
                 hide-bottom-space
                 lazy-rules
+                input-id="pessoas-input-responsavel"
+                class="pessoas-input-responsavel"
               />
             </div>
           </template>
@@ -118,13 +137,15 @@
               dense
               emit-value
               map-options
+              id="pessoas-select-status"
+              class="pessoas-select-status"
             />
           </div>
         </div>
 
         <!-- Dados de Contato -->
         <div class="text-h6 q-mt-lg q-mb-sm">Dados de Contato</div>
-        <div class="row q-col-gutter-md q-mb-md">
+        <div class="row q-col-gutter-md q-mb-md pessoas-dados-contato">
           <div class="col-12 col-sm-4">
             <q-input
               v-model="email"
@@ -133,11 +154,13 @@
               dense
               hide-bottom-space
               lazy-rules
+              input-id="pessoas-input-email"
+              class="pessoas-input-email"
             />
           </div>
         </div>
 
-        <div class="row q-col-gutter-md">
+        <div class="row q-col-gutter-md pessoas-dados-telefones">
           <div class="col-12 col-sm-4">
             <q-input
               v-model="telefone1"
@@ -148,6 +171,8 @@
               :rules="[val => !!val || 'Telefone obrigatório']"
               hide-bottom-space
               lazy-rules
+              input-id="pessoas-input-telefone1"
+              class="pessoas-input-telefone1"
             />
           </div>
           <div class="col-12 col-sm-4">
@@ -157,6 +182,8 @@
               mask="(##) #####-####"
               outlined
               dense
+              input-id="pessoas-input-telefone2"
+              class="pessoas-input-telefone2"
             />
           </div>
           <div class="col-12 col-sm-4">
@@ -166,13 +193,15 @@
               mask="(##) ####-####"
               outlined
               dense
+              input-id="pessoas-input-telefone-fixo"
+              class="pessoas-input-telefone-fixo"
             />
           </div>
         </div>
 
         <!-- Dados de Endereço -->
         <div class="text-h6 q-mt-lg q-mb-sm">Dados de Endereço</div>
-        <div class="row q-col-gutter-md">
+        <div class="row q-col-gutter-md pessoas-dados-endereco">
           <div class="col-12 col-sm-4">
             <q-input
               v-model="cep"
@@ -182,6 +211,8 @@
               dense
               hide-bottom-space
               lazy-rules
+              input-id="pessoas-input-cep"
+              class="pessoas-input-cep"
               @input="buscarCep(cep)"
             />
           </div>
@@ -193,6 +224,8 @@
               dense
               hide-bottom-space
               lazy-rules
+              input-id="pessoas-input-endereco"
+              class="pessoas-input-endereco"
             />
           </div>
           <div class="col-12 col-sm-4">
@@ -203,6 +236,8 @@
               dense
               hide-bottom-space
               lazy-rules
+              input-id="pessoas-input-numero"
+              class="pessoas-input-numero"
             />
           </div>
           <div class="col-12 col-sm-4">
@@ -213,6 +248,8 @@
               dense
               hide-bottom-space
               lazy-rules
+              input-id="pessoas-input-bairro"
+              class="pessoas-input-bairro"
             />
           </div>
           <div class="col-12 col-sm-4">
@@ -223,6 +260,8 @@
               dense
               hide-bottom-space
               lazy-rules
+              input-id="pessoas-input-cidade"
+              class="pessoas-input-cidade"
             />
           </div>
           <div class="col-12 col-sm-4">
@@ -236,13 +275,15 @@
               map-options
               hide-bottom-space
               lazy-rules
+              id="pessoas-select-uf"
+              class="pessoas-select-uf"
             />
           </div>
         </div>
 
         <!-- Observações -->
         <div class="text-h6 q-mt-lg q-mb-sm">Observações</div>
-        <div class="row">
+        <div class="row pessoas-observacoes">
           <div class="col-12">
             <q-input
               v-model="observacoes"
@@ -251,19 +292,25 @@
               dense
               input-style="resize: none;"
               rows="5"
+              input-id="pessoas-input-observacoes"
+              class="pessoas-input-observacoes"
             />
           </div>
         </div>
 
         <!-- Botões -->
-        <div class="row q-mt-xl q-gutter-md justify-start">
+        <div class="row q-mt-xl q-gutter-md justify-start pessoas-form-acoes">
           <q-btn
+            id="pessoas-btn-salvar"
+            class="pessoas-btn-salvar"
             label="Salvar Cadastro"
             color="positive"
             unelevated
             type="submit"
           />
           <q-btn
+            id="pessoas-btn-cancelar"
+            class="pessoas-btn-cancelar"
             label="Cancelar"
             color="negative"
             flat
@@ -276,7 +323,7 @@
     <!-- Tabela -->
     <div
       v-if="!mostrarFormCadastroPF && !mostrarFormCadastroPJ"
-      class="q-mt-xl"
+      class="q-mt-xl pessoas-tabela"
     >
       <q-table
         :data="rowsFiltradas"
@@ -286,7 +333,7 @@
         flat
         bordered
         no-data-label="Nenhum registro encontrado"
-        class="text-weight-medium"
+        class="text-weight-medium pessoas-tabela-clientes"
       >
         <template v-slot:body-cell-acoes="props">
           <q-td align="center">
@@ -296,6 +343,7 @@
               color="black"
               flat
               round
+              class="pessoas-btn-editar"
               @click="editar(props.row)"
             >
               <q-tooltip>Editar</q-tooltip>
@@ -307,6 +355,7 @@
               color="negative"
               flat
               round
+              class="pessoas-btn-inativar"
               @click="confirmarExcluir(props.row)"
             >
               <q-tooltip>Inativar</q-tooltip>
@@ -318,6 +367,7 @@
               color="positive"
               flat
               round
+              class="pessoas-btn-reativar"
               @click="reativarCliente(props.row)"
             >
               <q-tooltip>Reativar</q-tooltip>
@@ -328,6 +378,7 @@
           <q-td align="center">
             <q-badge
               :color="props.row.status === 'Ativo' ? 'positive' : 'negative'"
+              class="pessoas-badge-status"
             >
               {{ props.row.status }}
             </q-badge>
@@ -340,7 +391,7 @@
     </div>
 
     <!-- Dialog Cancelar -->
-    <q-dialog v-model="dialogCancelar" persistent>
+    <q-dialog v-model="dialogCancelar" persistent class="pessoas-dialog-cancelar">
       <q-card style="min-width: 380px; border-radius: 12px" class="q-pa-sm">
         <q-card-section class="q-pb-none">
           <div class="text-h6 text-bold">Cancelar operação</div>
@@ -350,6 +401,8 @@
         </q-card-section>
         <q-card-actions align="right" class="q-pa-md q-gutter-sm">
           <q-btn
+            id="pessoas-dialog-cancelar-voltar"
+            class="pessoas-dialog-cancelar-voltar"
             label="Voltar"
             unelevated
             style="border: 1px solid #ccc; border-radius: 8px; min-width: 100px"
@@ -358,6 +411,8 @@
             v-close-popup
           />
           <q-btn
+            id="pessoas-dialog-cancelar-confirmar"
+            class="pessoas-dialog-cancelar-confirmar"
             label="Sim, Cancelar"
             unelevated
             color="negative"
@@ -369,18 +424,20 @@
     </q-dialog>
 
     <!-- Dialog Inativar -->
-    <q-dialog v-model="dialogExcluir" persistent>
+    <q-dialog v-model="dialogExcluir" persistent class="pessoas-dialog-inativar">
       <q-card style="min-width: 380px; border-radius: 12px" class="q-pa-sm">
         <q-card-section class="q-pb-none">
           <div class="text-h6 text-bold">Inativar Cliente</div>
         </q-card-section>
         <q-card-section class="text-grey-7" style="font-size: 14px">
           Tem certeza que deseja inativar o cliente
-          <strong>{{ clienteParaExcluir?.nome_cliente }}</strong
-          >? O cliente não será excluído, mas ficará inativo no sistema.
+          <strong>{{ clienteParaExcluir?.nome_cliente }}</strong>?
+          O cliente não será excluído, mas ficará inativo no sistema.
         </q-card-section>
         <q-card-actions align="right" class="q-pa-md q-gutter-sm">
           <q-btn
+            id="pessoas-dialog-inativar-voltar"
+            class="pessoas-dialog-inativar-voltar"
             label="Voltar"
             unelevated
             style="border: 1px solid #ccc; border-radius: 8px; min-width: 100px"
@@ -389,6 +446,8 @@
             v-close-popup
           />
           <q-btn
+            id="pessoas-dialog-inativar-confirmar"
+            class="pessoas-dialog-inativar-confirmar"
             label="Sim, Inativar"
             unelevated
             color="negative"

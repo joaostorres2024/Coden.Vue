@@ -2,120 +2,295 @@
   <div class="q-pa-md">
 
     <!-- Cabeçalho -->
-    <div class="text-bold text-black row items-center" style="font-size: 28px">
+    <div class="text-bold text-black row items-center nfe-cabecalho" style="font-size: 28px">
       <q-icon name="trending_up" class="q-mr-md text-primary" size="28px" />NF Entrada
     </div>
-    <p class="text-grey-7 text-body2 q-mb-md">
+    <p class="text-grey-7 text-body2 q-mb-md nfe-subtitulo">
       Registre e consulte as notas fiscais de entrada. Adicione produtos manualmente ou importe via XML para atualizar o estoque automaticamente.
     </p>
     <q-separator class="q-mb-lg" />
 
     <!-- Filtros -->
-    <div v-if="!formNotaFiscalEntrada" class="row q-col-gutter-md q-mb-md">
+    <div v-if="!formNotaFiscalEntrada" class="row q-col-gutter-md q-mb-md nfe-filtros">
       <div class="col-12 col-md-4">
-        <q-input v-model="filtro.numeroNF" label="Número NF" outlined dense />
+        <q-input
+          v-model="filtro.numeroNF"
+          label="Número NF"
+          outlined
+          dense
+          input-id="nfe-input-filtro-numero"
+          class="nfe-input-filtro-numero"
+        />
       </div>
       <div class="col-12 col-md-4">
-        <q-input v-model="filtro.fornecedor" label="Fornecedor" outlined dense />
+        <q-input
+          v-model="filtro.fornecedor"
+          label="Fornecedor"
+          outlined
+          dense
+          input-id="nfe-input-filtro-fornecedor"
+          class="nfe-input-filtro-fornecedor"
+        />
       </div>
       <div class="col-12 col-md-4">
-        <q-input v-model="filtro.produto" label="Nome do Produto" outlined dense />
+        <q-input
+          v-model="filtro.produto"
+          label="Nome do Produto"
+          outlined
+          dense
+          input-id="nfe-input-filtro-produto"
+          class="nfe-input-filtro-produto"
+        />
       </div>
     </div>
 
     <!-- Botões listagem -->
-    <div v-if="!formNotaFiscalEntrada" class="row justify-start q-gutter-sm q-mb-md">
-      <q-btn label="Adicionar" icon="add" color="positive" unelevated @click="mostrarFormulario()" />
-      <q-btn label="Limpar" icon="delete_sweep" flat class="text-grey-7" @click="limparFiltros()" />
+    <div v-if="!formNotaFiscalEntrada" class="row justify-start q-gutter-sm q-mb-md nfe-acoes">
+      <q-btn
+        id="nfe-btn-adicionar"
+        class="nfe-btn-adicionar"
+        label="Adicionar"
+        icon="add"
+        color="positive"
+        unelevated
+        @click="mostrarFormulario()"
+      />
+      <q-btn
+        id="nfe-btn-limpar"
+        class="nfe-btn-limpar text-grey-7"
+        label="Limpar"
+        icon="delete_sweep"
+        flat
+        @click="limparFiltros()"
+      />
     </div>
 
     <!-- Formulário -->
-    <div v-if="formNotaFiscalEntrada" class="q-mt-lg">
+    <div v-if="formNotaFiscalEntrada" class="q-mt-lg nfe-form-cadastro">
       <q-form @submit.prevent="salvar()">
 
         <!-- Dados da Nota -->
-        <div class="row items-center justify-between q-mb-md">
+        <div class="row items-center justify-between q-mb-md nfe-dados-nota-cabecalho">
           <div class="text-h6">Dados da Nota</div>
           <q-file
-            outlined dense label="Carregar XML"
+            outlined
+            dense
+            label="Carregar XML"
             v-model="arquivoXML"
             accept=".xml"
             @input="lerXML"
             clearable
             style="width: 200px"
+            id="nfe-file-xml"
+            class="nfe-file-xml"
           >
             <template v-slot:prepend><q-icon name="attach_file" /></template>
           </q-file>
         </div>
-        <div class="row q-col-gutter-md q-mb-lg">
+
+        <div class="row q-col-gutter-md q-mb-lg nfe-dados-nota">
           <div class="col-12 col-sm-4">
-            <q-input v-model="form.numeroNF" label="Número NF" outlined dense />
+            <q-input
+              v-model="form.numeroNF"
+              label="Número NF"
+              outlined
+              dense
+              input-id="nfe-input-numero"
+              class="nfe-input-numero"
+            />
           </div>
           <div class="col-12 col-sm-4">
-            <q-input v-model="form.serie" label="Série" outlined dense />
+            <q-input
+              v-model="form.serie"
+              label="Série"
+              outlined
+              dense
+              input-id="nfe-input-serie"
+              class="nfe-input-serie"
+            />
           </div>
           <div class="col-12 col-sm-4">
-            <q-input v-model="form.dataEmissao" label="Data Emissão" type="date" outlined dense />
+            <q-input
+              v-model="form.dataEmissao"
+              label="Data Emissão"
+              type="date"
+              outlined
+              dense
+              input-id="nfe-input-data-emissao"
+              class="nfe-input-data-emissao"
+            />
           </div>
           <div class="col-12 col-sm-4">
-            <q-input v-model="dataHoje" label="Data Entrada" type="date" outlined dense readonly />
+            <q-input
+              v-model="dataHoje"
+              label="Data Entrada"
+              type="date"
+              outlined
+              dense
+              readonly
+              input-id="nfe-input-data-entrada"
+              class="nfe-input-data-entrada"
+            />
           </div>
         </div>
 
         <!-- Origem -->
         <div class="text-h6 q-mb-md">Origem</div>
-        <div class="row q-col-gutter-md q-mb-lg">
+        <div class="row q-col-gutter-md q-mb-lg nfe-dados-origem">
           <div class="col-12 col-sm-4">
-            <q-input v-model="form.fornecedor" label="Fornecedor" outlined dense />
+            <q-input
+              v-model="form.fornecedor"
+              label="Fornecedor"
+              outlined
+              dense
+              input-id="nfe-input-fornecedor"
+              class="nfe-input-fornecedor"
+            />
           </div>
           <div class="col-12 col-sm-4">
-            <q-input v-model="form.cnpjCpf" label="CNPJ/CPF" outlined dense />
+            <q-input
+              v-model="form.cnpjCpf"
+              label="CNPJ/CPF"
+              outlined
+              dense
+              input-id="nfe-input-cnpj"
+              class="nfe-input-cnpj"
+            />
           </div>
           <div class="col-12 col-sm-4">
-            <q-input v-model="form.inscricaoEstadual" label="Inscrição Estadual" outlined dense />
+            <q-input
+              v-model="form.inscricaoEstadual"
+              label="Inscrição Estadual"
+              outlined
+              dense
+              input-id="nfe-input-ie"
+              class="nfe-input-ie"
+            />
           </div>
           <div class="col-12 col-sm-4">
-            <q-select v-model="form.uf" label="UF" outlined dense :options="opcoesUF" />
+            <q-select
+              v-model="form.uf"
+              label="UF"
+              outlined
+              dense
+              :options="opcoesUF"
+              id="nfe-select-uf"
+              class="nfe-select-uf"
+            />
           </div>
         </div>
 
         <!-- Produtos -->
-        <div class="row items-center justify-between q-mb-md">
+        <div class="row items-center justify-between q-mb-md nfe-produtos-cabecalho">
           <div class="text-h6">Produtos</div>
-          <q-btn label="Adicionar Produto" icon="add" color="primary" unelevated @click="adicionarItemForm()" />
+          <q-btn
+            id="nfe-btn-adicionar-produto"
+            class="nfe-btn-adicionar-produto"
+            label="Adicionar Produto"
+            icon="add"
+            color="primary"
+            unelevated
+            @click="adicionarItemForm()"
+          />
         </div>
 
-        <div v-for="(item, index) in itens" :key="index" class="q-mb-md">
+        <div
+          v-for="(item, index) in itens"
+          :key="index"
+          class="q-mb-md nfe-item-produto"
+        >
           <q-card flat bordered class="q-pa-md">
             <div class="row items-center justify-between q-mb-sm">
               <span class="text-weight-bold text-grey-7">Produto {{ index + 1 }}</span>
               <q-btn
                 v-if="itens.length > 1"
-                icon="delete" flat round size="sm" color="negative"
+                icon="delete"
+                flat
+                round
+                size="sm"
+                color="negative"
+                class="nfe-btn-remover-produto"
                 @click="removerItemForm(index)"
               />
             </div>
             <div class="row q-col-gutter-md">
               <div class="col-12 col-sm-4">
-                <q-input v-model="item.codigoProduto" label="Código do Produto" outlined dense />
+                <q-input
+                  v-model="item.codigoProduto"
+                  label="Código do Produto"
+                  outlined
+                  dense
+                  :input-id="`nfe-input-item-codigo-${index}`"
+                  :class="`nfe-input-item-codigo`"
+                />
               </div>
               <div class="col-12 col-sm-8">
-                <q-input v-model="item.nomeProduto" label="Nome do Produto" outlined dense />
+                <q-input
+                  v-model="item.nomeProduto"
+                  label="Nome do Produto"
+                  outlined
+                  dense
+                  :input-id="`nfe-input-item-nome-${index}`"
+                  :class="`nfe-input-item-nome`"
+                />
               </div>
               <div class="col-12 col-sm-4">
-                <q-input v-model.number="item.quantidade" label="Quantidade" type="number" outlined dense @change="calcularTotais(item)" />
+                <q-input
+                  v-model.number="item.quantidade"
+                  label="Quantidade"
+                  type="number"
+                  outlined
+                  dense
+                  :input-id="`nfe-input-item-quantidade-${index}`"
+                  :class="`nfe-input-item-quantidade`"
+                  @change="calcularTotais(item)"
+                />
               </div>
               <div class="col-12 col-sm-4">
-                <q-input v-model.number="item.valorUnitario" label="Valor Unitário" type="number" outlined dense @change="calcularTotais(item)" />
+                <q-input
+                  v-model.number="item.valorUnitario"
+                  label="Valor Unitário"
+                  type="number"
+                  outlined
+                  dense
+                  :input-id="`nfe-input-item-valor-unitario-${index}`"
+                  :class="`nfe-input-item-valor-unitario`"
+                  @change="calcularTotais(item)"
+                />
               </div>
               <div class="col-12 col-sm-4">
-                <q-input v-model="item.valorTotal" label="Valor Total" outlined dense readonly />
+                <q-input
+                  v-model="item.valorTotal"
+                  label="Valor Total"
+                  outlined
+                  dense
+                  readonly
+                  :input-id="`nfe-input-item-valor-total-${index}`"
+                  :class="`nfe-input-item-valor-total`"
+                />
               </div>
               <div class="col-12 col-sm-4">
-                <q-input v-model.number="item.valorVenda" label="Preço de Venda" type="number" outlined dense @change="calcularMargem(item)" />
+                <q-input
+                  v-model.number="item.valorVenda"
+                  label="Preço de Venda"
+                  type="number"
+                  outlined
+                  dense
+                  :input-id="`nfe-input-item-valor-venda-${index}`"
+                  :class="`nfe-input-item-valor-venda`"
+                  @change="calcularMargem(item)"
+                />
               </div>
               <div class="col-12 col-sm-4">
-                <q-input v-model="item.margem" label="Margem (%)" outlined dense readonly />
+                <q-input
+                  v-model="item.margem"
+                  label="Margem (%)"
+                  outlined
+                  dense
+                  readonly
+                  :input-id="`nfe-input-item-margem-${index}`"
+                  :class="`nfe-input-item-margem`"
+                />
               </div>
               <div class="col-12 col-sm-4">
                 <q-select
@@ -123,93 +298,179 @@
                   :options="grupos"
                   option-label="nome"
                   option-value="id"
-                  emit-value map-options
+                  emit-value
+                  map-options
                   label="Grupo"
-                  outlined dense clearable
+                  outlined
+                  dense
+                  clearable
+                  :class="`nfe-select-item-grupo`"
                 />
               </div>
               <div class="col-12 col-sm-4">
-                <q-input v-model="item.codigoBarras" label="Código de Barras" outlined dense />
+                <q-input
+                  v-model="item.codigoBarras"
+                  label="Código de Barras"
+                  outlined
+                  dense
+                  :input-id="`nfe-input-item-codigo-barras-${index}`"
+                  :class="`nfe-input-item-codigo-barras`"
+                />
               </div>
               <div class="col-12 col-sm-4">
-                <q-input v-model="item.fornecedor" label="Fornecedor" outlined dense />
+                <q-input
+                  v-model="item.fornecedor"
+                  label="Fornecedor"
+                  outlined
+                  dense
+                  :input-id="`nfe-input-item-fornecedor-${index}`"
+                  :class="`nfe-input-item-fornecedor`"
+                />
               </div>
               <div class="col-12">
-                <q-input v-model="item.observacoes" label="Observações do Produto" type="textarea" outlined dense input-style="resize: none;" rows="2" />
+                <q-input
+                  v-model="item.observacoes"
+                  label="Observações do Produto"
+                  type="textarea"
+                  outlined
+                  dense
+                  input-style="resize: none;"
+                  rows="2"
+                  :input-id="`nfe-input-item-observacoes-${index}`"
+                  :class="`nfe-input-item-observacoes`"
+                />
               </div>
             </div>
           </q-card>
         </div>
+
         <!-- Tributação -->
         <div class="text-h6 q-mb-md">Tributação</div>
-        <div class="row q-col-gutter-md q-mb-lg">
+        <div class="row q-col-gutter-md q-mb-lg nfe-dados-tributacao">
           <div class="col-12 col-sm-4">
-            <q-input v-model="form.origemTributaria" label="Origem" outlined dense />
+            <q-input
+              v-model="form.origemTributaria"
+              label="Origem"
+              outlined
+              dense
+              input-id="nfe-input-origem-tributaria"
+              class="nfe-input-origem-tributaria"
+            />
           </div>
           <div class="col-12 col-sm-4">
-            <q-input v-model="form.icms" label="ICMS" outlined dense />
+            <q-input
+              v-model="form.icms"
+              label="ICMS"
+              outlined
+              dense
+              input-id="nfe-input-icms"
+              class="nfe-input-icms"
+            />
           </div>
           <div class="col-12 col-sm-4">
-            <q-input v-model="form.ipi" label="IPI" outlined dense />
+            <q-input
+              v-model="form.ipi"
+              label="IPI"
+              outlined
+              dense
+              input-id="nfe-input-ipi"
+              class="nfe-input-ipi"
+            />
           </div>
           <div class="col-12 col-sm-4">
-            <q-input v-model="form.pis" label="PIS" outlined dense />
+            <q-input
+              v-model="form.pis"
+              label="PIS"
+              outlined
+              dense
+              input-id="nfe-input-pis"
+              class="nfe-input-pis"
+            />
           </div>
           <div class="col-12 col-sm-4">
-            <q-input v-model="form.cofins" label="COFINS" outlined dense />
+            <q-input
+              v-model="form.cofins"
+              label="COFINS"
+              outlined
+              dense
+              input-id="nfe-input-cofins"
+              class="nfe-input-cofins"
+            />
           </div>
         </div>
 
         <!-- Observações Gerais -->
         <div class="text-h6 q-mb-md">Observações Gerais</div>
-        <div class="row q-mb-lg">
+        <div class="row q-mb-lg nfe-observacoes">
           <div class="col-12">
-            <q-input v-model="form.observacoes" type="textarea" outlined dense input-style="resize: none;" rows="3" />
+            <q-input
+              v-model="form.observacoes"
+              type="textarea"
+              outlined
+              dense
+              input-style="resize: none;"
+              rows="3"
+              input-id="nfe-input-observacoes"
+              class="nfe-input-observacoes"
+            />
           </div>
         </div>
 
-<div class="row justify-end q-mb-lg">
-  <q-card unelevated class="q-pa-md summary-card no-shadow">
-    
-    <div class="column q-gutter-sm" style="min-width: 300px">
-      
-      <div class="row justify-between items-center text-caption text-grey-6">
-        <span>Total de Produtos</span>
-        <span class="text-weight-medium">{{ itens.length }}</span>
-      </div>
-
-      <q-separator spaced />
-
-      <div class="row justify-between items-center text-body1 text-weight-bold">
-        <span>Valor Total NF</span>
-        <span class="text-positive text-h6">
-          {{ formatarReais(valorTotalNF) }}
-        </span>
-      </div>
-
-    </div>
-
-  </q-card>
-</div>
+        <!-- Resumo -->
+        <div class="row justify-end q-mb-lg nfe-resumo">
+          <q-card unelevated class="q-pa-md no-shadow">
+            <div class="column q-gutter-sm" style="min-width: 300px">
+              <div class="row justify-between items-center text-caption text-grey-6">
+                <span>Total de Produtos</span>
+                <span class="text-weight-medium">{{ itens.length }}</span>
+              </div>
+              <q-separator spaced />
+              <div class="row justify-between items-center text-body1 text-weight-bold">
+                <span>Valor Total NF</span>
+                <span class="text-positive text-h6 nfe-valor-total">
+                  {{ formatarReais(valorTotalNF) }}
+                </span>
+              </div>
+            </div>
+          </q-card>
+        </div>
 
         <!-- Botões -->
-        <div class="row justify-start q-gutter-sm">
-          <q-btn label="Salvar Entrada" icon="save" color="positive" unelevated type="submit" :loading="salvando" />
-          <q-btn label="Cancelar" icon="close" color="negative" flat @click="abrirDialogCancelar()" />
+        <div class="row justify-start q-gutter-sm nfe-form-acoes">
+          <q-btn
+            id="nfe-btn-salvar"
+            class="nfe-btn-salvar"
+            label="Salvar Entrada"
+            icon="save"
+            color="positive"
+            unelevated
+            type="submit"
+            :loading="salvando"
+          />
+          <q-btn
+            id="nfe-btn-cancelar"
+            class="nfe-btn-cancelar"
+            label="Cancelar"
+            icon="close"
+            color="negative"
+            flat
+            @click="abrirDialogCancelar()"
+          />
         </div>
 
       </q-form>
     </div>
 
     <!-- Tabela -->
-    <div v-if="!formNotaFiscalEntrada" class="q-mt-xl">
+    <div v-if="!formNotaFiscalEntrada" class="q-mt-xl nfe-tabela">
       <q-table
         :data="rowsFiltradas"
         :columns="colunasNotaFiscalEntrada"
         row-key="id"
-        flat bordered
+        flat
+        bordered
         no-data-label="Nenhum registro encontrado"
-        class="text-weight-medium"
+        class="text-weight-medium nfe-tabela-lista"
         :rows-per-page-options="[10, 20, 50]"
         :loading="carregando"
       >
@@ -224,7 +485,15 @@
         </template>
         <template v-slot:body-cell-acoes="props">
           <q-td align="center">
-            <q-btn icon="description" size="sm" color="green" flat round @click="verDetalhes(props.row)">
+            <q-btn
+              icon="description"
+              size="sm"
+              color="green"
+              flat
+              round
+              class="nfe-btn-ver-detalhes"
+              @click="verDetalhes(props.row)"
+            >
               <q-tooltip>Ver Detalhes</q-tooltip>
             </q-btn>
           </q-td>
@@ -233,7 +502,7 @@
     </div>
 
     <!-- Dialog Cancelar -->
-    <q-dialog v-model="dialogCancelar" persistent>
+    <q-dialog v-model="dialogCancelar" persistent class="nfe-dialog-cancelar">
       <q-card style="min-width: 380px; border-radius: 12px" class="q-pa-sm">
         <q-card-section class="q-pb-none">
           <div class="text-h6 text-bold">Cancelar operação</div>
@@ -242,14 +511,31 @@
           Deseja realmente cancelar? As alterações não salvas serão perdidas.
         </q-card-section>
         <q-card-actions align="right" class="q-pa-md q-gutter-sm">
-          <q-btn label="Voltar" unelevated style="border: 1px solid #ccc; border-radius: 8px; min-width: 100px" color="white" text-color="dark" v-close-popup />
-          <q-btn label="Sim, Cancelar" unelevated color="negative" style="border-radius: 8px; min-width: 130px" @click="confirmarCancelamento()" />
+          <q-btn
+            id="nfe-dialog-cancelar-voltar"
+            class="nfe-dialog-cancelar-voltar"
+            label="Voltar"
+            unelevated
+            style="border: 1px solid #ccc; border-radius: 8px; min-width: 100px"
+            color="white"
+            text-color="dark"
+            v-close-popup
+          />
+          <q-btn
+            id="nfe-dialog-cancelar-confirmar"
+            class="nfe-dialog-cancelar-confirmar"
+            label="Sim, Cancelar"
+            unelevated
+            color="negative"
+            style="border-radius: 8px; min-width: 130px"
+            @click="confirmarCancelamento()"
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>
 
     <!-- Dialog Detalhes -->
-    <q-dialog v-model="dialogDetalhes" persistent>
+    <q-dialog v-model="dialogDetalhes" persistent class="nfe-dialog-detalhes">
       <q-card style="min-width: 650px; max-width: 700px; border-radius: 12px">
         <div class="q-pa-lg row items-center justify-between" style="background: #f8f9fa">
           <div>
@@ -267,7 +553,11 @@
           <q-table
             :data="nfSelecionada?.itens || []"
             :columns="colunasItensDetalhe"
-            flat bordered hide-bottom dense
+            flat
+            bordered
+            hide-bottom
+            dense
+            class="nfe-tabela-detalhes"
           >
             <template v-slot:body-cell-valor_unitario="props">
               <q-td align="center">{{ formatarReais(props.row.valor_unitario) }}</q-td>
@@ -281,13 +571,19 @@
               <q-separator />
               <div class="row justify-between text-weight-bold text-body1">
                 <span>Total</span>
-                <span class="text-positive">{{ formatarReais(nfSelecionada?.valor_total) }}</span>
+                <span class="text-positive nfe-detalhes-total">{{ formatarReais(nfSelecionada?.valor_total) }}</span>
               </div>
             </div>
           </div>
         </q-card-section>
         <q-card-actions align="right" class="q-pa-md">
-          <q-btn label="Fechar" flat v-close-popup />
+          <q-btn
+            id="nfe-dialog-detalhes-fechar"
+            class="nfe-dialog-detalhes-fechar"
+            label="Fechar"
+            flat
+            v-close-popup
+          />
         </q-card-actions>
       </q-card>
     </q-dialog>

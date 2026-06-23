@@ -2,21 +2,35 @@
   <div class="q-pa-md">
 
     <!-- Cabeçalho -->
-    <div class="text-bold text-black row items-center" style="font-size: 28px">
+    <div class="text-bold text-black row items-center rv-cabecalho" style="font-size: 28px">
       <q-icon name="sell" class="q-mr-md text-primary" size="28px" />Relatório de Vendas
     </div>
-    <p class="text-grey-7 text-body2 q-mb-md">
+    <p class="text-grey-7 text-body2 q-mb-md rv-subtitulo">
       Analise as vendas por período, cliente, produto e forma de pagamento. Exporte os dados em PDF ou Excel.
     </p>
     <q-separator class="q-mb-lg" />
 
     <!-- Filtros -->
-    <div class="row q-col-gutter-md q-mb-md">
+    <div class="row q-col-gutter-md q-mb-md rv-filtros">
       <div class="col-12 col-sm-4">
-        <q-input v-model="filtro.cliente" label="Cliente" outlined dense />
+        <q-input
+          v-model="filtro.cliente"
+          label="Cliente"
+          outlined
+          dense
+          input-id="rv-input-filtro-cliente"
+          class="rv-input-filtro-cliente"
+        />
       </div>
       <div class="col-12 col-sm-4">
-        <q-input v-model="filtro.produto" label="Produto" outlined dense />
+        <q-input
+          v-model="filtro.produto"
+          label="Produto"
+          outlined
+          dense
+          input-id="rv-input-filtro-produto"
+          class="rv-input-filtro-produto"
+        />
       </div>
       <div class="col-12 col-sm-4">
         <q-select
@@ -24,23 +38,46 @@
           :options="opcoesPagamento"
           option-label="label"
           option-value="value"
-          emit-value map-options
+          emit-value
+          map-options
           label="Forma de Pagamento"
-          outlined dense clearable
+          outlined
+          dense
+          clearable
+          id="rv-select-filtro-pagamento"
+          class="rv-select-filtro-pagamento"
         />
       </div>
       <div class="col-12 col-sm-4">
-        <q-input v-model="filtro.de" label="De" type="date" outlined dense />
+        <q-input
+          v-model="filtro.de"
+          label="De"
+          type="date"
+          outlined
+          dense
+          input-id="rv-input-filtro-de"
+          class="rv-input-filtro-de"
+        />
       </div>
       <div class="col-12 col-sm-4">
-        <q-input v-model="filtro.ate" label="Até" type="date" outlined dense />
+        <q-input
+          v-model="filtro.ate"
+          label="Até"
+          type="date"
+          outlined
+          dense
+          input-id="rv-input-filtro-ate"
+          class="rv-input-filtro-ate"
+        />
       </div>
     </div>
 
     <!-- Botões -->
-    <div class="row justify-between items-center q-mb-lg">
-      <div class="row q-gutter-sm">
+    <div class="row justify-between items-center q-mb-lg rv-acoes">
+      <div class="row q-gutter-sm rv-acoes-filtro">
         <q-btn
+          id="rv-btn-gerar"
+          class="rv-btn-gerar"
           label="Gerar Relatório"
           icon="summarize"
           color="primary"
@@ -49,56 +86,73 @@
           @click="gerarRelatorio()"
         />
         <q-btn
+          id="rv-btn-limpar"
+          class="rv-btn-limpar text-grey-7"
           label="Limpar"
           icon="delete_sweep"
           flat
-          class="text-grey-7"
           @click="limparFiltros()"
         />
       </div>
-      <div v-if="gerado" class="row q-gutter-sm">
-        <q-btn label="Exportar PDF" icon="picture_as_pdf" color="negative" unelevated @click="exportarPDF()" />
-        <q-btn label="Exportar Excel" icon="table_view" color="positive" unelevated @click="exportarExcel()" />
+      <div v-if="gerado" class="row q-gutter-sm rv-acoes-exportar">
+        <q-btn
+          id="rv-btn-exportar-pdf"
+          class="rv-btn-exportar-pdf"
+          label="Exportar PDF"
+          icon="picture_as_pdf"
+          color="negative"
+          unelevated
+          @click="exportarPDF()"
+        />
+        <q-btn
+          id="rv-btn-exportar-excel"
+          class="rv-btn-exportar-excel"
+          label="Exportar Excel"
+          icon="table_view"
+          color="positive"
+          unelevated
+          @click="exportarExcel()"
+        />
       </div>
     </div>
 
     <!-- Cards de Resumo -->
-    <div v-if="gerado" class="row q-col-gutter-md q-mb-lg q-mt-md">
+    <div v-if="gerado" class="row q-col-gutter-md q-mb-lg q-mt-md rv-resumo">
       <div class="col-6 col-sm-3">
-        <q-card flat bordered class="b-r-10 q-pa-md">
+        <q-card flat bordered class="b-r-10 q-pa-md rv-card-total-vendas">
           <div class="text-caption text-grey-6">Total de Vendas</div>
-          <div class="text-h5 text-bold text-black q-mt-xs">{{ rows.length }}</div>
+          <div class="text-h5 text-bold text-black q-mt-xs rv-valor-total-vendas">{{ rows.length }}</div>
         </q-card>
       </div>
       <div class="col-6 col-sm-3">
-        <q-card flat bordered class="b-r-10 q-pa-md">
+        <q-card flat bordered class="b-r-10 q-pa-md rv-card-ticket-medio">
           <div class="text-caption text-grey-6">Ticket Médio</div>
-          <div class="text-h6 text-bold text-black q-mt-xs">{{ ticketMedio }}</div>
+          <div class="text-h6 text-bold text-black q-mt-xs rv-valor-ticket-medio">{{ ticketMedio }}</div>
         </q-card>
       </div>
       <div class="col-6 col-sm-3">
-        <q-card flat bordered class="b-r-10 q-pa-md">
+        <q-card flat bordered class="b-r-10 q-pa-md rv-card-total-descontos">
           <div class="text-caption text-grey-6">Total Descontos</div>
-          <div class="text-h6 text-bold text-black q-mt-xs">{{ totalDescontos }}</div>
+          <div class="text-h6 text-bold text-black q-mt-xs rv-valor-total-descontos">{{ totalDescontos }}</div>
         </q-card>
       </div>
       <div class="col-6 col-sm-3">
-        <q-card flat bordered class="b-r-10 q-pa-md">
+        <q-card flat bordered class="b-r-10 q-pa-md rv-card-total-geral">
           <div class="text-caption text-grey-6">Total Geral</div>
-          <div class="text-h6 text-bold text-black q-mt-xs">{{ totalGeral }}</div>
+          <div class="text-h6 text-bold text-black q-mt-xs rv-valor-total-geral">{{ totalGeral }}</div>
         </q-card>
       </div>
     </div>
 
     <!-- Cards por Forma de Pagamento -->
-    <div v-if="gerado && totalPorForma.length" class="row q-col-gutter-md q-mb-lg">
+    <div v-if="gerado && totalPorForma.length" class="row q-col-gutter-md q-mb-lg rv-cards-pagamento">
       <div v-for="item in totalPorForma" :key="item.forma" class="col-6 col-sm-4">
-        <q-card flat bordered class="b-r-10 q-pa-md">
+        <q-card flat bordered class="b-r-10 q-pa-md rv-card-pagamento">
           <div class="row items-center q-gutter-sm">
             <q-icon :name="iconePagamento(item.forma)" :color="corPagamento(item.forma)" size="24px" />
             <div>
-              <div class="text-caption text-grey-6">{{ item.forma }}</div>
-              <div class="text-weight-bold">{{ formatarReais(item.total) }}</div>
+              <div class="text-caption text-grey-6 rv-card-pagamento-label">{{ item.forma }}</div>
+              <div class="text-weight-bold rv-card-pagamento-valor">{{ formatarReais(item.total) }}</div>
             </div>
           </div>
         </q-card>
@@ -106,14 +160,15 @@
     </div>
 
     <!-- Tabela -->
-    <div v-if="gerado">
+    <div v-if="gerado" class="rv-tabela">
       <q-table
         :data="rows"
         :columns="colunasRelatorioVendas"
         row-key="id"
-        flat bordered
+        flat
+        bordered
         no-data-label="Nenhuma venda encontrada"
-        class="text-weight-medium"
+        class="text-weight-medium rv-tabela-lista"
         :rows-per-page-options="[10, 20, 50]"
       >
         <template v-slot:body-cell-data="props">
@@ -121,7 +176,10 @@
         </template>
         <template v-slot:body-cell-forma_pagamento="props">
           <q-td align="center">
-            <q-badge :color="corPagamento(labelPagamento(props.row.forma_pagamento))">
+            <q-badge
+              :color="corPagamento(labelPagamento(props.row.forma_pagamento))"
+              class="rv-badge-pagamento"
+            >
               {{ labelPagamento(props.row.forma_pagamento) }}
             </q-badge>
           </q-td>
@@ -146,7 +204,7 @@
     </div>
 
     <!-- Empty state -->
-    <div v-if="!gerado" class="column items-center q-py-xl text-grey-5">
+    <div v-if="!gerado" class="column items-center q-py-xl text-grey-5 rv-empty-state">
       <q-icon name="summarize" size="48px" />
       <div class="q-mt-sm">Selecione os filtros e clique em Gerar Relatório</div>
     </div>

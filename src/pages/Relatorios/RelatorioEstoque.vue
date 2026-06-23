@@ -2,21 +2,35 @@
   <div class="q-pa-md">
 
     <!-- Cabeçalho -->
-    <div class="text-bold text-black row items-center" style="font-size:28px">
+    <div class="text-bold text-black row items-center rest-cabecalho" style="font-size:28px">
       <q-icon name="inventory_2" class="q-mr-md text-primary" size="28px" />Relatório de Estoque
     </div>
-    <p class="text-grey-7 text-body2 q-mb-md">
+    <p class="text-grey-7 text-body2 q-mb-md rest-subtitulo">
       Analise a situação atual do estoque por produto, grupo e fornecedor. Exporte os dados em PDF ou Excel.
     </p>
     <q-separator class="q-mb-lg" />
 
     <!-- Filtros -->
-    <div class="row q-col-gutter-md q-mb-md">
+    <div class="row q-col-gutter-md q-mb-md rest-filtros">
       <div class="col-12 col-sm-4">
-        <q-input v-model="filtro.codigo" label="Código do Produto" outlined dense />
+        <q-input
+          v-model="filtro.codigo"
+          label="Código do Produto"
+          outlined
+          dense
+          input-id="rest-input-filtro-codigo"
+          class="rest-input-filtro-codigo"
+        />
       </div>
       <div class="col-12 col-sm-4">
-        <q-input v-model="filtro.nomeProduto" label="Nome do Produto" outlined dense />
+        <q-input
+          v-model="filtro.nomeProduto"
+          label="Nome do Produto"
+          outlined
+          dense
+          input-id="rest-input-filtro-nome"
+          class="rest-input-filtro-nome"
+        />
       </div>
       <div class="col-12 col-sm-4">
         <q-select
@@ -24,9 +38,14 @@
           :options="grupos"
           option-label="nome"
           option-value="id"
-          emit-value map-options
+          emit-value
+          map-options
           label="Grupo"
-          outlined dense clearable
+          outlined
+          dense
+          clearable
+          id="rest-select-filtro-grupo"
+          class="rest-select-filtro-grupo"
         />
       </div>
       <div class="col-12 col-sm-4">
@@ -35,9 +54,14 @@
           :options="opcoesStatus"
           option-label="label"
           option-value="value"
-          emit-value map-options
+          emit-value
+          map-options
           label="Status"
-          outlined dense clearable
+          outlined
+          dense
+          clearable
+          id="rest-select-filtro-status"
+          class="rest-select-filtro-status"
         />
       </div>
       <div class="col-12 col-sm-4">
@@ -46,20 +70,34 @@
           :options="opcoesSituacaoEstoque"
           option-label="label"
           option-value="value"
-          emit-value map-options
+          emit-value
+          map-options
           label="Situação do Estoque"
-          outlined dense clearable
+          outlined
+          dense
+          clearable
+          id="rest-select-filtro-situacao"
+          class="rest-select-filtro-situacao"
         />
       </div>
       <div class="col-12 col-sm-4">
-        <q-input v-model="filtro.fornecedor" label="Fornecedor" outlined dense />
+        <q-input
+          v-model="filtro.fornecedor"
+          label="Fornecedor"
+          outlined
+          dense
+          input-id="rest-input-filtro-fornecedor"
+          class="rest-input-filtro-fornecedor"
+        />
       </div>
     </div>
 
     <!-- Botões de ação -->
-    <div class="row justify-between items-center q-mb-lg">
-      <div class="row q-gutter-sm">
+    <div class="row justify-between items-center q-mb-lg rest-acoes">
+      <div class="row q-gutter-sm rest-acoes-filtro">
         <q-btn
+          id="rest-btn-gerar"
+          class="rest-btn-gerar"
           label="Gerar Relatório"
           icon="summarize"
           color="primary"
@@ -68,68 +106,92 @@
           @click="gerarRelatorio()"
         />
         <q-btn
+          id="rest-btn-limpar"
+          class="rest-btn-limpar text-grey-7"
           label="Limpar"
           icon="delete_sweep"
           flat
-          class="text-grey-7"
           @click="limparFiltros()"
         />
       </div>
-      <div v-if="gerado" class="row q-gutter-sm">
-        <q-btn label="Exportar PDF" icon="picture_as_pdf" color="negative" unelevated @click="exportarPDF()" />
-        <q-btn label="Exportar Excel" icon="table_view" color="positive" unelevated @click="exportarExcel()" />
+      <div v-if="gerado" class="row q-gutter-sm rest-acoes-exportar">
+        <q-btn
+          id="rest-btn-exportar-pdf"
+          class="rest-btn-exportar-pdf"
+          label="Exportar PDF"
+          icon="picture_as_pdf"
+          color="negative"
+          unelevated
+          @click="exportarPDF()"
+        />
+        <q-btn
+          id="rest-btn-exportar-excel"
+          class="rest-btn-exportar-excel"
+          label="Exportar Excel"
+          icon="table_view"
+          color="positive"
+          unelevated
+          @click="exportarExcel()"
+        />
       </div>
     </div>
 
     <!-- Cards de Resumo -->
-    <div v-if="gerado" class="row q-col-gutter-md q-mb-lg q-mt-md">
+    <div v-if="gerado" class="row q-col-gutter-md q-mb-lg q-mt-md rest-resumo">
       <div class="col-6 col-sm-3">
-        <q-card flat bordered class="b-r-10 q-pa-md">
+        <q-card flat bordered class="b-r-10 q-pa-md rest-card-total-produtos">
           <div class="text-caption text-grey-6">Total de Produtos</div>
-          <div class="text-h5 text-bold text-black q-mt-xs">{{ rowsFiltradas.length }}</div>
+          <div class="text-h5 text-bold text-black q-mt-xs rest-valor-total-produtos">{{ rowsFiltradas.length }}</div>
         </q-card>
       </div>
       <div class="col-6 col-sm-3">
-        <q-card flat bordered class="b-r-10 q-pa-md">
+        <q-card flat bordered class="b-r-10 q-pa-md rest-card-total-ativos">
           <div class="text-caption text-grey-6">Produtos Ativos</div>
-          <div class="text-h5 text-bold text-black q-mt-xs">{{ totalAtivos }}</div>
+          <div class="text-h5 text-bold text-black q-mt-xs rest-valor-total-ativos">{{ totalAtivos }}</div>
         </q-card>
       </div>
       <div class="col-6 col-sm-3">
-        <q-card flat bordered class="b-r-10 q-pa-md">
+        <q-card flat bordered class="b-r-10 q-pa-md rest-card-estoque-baixo">
           <div class="text-caption text-grey-6">Estoque Baixo</div>
-          <div class="text-h5 text-bold text-black q-mt-xs">{{ totalEstoqueBaixo }}</div>
+          <div class="text-h5 text-bold text-black q-mt-xs rest-valor-estoque-baixo">{{ totalEstoqueBaixo }}</div>
         </q-card>
       </div>
       <div class="col-6 col-sm-3">
-        <q-card flat bordered class="b-r-10 q-pa-md">
+        <q-card flat bordered class="b-r-10 q-pa-md rest-card-valor-total">
           <div class="text-caption text-grey-6">Valor Total em Estoque</div>
-          <div class="text-h6 text-bold text-black q-mt-xs">{{ valorTotalEstoque }}</div>
+          <div class="text-h6 text-bold text-black q-mt-xs rest-valor-total-estoque">{{ valorTotalEstoque }}</div>
         </q-card>
       </div>
     </div>
 
     <!-- Tabela -->
-    <div v-if="gerado">
+    <div v-if="gerado" class="rest-tabela">
       <q-table
         :data="rowsFiltradas"
         :columns="colunasRelatorioEstoque"
         row-key="id"
-        flat bordered
+        flat
+        bordered
         no-data-label="Nenhum produto encontrado com os filtros selecionados"
-        class="text-weight-medium"
+        class="text-weight-medium rest-tabela-lista"
         :rows-per-page-options="[10, 20, 50]"
       >
         <template v-slot:body-cell-status="props">
           <q-td align="center">
-            <q-badge :color="props.row.status === 'Ativo' ? 'positive' : 'negative'">
+            <q-badge
+              :color="props.row.status === 'Ativo' ? 'positive' : 'negative'"
+              class="rest-badge-status"
+            >
               {{ props.row.status }}
             </q-badge>
           </q-td>
         </template>
         <template v-slot:body-cell-situacao_estoque="props">
           <q-td align="center">
-            <q-badge :color="corSituacaoEstoque(props.row)">
+            <q-badge
+              :color="corSituacaoEstoque(props.row)"
+              class="rest-badge-situacao"
+            >
               {{ situacaoEstoque(props.row) }}
             </q-badge>
           </q-td>
@@ -144,7 +206,7 @@
     </div>
 
     <!-- Empty state -->
-    <div v-if="!gerado" class="column items-center q-py-xl text-grey-5">
+    <div v-if="!gerado" class="column items-center q-py-xl text-grey-5 rest-empty-state">
       <q-icon name="summarize" size="48px" />
       <div class="q-mt-sm">Selecione os filtros e clique em Gerar Relatório</div>
     </div>
