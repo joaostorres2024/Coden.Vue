@@ -87,12 +87,6 @@ const dashboardService = {
     return api
       .get(`/api/dashboard/grafico?${params.toString()}`)
       .then(r => r.data)
-  },
-
-  async getSituacaoPedidos(): Promise<SituacaoResponse[]> {
-    return api
-      .get('/api/dashboard/situacao')
-      .then(r => r.data)
   }
 
 }

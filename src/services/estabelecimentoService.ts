@@ -20,6 +20,7 @@ export interface Estabelecimento {
   site?: string
   responsavel?: string
   cargo?: string
+  logo?: string
 }
 
 const estabelecimentoService = {

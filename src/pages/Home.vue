@@ -77,7 +77,7 @@
     <div class="row q-col-gutter-md q-mb-lg dashboard-grafico-situacao">
 
       <!-- Gráfico com Tabs -->
-      <div class="col-12 col-md-8">
+      <div class="col-12 col-md-12">
         <q-card flat bordered class="b-r-10 dashboard-grafico-card" style="position: relative;">
           <q-tabs
             v-model="abaGrafico"
@@ -141,44 +141,6 @@
             </q-tab-panel>
 
           </q-tab-panels>
-        </q-card>
-      </div>
-
-      <!-- Situação dos Pedidos -->
-      <div class="col-12 col-md-4">
-        <q-card flat bordered class="b-r-10 q-pa-md dashboard-situacao-card" style="position: relative;">
-          <q-inner-loading :showing="carregando" size="24px" />
-          <div class="row items-center justify-between q-mb-md">
-            <div class="text-subtitle1 text-bold dashboard-situacao-titulo">Situação</div>
-            <q-btn
-              id="dashboard-btn-todos-pedidos"
-              class="dashboard-btn-todos-pedidos"
-              label="Todos os pedidos"
-              flat
-              size="sm"
-              color="primary"
-              @click="irParaPedidos()"
-            />
-          </div>
-          <div class="column q-gutter-md dashboard-situacao-lista">
-            <div class="dashboard-situacao-item" v-for="sit in situacoes" :key="sit.label">
-              <div class="row items-center justify-between q-mb-xs">
-                <div class="row items-center q-gutter-xs">
-                  <div :style="'width:8px;height:8px;border-radius:50%;background:' + sit.cor" />
-                  <span class="text-body2 text-weight-medium">{{ sit.label }}</span>
-                </div>
-                <span class="text-body2 text-bold">{{ formatarReais(sit.valor) }}</span>
-              </div>
-              <q-linear-progress
-                :value="totalSituacoes > 0 ? sit.valor / totalSituacoes : 0"
-                :color="sit.qColor"
-                track-color="grey-2"
-                rounded
-                size="6px"
-                class="dashboard-situacao-progresso"
-              />
-            </div>
-          </div>
         </q-card>
       </div>
     </div>
@@ -365,8 +327,8 @@ export default class ModuleComponent extends Vue {
 
   colunasClientes = [
     { name: 'nome_cliente', label: 'Cliente', field: 'nome_cliente', align: 'left' as const,   sortable: true },
-    { name: 'total',        label: 'Valor',   field: 'total',        align: 'right' as const,  sortable: true },
-    { name: 'data',         label: 'Data',    field: 'data',         align: 'center' as const, sortable: true }
+    { name: 'total',        label: 'Valor',   field: 'total',        align: 'left' as const,  sortable: true },
+    { name: 'data',         label: 'Data',    field: 'data',         align: 'left' as const, sortable: true }
   ]
 
   // ── Estoque ───────────────────────────────────────────────
@@ -450,13 +412,12 @@ export default class ModuleComponent extends Vue {
 
   // ── Métodos ───────────────────────────────────────────────
 
-  async carregarDados () {
+async carregarDados () {
     try {
       this.carregando = true
 
-      const [metricas, situacao, grafico, financeiro] = await Promise.all([
+      const [metricas, grafico, financeiro] = await Promise.all([
         dashboardService.getMetricas(this.dataInicio, this.dataFim),
-        dashboardService.getSituacaoPedidos(),
         dashboardService.getGraficoVendas(this.dataInicio, this.dataFim),
         dashboardService.getFinanceiro(
           this.dataInicio || undefined,
@@ -469,7 +430,6 @@ export default class ModuleComponent extends Vue {
       this.metricas[2].valor = String(metricas.produtosVendidos)
       this.metricas[3].valor = this.formatarReais(metricas.ticketMedio)
 
-      this.aplicarSituacao(situacao)
       this.atualizarGrafico(grafico)
       this.aplicarFinanceiro(financeiro)
 

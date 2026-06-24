@@ -55,6 +55,13 @@
             :loading="loading"
             id="login-btn-entrar"
           />
+
+          <q-btn
+            unelevated
+            class="full-width q-mt-md bg-transparent text-black login-btn-esqueci-senha"
+            label="Esqueci minha senha"
+            id="login-btn-esqueci-senha"
+          />
         </form>
       </div>
     </div>

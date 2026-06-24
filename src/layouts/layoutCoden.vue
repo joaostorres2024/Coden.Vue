@@ -35,7 +35,10 @@
           id="layout-perfil-trigger"
           @click="drawerPerfil = !drawerPerfil"
         >
-          <q-avatar size="36px" color="primary" text-color="white" class="layout-avatar">{{ iniciais }}</q-avatar>
+          <q-avatar size="36px" color="primary" text-color="white" class="layout-avatar">
+  <img v-if="logo" :src="logo" style="object-fit: cover; width: 100%; height: 100%; border-radius: 50%;" />
+  <span v-else>{{ iniciais }}</span>
+</q-avatar>
           <div class="column" style="line-height: 1.2">
             <span class="text-black text-weight-bold layout-perfil-nome" style="font-size: 13px">{{ user }}</span>
             <span class="text-grey-6" style="font-size: 11px">Configurações e Perfil</span>
@@ -222,7 +225,10 @@
     >
       <div class="column full-height">
         <div class="q-pa-lg row items-center q-gutter-md layout-perfil-header">
-          <q-avatar size="48px" color="primary" text-color="white" class="layout-perfil-avatar">{{ iniciais }}</q-avatar>
+          <q-avatar size="48px" color="primary" text-color="white" class="layout-perfil-avatar">
+  <img v-if="logo" :src="logo" style="object-fit: cover; width: 100%; height: 100%; border-radius: 50%;" />
+  <span v-else>{{ iniciais }}</span>
+</q-avatar>
           <div class="column">
             <span class="text-weight-bold layout-perfil-drawer-nome" style="font-size: 14px">{{ user }}</span>
             <span class="text-grey-6" style="font-size: 12px">Administrador</span>
@@ -313,42 +319,53 @@
 </template>
 
   <script lang="ts">
-  import Vue from 'vue'
-  import Component from 'vue-class-component'
+import Vue from 'vue'
+import Component from 'vue-class-component'
+import estabelecimentoService from '../services/estabelecimentoService'
 
-  @Component
-  export default class ModuleComponent extends Vue {
+@Component
+export default class ModuleComponent extends Vue {
 
-    leftDrawerOpen = true
-    drawerPerfil = false
-    user = ''
+  leftDrawerOpen = true
+  drawerPerfil = false
+  user = ''
+  logo = ''
 
-    created() {
-      const token = localStorage.getItem('token')
-      if (token) {
-        const payload = JSON.parse(atob(token.split('.')[1]))
-        this.user = payload.nome ?? localStorage.getItem('nomeUsuario') ?? ''
-      }
+  async created() {
+    const token = localStorage.getItem('token')
+    if (token) {
+      const payload = JSON.parse(atob(token.split('.')[1]))
+      this.user = payload.nome ?? localStorage.getItem('nomeUsuario') ?? ''
     }
-
-    get iniciais(): string {
-      if (!this.user) return '?'
-      const partes = this.user.trim().split(' ')
-      const primeira = partes[0]?.[0] ?? ''
-      const segunda = partes[1]?.[0] ?? ''
-      return (primeira + segunda).toUpperCase()
-    }
-
-    toggleDark() {
-      this.$q.dark.toggle()
-    }
-
-    Sair() {
-      localStorage.removeItem('token')
-      this.$router.push('/login')
-    }
-
+    await this.carregarLogo()
   }
+
+  async carregarLogo() {
+    try {
+      const dados = await estabelecimentoService.buscar()
+      this.logo = dados.logo || ''
+    } catch {
+      this.logo = ''
+    }
+  }
+
+  get iniciais(): string {
+    if (!this.user) return '?'
+    const partes = this.user.trim().split(' ')
+    const primeira = partes[0]?.[0] ?? ''
+    const segunda = partes[1]?.[0] ?? ''
+    return (primeira + segunda).toUpperCase()
+  }
+
+  toggleDark() {
+    this.$q.dark.toggle()
+  }
+
+  Sair() {
+    localStorage.removeItem('token')
+    this.$router.push('/login')
+  }
+}
   </script>
 
   <style>

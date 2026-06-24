@@ -16,82 +16,45 @@
       <div class="col-12 col-md-3">
 
         <!-- Foto de Perfil -->
-        <q-card flat bordered class="b-r-10 q-pa-md text-center q-mb-md perfil-card-foto">
-          <div class="column items-center q-gutter-sm">
-            <q-avatar size="120px" font-size="60px" color="grey-3" text-color="primary" icon="business" class="shadow-1 perfil-avatar" />
-            <div class="text-subtitle2 text-weight-bold perfil-nome-empresa">{{ form.nome || 'Empresa' }}</div>
-            <div class="text-caption text-grey-6 perfil-regime">{{ form.regime_tributario || '-' }}</div>
-            <q-file
-              v-model="fotoPerfil"
-              accept=".jpg,.jpeg,.png"
-              label="Alterar Logo"
-              outlined
-              dense
-              class="full-width q-mt-sm perfil-file-logo"
-              id="perfil-file-logo"
-            >
-              <template v-slot:prepend><q-icon name="image" /></template>
-            </q-file>
-          </div>
-        </q-card>
+<q-card flat bordered class="b-r-10 q-pa-md text-center q-mb-md perfil-card-foto">
+  <div class="column items-center q-gutter-sm">
 
-        <!-- Segurança -->
-        <q-card flat bordered class="b-r-10 q-pa-md q-mb-md perfil-card-seguranca">
-          <div class="text-subtitle1 text-weight-bold q-mb-md">
-            <q-icon name="lock" class="q-mr-xs" />Segurança
-          </div>
-          <div class="column q-gutter-sm">
-            <q-input
-              v-model="senha.atual"
-              label="Senha Atual"
-              type="password"
-              outlined
-              dense
-              input-id="perfil-input-senha-atual"
-              class="perfil-input-senha-atual"
-            />
-            <q-input
-              v-model="senha.nova"
-              label="Nova Senha"
-              type="password"
-              outlined
-              dense
-              input-id="perfil-input-senha-nova"
-              class="perfil-input-senha-nova"
-            />
-            <q-input
-              v-model="senha.confirmar"
-              label="Confirmar Nova Senha"
-              type="password"
-              outlined
-              dense
-              input-id="perfil-input-senha-confirmar"
-              class="perfil-input-senha-confirmar"
-            />
-            <q-btn
-              id="perfil-btn-alterar-senha"
-              class="full-width q-mt-sm perfil-btn-alterar-senha"
-              label="Alterar Senha"
-              color="primary"
-              unelevated
-              icon="lock_reset"
-              @click="alterarSenha()"
-            />
-          </div>
-        </q-card>
+    <!-- Avatar com foto ou ícone padrão -->
+    <q-avatar size="120px" class="shadow-1 perfil-avatar">
+      <img v-if="form.logo" :src="form.logo" style="object-fit: cover;" />
+      <q-icon v-else name="business" size="60px" color="primary" />
+    </q-avatar>
 
-        <!-- Notificações -->
-        <q-card flat bordered class="b-r-10 q-pa-md q-mb-md perfil-card-notificacoes">
-          <div class="text-subtitle1 text-weight-bold q-mb-md">
-            <q-icon name="notifications" class="q-mr-xs" />Notificações
-          </div>
-          <div class="column q-gutter-sm">
-            <q-toggle v-model="notificacoes.vendas" label="Novas vendas" color="primary" dense class="perfil-toggle-vendas" />
-            <q-toggle v-model="notificacoes.estoque" label="Estoque baixo" color="primary" dense class="perfil-toggle-estoque" />
-            <q-toggle v-model="notificacoes.nf" label="Notas fiscais" color="primary" dense class="perfil-toggle-nf" />
-            <q-toggle v-model="notificacoes.sistema" label="Atualizações do sistema" color="primary" dense class="perfil-toggle-sistema" />
-          </div>
-        </q-card>
+    <div class="text-subtitle2 text-weight-bold perfil-nome-empresa">{{ form.nome || 'Empresa' }}</div>
+    <div class="text-caption text-grey-6 perfil-regime">{{ form.regime_tributario || '-' }}</div>
+
+    <q-file
+      v-model="fotoPerfil"
+      accept=".jpg,.jpeg,.png"
+      label="Alterar Logo"
+      outlined
+      dense
+      class="full-width q-mt-sm perfil-file-logo"
+      id="perfil-file-logo"
+      @input="onFotoSelecionada"
+    >
+      <template v-slot:prepend><q-icon name="image" /></template>
+    </q-file>
+
+    <q-btn
+      v-if="form.logo"
+      label="Remover foto"
+      flat
+      dense
+      size="md"
+      color="negative"
+      icon="delete"
+      class="full-width"
+      @click="removerFoto()"
+    />
+
+  </div>
+</q-card>
 
         <!-- Suporte -->
         <q-card flat bordered class="b-r-10 q-pa-md perfil-card-suporte">
@@ -121,68 +84,22 @@
         <div class="text-h6 q-mb-md">Dados da Empresa</div>
         <div class="row q-col-gutter-md q-mb-lg perfil-dados-empresa">
           <div class="col-12 col-sm-4">
-            <q-input
-              v-model="form.nome"
-              label="Razão Social"
-              outlined
-              dense
-              input-id="perfil-input-razao-social"
-              class="perfil-input-razao-social"
-            />
+            <q-input v-model="form.nome" label="Razão Social" outlined dense input-id="perfil-input-razao-social" class="perfil-input-razao-social" />
           </div>
           <div class="col-12 col-sm-4">
-            <q-input
-              v-model="form.nome_fantasia"
-              label="Nome Fantasia"
-              outlined
-              dense
-              input-id="perfil-input-nome-fantasia"
-              class="perfil-input-nome-fantasia"
-            />
+            <q-input v-model="form.nome_fantasia" label="Nome Fantasia" outlined dense input-id="perfil-input-nome-fantasia" class="perfil-input-nome-fantasia" />
           </div>
           <div class="col-12 col-sm-4">
-            <q-input
-              v-model="form.cnpj"
-              label="CNPJ"
-              outlined
-              dense
-              mask="##.###.###/####-##"
-              input-id="perfil-input-cnpj"
-              class="perfil-input-cnpj"
-            />
+            <q-input v-model="form.cnpj" label="CNPJ" outlined dense mask="##.###.###/####-##" input-id="perfil-input-cnpj" class="perfil-input-cnpj" />
           </div>
           <div class="col-12 col-sm-4">
-            <q-input
-              v-model="form.inscricao_estadual"
-              label="Inscrição Estadual"
-              outlined
-              dense
-              input-id="perfil-input-ie"
-              class="perfil-input-ie"
-            />
+            <q-input v-model="form.inscricao_estadual" label="Inscrição Estadual" outlined dense input-id="perfil-input-ie" class="perfil-input-ie" />
           </div>
           <div class="col-12 col-sm-4">
-            <q-input
-              v-model="form.inscricao_municipal"
-              label="Inscrição Municipal"
-              outlined
-              dense
-              input-id="perfil-input-im"
-              class="perfil-input-im"
-            />
+            <q-input v-model="form.inscricao_municipal" label="Inscrição Municipal" outlined dense input-id="perfil-input-im" class="perfil-input-im" />
           </div>
           <div class="col-12 col-sm-4">
-            <q-select
-              v-model="form.regime_tributario"
-              :options="opcoesRegime"
-              label="Regime Tributário"
-              outlined
-              dense
-              emit-value
-              map-options
-              id="perfil-select-regime"
-              class="perfil-select-regime"
-            />
+            <q-select v-model="form.regime_tributario" :options="opcoesRegime" label="Regime Tributário" outlined dense emit-value map-options id="perfil-select-regime" class="perfil-select-regime" />
           </div>
         </div>
 
@@ -190,79 +107,25 @@
         <div class="text-h6 q-mb-md">Endereço</div>
         <div class="row q-col-gutter-md q-mb-lg perfil-dados-endereco">
           <div class="col-12 col-sm-4">
-            <q-input
-              v-model="form.cep"
-              label="CEP"
-              outlined
-              dense
-              mask="#####-###"
-              input-id="perfil-input-cep"
-              class="perfil-input-cep"
-              @input="buscarCep(form.cep)"
-            />
+            <q-input v-model="form.cep" label="CEP" outlined dense mask="#####-###" input-id="perfil-input-cep" class="perfil-input-cep" @input="buscarCep(form.cep)" />
           </div>
           <div class="col-12 col-sm-4">
-            <q-input
-              v-model="form.endereco"
-              label="Endereço"
-              outlined
-              dense
-              input-id="perfil-input-endereco"
-              class="perfil-input-endereco"
-            />
+            <q-input v-model="form.endereco" label="Endereço" outlined dense input-id="perfil-input-endereco" class="perfil-input-endereco" />
           </div>
           <div class="col-12 col-sm-4">
-            <q-input
-              v-model="form.numero"
-              label="Número"
-              outlined
-              dense
-              input-id="perfil-input-numero"
-              class="perfil-input-numero"
-            />
+            <q-input v-model="form.numero" label="Número" outlined dense input-id="perfil-input-numero" class="perfil-input-numero" />
           </div>
           <div class="col-12 col-sm-4">
-            <q-input
-              v-model="form.complemento"
-              label="Complemento"
-              outlined
-              dense
-              input-id="perfil-input-complemento"
-              class="perfil-input-complemento"
-            />
+            <q-input v-model="form.complemento" label="Complemento" outlined dense input-id="perfil-input-complemento" class="perfil-input-complemento" />
           </div>
           <div class="col-12 col-sm-4">
-            <q-input
-              v-model="form.bairro"
-              label="Bairro"
-              outlined
-              dense
-              input-id="perfil-input-bairro"
-              class="perfil-input-bairro"
-            />
+            <q-input v-model="form.bairro" label="Bairro" outlined dense input-id="perfil-input-bairro" class="perfil-input-bairro" />
           </div>
           <div class="col-12 col-sm-4">
-            <q-input
-              v-model="form.cidade"
-              label="Cidade"
-              outlined
-              dense
-              input-id="perfil-input-cidade"
-              class="perfil-input-cidade"
-            />
+            <q-input v-model="form.cidade" label="Cidade" outlined dense input-id="perfil-input-cidade" class="perfil-input-cidade" />
           </div>
           <div class="col-12 col-sm-4">
-            <q-select
-              v-model="form.uf"
-              :options="opcoesUF"
-              label="UF"
-              outlined
-              dense
-              emit-value
-              map-options
-              id="perfil-select-uf"
-              class="perfil-select-uf"
-            />
+            <q-select v-model="form.uf" :options="opcoesUF" label="UF" outlined dense emit-value map-options id="perfil-select-uf" class="perfil-select-uf" />
           </div>
         </div>
 
@@ -270,35 +133,13 @@
         <div class="text-h6 q-mb-md">Contato</div>
         <div class="row q-col-gutter-md q-mb-lg perfil-dados-contato">
           <div class="col-12 col-sm-4">
-            <q-input
-              v-model="form.telefone"
-              label="Telefone"
-              outlined
-              dense
-              mask="(##) #####-####"
-              input-id="perfil-input-telefone"
-              class="perfil-input-telefone"
-            />
+            <q-input v-model="form.telefone" label="Telefone" outlined dense mask="(##) #####-####" input-id="perfil-input-telefone" class="perfil-input-telefone" />
           </div>
           <div class="col-12 col-sm-4">
-            <q-input
-              v-model="form.email"
-              label="E-mail"
-              outlined
-              dense
-              input-id="perfil-input-email"
-              class="perfil-input-email"
-            />
+            <q-input v-model="form.email" label="E-mail" outlined dense input-id="perfil-input-email" class="perfil-input-email" />
           </div>
           <div class="col-12 col-sm-4">
-            <q-input
-              v-model="form.site"
-              label="Site"
-              outlined
-              dense
-              input-id="perfil-input-site"
-              class="perfil-input-site"
-            />
+            <q-input v-model="form.site" label="Site" outlined dense input-id="perfil-input-site" class="perfil-input-site" />
           </div>
         </div>
 
@@ -306,24 +147,10 @@
         <div class="text-h6 q-mb-md">Responsável</div>
         <div class="row q-col-gutter-md q-mb-lg perfil-dados-responsavel">
           <div class="col-12 col-sm-4">
-            <q-input
-              v-model="form.responsavel"
-              label="Nome do Responsável"
-              outlined
-              dense
-              input-id="perfil-input-responsavel"
-              class="perfil-input-responsavel"
-            />
+            <q-input v-model="form.responsavel" label="Nome do Responsável" outlined dense input-id="perfil-input-responsavel" class="perfil-input-responsavel" />
           </div>
           <div class="col-12 col-sm-4">
-            <q-input
-              v-model="form.cargo"
-              label="Cargo"
-              outlined
-              dense
-              input-id="perfil-input-cargo"
-              class="perfil-input-cargo"
-            />
+            <q-input v-model="form.cargo" label="Cargo" outlined dense input-id="perfil-input-cargo" class="perfil-input-cargo" />
           </div>
         </div>
 
@@ -355,7 +182,22 @@ import estabelecimentoService, { Estabelecimento } from '../services/estabelecim
 @Component
 export default class PerfilComponent extends Vue {
   salvando = false
+
   fotoPerfil: File | null = null
+
+onFotoSelecionada(file: File) {
+  if (!file) return
+  const reader = new FileReader()
+  reader.onload = (e: any) => {
+    this.form.logo = e.target.result as string
+  }
+  reader.readAsDataURL(file)
+}
+
+removerFoto() {
+  this.form.logo = ''
+  this.fotoPerfil = null
+}
 
   form: Estabelecimento = {
     nome: '',
@@ -378,24 +220,11 @@ export default class PerfilComponent extends Vue {
     cargo: ''
   }
 
-  senha = {
-    atual: '',
-    nova: '',
-    confirmar: ''
-  }
-
-  notificacoes = {
-    vendas: true,
-    estoque: true,
-    nf: false,
-    sistema: true
-  }
-
   opcoesRegime = [
     { label: 'Simples Nacional', value: 'Simples Nacional' },
-    { label: 'Lucro Presumido', value: 'Lucro Presumido' },
-    { label: 'Lucro Real', value: 'Lucro Real' },
-    { label: 'MEI', value: 'MEI' }
+    { label: 'Lucro Presumido',  value: 'Lucro Presumido'  },
+    { label: 'Lucro Real',       value: 'Lucro Real'       },
+    { label: 'MEI',              value: 'MEI'              }
   ]
 
   opcoesUF = [
@@ -428,42 +257,31 @@ export default class PerfilComponent extends Vue {
         return
       }
       this.form.endereco = data.logradouro
-      this.form.bairro = data.bairro
-      this.form.cidade = data.localidade
-      this.form.uf = data.uf
+      this.form.bairro   = data.bairro
+      this.form.cidade   = data.localidade
+      this.form.uf       = data.uf
     } catch {
       this.$q.notify({ type: 'negative', message: 'Erro ao buscar CEP' })
     }
   }
 
-  async salvar() {
-    try {
-      this.salvando = true
-      await estabelecimentoService.atualizar(this.form)
-      this.$q.notify({ type: 'positive', message: 'Dados salvos com sucesso!' })
-    } catch {
-      this.$q.notify({ type: 'negative', message: 'Erro ao salvar dados!' })
-    } finally {
-      this.salvando = false
-    }
+async salvar() {
+  try {
+    this.salvando = true
+    await estabelecimentoService.atualizar(this.form)
+    this.$q.notify({ type: 'positive', message: 'Dados salvos com sucesso!' })
+    window.location.reload()
+  } catch {
+    this.$q.notify({ type: 'negative', message: 'Erro ao salvar dados!' })
+  } finally {
+    this.salvando = false
   }
-
-  alterarSenha() {
-    if (!this.senha.atual || !this.senha.nova || !this.senha.confirmar) {
-      this.$q.notify({ type: 'warning', message: 'Preencha todos os campos de senha!' })
-      return
-    }
-    if (this.senha.nova !== this.senha.confirmar) {
-      this.$q.notify({ type: 'negative', message: 'As senhas não coincidem!' })
-      return
-    }
-    this.$q.notify({ type: 'info', message: 'Funcionalidade em desenvolvimento!' })
-  }
+}
 }
 </script>
 
 <style scoped>
 .border { border: 1px solid #ccc; }
 .b-r-10 { border-radius: 10px; }
-.b-r-8 { border-radius: 8px; }
+.b-r-8  { border-radius: 8px;  }
 </style>

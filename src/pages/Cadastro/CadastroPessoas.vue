@@ -12,7 +12,7 @@
 
     <!-- Filtros -->
     <div class="row q-col-gutter-md q-mb-md pessoas-filtros">
-      <div class="col-12 col-md-3">
+      <div class="col-12 col-md-4">
         <q-select
           v-model="tipoPessoa"
           :options="opcoesTipoPessoa"

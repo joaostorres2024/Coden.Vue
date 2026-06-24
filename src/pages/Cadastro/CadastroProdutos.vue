@@ -79,12 +79,12 @@
           </div>
           <div class="col-12 col-sm-2">
             <q-btn
-              id="produtos-btn-criar-grupo"
-              class="produtos-btn-criar-grupo full-width"
-              label="Criar Grupo"
+              id="produtos-btn-gerenciar-grupos"
+              class="produtos-btn-gerenciar-grupos full-width"
+              label="Gerenciar Grupos"
               color="primary"
               unelevated
-              @click="dialogCriarGrupo = true"
+              @click="dialogGerenciarGrupos = true"
             />
           </div>
           <div class="col-12 col-sm-4">
@@ -104,6 +104,7 @@
               label="Gerar"
               color="primary"
               unelevated
+              @click="gerarEAN13()"
             />
           </div>
         </div>
@@ -441,39 +442,83 @@
       </q-card>
     </q-dialog>
 
-    <!-- Dialog Criar Grupo -->
-    <q-dialog v-model="dialogCriarGrupo" persistent class="produtos-dialog-grupo">
-      <q-card style="min-width: 350px; border-radius: 12px" class="q-pa-sm">
+    <!-- Dialog Gerenciar Grupos -->
+    <q-dialog v-model="dialogGerenciarGrupos" persistent class="produtos-dialog-grupos">
+      <q-card style="min-width: 400px; border-radius: 12px" class="q-pa-sm">
         <q-card-section class="q-pb-none">
-          <div class="text-h6 text-bold">Criar Grupo</div>
+          <div class="text-h6 text-bold">Gerenciar Grupos</div>
         </q-card-section>
         <q-card-section>
-          <q-input
-            v-model="novoGrupo"
-            label="Nome do Grupo"
-            outlined
-            dense
-            autofocus
-            input-id="produtos-input-novo-grupo"
-            class="produtos-input-novo-grupo"
-          />
+          <div class="column q-gutter-md">
+
+            <q-select
+              v-model="grupoSelecionadoDialog"
+              :options="gruposDisponiveis"
+              option-label="nome"
+              option-value="id"
+              emit-value
+              map-options
+              label="Selecione um grupo"
+              outlined
+              dense
+              clearable
+              id="produtos-dialog-grupos-select"
+              class="produtos-dialog-grupos-select"
+            />
+
+            <q-separator />
+
+            <div class="text-caption text-grey-6">Criar novo grupo</div>
+
+            <div class="row q-gutter-sm items-center">
+              <q-input
+                v-model="novoGrupo"
+                label="Nome do novo grupo"
+                outlined
+                dense
+                class="col"
+                input-id="produtos-dialog-grupos-input"
+              />
+              <q-btn
+                id="produtos-dialog-grupos-criar"
+                class="produtos-dialog-grupos-criar"
+                label="Criar"
+                color="primary"
+                unelevated
+                icon="add"
+                @click="salvarGrupo()"
+              />
+            </div>
+
+          </div>
         </q-card-section>
         <q-card-actions align="right" class="q-pa-md q-gutter-sm">
           <q-btn
-            id="produtos-dialog-grupo-cancelar"
-            class="produtos-dialog-grupo-cancelar"
+            id="produtos-dialog-grupos-cancelar"
+            class="produtos-dialog-grupos-cancelar"
             label="Cancelar"
             flat
             v-close-popup
           />
           <q-btn
-            id="produtos-dialog-grupo-confirmar"
-            class="produtos-dialog-grupo-confirmar"
-            label="Criar"
+            id="produtos-dialog-grupos-excluir"
+            class="produtos-dialog-grupos-excluir"
+            label="Excluir"
             unelevated
-            color="primary"
-            style="border-radius: 8px"
-            @click="salvarGrupo()"
+            color="negative"
+            icon="delete"
+            :disable="!grupoSelecionadoDialog"
+            @click="excluirGrupo()"
+          />
+          <q-btn
+            id="produtos-dialog-grupos-selecionar"
+            class="produtos-dialog-grupos-selecionar"
+            label="Selecionar"
+            unelevated
+            color="positive"
+            icon="check"
+            :disable="!grupoSelecionadoDialog"
+            @click="selecionarGrupo()"
           />
         </q-card-actions>
       </q-card>
@@ -493,7 +538,7 @@ import productService, { Product } from '../../services/productService'
 export default class ModuleComponent extends Vue {
   colunasCadastroProdutos = listCadastroProdutos.columns
 
- // ===== data =====
+  // ===== data =====
   codigo_produto = ''
   nome_produto = ''
   codigo_barras = ''
@@ -514,7 +559,13 @@ export default class ModuleComponent extends Vue {
   cadastroProdutoForm = false
   dialogCancelar = false
   dialogExcluir = false
+  dialogGerenciarGrupos = false
   rows: Product[] = []
+
+  // Grupos
+  grupos: any[] = []
+  novoGrupo = ''
+  grupoSelecionadoDialog: number | null = null
 
   ativoInativoOpcoes = [
     { label: 'Ativo', value: 'Ativo' },
@@ -526,18 +577,75 @@ export default class ModuleComponent extends Vue {
     await this.carregarGrupos()
   }
 
- async salvar() {
-    const form = this.$refs.formProduto as any
-  const valido = await form.validate()
-  if (!valido) return
-
-  // Validações dos campos de topo (fora do q-form)
-  if (!this.nome_produto) {
-    this.$q.notify({ type: 'negative', message: 'Nome do produto obrigatório', position: 'bottom' })
-    return
+  get gruposDisponiveis() {
+    return this.grupos.filter(g => g.id !== null)
   }
-    try {
 
+  // ── EAN-13 ───────────────────────────────────────────────
+  gerarEAN13(): void {
+    const digitos: number[] = Array.from({ length: 12 }, () => Math.floor(Math.random() * 10))
+    const soma = digitos.reduce((acc, d, i) => acc + d * (i % 2 === 0 ? 1 : 3), 0)
+    const verificador = (10 - (soma % 10)) % 10
+    this.codigo_barras = [...digitos, verificador].join('')
+  }
+
+  // ── Grupos ───────────────────────────────────────────────
+  async carregarGrupos() {
+    try {
+      const grupos = await productService.listarGrupos()
+      this.grupos = [{ id: null, nome: 'Nenhum' }, ...grupos]
+    } catch {
+      this.$q.notify({ type: 'negative', message: 'Erro ao carregar grupos!' })
+    }
+  }
+
+  async salvarGrupo() {
+    if (!this.novoGrupo) {
+      this.$q.notify({ type: 'warning', message: 'Informe o nome do grupo!' })
+      return
+    }
+    try {
+      const grupo = await productService.criarGrupo(this.novoGrupo)
+      this.grupos.push(grupo)
+      this.grupoSelecionadoDialog = grupo.id
+      this.novoGrupo = ''
+      this.$q.notify({ type: 'positive', message: 'Grupo criado com sucesso!' })
+    } catch {
+      this.$q.notify({ type: 'negative', message: 'Erro ao criar grupo!' })
+    }
+  }
+
+  selecionarGrupo() {
+    this.grupo = this.grupoSelecionadoDialog
+    this.dialogGerenciarGrupos = false
+    this.grupoSelecionadoDialog = null
+  }
+
+  async excluirGrupo() {
+    if (!this.grupoSelecionadoDialog) return
+    try {
+      await productService.excluirGrupo(this.grupoSelecionadoDialog)
+      this.grupos = this.grupos.filter(g => g.id !== this.grupoSelecionadoDialog)
+      if (this.grupo === this.grupoSelecionadoDialog) this.grupo = null
+      this.grupoSelecionadoDialog = null
+      this.$q.notify({ type: 'positive', message: 'Grupo excluído com sucesso!' })
+    } catch {
+      this.$q.notify({ type: 'negative', message: 'Erro ao excluir grupo!' })
+    }
+  }
+
+  // ── Produto ──────────────────────────────────────────────
+  async salvar() {
+    const form = this.$refs.formProduto as any
+    const valido = await form.validate()
+    if (!valido) return
+
+    if (!this.nome_produto) {
+      this.$q.notify({ type: 'negative', message: 'Nome do produto obrigatório', position: 'bottom' })
+      return
+    }
+
+    try {
       const payload: Product = {
         nome_produto: this.nome_produto,
         preco: this.preco_venda ?? 0,
@@ -572,33 +680,13 @@ export default class ModuleComponent extends Vue {
     }
   }
 
-async carregarProdutos() {
+  async carregarProdutos() {
     try {
       this.rows = await productService.getAllProducts()
     } catch (err) {
       this.$q.notify({ type: 'negative', message: 'Erro ao carregar produtos!' })
     }
   }
-
-  dialogCriarGrupo = false
-novoGrupo = ''
-
-async salvarGrupo() {
-  if (!this.novoGrupo) {
-    this.$q.notify({ type: 'warning', message: 'Informe o nome do grupo!' })
-    return
-  }
-  try {
-    const grupo = await productService.criarGrupo(this.novoGrupo)
-    this.grupos.push(grupo)
-    this.grupo = grupo.id
-    this.novoGrupo = ''
-    this.dialogCriarGrupo = false
-    this.$q.notify({ type: 'positive', message: 'Grupo criado com sucesso!' })
-  } catch {
-    this.$q.notify({ type: 'negative', message: 'Erro ao criar grupo!' })
-  }
-}
 
   editar(row: any) {
     this.editandoId = row.id
@@ -617,38 +705,38 @@ async salvarGrupo() {
     this.cadastroProdutoForm = true
   }
 
-confirmarExcluir(row: any) {
-  this.produtoParaExcluir = row
-  this.dialogExcluir = true
-}
-
-async executarExclusao() {
-  try {
-    await productService.updateProduct(this.produtoParaExcluir.id, {
-      ...this.produtoParaExcluir,
-      status: 'Inativo'
-    })
-    this.$q.notify({ type: 'positive', message: 'Produto inativado com sucesso!' })
-    this.dialogExcluir = false
-    this.produtoParaExcluir = null
-    await this.carregarProdutos()
-  } catch {
-    this.$q.notify({ type: 'negative', message: 'Erro ao inativar produto!' })
+  confirmarExcluir(row: any) {
+    this.produtoParaExcluir = row
+    this.dialogExcluir = true
   }
-}
 
-async reativarProduto(row: any) {
-  try {
-    await productService.updateProduct(row.id, {
-      ...row,
-      status: 'Ativo'
-    })
-    this.$q.notify({ type: 'positive', message: 'Produto reativado com sucesso!' })
-    await this.carregarProdutos()
-  } catch {
-    this.$q.notify({ type: 'negative', message: 'Erro ao reativar produto!' })
+  async executarExclusao() {
+    try {
+      await productService.updateProduct(this.produtoParaExcluir.id, {
+        ...this.produtoParaExcluir,
+        status: 'Inativo'
+      })
+      this.$q.notify({ type: 'positive', message: 'Produto inativado com sucesso!' })
+      this.dialogExcluir = false
+      this.produtoParaExcluir = null
+      await this.carregarProdutos()
+    } catch {
+      this.$q.notify({ type: 'negative', message: 'Erro ao inativar produto!' })
+    }
   }
-}
+
+  async reativarProduto(row: any) {
+    try {
+      await productService.updateProduct(row.id, {
+        ...row,
+        status: 'Ativo'
+      })
+      this.$q.notify({ type: 'positive', message: 'Produto reativado com sucesso!' })
+      await this.carregarProdutos()
+    } catch {
+      this.$q.notify({ type: 'negative', message: 'Erro ao reativar produto!' })
+    }
+  }
 
   get rowsFiltradas() {
     return this.rows.filter((p: Product) => {
@@ -658,31 +746,20 @@ async reativarProduto(row: any) {
     })
   }
 
-get margem_calculada(): string {
+  get margem_calculada(): string {
     if (!this.preco_custo || !this.preco_venda) return '0.00%'
     const margem = ((this.preco_venda - this.preco_custo) / this.preco_custo) * 100
     return margem.toFixed(2) + '%'
   }
 
- formatarReais(valor: string | number): string {
+  formatarReais(valor: string | number): string {
     const numero = typeof valor === 'string' ? parseFloat(valor) : valor
     return numero.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
   }
 
-  grupos: any[] = []
-
-async carregarGrupos() {
-  try {
-    const grupos = await productService.listarGrupos()
-    this.grupos = [{ id: null, nome: 'Nenhum' }, ...grupos]
-  } catch {
-    this.$q.notify({ type: 'negative', message: 'Erro ao carregar grupos!' })
+  abrirDialogCancelar() {
+    this.dialogCancelar = true
   }
-}
-
-abrirDialogCancelar() {
-  this.dialogCancelar = true
-}
 
   limparCampos() {
     this.editandoId = null
@@ -700,35 +777,39 @@ abrirDialogCancelar() {
     this.ativoInativo = 'Ativo'
   }
 
-confirmarCancelamento() {
-  this.dialogCancelar = false
-  this.cadastroProdutoForm = false
-  this.limparCampos()
-}
-
-mostrarFormulario() {
-  this.cadastroProdutoForm = true
-}
-
-dialogDeletar = false
-produtoParaDeletar: any = null
-
-confirmarDeletar(row: any) {
-  this.produtoParaDeletar = row
-  this.dialogDeletar = true
-}
-
-async executarDeletar() {
-  try {
-    await productService.deletarProduto(this.produtoParaDeletar.id)
-    this.$q.notify({ type: 'positive', message: 'Produto excluído com sucesso!' })
-    this.dialogDeletar = false
-    this.produtoParaDeletar = null
-    await this.carregarProdutos()
-  } catch (err: any) {
-    this.$q.notify({ type: 'negative', message: err.response?.data?.erro || 'Erro ao excluir produto!' })
+  confirmarCancelamento() {
+    this.dialogCancelar = false
+    this.cadastroProdutoForm = false
+    this.limparCampos()
   }
-}
+
+  mostrarFormulario() {
+    this.cadastroProdutoForm = true
+  }
+
+  refreshTable() {
+    this.limparCampos()
+  }
+
+  dialogDeletar = false
+  produtoParaDeletar: any = null
+
+  confirmarDeletar(row: any) {
+    this.produtoParaDeletar = row
+    this.dialogDeletar = true
+  }
+
+  async executarDeletar() {
+    try {
+      await productService.deletarProduto(this.produtoParaDeletar.id)
+      this.$q.notify({ type: 'positive', message: 'Produto excluído com sucesso!' })
+      this.dialogDeletar = false
+      this.produtoParaDeletar = null
+      await this.carregarProdutos()
+    } catch (err: any) {
+      this.$q.notify({ type: 'negative', message: err.response?.data?.erro || 'Erro ao excluir produto!' })
+    }
+  }
 }
 </script>
 

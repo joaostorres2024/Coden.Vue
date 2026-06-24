@@ -1,4 +1,5 @@
 import api from './api';
+
 export interface Product {
   id?: number
   nome_produto: string
@@ -54,53 +55,56 @@ const productService = {
     return api.post('/api/grupos', { nome }).then(r => r.data)
   },
 
+  async excluirGrupo(id: number): Promise<void> {
+    return api.delete(`/api/grupos/${id}`).then(() => undefined)
+  },
+
   async relatorioEstoque(filtros: {
-  codigo?: string
-  nome_produto?: string
-  grupo_id?: number | null
-  status?: string
-  fornecedor?: string
-}): Promise<any[]> {
-  const params = new URLSearchParams()
-  if (filtros.codigo) params.append('codigo', filtros.codigo)
-  if (filtros.nome_produto) params.append('nome_produto', filtros.nome_produto)
-  if (filtros.grupo_id) params.append('grupo_id', String(filtros.grupo_id))
-  if (filtros.status) params.append('status', filtros.status)
-  if (filtros.fornecedor) params.append('fornecedor', filtros.fornecedor)
+    codigo?: string
+    nome_produto?: string
+    grupo_id?: number | null
+    status?: string
+    fornecedor?: string
+  }): Promise<any[]> {
+    const params = new URLSearchParams()
+    if (filtros.codigo) params.append('codigo', filtros.codigo)
+    if (filtros.nome_produto) params.append('nome_produto', filtros.nome_produto)
+    if (filtros.grupo_id) params.append('grupo_id', String(filtros.grupo_id))
+    if (filtros.status) params.append('status', filtros.status)
+    if (filtros.fornecedor) params.append('fornecedor', filtros.fornecedor)
+    return api.get(`/api/products/relatorio/estoque?${params.toString()}`).then(r => r.data)
+  },
 
-  return api.get(`/api/products/relatorio/estoque?${params.toString()}`).then(r => r.data)
-},
+  async relatorioEstoquePDF(filtros: {
+    codigo?: string
+    nome_produto?: string
+    grupo_id?: number | null
+    status?: string
+    fornecedor?: string
+  }): Promise<void> {
+    const params = new URLSearchParams()
+    if (filtros.codigo) params.append('codigo', filtros.codigo)
+    if (filtros.nome_produto) params.append('nome_produto', filtros.nome_produto)
+    if (filtros.grupo_id) params.append('grupo_id', String(filtros.grupo_id))
+    if (filtros.status) params.append('status', filtros.status)
+    if (filtros.fornecedor) params.append('fornecedor', filtros.fornecedor)
 
-async relatorioEstoquePDF(filtros: {
-  codigo?: string
-  nome_produto?: string
-  grupo_id?: number | null
-  status?: string
-  fornecedor?: string
-}): Promise<void> {
-  const params = new URLSearchParams()
-  if (filtros.codigo) params.append('codigo', filtros.codigo)
-  if (filtros.nome_produto) params.append('nome_produto', filtros.nome_produto)
-  if (filtros.grupo_id) params.append('grupo_id', String(filtros.grupo_id))
-  if (filtros.status) params.append('status', filtros.status)
-  if (filtros.fornecedor) params.append('fornecedor', filtros.fornecedor)
+    const response = await api.get(`/api/products/relatorio/estoque/pdf?${params.toString()}`, {
+      responseType: 'blob'
+    })
+    const url = window.URL.createObjectURL(new Blob([response.data]))
+    const link = document.createElement('a')
+    link.href = url
+    link.setAttribute('download', `relatorio_estoque_${new Date().toLocaleDateString('pt-BR').replace(/\//g, '-')}.pdf`)
+    document.body.appendChild(link)
+    link.click()
+    link.remove()
+    window.URL.revokeObjectURL(url)
+  },
 
-  const response = await api.get(`/api/products/relatorio/estoque/pdf?${params.toString()}`, {
-    responseType: 'blob'
-  })
-  const url = window.URL.createObjectURL(new Blob([response.data]))
-  const link = document.createElement('a')
-  link.href = url
-  link.setAttribute('download', `relatorio_estoque_${new Date().toLocaleDateString('pt-BR').replace(/\//g, '-')}.pdf`)
-  document.body.appendChild(link)
-  link.click()
-  link.remove()
-  window.URL.revokeObjectURL(url)
-},
-
-async deletarProduto(id: number): Promise<void> {
-  return api.delete(`/api/products/${id}`).then(() => undefined)
-}
+  async deletarProduto(id: number): Promise<void> {
+    return api.delete(`/api/products/${id}`).then(() => undefined)
+  }
 }
 
 export default productService
