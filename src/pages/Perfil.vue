@@ -62,6 +62,7 @@
             <q-icon name="support_agent" class="q-mr-xs" />Suporte
           </div>
           <div class="text-caption text-grey-6 q-mb-md">Precisa de ajuda? Acesse nosso helpdesk.</div>
+          <a style="text-decoration: none; color: black;" href="https://orus-vue.onrender.com" target="_blank">
           <q-btn
             id="perfil-btn-helpdesk"
             class="full-width perfil-btn-helpdesk"
@@ -69,10 +70,9 @@
             color="primary"
             outline
             icon="open_in_new"
-            disable
           >
-            <q-tooltip>Em breve</q-tooltip>
           </q-btn>
+          </a>
         </q-card>
 
       </div>
