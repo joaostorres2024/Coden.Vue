@@ -12,12 +12,6 @@
 
     <!-- TELA 1: LISTA DE MARKETPLACES -->
     <div v-if="tela === 'inicio'" class="integ-tela-inicio">
-      <div class="row q-pb-md items-center integ-tutorial">
-        Caso não saiba como fazer uma integração, clique aqui para ver o tutorial:
-        <span>
-          <q-icon class="cursor-pointer" color="orange" name="o_info" size="18px" style="margin-bottom: 1.5px; margin-left: 5px" />
-        </span>
-      </div>
       <div class="row items-center justify-between q-gutter-sm integ-busca">
         <q-input
           class="col-3"
@@ -111,7 +105,7 @@
           @click="conectarML()"
         />
       </div>
-      <div class="q-py-md q-pl-xs" style="font-size: 12px">
+      <div class="q-py-md q-pl-xs" style="font-size: 15px">
         <p>
           Ao clicar no botão, você será redirecionado para a página do
           {{ marketplaceSelecionado.nome }} para realizar a autenticação e conectar sua conta com segurança.
@@ -123,7 +117,7 @@
           class="integ-btn-cancelar-conectar"
           label="Cancelar"
           color="negative"
-          flat
+          unelevated
           @click="abrirDialogCancelar()"
         />
       </div>
