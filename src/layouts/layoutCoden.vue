@@ -256,29 +256,19 @@
             <q-item-section avatar><q-icon :name="$q.dark.isActive ? 'light_mode' : 'dark_mode'" color="grey-7" size="20px" /></q-item-section>
             <q-item-section><span style="font-size: 13px">{{ $q.dark.isActive ? 'Modo Claro' : 'Modo Escuro' }}</span></q-item-section>
           </q-item>
-          <q-item
-            id="layout-perfil-ir-config"
-            clickable
-            v-ripple
-            class="b-r-8 layout-perfil-ir-config"
-            @click="$router.push('/Configuracoes'); drawerPerfil = false"
-          >
-            <q-item-section avatar><q-icon name="settings" color="grey-7" size="20px" /></q-item-section>
-            <q-item-section><span style="font-size: 13px">Configurações</span></q-item-section>
-          </q-item>
+          <a style="text-decoration: none; color: black;" href="https://orus-vue.onrender.com" target="_blank">
           <q-item
             id="layout-perfil-helpdesk"
             clickable
             v-ripple
             class="b-r-8 layout-perfil-helpdesk"
-            disable
           >
-            <q-item-section avatar><q-icon name="support_agent" color="grey-4" size="20px" /></q-item-section>
+            <q-item-section avatar><q-icon name="support_agent" color="grey-7" size="20px" /></q-item-section>
             <q-item-section>
-              <span style="font-size: 13px" class="text-grey-5">Helpdesk</span>
-              <span class="text-caption text-grey-4">Em breve</span>
+              <span style="font-size: 13px">Helpdesk</span>
             </q-item-section>
           </q-item>
+          </a>
         </q-list>
         <q-space />
         <q-separator />

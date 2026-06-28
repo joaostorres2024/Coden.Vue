@@ -192,6 +192,7 @@
         <!-- ABA: DASHBOARD -->
         <q-tab-panel name="dashboard" class="q-pa-none">
 
+          <div class="text-grey-6 q-mb-md">Exibindo os últimos 90 dias por padrão. Use os filtros abaixo para personalizar o período.</div>
           <!-- Filtro de datas -->
           <div class="row items-center q-gutter-sm q-mb-lg">
               <q-input
@@ -211,6 +212,14 @@
                 style="max-width:180px"
               />
             <q-btn label="Filtrar" unelevated color="primary" icon="filter_list" @click="aplicarFiltroDashboard" />
+              <q-btn
+                id="filtro-btn-limpar"
+                class="filtro-btn-limpar text-grey-7"
+                label="Limpar"
+                icon="delete_sweep"
+                flat
+                @click="refreshTable()"
+              />
           </div>
 
           <!-- Cards de métricas melhorados -->
@@ -219,18 +228,18 @@
             <div class="col-6 col-md">
               <q-card flat bordered style="border-radius:12px" class="q-pa-md">
                 <div class="row items-center justify-between q-mb-sm">
-                  <div class="text-caption text-grey-6">Produtos sincronizados</div>
+                  <div class="text-caption text-grey-6" style="font-size: 14px;">Produtos sincronizados</div>
                   <q-avatar size="32px" color="blue-1" text-color="primary" icon="inventory_2" font-size="16px" />
                 </div>
                 <div class="text-h5 text-bold">{{ totalProdutos }}</div>
-                <div class="text-caption text-grey-5">no Mercado Livre</div>
+                <div class="text-caption text-grey-5" style="font-size: 12px;">no {{ marketplaceSelecionado?.nome }}</div>
               </q-card>
             </div>
 
             <div class="col-6 col-md">
               <q-card flat bordered style="border-radius:12px" class="q-pa-md">
                 <div class="row items-center justify-between q-mb-sm">
-                  <div class="text-caption text-grey-6">Total de pedidos</div>
+                  <div class="text-caption text-grey-6" style="font-size: 14px;">Total de pedidos</div>
                   <q-avatar size="32px" color="purple-1" text-color="purple" icon="shopping_bag" font-size="16px" />
                 </div>
                 <div class="text-h5 text-bold">{{ totalPedidosDoPeriodo }}</div>
@@ -241,7 +250,7 @@
             <div class="col-6 col-md">
               <q-card flat bordered style="border-radius:12px" class="q-pa-md">
                 <div class="row items-center justify-between q-mb-sm">
-                  <div class="text-caption text-grey-6">Concluídos</div>
+                  <div class="text-caption text-grey-6" style="font-size: 14px;">Concluídos</div>
                   <q-avatar size="32px" color="green-1" text-color="positive" icon="check_circle" font-size="16px" />
                 </div>
                 <div class="text-h5 text-bold">{{ pedidosConcluidosDoPeriodo }}</div>
@@ -252,7 +261,7 @@
             <div class="col-6 col-md">
               <q-card flat bordered style="border-radius:12px" class="q-pa-md">
                 <div class="row items-center justify-between q-mb-sm">
-                  <div class="text-caption text-grey-6">Cancelados</div>
+                  <div class="text-caption text-grey-6" style="font-size: 14px;">Cancelados</div>
                   <q-avatar size="32px" color="red-1" text-color="negative" icon="cancel" font-size="16px" />
                 </div>
                 <div class="text-h5 text-bold">{{ pedidosCanceladosDoPeriodo }}</div>
@@ -263,7 +272,7 @@
             <div class="col-12 col-md-3">
               <q-card flat bordered style="border-radius:12px" class="q-pa-md">
                 <div class="row items-center justify-between q-mb-sm">
-                  <div class="text-caption" style="color:#0F6E56">Receita total</div>
+                  <div class="text-caption" style="color:#0F6E56; font-size: 14px;">Receita total</div>
                   <q-avatar size="32px" color="teal-1" text-color="teal" icon="attach_money" font-size="16px" />
                 </div>
                 <div class="text-h5 text-bold" style="color:#0F6E56">{{ receitaTotalDoPeriodo }}</div>
@@ -352,12 +361,22 @@
         <!-- ABA: PEDIDOS -->
         <q-tab-panel name="pedidos" class="q-pa-none">
           <div class="row items-center justify-between q-mb-md q-gutter-sm flex-wrap">
-            <q-input v-model="buscaPedido" label="Pesquisar pedido..." outlined dense style="min-width:240px">
-              <template v-slot:prepend><q-icon name="search" /></template>
-            </q-input>
-            <q-input v-model="inicioPedidoStr" label="Data início" type="date" outlined dense style="min-width:150px" />
-            <q-input v-model="fimPedidoStr" label="Data fim" outlined dense type="date" style="min-width:150px" />
-            <div class="row q-gutter-sm items-center">
+            <div class="row q-gutter-sm q-ma-none">
+              <q-input v-model="buscaPedido" label="Pesquisar pedido..." outlined dense style="min-width:240px">
+                <template v-slot:prepend><q-icon name="search" /></template>
+              </q-input>
+              <q-input v-model="inicioPedidoStr" label="Data início" type="date" outlined dense style="min-width:150px" />
+              <q-input v-model="fimPedidoStr" label="Data fim" outlined dense type="date" style="min-width:150px" />
+                <q-btn
+                  id="pedidos-btn-limpar"
+                  class="pedidos-btn-limpar text-grey-7"
+                  label="Limpar"
+                  icon="delete_sweep"
+                  flat
+                  @click="limparPedidos()"
+                />
+            </div>
+            <div class="row q-gutter-sm items-center q-ma-none">
               <q-select v-model="filtroPedido" :options="[{label:'Todos',value:'todos'},{label:'Pago',value:'paid'},{label:'Pendente',value:'pending'},{label:'Cancelado',value:'cancelled'}]" option-label="label" option-value="value" emit-value map-options outlined dense style="min-width:160px" />
               <q-btn label="Sincronizar" unelevated color="primary" icon="sync" @click="carregarPedidos()" />
             </div>
@@ -534,8 +553,11 @@ export default class ModuleComponent extends Vue {
 
   inicioPeriodo = moment().subtract(90, 'days')
   fimPeriodo = moment()
-  inicioPeriodoStr = moment().subtract(90, 'days').format('DD/MM/YYYY')
-  fimPeriodoStr = moment().format('DD/MM/YYYY')
+  inicioPeriodoStr = moment().subtract(90, 'days').format('YYYY-MM-DD')
+  fimPeriodoStr = moment().format('YYYY-MM-DD')
+
+  inicioPedidoStr = moment().subtract(30, 'days').format('YYYY-MM-DD')
+  fimPedidoStr = ''
 
   marketplaceSelecionado: any = null
   statusML: StatusML | null = null
@@ -551,8 +573,6 @@ export default class ModuleComponent extends Vue {
 
   buscaPedido = ''
   filtroPedido = 'todos'
-  inicioPedidoStr = moment().subtract(30, 'days')
-  fimPedidoStr = ''
   carregandoPedidos = false
   pedidos: PedidoML[] = []
   totalPedidos = 0
@@ -613,21 +633,35 @@ export default class ModuleComponent extends Vue {
   }
 
   get pedidosFiltrados() {
-    const inicio = this.inicioPedidoStr ? moment(this.inicioPedidoStr, 'DD/MM/YYYY') : null
-    const fim = this.fimPedidoStr ? moment(this.fimPedidoStr, 'DD/MM/YYYY') : null
     return this.pedidos.filter((p: any) => {
       const matchBusca = !this.buscaPedido ||
         String(p.id).toLowerCase().includes(this.buscaPedido.toLowerCase()) ||
         ((p.buyer?.nickname ?? '').toLowerCase().includes(this.buscaPedido.toLowerCase()))
       const matchFiltro = this.filtroPedido === 'todos' || p.status === this.filtroPedido
       let matchData = true
-      if (inicio?.isValid() || fim?.isValid()) {
+      if (this.inicioPedidoStr || this.fimPedidoStr) {
         const data = moment(p.date_created)
-        if (inicio?.isValid()) matchData = matchData && data.isSameOrAfter(inicio, 'day')
-        if (fim?.isValid()) matchData = matchData && data.isSameOrBefore(fim, 'day')
+        if (this.inicioPedidoStr) matchData = matchData && data.isSameOrAfter(moment(this.inicioPedidoStr), 'day')
+        if (this.fimPedidoStr)    matchData = matchData && data.isSameOrBefore(moment(this.fimPedidoStr), 'day')
       }
       return matchBusca && matchFiltro && matchData
     })
+  }
+
+  refreshTable() {
+    this.limparCampos()
+  }
+
+  limparCampos() {
+    this.inicioPeriodo = moment().subtract(90, 'days')
+    this.fimPeriodo = moment()
+    this.inicioPeriodoStr = ''
+    this.fimPeriodoStr = ''
+  }
+
+  limparPedidos() {
+    this.inicioPedidoStr = ''
+    this.fimPedidoStr = ''
   }
 
   get notasFiscaisFiltradas() {
@@ -665,8 +699,8 @@ export default class ModuleComponent extends Vue {
   }
 
   aplicarFiltroDashboard() {
-    const inicio = moment(this.inicioPeriodoStr, 'DD/MM/YYYY')
-    const fim = moment(this.fimPeriodoStr, 'DD/MM/YYYY')
+    const inicio = moment(this.inicioPeriodoStr, 'YYYY-MM-DD')
+    const fim = moment(this.fimPeriodoStr, 'YYYY-MM-DD')
     if (inicio.isValid()) this.inicioPeriodo = inicio
     if (fim.isValid()) this.fimPeriodo = fim
   }
@@ -703,39 +737,75 @@ export default class ModuleComponent extends Vue {
     this.tela = 'conectar'
   }
 
-  async conectarML() {
-    try {
-      this.carregando = true
-      const url = await mlService.getLoginUrl()
-      this.$q.dialog({
-        title: 'Conectar Mercado Livre',
-        message: 'Uma janela de autenticação será aberta. Caso queira conectar uma conta diferente, certifique-se de estar deslogado do Mercado Livre antes de continuar.',
-        ok: { label: 'Continuar', color: 'primary', unelevated: true },
-        cancel: { label: 'Cancelar', flat: true }
-      }).onOk(() => {
-        const largura = 600, altura = 700
-        const left = window.screenX + (window.outerWidth - largura) / 2
-        const top = window.screenY + (window.outerHeight - altura) / 2
-        const popup = window.open(url, 'ml_auth', `width=${largura},height=${altura},left=${left},top=${top},toolbar=no,menubar=no,scrollbars=yes`)
-        const intervalo = setInterval(async () => {
-          if (popup?.closed) {
-            clearInterval(intervalo)
-            await new Promise(resolve => setTimeout(resolve, 2000))
-            await this.verificarConexaoML()
-            if (this.statusML?.conectado) {
-              this.irParaDashboard(this.marketplaceSelecionado)
-            } else {
-              this.$q.notify({ message: 'Conexão não detectada, tente novamente', color: 'warning' })
-            }
-          }
-        }, 1000)
+async conectarML() {
+  try {
+    this.carregando = true
+    const url = await mlService.getLoginUrl()
+    this.$q.dialog({
+      title: 'Conectar Mercado Livre',
+      message: 'Uma janela de autenticação será aberta. Caso queira conectar uma conta diferente, certifique-se de estar deslogado do Mercado Livre antes de continuar.',
+      ok: { label: 'Continuar', color: 'primary', unelevated: true },
+      cancel: { label: 'Cancelar', flat: true }
+    }).onOk(() => {
+      const largura = 600, altura = 700
+      const left = window.screenX + (window.outerWidth - largura) / 2
+      const top = window.screenY + (window.outerHeight - altura) / 2
+      const popup = window.open(url, 'ml_auth', `width=${largura},height=${altura},left=${left},top=${top},toolbar=no,menubar=no,scrollbars=yes`)
+
+      // Loading enquanto aguarda o popup fechar
+      const loadingDialog = this.$q.dialog({
+        title: 'Aguardando autenticação...',
+        message: 'Conclua o login no Mercado Livre para continuar.',
+        progress: true,
+        persistent: true,
+        ok: false,
+        cancel: false
       })
-    } catch {
-      this.$q.notify({ message: 'Erro ao conectar com o Mercado Livre', color: 'negative' })
-    } finally {
-      this.carregando = false
-    }
+
+      const intervalo = setInterval(async () => {
+        if (popup?.closed) {
+          clearInterval(intervalo)
+          loadingDialog.hide()
+
+          // Loading de verificação
+          const verificandoDialog = this.$q.dialog({
+            title: 'Verificando conexão...',
+            message: 'Estamos confirmando sua autenticação.',
+            progress: true,
+            persistent: true,
+            ok: false,
+            cancel: false
+          })
+
+          await new Promise(resolve => setTimeout(resolve, 2000))
+          await this.verificarConexaoML()
+          verificandoDialog.hide()
+
+          if (this.statusML?.conectado) {
+            this.$q.notify({
+              type: 'positive',
+              message: 'Mercado Livre conectado com sucesso!',
+              icon: 'check_circle',
+              timeout: 3000
+            })
+            this.irParaDashboard(this.marketplaceSelecionado)
+          } else {
+            this.$q.notify({
+              type: 'warning',
+              message: 'Conexão não detectada. Tente novamente.',
+              icon: 'warning',
+              timeout: 4000
+            })
+          }
+        }
+      }, 1000)
+    })
+  } catch {
+    this.$q.notify({ message: 'Erro ao conectar com o Mercado Livre', color: 'negative' })
+  } finally {
+    this.carregando = false
   }
+}
 
   async irParaDashboard(marketplace: any) {
     this.marketplaceSelecionado = marketplace
