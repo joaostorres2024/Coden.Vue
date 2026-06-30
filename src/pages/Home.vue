@@ -60,9 +60,9 @@
       <div class="col-6 col-sm-3 dashboard-metrica-item" v-for="metrica in metricas" :key="metrica.label">
         <q-card flat bordered class="b-r-10 q-pa-md dashboard-metrica-card" style="position: relative;">
           <q-inner-loading :showing="carregando" size="24px" />
-          <div class="row items-center justify-between q-mb-xs">
+          <div class="row items-center justify-between q-mb-xs rounded">
             <div class="text-caption text-grey-6 text-weight-medium dashboard-metrica-label">{{ metrica.label }}</div>
-            <q-icon :name="metrica.icon" size="20px" color="primary" />
+            <q-avatar :icon="metrica.icon" size="32px" font-size="20px" :color="metrica.cor" :text-color="metrica.text" />
           </div>
           <div class="text-h5 text-bold text-black dashboard-metrica-valor">{{ metrica.valor || '—' }}</div>
           <div class="row items-center justify-between q-mt-xs">
@@ -120,10 +120,9 @@
                 :columns="colunasClientes"
                 row-key="nome_cliente"
                 flat
-                dense
                 :loading="carregandoClientes"
                 no-data-label="Nenhuma venda encontrada"
-                class="q-px-sm dashboard-tabela-clientes"
+                class="dashboard-tabela-clientes"
                 style="max-height: 320px;"
                 virtual-scroll
               >
@@ -165,7 +164,7 @@
 
     <!-- Relatório de Estoque -->
     <div class="row items-center justify-between q-mb-md dashboard-estoque-cabecalho">
-      <div class="text-subtitle1 text-bold dashboard-estoque-titulo">Relatório de estoque</div>
+      <div class="text-subtitle1 text-bold dashboard-estoque-titulo">Resumo de estoque</div>
     </div>
 
     <!-- Filtros de estoque -->
@@ -215,20 +214,18 @@
           icon="search"
           color="primary"
           unelevated
-          dense
           @click="carregarEstoque()"
         />
       </div>
     </div>
 
-    <q-card flat bordered class="b-r-10 q-mb-xl dashboard-estoque-card" style="position: relative;">
+    <q-card flat bordered class="q-mb-xl dashboard-estoque-card" style="position: relative;">
       <q-inner-loading :showing="carregandoEstoque" size="28px" />
       <q-table
         :data="estoque"
         :columns="colunasEstoque"
         row-key="id"
         flat
-        dense
         :loading="carregandoEstoque"
         no-data-label="Nenhum produto encontrado"
         :rows-per-page-options="[10, 20, 50]"
@@ -258,7 +255,7 @@
         </template>
 
         <template v-slot:body-cell-preco="props">
-          <q-td :props="props" class="text-bold">
+          <q-td :props="props" class="text-bold text-positive">
             {{ formatarReais(props.value) }}
           </q-td>
         </template>
@@ -296,10 +293,10 @@ export default class ModuleComponent extends Vue {
 
   // ── Métricas ─────────────────────────────────────────────
   metricas = [
-    { label: 'Total de Vendas',   icon: 'attach_money',  valor: '', variacao: '', falta: '' },
-    { label: 'Total de Pedidos',  icon: 'shopping_cart', valor: '', variacao: '', falta: '' },
-    { label: 'Produtos Vendidos', icon: 'inventory_2',   valor: '', variacao: '', falta: '' },
-    { label: 'Ticket Médio',      icon: 'trending_up',   valor: '', variacao: '', falta: '' }
+    { label: 'Total de Vendas',   icon: 'attach_money', cor: 'green-1', text: 'positive',  valor: '', variacao: '', falta: '' },
+    { label: 'Total de Pedidos',  icon: 'shopping_cart', cor: 'purple-1', text: 'purple', variacao: '', falta: '' },
+    { label: 'Produtos Vendidos', icon: 'inventory_2', cor: 'blue-1', text: 'primary', variacao: '', falta: '' },
+    { label: 'Ticket Médio',      icon: 'trending_up', cor: 'teal-1', text: 'teal', valor: '', variacao: '', falta: '' }
   ]
 
   // ── Situação dos pedidos ──────────────────────────────────
@@ -327,8 +324,8 @@ export default class ModuleComponent extends Vue {
 
   colunasClientes = [
     { name: 'nome_cliente', label: 'Cliente', field: 'nome_cliente', align: 'left' as const,   sortable: true },
-    { name: 'total',        label: 'Valor',   field: 'total',        align: 'left' as const,  sortable: true },
-    { name: 'data',         label: 'Data',    field: 'data',         align: 'left' as const, sortable: true }
+    { name: 'data',         label: 'Data',    field: 'data',         align: 'left' as const, sortable: true },
+    { name: 'total',        label: 'Valor',   field: 'total',        align: 'right' as const,  sortable: true }
   ]
 
   // ── Estoque ───────────────────────────────────────────────
