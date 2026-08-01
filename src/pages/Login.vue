@@ -1,22 +1,17 @@
 <template>
-  <div class="row col-12">
-    <div
-      class="column col-6 justify-center items-center imagem-tela2"
-      style="height: 100vh"
-    >
-      <img style="width: 300px" src="../assets/Logo Coden Branca.png" />
+  <div class="column items-center col-12">
+    <div class="background">
+      <img class="img-logo" src="../assets/Logo Coden Branca.png" alt="" />
     </div>
 
-    <div
-      class="column col-6 justify-center items-center imagem-tela b-r-20"
-      style="height: 100vh"
-    >
-      <div
-        class="column q-pa-lg items-left justify-center"
-        style="width: 100%; max-width: 420px"
+    <div>
+      <q-card
+        class="column justify-center q-pa-lg card"
+        style="width: 400px; height: 330px"
       >
-        <div class="text-h5 text-bold login-titulo">Bem-vindo ao sistema Coden!</div>
-
+        <div class="text-h6 text-bold login-titulo">
+          Bem-vindo ao sistema Coden!
+        </div>
         <div class="login-subtitulo">Faça login para continuar.</div>
 
         <form id="login-form" @submit.prevent="realizarLogin">
@@ -49,73 +44,89 @@
           </q-input>
 
           <q-btn
+            unelevated
             class="full-width q-mt-md bg-primary text-white text-bold login-btn-entrar"
             label="Entrar"
             type="submit"
             :loading="loading"
             id="login-btn-entrar"
           />
-          <a style="text-decoration: none; color: black;" href="https://orus-vue.onrender.com" target="_blank">
-          <q-btn
-            unelevated
-            class="full-width q-mt-md bg-transparent text-black login-btn-esqueci-senha"
-            label="Esqueci minha senha"
-            id="login-btn-esqueci-senha"
-          />
+          <a
+            style="text-decoration: none; color: black"
+            href="https://orus-vue.onrender.com"
+            target="_blank"
+          >
+            <q-btn
+              unelevated
+              class="full-width q-mt-md bg-transparent text-black login-btn-esqueci-senha"
+              label="Esqueci minha senha"
+              id="login-btn-esqueci-senha"
+            />
           </a>
         </form>
-      </div>
+      </q-card>
     </div>
+    <div class="q-mt-lg">@2026 Coden</div>
   </div>
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
-import { authService } from '../services/authService'
+import Vue from "vue";
+import Component from "vue-class-component";
+import { authService } from "../services/authService";
 
 @Component
 export default class LoginComponent extends Vue {
-  usuario = ''
-  email = ''
-  senha = ''
-  erro = ''
-  loading = false
-  verSenha = false
+  usuario = "";
+  email = "";
+  senha = "";
+  erro = "";
+  loading = false;
+  verSenha = false;
 
   async realizarLogin() {
-    this.erro = ''
-    this.loading = true
+    this.erro = "";
+    this.loading = true;
 
     try {
-      await authService.login({ email: this.email, senha: this.senha })
-      this.$router.push('/')
-      this.$q.notify({ color: 'positive', message: 'Bem-vindo ' + this.email, icon: 'check' })
+      await authService.login({ email: this.email, senha: this.senha });
+      this.$router.push("/");
+      this.$q.notify({
+        color: "positive",
+        message: "Bem-vindo " + this.email,
+        icon: "check",
+      });
     } catch (err: any) {
       this.$q.notify({
-        color: 'negative',
-        message: err.response?.data || 'Erro ao realizar login',
-        icon: 'error'
-      })
+        color: "negative",
+        message: err.response?.data || "Erro ao realizar login",
+        icon: "error",
+      });
     } finally {
-      this.loading = false
+      this.loading = false;
     }
   }
 }
 </script>
 
 <style scoped>
-.imagem-tela2 {
-  background: url(../assets/Tela 2.jpg);
-  background-position: center;
-  background-size: cover;
+.background {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 45vh;
+  background: linear-gradient(to right, #3998f7 0%, #1976d2 100%);
 }
 
-.b-r-20 {
-  border-radius: 0 0 0 20px;
+.img-logo {
+  width: 220px;
 }
 
-.verde {
-  background-color: #11b69a;
+.card {
+  border-radius: 10px;
+  position: relative;
+  bottom: 120px;
+  z-index: 1000;
 }
 </style>
