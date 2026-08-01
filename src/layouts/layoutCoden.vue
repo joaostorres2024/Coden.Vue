@@ -29,7 +29,14 @@
           <span class="text-bold text-black"> Olá, </span>
           <span class="text-bold text-primary layout-usuario-nome">{{ user }}</span>
         </q-toolbar-title>
-        <q-space />
+        <div class="q-mx-sm">
+          <q-btn
+            icon="o_notifications"
+            class="text-black"
+            unelevated
+            onclick="alert('Função em Desenvolvimento')"
+          />
+        </div>
         <div
           class="row items-center q-gutter-sm cursor-pointer q-mr-sm layout-perfil-trigger"
           id="layout-perfil-trigger"
@@ -200,6 +207,34 @@
                 <q-icon name="webhook" size="20px" color="white" />
               </q-item-section>
               <q-item-section class="menu-label">Integrações</q-item-section>
+            </q-item>
+
+            <q-item
+              id="layout-menu-integracoes"
+              clickable
+              v-ripple
+              class="menu-item b-r-10 q-mb-xs text-white layout-menu-integracoes"
+              :class="$route.path === '/Whatsapp' ? 'menu-item-active' : ''"
+              @click="$router.push('/Whatsapp')"
+            >
+              <q-item-section avatar>
+                <q-icon name="fab fa-whatsapp" size="20px" color="white" />
+              </q-item-section>
+              <q-item-section class="menu-label">Whatsapp</q-item-section>
+            </q-item>
+
+            <q-item
+              id="layout-menu-integracoes"
+              clickable
+              v-ripple
+              class="menu-item b-r-10 q-mb-xs text-white layout-menu-integracoes"
+              :class="$route.path === '/Agentes' ? 'menu-item-active' : ''"
+              @click="$router.push('/Agentes')"
+            >
+              <q-item-section avatar>
+                <q-icon name="support_agent" size="20px" color="white" />
+              </q-item-section>
+              <q-item-section class="menu-label">Agentes de IA</q-item-section>
             </q-item>
 
           </q-list>
