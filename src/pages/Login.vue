@@ -66,7 +66,7 @@
         </form>
       </q-card>
     </div>
-    <div class="q-mt-lg">@2026 Coden</div>
+    <div class="q-mt-lg direitos">@2026 CODEN</div>
   </div>
 </template>
 
@@ -128,5 +128,11 @@ export default class LoginComponent extends Vue {
   position: relative;
   bottom: 120px;
   z-index: 1000;
+}
+
+.direitos{
+  font-weight: 700;
+  letter-spacing: 3px;
+  font-size: 11px;
 }
 </style>
