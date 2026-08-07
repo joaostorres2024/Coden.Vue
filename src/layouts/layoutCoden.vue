@@ -347,6 +347,7 @@
 import Vue from 'vue'
 import Component from 'vue-class-component'
 import estabelecimentoService from '../services/estabelecimentoService'
+import { escape } from 'querystring'
 
 @Component
 export default class ModuleComponent extends Vue {
@@ -359,7 +360,7 @@ export default class ModuleComponent extends Vue {
   async created() {
     const token = localStorage.getItem('token')
     if (token) {
-      const payload = JSON.parse(atob(token.split('.')[1]))
+      const payload = JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(token.split('.')[1]), c => c.charCodeAt(0))))
       this.user = payload.nome ?? localStorage.getItem('nomeUsuario') ?? ''
     }
     await this.carregarLogo()
