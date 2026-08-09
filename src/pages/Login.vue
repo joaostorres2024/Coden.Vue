@@ -16,9 +16,9 @@
 
         <form id="login-form" @submit.prevent="realizarLogin">
           <q-input
-            v-model="email"
+            v-model="usuario"
             class="full-width q-my-md login-input-email"
-            label="E-mail"
+            label="Usuário"
             outlined
             dense
             input-id="login-input-email"
@@ -78,7 +78,6 @@ import { authService } from "../services/authService";
 @Component
 export default class LoginComponent extends Vue {
   usuario = "";
-  email = "";
   senha = "";
   erro = "";
   loading = false;
@@ -89,11 +88,11 @@ export default class LoginComponent extends Vue {
     this.loading = true;
 
     try {
-      await authService.login({ email: this.email, senha: this.senha });
+      await authService.login({ usuario: this.usuario, senha: this.senha });
       this.$router.push("/");
       this.$q.notify({
         color: "positive",
-        message: "Bem-vindo " + this.email,
+        message: "Bem-vindo " + this.usuario,
         icon: "check",
       });
     } catch (err: any) {

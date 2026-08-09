@@ -26,7 +26,7 @@
     </q-avatar>
 
     <div class="text-subtitle2 text-weight-bold perfil-nome-empresa">{{ form.nome || 'Empresa' }}</div>
-    <div class="text-caption text-grey-6 perfil-regime">{{ form.regime_tributario || '-' }}</div>
+    <div class="text-caption text-grey-6 perfil-regime">{{ form.natureza_juridica || '-' }}</div>
 
     <q-file
       v-model="fotoPerfil"
@@ -93,13 +93,10 @@
             <q-input v-model="form.cnpj" label="CNPJ" outlined dense mask="##.###.###/####-##" input-id="perfil-input-cnpj" class="perfil-input-cnpj" />
           </div>
           <div class="col-12 col-sm-4">
-            <q-input v-model="form.inscricao_estadual" label="Inscrição Estadual" outlined dense input-id="perfil-input-ie" class="perfil-input-ie" />
+            <q-select v-model="form.natureza_juridica" :options="opcoesNatureza" label="Natureza Jurídica" outlined dense emit-value map-options id="perfil-select-regime" class="perfil-select-regime" />
           </div>
           <div class="col-12 col-sm-4">
-            <q-input v-model="form.inscricao_municipal" label="Inscrição Municipal" outlined dense input-id="perfil-input-im" class="perfil-input-im" />
-          </div>
-          <div class="col-12 col-sm-4">
-            <q-select v-model="form.regime_tributario" :options="opcoesRegime" label="Regime Tributário" outlined dense emit-value map-options id="perfil-select-regime" class="perfil-select-regime" />
+            <q-input v-model="form.capital_social" @input="formatarCapitalSocial" label="Capital Social" outlined dense input-id="perfil-input-nome-fantasia" class="perfil-input-nome-fantasia" />
           </div>
         </div>
 
@@ -194,6 +191,26 @@ onFotoSelecionada(file: File) {
   reader.readAsDataURL(file)
 }
 
+formatarCapitalSocial(valor: string) {
+  let numero = valor.replace(/\D/g, '')
+
+  if (!numero) {
+    this.form.capital_social = ''
+    return
+  }
+
+  numero = (Number(numero) / 100).toFixed(2)
+
+  const [inteiro, decimal] = numero.split('.')
+
+  const inteiroFormatado = inteiro.replace(
+    /\B(?=(\d{3})+(?!\d))/g,
+    '.'
+  )
+
+  this.form.capital_social = `${inteiroFormatado},${decimal}`
+}
+
 removerFoto() {
   this.form.logo = ''
   this.fotoPerfil = null
@@ -203,9 +220,8 @@ removerFoto() {
     nome: '',
     nome_fantasia: '',
     cnpj: '',
-    inscricao_estadual: '',
-    inscricao_municipal: '',
-    regime_tributario: '',
+    natureza_juridica: '',
+    capital_social: '',
     cep: '',
     endereco: '',
     numero: '',
@@ -220,11 +236,12 @@ removerFoto() {
     cargo: ''
   }
 
-  opcoesRegime = [
-    { label: 'Simples Nacional', value: 'Simples Nacional' },
-    { label: 'Lucro Presumido',  value: 'Lucro Presumido'  },
-    { label: 'Lucro Real',       value: 'Lucro Real'       },
-    { label: 'MEI',              value: 'MEI'              }
+  opcoesNatureza = [
+    { label: 'S/A (Sociedade Anônima)', value: 'SA' },
+    { label: 'LTDA (Sociedade Empresária Limitada)', value: 'LTDA' },
+    { label: 'SLU (Sociedade Limitada Unipessoal)', value: 'SLU' },
+    { label: 'MEI (Microempreendedor Individual)', value: 'MEI' },
+    { label: 'Sociedade Simples', value: 'SIMPLES' }
   ]
 
   opcoesUF = [
@@ -270,7 +287,10 @@ async salvar() {
     this.salvando = true
     await estabelecimentoService.atualizar(this.form)
     this.$q.notify({ type: 'positive', message: 'Dados salvos com sucesso!' })
-    window.location.reload()
+
+    setTimeout(() => {
+      window.location.reload()
+    }, 1500)
   } catch {
     this.$q.notify({ type: 'negative', message: 'Erro ao salvar dados!' })
   } finally {

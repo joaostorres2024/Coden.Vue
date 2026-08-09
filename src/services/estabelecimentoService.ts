@@ -5,9 +5,8 @@ export interface Estabelecimento {
   nome?: string
   nome_fantasia?: string
   cnpj?: string
-  inscricao_estadual?: string
-  inscricao_municipal?: string
-  regime_tributario?: string
+  natureza_juridica?: string
+  capital_social?: string
   cep?: string
   endereco?: string
   numero?: string
