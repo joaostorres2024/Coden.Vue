@@ -124,6 +124,20 @@
               clickable
               v-ripple
               class="menu-item b-r-10 q-mb-xs text-white layout-menu-nf-entrada"
+              :class="$route.path === '/ControleFiscal' ? 'menu-item-active' : ''"
+              @click="$router.push('/ControleFiscal')"
+            >
+              <q-item-section avatar>
+                <q-icon name="assured_workload" size="20px" color="white" />
+              </q-item-section>
+              <q-item-section class="menu-label">Controle Fiscal</q-item-section>
+            </q-item>
+
+            <q-item
+              id="layout-menu-nf-entrada"
+              clickable
+              v-ripple
+              class="menu-item b-r-10 q-mb-xs text-white layout-menu-nf-entrada"
               :class="$route.path === '/NotaFiscalEntrada' ? 'menu-item-active' : ''"
               @click="$router.push('/NotaFiscalEntrada')"
             >
@@ -207,34 +221,6 @@
                 <q-icon name="webhook" size="20px" color="white" />
               </q-item-section>
               <q-item-section class="menu-label">Integrações</q-item-section>
-            </q-item>
-
-            <q-item
-              id="layout-menu-integracoes"
-              clickable
-              v-ripple
-              class="menu-item b-r-10 q-mb-xs text-white layout-menu-integracoes"
-              :class="$route.path === '/Whatsapp' ? 'menu-item-active' : ''"
-              @click="$router.push('/Whatsapp')"
-            >
-              <q-item-section avatar>
-                <q-icon name="fab fa-whatsapp" size="20px" color="white" />
-              </q-item-section>
-              <q-item-section class="menu-label">Whatsapp</q-item-section>
-            </q-item>
-
-            <q-item
-              id="layout-menu-integracoes"
-              clickable
-              v-ripple
-              class="menu-item b-r-10 q-mb-xs text-white layout-menu-integracoes"
-              :class="$route.path === '/Agentes' ? 'menu-item-active' : ''"
-              @click="$router.push('/Agentes')"
-            >
-              <q-item-section avatar>
-                <q-icon name="support_agent" size="20px" color="white" />
-              </q-item-section>
-              <q-item-section class="menu-label">Agentes de IA</q-item-section>
             </q-item>
 
           </q-list>
