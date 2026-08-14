@@ -31,7 +31,7 @@
     <q-file
       v-model="fotoPerfil"
       accept=".jpg,.jpeg,.png"
-      label="Alterar Logo"
+      label="Alterar Imagem"
       outlined
       dense
       class="full-width q-mt-sm perfil-file-logo"
@@ -43,7 +43,7 @@
 
     <q-btn
       v-if="form.logo"
-      label="Remover foto"
+      label="Remover Imagem"
       flat
       dense
       size="md"
@@ -97,6 +97,9 @@
           </div>
           <div class="col-12 col-sm-4">
             <q-input v-model="form.capital_social" @input="formatarCapitalSocial" label="Capital Social" outlined dense input-id="perfil-input-nome-fantasia" class="perfil-input-nome-fantasia" />
+          </div>
+          <div class="col-12 col-sm-4">
+            <q-input v-model="form.cnae" label="CNAE Principal" outlined dense input-id="perfil-input-nome-fantasia" class="perfil-input-nome-fantasia" />
           </div>
         </div>
 
@@ -152,7 +155,7 @@
         </div>
 
         <!-- Botão Salvar -->
-        <div class="row justify-start q-mt-xl perfil-acoes">
+        <div class="row justify-end q-mt-xl perfil-acoes">
           <q-btn
             id="perfil-btn-salvar"
             class="perfil-btn-salvar"
@@ -222,6 +225,7 @@ removerFoto() {
     cnpj: '',
     natureza_juridica: '',
     capital_social: '',
+    cnae: '',
     cep: '',
     endereco: '',
     numero: '',

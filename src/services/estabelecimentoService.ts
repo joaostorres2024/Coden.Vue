@@ -7,6 +7,7 @@ export interface Estabelecimento {
   cnpj?: string
   natureza_juridica?: string
   capital_social?: string
+  cnae?: string
   cep?: string
   endereco?: string
   numero?: string
