@@ -1,5 +1,5 @@
 <template>
-  <div class="q-pa-md">
+  <div style="padding: 30px 200px;">
 
     <!-- Cabeçalho -->
     <div class="text-bold text-black row items-center perfil-cabecalho" style="font-size: 28px">

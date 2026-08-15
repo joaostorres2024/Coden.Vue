@@ -1,5 +1,5 @@
 <template>
-  <div class="q-pa-md q-pt-lg">
+  <div style="padding: 30px 200px;">
     <!-- Cabeçalho -->
     <div class="text-bold text-black row items-center vd-cabecalho" style="font-size: 28px">
       <q-icon name="point_of_sale" class="q-mr-md text-primary" size="28px" />Venda Direta
