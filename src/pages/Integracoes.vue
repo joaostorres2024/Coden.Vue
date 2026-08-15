@@ -1,5 +1,5 @@
 <template>
-  <div class="q-pa-md">
+  <div class="q-pa-md q-pt-lg">
 
     <div class="text-bold text-black row items-center integ-cabecalho" style="font-size:28px">
       <q-icon name="webhook" class="q-mr-md text-primary" size="28px" />Integrações

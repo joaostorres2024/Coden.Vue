@@ -1,5 +1,5 @@
 <template>
-  <div class="q-pa-md">
+  <div class="q-pa-md q-pt-lg">
 
     <!-- Cabeçalho -->
     <div class="text-bold text-black row items-center nfs-cabecalho" style="font-size: 28px">
