@@ -131,9 +131,9 @@
                     @click="$router.push('/ControleFiscal')"
                   >
                     <q-item-section avatar>
-                      <q-icon name="assured_workload" color="grey-7" size="20px" />
+                      <q-icon name="date_range" color="grey-7" size="20px" />
                     </q-item-section>
-                    <q-item-section>Controle Fiscal</q-item-section>
+                    <q-item-section>Calendário Fiscal</q-item-section>
                   </q-item>
 
                   <q-item
@@ -162,6 +162,48 @@
                       <q-icon name="trending_down" color="grey-7" size="20px" />
                     </q-item-section>
                     <q-item-section>NF Saída</q-item-section>
+                  </q-item>
+
+                  <q-item
+                    id="layout-menu-nf-saida"
+                    clickable
+                    v-ripple
+                    v-close-popup
+                    class="menu-dropdown-item"
+                    @click="$router.push('/ContasAPagar')"
+                  >
+                    <q-item-section avatar>
+                      <q-icon name="payments" color="grey-7" size="20px" />
+                    </q-item-section>
+                    <q-item-section>Contas a Pagar</q-item-section>
+                  </q-item>
+
+                  <q-item
+                    id="layout-menu-nf-saida"
+                    clickable
+                    v-ripple
+                    v-close-popup
+                    class="menu-dropdown-item"
+                    @click="$router.push('/ContasAReceber')"
+                  >
+                    <q-item-section avatar>
+                      <q-icon name="savings" color="grey-7" size="20px" />
+                    </q-item-section>
+                    <q-item-section>Contas a Receber</q-item-section>
+                  </q-item>
+
+                  <q-item
+                    id="layout-menu-nf-saida"
+                    clickable
+                    v-ripple
+                    v-close-popup
+                    class="menu-dropdown-item"
+                    @click="$router.push('/FormasPagamento')"
+                  >
+                    <q-item-section avatar>
+                      <q-icon name="credit_card" color="grey-7" size="20px" />
+                    </q-item-section>
+                    <q-item-section>Formas de Pagamento</q-item-section>
                   </q-item>
                 </q-list>
               </q-menu>
@@ -220,6 +262,20 @@
                     </q-item-section>
                     <q-item-section>Vendas</q-item-section>
                   </q-item>
+
+                  <q-item
+                    id="layout-menu-rel-vendas"
+                    clickable
+                    v-ripple
+                    v-close-popup
+                    class="menu-dropdown-item"
+                    @click="$router.push('/CurvaABC')"
+                  >
+                    <q-item-section avatar>
+                      <q-icon name="analytics" color="grey-7" size="20px" />
+                    </q-item-section>
+                    <q-item-section>Curva ABC</q-item-section>
+                  </q-item>
                 </q-list>
               </q-menu>
             </q-btn>
@@ -277,16 +333,31 @@
                     </q-item-section>
                     <q-item-section>Integrações</q-item-section>
                   </q-item>
+
+                  <q-item
+                    id="layout-menu-integracoes"
+                    clickable
+                    v-ripple
+                    v-close-popup
+                    class="menu-dropdown-item"
+                    @click="$router.push('/Contratos')"
+                  >
+                    <q-item-section avatar>
+                      <q-icon name="article" color="grey-7" size="20px" />
+                    </q-item-section>
+                    <q-item-section>Contratos</q-item-section>
+                  </q-item>
                 </q-list>
               </q-menu>
             </q-btn>
           </div>
         </q-toolbar-title>
 
-        <div class="q-mx-sm">
+        <div class="q-mx-md">
           <q-btn
             icon="notifications"
             class="text-black"
+            size="12px"
             unelevated
             onclick="alert('Função em Desenvolvimento')"
           />
@@ -391,6 +462,22 @@
                   </q-item-section>
                 </q-item>
               </a>
+
+              <q-item
+                id="layout-perfil-ir-perfil"
+                clickable
+                v-ripple
+                v-close-popup
+                class="menu-dropdown-item"
+                @click="$router.push('/Configuracoes')"
+              >
+                <q-item-section avatar>
+                  <q-icon name="settings" color="grey-7" size="20px" />
+                </q-item-section>
+                <q-item-section>
+                  <span style="font-size: 13px">Configurações</span>
+                </q-item-section>
+              </q-item>
 
               <q-separator class="q-my-xs" />
 

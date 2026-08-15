@@ -1,5 +1,5 @@
 <template>
-  <div class="q-pa-md q-pt-lg">
+  <div style="padding: 30px 200px;">
 
     <!-- Cabeçalho -->
     <div class="text-bold text-black row items-center dashboard-cabecalho" style="font-size: 28px">
@@ -8,7 +8,6 @@
     <p class="text-grey-7 text-body2 q-mb-md dashboard-subtitulo">
       Acompanhe os principais indicadores e métricas do seu negócio em tempo real.
     </p>
-    <q-separator class="q-mb-lg" />
 
     <!-- Filtro de datas -->
     <div class="row q-col-gutter-md q-mb-lg items-center dashboard-filtro-datas">
@@ -17,10 +16,10 @@
           v-model="dataInicio"
           label="De"
           type="date"
-          outlined
           dense
+          outlined
           input-id="dashboard-input-data-inicio"
-          class="dashboard-input-data-inicio"
+          class="dashboard-input-data-inicio bg-white"
         />
       </div>
       <div class="col-12 col-sm-2">
@@ -31,7 +30,7 @@
           outlined
           dense
           input-id="dashboard-input-data-fim"
-          class="dashboard-input-data-fim"
+          class="dashboard-input-data-fim bg-white"
         />
       </div>
       <div class="col-12 col-sm-6 q-gutter-sm row items-end dashboard-filtro-acoes">
@@ -40,14 +39,17 @@
           class="dashboard-btn-filtrar"
           label="Filtrar"
           icon="search"
+          rounded
           color="primary"
           unelevated
           @click="carregarDados()"
         />
         <q-btn
           id="dashboard-btn-limpar"
-          class="dashboard-btn-limpar text-grey-7"
+          style="border: 1px solid rgba(0, 0, 0, 0.12);"
+          class="dashboard-btn-limpar bg-white text-grey-7"
           label="Limpar"
+          rounded
           icon="delete_sweep"
           flat
           @click="refreshTable()"
@@ -58,11 +60,11 @@
     <!-- Cards de Métricas -->
     <div class="row q-col-gutter-md q-mb-lg dashboard-metricas">
       <div class="col-6 col-sm-3 dashboard-metrica-item" v-for="metrica in metricas" :key="metrica.label">
-        <q-card flat bordered class="b-r-10 q-pa-md dashboard-metrica-card" style="position: relative;">
+        <q-card class="b-r-10 q-pa-md dashboard-metrica-card" style="position: relative;">
           <q-inner-loading :showing="carregando" size="24px" />
-          <div class="row items-center justify-between q-mb-xs rounded">
+          <q-avatar :icon="metrica.icon" size="32px" font-size="20px" :color="metrica.cor" :text-color="metrica.text" />
+          <div class="row items-center justify-between q-mt-sm">
             <div class="text-caption text-grey-6 text-weight-medium dashboard-metrica-label">{{ metrica.label }}</div>
-            <q-avatar :icon="metrica.icon" size="32px" font-size="20px" :color="metrica.cor" :text-color="metrica.text" />
           </div>
           <div class="text-h5 text-bold text-black dashboard-metrica-valor">{{ metrica.valor || '—' }}</div>
           <div class="row items-center justify-between q-mt-xs">
@@ -74,34 +76,41 @@
     </div>
 
     <!-- Gráfico + Situação -->
-    <div class="row q-col-gutter-md q-mb-lg dashboard-grafico-situacao">
+    <div class="row q-mb-lg b-r-10 dashboard-grafico-situacao">
 
       <!-- Gráfico com Tabs -->
       <div class="col-12 col-md-12">
-        <q-card flat bordered class="b-r-10 dashboard-grafico-card" style="position: relative;">
+        <q-card flat class="dashboard-grafico-card rounded-2xl border border-grey-2" style="position: relative; border-radius: 16px; overflow: hidden;">
+        <div class="row justify-between items-center q-px-lg q-pt-md">
+          <div class="q-pb-md">
+            <p class="text-bold text-black q-ma-none" style="font-size: 16px;">Análise de Vendas</p>
+            <p class="text-grey-7 q-ma-none" style="font-size: 13px;">Receita acumulada no período selecionados</p>
+          </div>
+          <div class="q-pb-md">
           <q-tabs
             v-model="abaGrafico"
             dense
             align="left"
-            class="text-grey-7 q-px-md q-pt-sm dashboard-tabs"
+            class="pill-tabs"
+            indicator-color="transparent"
             active-color="primary"
-            indicator-color="primary"
+            no-caps
           >
             <q-tab
-              id="dashboard-tab-vendas"
-              class="dashboard-tab-vendas"
               name="vendas"
               label="Vendas por dia"
+              class="pill-tab"
             />
             <q-tab
-              id="dashboard-tab-clientes"
-              class="dashboard-tab-clientes"
               name="clientes"
               label="Vendas por cliente"
+              class="pill-tab"
             />
           </q-tabs>
+          </div>
+        </div>
 
-          <q-separator />
+        <q-separator/>
 
           <q-tab-panels v-model="abaGrafico" animated class="dashboard-tab-panels">
 
@@ -116,6 +125,8 @@
             <q-tab-panel name="clientes" class="q-pa-none dashboard-panel-clientes">
               <q-inner-loading :showing="carregandoClientes" size="28px" />
               <q-table
+                dense
+                :rows-per-page-options="[10, 20, 50]"
                 :data="vendasClientes"
                 :columns="colunasClientes"
                 row-key="nome_cliente"
@@ -293,10 +304,10 @@ export default class ModuleComponent extends Vue {
 
   // ── Métricas ─────────────────────────────────────────────
   metricas = [
-    { label: 'Total de Vendas',   icon: 'attach_money', cor: 'green-1', text: 'positive',  valor: '', variacao: '', falta: '' },
-    { label: 'Total de Pedidos',  icon: 'shopping_cart', cor: 'purple-1', text: 'purple', variacao: '', falta: '' },
-    { label: 'Produtos Vendidos', icon: 'inventory_2', cor: 'blue-1', text: 'primary', variacao: '', falta: '' },
-    { label: 'Ticket Médio',      icon: 'trending_up', cor: 'teal-1', text: 'teal', valor: '', variacao: '', falta: '' }
+    { label: 'Total de Vendas',   icon: 'attach_money', cor: 'blue-1', text: 'blue',  valor: '', variacao: '', falta: '' },
+    { label: 'Total de Pedidos',  icon: 'shopping_cart', cor: 'deep-purple-1', text: 'deep-purple-12', variacao: '', falta: '' },
+    { label: 'Produtos Vendidos', icon: 'inventory_2', cor: 'teal-1', text: 'teal', variacao: '', falta: '' },
+    { label: 'Ticket Médio',      icon: 'trending_up', cor: 'orange-1', text: 'orange-9', valor: '', variacao: '', falta: '' }
   ]
 
   // ── Situação dos pedidos ──────────────────────────────────
@@ -540,22 +551,35 @@ inicializarGrafico (labels: string[], dados: number[]) {
   const tooltipBg  = dark ? '#1a1a2e' : '#ffffff'
   const tooltipBorder = dark ? '#2a2a42' : '#eeeeee'
 
+  const ctx = canvas.getContext('2d')
+  if (!ctx) return
+
+  // Criar degradê para a linha
+  const lineGradient = ctx.createLinearGradient(0, 0, canvas.width, 0)
+  lineGradient.addColorStop(0, '#1976D2')
+  lineGradient.addColorStop(1, '#64b5f6') // Um tom mais claro de azul para o degradê da linha
+
+  // Criar degradê para o preenchimento (do topo para o fundo)
+  const fillGradient = ctx.createLinearGradient(0, 0, 0, 260)
+  fillGradient.addColorStop(0, 'rgba(25, 118, 210, 0.2)') // Cor #1976D2 com transparência
+  fillGradient.addColorStop(1, 'rgba(25, 118, 210, 0)')
+
   this.chart = new Chart(canvas, {
     type: 'line',
     data: {
       labels,
       datasets: [{
         data: dados,
-        borderColor: '#1976D2',
-        backgroundColor: dark
-          ? 'rgba(25,118,210,0.15)'
-          : 'rgba(25,118,210,0.07)',
-        borderWidth: 2,
+        borderColor: lineGradient,
+        backgroundColor: fillGradient,
+        borderWidth: 3,
         fill: true,
         tension: 0.4,
-        pointRadius: 3,
+        // Configurações para o ponto aparecer ao passar o mouse
+        pointRadius: 0,
+        pointHoverRadius: 6,
         pointBackgroundColor: '#1976D2',
-        pointBorderColor: dark ? '#1a1a2e' : '#ffffff',
+        pointBorderColor: '#ffffff',
         pointBorderWidth: 2
       }]
     },
@@ -563,9 +587,29 @@ inicializarGrafico (labels: string[], dados: number[]) {
       responsive: true,
       maintainAspectRatio: false,
       legend: { display: false },
+      // Interação otimizada para mostrar o ponto e o tooltip ao longo da coluna
+      tooltips: {
+        mode: 'index',
+        intersect: false,
+        backgroundColor: tooltipBg,
+        titleFontColor: tickColor,
+        bodyFontColor: dark ? '#e8e8f0' : '#222222',
+        borderColor: tooltipBorder,
+        borderWidth: 1,
+        xPadding: 12,
+        yPadding: 12,
+        callbacks: {
+          label: (item: any) =>
+            ' R$ ' + Number(item.yLabel).toLocaleString('pt-BR', { minimumFractionDigits: 2 })
+        }
+      },
+      hover: {
+        mode: 'nearest',
+        intersect: true
+      },
       scales: {
         xAxes: [{
-          gridLines: { color: gridColor },
+          gridLines: { color: gridColor, display: true },
           ticks: { fontSize: 11, fontColor: tickColor, padding: 8 }
         }],
         yAxes: [{
@@ -574,20 +618,9 @@ inicializarGrafico (labels: string[], dados: number[]) {
             fontSize: 11,
             fontColor: tickColor,
             padding: 8,
-            callback: (v: number) => 'R$ ' + v.toLocaleString('pt-BR')
+            callback: (v: number) => 'R$ ' + (v >= 1000 ? (v / 1000).toFixed(1) + 'K' : v)
           }
         }]
-      },
-      tooltips: {
-        backgroundColor: tooltipBg,
-        titleFontColor: tickColor,
-        bodyFontColor: dark ? '#e8e8f0' : '#222222',
-        borderColor: tooltipBorder,
-        borderWidth: 1,
-        callbacks: {
-          label: (item: any) =>
-            ' R$ ' + Number(item.yLabel).toLocaleString('pt-BR', { minimumFractionDigits: 2 })
-        }
       }
     }
   })
@@ -640,6 +673,68 @@ onDarkModeChange () {
 }
 </script>
 
-<style scoped>
+<style>
 .b-r-10 { border-radius: 10px; }
+
+.dashboard-metrica-card {
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.dashboard-metrica-card .q-avatar {
+  border-radius: 20% !important;
+}
+
+.dashboard-input-data-inicio,
+.dashboard-input-data-fim,
+.dashboard-btn-filtrar,
+.dashboard-btn-limpar {
+  border-radius: 6px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.dashboard-grafico-situacao{
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.pill-tabs {
+  background-color: #f3f4f6; /* cinza claro */
+  border-radius: 9999px;
+  padding: 3px;
+  min-height: unset;
+}
+
+.pill-tabs :deep(.q-tabs__content) {
+  min-height: unset;
+}
+
+.pill-tab {
+  border-radius: 9999px;
+  min-height: 32px;
+  padding: 0 16px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #6b7280;
+  transition: all 0.2s ease;
+}
+
+.pill-tab.q-tab--active {
+  background-color: #FFFFFF;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.pill-tabs :deep(.q-tab__indicator) {
+  display: none !important;
+}
+
+.dashboard-tabela-clientes .q-td{
+  height: 32px !important; 
+}
+
+.dashboard-tabela-clientes th {
+  font-weight: 700 !important;
+  color: #1f2937 !important;
+  font-size: 13px !important;
+  height: 38px !important; 
+}
+
 </style>
