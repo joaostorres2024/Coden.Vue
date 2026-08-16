@@ -737,4 +737,22 @@ onDarkModeChange () {
   height: 38px !important; 
 }
 
+/* Borda no estado normal (não focado) */
+.dashboard-input-data-inicio .q-field__control:before,
+.dashboard-input-data-fim .q-field__control:before {
+  border-color: #d8dee5 !important;
+}
+
+/* Borda no hover (mouse em cima, sem estar focado) */
+.dashboard-input-data-inicio .q-field--outlined:hover .q-field__control:before,
+.dashboard-input-data-fim .q-field--outlined:hover .q-field__control:before {
+  border-color: #c4ccd6 !important;
+}
+
+/* Borda quando o campo está focado (clicado) */
+.dashboard-input-data-inicio.q-field--focused .q-field__control:after,
+.dashboard-input-data-fim.q-field--focused .q-field__control:after {
+  border-color: #1976d2 !important; /* mantém a cor de destaque ao focar, ajuste se quiser */
+}
+
 </style>
