@@ -36,7 +36,7 @@
       <div class="col-12 col-sm-6 q-gutter-sm row items-end dashboard-filtro-acoes">
         <q-btn
           id="dashboard-btn-filtrar"
-          class="dashboard-btn-filtrar"
+          class="dashboard-btn-filtrar b-r-6"
           label="Filtrar"
           icon="search"
           rounded
@@ -47,7 +47,7 @@
         <q-btn
           id="dashboard-btn-limpar"
           style="border: 1px solid rgba(0, 0, 0, 0.12);"
-          class="dashboard-btn-limpar bg-white text-grey-7"
+          class="dashboard-btn-limpar bg-white text-grey-7 b-r-6"
           label="Limpar"
           rounded
           icon="delete_sweep"
@@ -674,10 +674,10 @@ onDarkModeChange () {
 </script>
 
 <style>
-.b-r-10 { border-radius: 10px; }
+.b-r-6 { border-radius: 6px; }
 
 .dashboard-metrica-card {
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .dashboard-metrica-card .q-avatar {
@@ -688,12 +688,11 @@ onDarkModeChange () {
 .dashboard-input-data-fim,
 .dashboard-btn-filtrar,
 .dashboard-btn-limpar {
-  border-radius: 6px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .dashboard-grafico-situacao{
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .pill-tabs {
@@ -730,11 +729,29 @@ onDarkModeChange () {
   height: 32px !important; 
 }
 
-.dashboard-tabela-clientes th {
+.dashboard-tabela-clientes :deep(th) {
   font-weight: 700 !important;
   color: #1f2937 !important;
   font-size: 13px !important;
   height: 38px !important; 
+}
+
+/* Borda no estado normal (não focado) */
+.dashboard-input-data-inicio .q-field__control:before,
+.dashboard-input-data-fim .q-field__control:before {
+  border-color: #d8dee5 !important;
+}
+
+/* Borda no hover (mouse em cima, sem estar focado) */
+.dashboard-input-data-inicio .q-field--outlined:hover .q-field__control:before,
+.dashboard-input-data-fim .q-field--outlined:hover .q-field__control:before {
+  border-color: #c4ccd6 !important;
+}
+
+/* Borda quando o campo está focado (clicado) */
+.dashboard-input-data-inicio.q-field--focused .q-field__control:after,
+.dashboard-input-data-fim.q-field--focused .q-field__control:after {
+  border-color: #1976d2 !important; /* mantém a cor de destaque ao focar, ajuste se quiser */
 }
 
 </style>
