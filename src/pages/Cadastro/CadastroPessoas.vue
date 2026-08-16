@@ -1,75 +1,139 @@
 <template>
-  <div style="padding: 30px 200px;">
+  <div style="padding: 30px 200px">
     <!-- Cabeçalho -->
-    <div class="text-bold text-black row items-center pessoas-cabecalho" style="font-size: 28px">
-      <q-icon name="group" class="q-mr-md text-primary" size="28px" />Cadastro de Pessoas
-    </div>
-    <p class="text-grey-7 text-body2 q-mb-md pessoas-subtitulo">
-      Gerencie os cadastros de pessoas físicas e jurídicas. Aqui você pode
-      adicionar, editar, inativar e reativar clientes do sistema.
-    </p>
-    <q-separator class="q-mb-lg" />
-
-    <!-- Filtros -->
-    <div class="row q-col-gutter-md q-mb-md pessoas-filtros">
-      <div class="col-12 col-md-4">
-        <q-select
-          v-model="tipoPessoa"
-          :options="opcoesTipoPessoa"
-          label="Tipo de Pessoa"
-          outlined
-          dense
-          emit-value
-          map-options
-          :rules="[val => !!val || 'Selecione o tipo de pessoa']"
-          ref="selectTipoPessoa"
-          hide-bottom-space
-          lazy-rules
-          id="pessoas-select-tipo"
-          class="pessoas-select-tipo"
+    <div
+      class="text-bold text-black row q-mb-sm items-center justify-between pessoas-cabecalho"
+      style="font-size: 28px"
+    >
+      <div>
+        <q-icon name="group" class="q-mr-md text-primary" size="28px" />Cadastro
+        de Pessoas
+        <p class="text-grey-7 text-body2 q-mb- pessoas-subtitulo">
+          Gerencie os cadastros de pessoas físicas e jurídicas. Aqui você pode
+          adicionar, editar, inativar e reativar clientes do sistema.
+        </p>
+      </div>
+      <div class="row justify-end items-center" v-if="!mostrarFormCadastroPF && !mostrarFormCadastroPJ">
+        <q-btn
+          id="pessoas-btn-adicionar"
+          class="pessoas-btn-adicionar b-r-6"
+          label="Adicionar Novo"
+          icon="add"
+          color="positive"
+          unelevated
+          @click="mostrarFormulario()"
         />
       </div>
     </div>
 
-    <q-form class="row q-col-gutter-md q-mb-md pessoas-form-filtro">
-      <div class="col-12 col-md-4">
-        <q-input v-model="nome" label="Nome Completo" outlined dense input-id="pessoas-input-nome" class="pessoas-input-nome" />
+    <!-- Filtro de busca (Escondido quando o formulário estiver aberto) -->
+    <q-card v-if="!mostrarFormCadastroPF && !mostrarFormCadastroPJ" class="card-filtro b-r-10 q-pa-md q-mb-md">
+      <div class="text-bold text-black q-mb-md" style="font-size: 16px">
+        Filtros de busca
       </div>
-      <div class="col-12 col-md-4">
-        <q-input v-model="documento" label="CNPJ/CPF" outlined dense input-id="pessoas-input-documento" class="pessoas-input-documento" />
-      </div>
-      <div class="col-12 col-md-4">
-        <q-input v-model="codigo" label="Código do Cliente" outlined dense input-id="pessoas-input-codigo" class="pessoas-input-codigo" />
-      </div>
-    </q-form>
 
-    <!-- Botões -->
-    <div
-      v-if="!mostrarFormCadastroPF && !mostrarFormCadastroPJ"
-      class="row justify-start q-gutter-sm q-mb-lg pessoas-acoes"
-    >
-      <q-btn
-        id="pessoas-btn-adicionar"
-        class="pessoas-btn-adicionar"
-        label="Adicionar"
-        icon="add"
-        color="positive"
-        unelevated
-        @click="mostrarFormulario()"
-      />
-      <q-btn
-        id="pessoas-btn-limpar"
-        class="pessoas-btn-limpar text-grey-7"
-        label="Limpar"
-        icon="delete_sweep"
-        flat
-        @click="refreshTable()"
-      />
-    </div>
+      <div class="row justify-between items-end q-col-gutter-md q-mb-sm">
+        <div class="col-12 col-md-9">
+          <q-form class="row q-col-gutter-sm pessoas-form-filtro">
+            <div class="col-12 col-md-3">
+              <q-select
+                v-model="filtroTipoPessoa"
+                :options="opcoesTipoPessoa"
+                label="Tipo de Pessoa"
+                outlined
+                dense
+                emit-value
+                map-options
+                clearable
+                ref="selectTipoPessoa"
+                hide-bottom-space
+                lazy-rules
+                id="pessoas-select-tipo"
+                class="pessoas-select-tipo"
+              />
+            </div>
+            <div class="col-12 col-md-3">
+              <q-input
+                v-model="filtroNome"
+                label="Nome Completo"
+                outlined
+                dense
+                input-id="pessoas-input-nome"
+                class="pessoas-input-nome"
+              />
+            </div>
+            <div class="col-12 col-md-3">
+              <q-input
+                label="CNPJ/CPF"
+                outlined
+                dense
+                input-id="pessoas-input-documento"
+                class="pessoas-input-documento"
+                :value="filtroDocumentoFormatado"
+                @input="atualizarFiltroDocumento"
+              />
+            </div>
+            <div class="col-12 col-md-3">
+              <q-input
+                v-model="filtroCodigo"
+                label="Código do Cliente"
+                outlined
+                dense
+                input-id="pessoas-input-codigo"
+                class="pessoas-input-codigo"
+              />
+            </div>
+          </q-form>
+        </div>
+
+        <!-- Lado Direito: Botões de Filtro -->
+        <div class="col-12 col-md-3 row justify-end q-gutter-sm no-wrap">
+          <q-btn
+            style="border: 1px solid rgba(0, 0, 0, 0.12)"
+            id="pessoas-btn-filtrar"
+            class="pessoas-btn-filtrar"
+            label="Filtrar"
+            icon="search"
+            color="primary"
+            unelevated
+            @click="aplicarFiltro()"
+          />
+          <q-btn
+            style="border: 1px solid rgba(0, 0, 0, 0.12)"
+            id="pessoas-btn-limpar"
+            class="pessoas-btn-limpar text-grey-7"
+            label="Limpar"
+            icon="delete_sweep"
+            flat
+            @click="refreshTable()"
+          />
+        </div>
+      </div>
+    </q-card>
 
     <!-- Formulário -->
-    <div v-if="mostrarFormCadastroPF || mostrarFormCadastroPJ" class="q-mt-md pessoas-form-cadastro">
+    <div
+      v-if="mostrarFormCadastroPF || mostrarFormCadastroPJ"
+      class="q-mt-md pessoas-form-cadastro"
+    >
       <q-form ref="formCadastro" @submit.prevent="salvar()" greedy>
+        <!-- Tipo de Cadastro (Selecionado dentro do formulário) -->
+        <div class="text-h6 q-mb-sm">Tipo de Cadastro</div>
+        <div class="row q-col-gutter-md q-mb-md">
+          <div class="col-12 col-sm-4">
+            <q-select
+              v-model="tipoPessoa"
+              :options="opcoesTipoPessoa"
+              label="Tipo de Pessoa *"
+              outlined
+              dense
+              emit-value
+              map-options
+              @input="mudarTipoPessoaNoForm"
+              :rules="[(val) => !!val || 'Selecione o tipo de pessoa']"
+            />
+          </div>
+        </div>
 
         <!-- Dados Gerais -->
         <div class="text-h6 q-mb-sm">Dados Gerais</div>
@@ -119,7 +183,7 @@
                 label="Nome do Responsável *"
                 outlined
                 dense
-                :rules="[val => !!val || 'Nome do responsável obrigatório']"
+                :rules="[(val) => !!val || 'Nome do responsável obrigatório']"
                 hide-bottom-space
                 lazy-rules
                 input-id="pessoas-input-responsavel"
@@ -168,7 +232,7 @@
               mask="(##) #####-####"
               outlined
               dense
-              :rules="[val => !!val || 'Telefone obrigatório']"
+              :rules="[(val) => !!val || 'Telefone obrigatório']"
               hide-bottom-space
               lazy-rules
               input-id="pessoas-input-telefone1"
@@ -323,17 +387,15 @@
     <!-- Tabela -->
     <div
       v-if="!mostrarFormCadastroPF && !mostrarFormCadastroPJ"
-      class="q-mt-xl pessoas-tabela"
+      class="q-mt-lg pessoas-tabela"
     >
       <q-table
         :data="rowsFiltradas"
         :columns="colunasCadastroProdutos"
         row-key="id"
         :rows-per-page-options="[10, 20, 50]"
-        flat
-        bordered
         no-data-label="Nenhum registro encontrado"
-        class="text-weight-medium pessoas-tabela-clientes"
+        class=" pessoas-tabela-clientes b-r-10"
       >
         <template v-slot:body-cell-acoes="props">
           <q-td align="center">
@@ -391,7 +453,11 @@
     </div>
 
     <!-- Dialog Cancelar -->
-    <q-dialog v-model="dialogCancelar" persistent class="pessoas-dialog-cancelar">
+    <q-dialog
+      v-model="dialogCancelar"
+      persistent
+      class="pessoas-dialog-cancelar"
+    >
       <q-card style="min-width: 380px; border-radius: 12px" class="q-pa-sm">
         <q-card-section class="q-pb-none">
           <div class="text-h6 text-bold">Cancelar operação</div>
@@ -461,140 +527,182 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-import Component from 'vue-class-component'
-import listCadastroPessoas from '../../config/listCadastroPessoas.json'
-import clienteService, { Cliente } from '../../services/clienteService'
+import Vue from "vue";
+import Component from "vue-class-component";
+import listCadastroPessoas from "../../config/listCadastroPessoas.json";
+import clienteService, { Cliente } from "../../services/clienteService";
 
 @Component
 export default class ModuleComponent extends Vue {
-  colunasCadastroProdutos = listCadastroPessoas.columns
+  colunasCadastroProdutos = listCadastroPessoas.columns;
 
   // ===== data =====
-  tipoPessoa: string | null = null
-  nome = ''
-  documento = ''
-  codigo = ''
-  editandoId: number | null = null
-  clienteParaExcluir: any = null
+  // Variáveis do formulário de cadastro / edição
+  tipoPessoa: string | null = null;
+  nome = "";
+  documento = "";
+  codigo = "";
+
+  // Variáveis exclusivas para o filtro
+  filtroTipoPessoa: string | null = null;
+  filtroNome = "";
+  filtroDocumento = "";
+  filtroCodigo = "";
+
+  editandoId: number | null = null;
+  clienteParaExcluir: any = null;
 
   // Controle de UI
-  mostrarFormCadastroPF = false
-  mostrarFormCadastroPJ = false
-  dialogCancelar = false
-  dialogExcluir = false
+  mostrarFormCadastroPF = false;
+  mostrarFormCadastroPJ = false;
+  dialogCancelar = false;
+  dialogExcluir = false;
 
   // Dados do Formulário
-  dtaNascimento = ''
-  nmeSocial = ''
-  razaoSocial = ''
-  nomeResponsavel = ''
-  ativoInativo = 'Ativo'
-  telefone1 = ''
-  telefone2 = ''
-  telefone_fixo = ''
-  email = ''
-  cep = ''
-  endereco = ''
-  numero = ''
-  bairro = ''
-  cidade = ''
-  ufSelect = 'DF'
-  observacoes = ''
+  dtaNascimento = "";
+  nmeSocial = "";
+  razaoSocial = "";
+  nomeResponsavel = "";
+  ativoInativo = "Ativo";
+  telefone1 = "";
+  telefone2 = "";
+  telefone_fixo = "";
+  email = "";
+  cep = "";
+  endereco = "";
+  numero = "";
+  bairro = "";
+  cidade = "";
+  ufSelect = "DF";
+  observacoes = "";
 
   // Tabela
-  rows: Cliente[] = []
+  rows: Cliente[] = [];
 
   // Opções
   opcoesTipoPessoa = [
-    { label: 'Pessoa Física', value: 'PF' },
-    { label: 'Pessoa Jurídica', value: 'PJ' }
-  ]
+    { label: "Pessoa Física", value: "PF" },
+    { label: "Pessoa Jurídica", value: "PJ" },
+  ];
   ativo_inativo = [
-    { label: 'Ativo', value: 'Ativo' },
-    { label: 'Inativo', value: 'Inativo' }
-  ]
+    { label: "Ativo", value: "Ativo" },
+    { label: "Inativo", value: "Inativo" },
+  ];
   uf_select = [
-  { label: 'AC', value: 'AC' },
-  { label: 'AL', value: 'AL' },
-  { label: 'AM', value: 'AM' },
-  { label: 'AP', value: 'AP' },
-  { label: 'BA', value: 'BA' },
-  { label: 'CE', value: 'CE' },
-  { label: 'DF', value: 'DF' },
-  { label: 'ES', value: 'ES' },
-  { label: 'GO', value: 'GO' },
-  { label: 'MA', value: 'MA' },
-  { label: 'MG', value: 'MG' },
-  { label: 'MS', value: 'MS' },
-  { label: 'MT', value: 'MT' },
-  { label: 'PA', value: 'PA' },
-  { label: 'PB', value: 'PB' },
-  { label: 'PE', value: 'PE' },
-  { label: 'PI', value: 'PI' },
-  { label: 'PR', value: 'PR' },
-  { label: 'RJ', value: 'RJ' },
-  { label: 'RN', value: 'RN' },
-  { label: 'RO', value: 'RO' },
-  { label: 'RR', value: 'RR' },
-  { label: 'RS', value: 'RS' },
-  { label: 'SC', value: 'SC' },
-  { label: 'SE', value: 'SE' },
-  { label: 'SP', value: 'SP' },
-  { label: 'TO', value: 'TO' }
-  ]
+    { label: "AC", value: "AC" },
+    { label: "AL", value: "AL" },
+    { label: "AM", value: "AM" },
+    { label: "AP", value: "AP" },
+    { label: "BA", value: "BA" },
+    { label: "CE", value: "CE" },
+    { label: "DF", value: "DF" },
+    { label: "ES", value: "ES" },
+    { label: "GO", value: "GO" },
+    { label: "MA", value: "MA" },
+    { label: "MG", value: "MG" },
+    { label: "MS", value: "MS" },
+    { label: "MT", value: "MT" },
+    { label: "PA", value: "PA" },
+    { label: "PB", value: "PB" },
+    { label: "PE", value: "PE" },
+    { label: "PI", value: "PI" },
+    { label: "PR", value: "PR" },
+    { label: "RJ", value: "RJ" },
+    { label: "RN", value: "RN" },
+    { label: "RO", value: "RO" },
+    { label: "RR", value: "RR" },
+    { label: "RS", value: "RS" },
+    { label: "SC", value: "SC" },
+    { label: "SE", value: "SE" },
+    { label: "SP", value: "SP" },
+    { label: "TO", value: "TO" },
+  ];
 
   async created() {
-    await this.carregarClientes()
+    await this.carregarClientes();
   }
 
-  // ===== Computed =====
-  get rowsFiltradas() {
-    return this.rows.filter((c: Cliente) => {
-      const nomeOk = c.nome_cliente.toLowerCase().startsWith(this.nome.toLowerCase())
-      const codigoOk = !this.codigo || c.codigo_cliente?.toLowerCase().startsWith(this.codigo.toLowerCase())
-      const docOk = !this.documento || c.cpf?.startsWith(this.documento) || c.cnpj?.startsWith(this.documento)
-      const tipoOk = !this.tipoPessoa || c.tipo_pessoa === this.tipoPessoa
-      return nomeOk && codigoOk && docOk && tipoOk
-    })
-  }
+// Filtros efetivamente aplicados
+filtroAplicadoTipoPessoa: string | null = null;
+filtroAplicadoNome = "";
+filtroAplicadoDocumento = "";
+filtroAplicadoCodigo = "";
+
+get rowsFiltradas() {
+  return this.rows.filter((c: Cliente) => {
+    const nomeOk =
+      !this.filtroAplicadoNome ||
+      c.nome_cliente
+        .toLowerCase()
+        .includes(this.filtroAplicadoNome.toLowerCase());
+
+    const codigoOk =
+      !this.filtroAplicadoCodigo ||
+      c.codigo_cliente
+        ?.toLowerCase()
+        .includes(this.filtroAplicadoCodigo.toLowerCase());
+
+    const docOk =
+      !this.filtroAplicadoDocumento ||
+      c.cpf?.includes(this.filtroAplicadoDocumento) ||
+      c.cnpj?.includes(this.filtroAplicadoDocumento);
+
+    const tipoOk =
+      !this.filtroAplicadoTipoPessoa ||
+      c.tipo_pessoa === this.filtroAplicadoTipoPessoa;
+
+    return nomeOk && codigoOk && docOk && tipoOk;
+  });
+}
 
   // ===== Métodos =====
   async carregarClientes() {
     try {
-      this.rows = await clienteService.listarClientes()
+      this.rows = await clienteService.listarClientes();
     } catch (err) {
-      this.$q.notify({ type: 'negative', message: 'Erro ao carregar clientes!' })
+      this.$q.notify({
+        type: "negative",
+        message: "Erro ao carregar clientes!",
+      });
     }
   }
 
   async salvar() {
-    const form = this.$refs.formCadastro as any
-    const valido = await form.validate()
-    if (!valido) return
+    const form = this.$refs.formCadastro as any;
+    const valido = await form.validate();
+    if (!valido) return;
 
-    // Validações extras dos campos do topo (fora do q-form)
     if (!this.nome) {
-      this.$q.notify({ type: 'negative', message: 'Nome completo obrigatório', position: 'bottom' })
-      return
+      this.$q.notify({
+        type: "negative",
+        message: "Nome completo obrigatório",
+        position: "bottom",
+      });
+      return;
     }
     if (!this.documento) {
-      this.$q.notify({ type: 'negative', message: 'CPF/CNPJ obrigatório', position: 'bottom' })
-      return
+      this.$q.notify({
+        type: "negative",
+        message: "CPF/CNPJ obrigatório",
+        position: "bottom",
+      });
+      return;
     }
 
     try {
       const payload: Cliente = {
-        tipo_pessoa: this.tipoPessoa ?? '',
+        tipo_pessoa: this.tipoPessoa ?? "",
         nome_cliente: this.nome,
-        cpf: this.tipoPessoa === 'PF' ? this.documento : undefined,
-        cnpj: this.tipoPessoa === 'PJ' ? this.documento : undefined,
+        cpf: this.tipoPessoa === "PF" ? this.documento : undefined,
+        cnpj: this.tipoPessoa === "PJ" ? this.documento : undefined,
         codigo_cliente: this.codigo,
         status: this.ativoInativo,
-        data_nascimento: this.tipoPessoa === 'PF' ? this.dtaNascimento : undefined,
-        nome_social: this.tipoPessoa === 'PF' ? this.nmeSocial : undefined,
-        razao_social: this.tipoPessoa === 'PJ' ? this.razaoSocial : undefined,
-        nome_responsavel: this.tipoPessoa === 'PJ' ? this.nomeResponsavel : undefined,
+        data_nascimento:
+          this.tipoPessoa === "PF" ? this.dtaNascimento : undefined,
+        nome_social: this.tipoPessoa === "PF" ? this.nmeSocial : undefined,
+        razao_social: this.tipoPessoa === "PJ" ? this.razaoSocial : undefined,
+        nome_responsavel:
+          this.tipoPessoa === "PJ" ? this.nomeResponsavel : undefined,
         telefone_1: this.telefone1,
         telefone_2: this.telefone2,
         telefone_fixo: this.telefone_fixo,
@@ -605,176 +713,254 @@ export default class ModuleComponent extends Vue {
         bairro: this.bairro,
         cidade: this.cidade,
         uf: this.ufSelect,
-        observacoes: this.observacoes
-      }
+        observacoes: this.observacoes,
+      };
 
       if (this.editandoId) {
-        await clienteService.atualizarCliente(this.editandoId, payload)
-        this.$q.notify({ type: 'positive', message: 'Cliente atualizado com sucesso!' })
+        await clienteService.atualizarCliente(this.editandoId, payload);
+        this.$q.notify({
+          type: "positive",
+          message: "Cliente atualizado com sucesso!",
+        });
       } else {
-        await clienteService.criarCliente(payload)
-        this.$q.notify({ type: 'positive', message: 'Cliente cadastrado com sucesso!' })
+        await clienteService.criarCliente(payload);
+        this.$q.notify({
+          type: "positive",
+          message: "Cliente cadastrado com sucesso!",
+        });
       }
 
-      await this.carregarClientes()
-      this.confirmarCancelamento()
-
+      await this.carregarClientes();
+      this.confirmarCancelamento();
     } catch (err) {
-      this.$q.notify({ type: 'negative', message: 'Erro ao salvar cadastro!' })
+      this.$q.notify({ type: "negative", message: "Erro ao salvar cadastro!" });
     }
   }
 
   async reativarCliente(row: any) {
-  try {
-    await clienteService.atualizarCliente(row.id, {
-      ...row,
-      status: 'Ativo'
-    })
-    this.$q.notify({ type: 'positive', message: 'Cliente reativado com sucesso!' })
-    await this.carregarClientes()
-  } catch {
-    this.$q.notify({ type: 'negative', message: 'Erro ao reativar cliente!' })
+    try {
+      await clienteService.atualizarCliente(row.id, {
+        ...row,
+        status: "Ativo",
+      });
+      this.$q.notify({
+        type: "positive",
+        message: "Cliente reativado com sucesso!",
+      });
+      await this.carregarClientes();
+    } catch {
+      this.$q.notify({
+        type: "negative",
+        message: "Erro ao reativar cliente!",
+      });
+    }
   }
-}
 
   async buscarCep(cep: string) {
-  const cepLimpo = cep.replace(/\D/g, '')
-  if (cepLimpo.length !== 8) return
+    const cepLimpo = cep.replace(/\D/g, "");
+    if (cepLimpo.length !== 8) return;
 
-  try {
-    const response = await fetch(`https://viacep.com.br/ws/${cepLimpo}/json/`)
-    const data = await response.json()
+    try {
+      const response = await fetch(
+        `https://viacep.com.br/ws/${cepLimpo}/json/`,
+      );
+      const data = await response.json();
 
-    if (data.erro) {
-      this.$q.notify({ type: 'negative', message: 'CEP não encontrado' })
-      return
+      if (data.erro) {
+        this.$q.notify({ type: "negative", message: "CEP não encontrado" });
+        return;
+      }
+
+      this.endereco = data.logradouro;
+      this.bairro = data.bairro;
+      this.cidade = data.localidade;
+      this.ufSelect = data.uf;
+    } catch (err) {
+      this.$q.notify({ type: "negative", message: "Erro ao buscar CEP" });
     }
-
-    this.endereco = data.logradouro
-    this.bairro    = data.bairro
-    this.cidade    = data.localidade
-    this.ufSelect  = data.uf
-  } catch (err) {
-    this.$q.notify({ type: 'negative', message: 'Erro ao buscar CEP' })
   }
-}
 
-  abrirDialogCancelar(){
-    this.dialogCancelar = true
+  abrirDialogCancelar() {
+    this.dialogCancelar = true;
   }
 
   formatarDocumento(row: any): string {
-    if (row.tipo_pessoa === 'PF') {
-      const cpf = row.cpf?.replace(/\D/g, '') ?? ''
-      return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4')
+    if (row.tipo_pessoa === "PF") {
+      const cpf = row.cpf?.replace(/\D/g, "") ?? "";
+      return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
     } else {
-      const cnpj = row.cnpj?.replace(/\D/g, '') ?? ''
-      return cnpj.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5')
+      const cnpj = row.cnpj?.replace(/\D/g, "") ?? "";
+      return cnpj.replace(
+        /(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/,
+        "$1.$2.$3/$4-$5",
+      );
     }
   }
 
   editar(row: any) {
-    this.editandoId = row.id
-    this.tipoPessoa = row.tipo_pessoa
-    this.nome = row.nome_cliente
-    this.documento = row.cpf || row.cnpj
-    this.codigo = row.codigo_cliente
-    this.ativoInativo = row.status
-    this.dtaNascimento = row.data_nascimento
-    this.nmeSocial = row.nome_social
-    this.razaoSocial = row.razao_social
-    this.nomeResponsavel = row.nome_responsavel
-    this.telefone1 = row.telefone_1
-    this.telefone2 = row.telefone_2
-    this.telefone_fixo = row.telefone_fixo
-    this.email = row.email
-    this.cep = row.cep
-    this.endereco = row.endereco
-    this.numero = row.numero
-    this.bairro = row.bairro
-    this.cidade = row.cidade
-    this.ufSelect = row.uf
-    this.observacoes = row.observacoes
-    this.mostrarFormulario()
+    this.editandoId = row.id;
+    this.tipoPessoa = row.tipo_pessoa;
+    this.nome = row.nome_cliente;
+    this.documento = row.cpf || row.cnpj;
+    this.codigo = row.codigo_cliente;
+    this.ativoInativo = row.status;
+    this.dtaNascimento = row.data_nascimento;
+    this.nmeSocial = row.nome_social;
+    this.razaoSocial = row.razao_social;
+    this.nomeResponsavel = row.nome_responsavel;
+    this.telefone1 = row.telefone_1;
+    this.telefone2 = row.telefone_2;
+    this.telefone_fixo = row.telefone_fixo;
+    this.email = row.email;
+    this.cep = row.cep;
+    this.endereco = row.endereco;
+    this.numero = row.numero;
+    this.bairro = row.bairro;
+    this.cidade = row.cidade;
+    this.ufSelect = row.uf;
+    this.observacoes = row.observacoes;
+
+    this.mostrarFormCadastroPF = row.tipo_pessoa === "PF";
+    this.mostrarFormCadastroPJ = row.tipo_pessoa === "PJ";
   }
 
-confirmarExcluir(row: any) {
-  this.clienteParaExcluir = row
-  this.dialogExcluir = true
-}
-
-async executarExclusao() {
-  try {
-    await clienteService.atualizarCliente(this.clienteParaExcluir.id, {
-      ...this.clienteParaExcluir,
-      status: 'Inativo'
-    })
-    this.$q.notify({ type: 'positive', message: 'Cliente inativado com sucesso!' })
-    this.dialogExcluir = false
-    this.clienteParaExcluir = null
-    await this.carregarClientes()
-  } catch {
-    this.$q.notify({ type: 'negative', message: 'Erro ao inativar cliente!' })
+  confirmarExcluir(row: any) {
+    this.clienteParaExcluir = row;
+    this.dialogExcluir = true;
   }
-}
 
-async mostrarFormulario() {
-    if (!this.tipoPessoa) {
-        (this.$refs.selectTipoPessoa as any).validate()
-        return
+  async executarExclusao() {
+    try {
+      await clienteService.atualizarCliente(this.clienteParaExcluir.id, {
+        ...this.clienteParaExcluir,
+        status: "Inativo",
+      });
+      this.$q.notify({
+        type: "positive",
+        message: "Cliente inativado com sucesso!",
+      });
+      this.dialogExcluir = false;
+      this.clienteParaExcluir = null;
+      await this.carregarClientes();
+    } catch {
+      this.$q.notify({
+        type: "negative",
+        message: "Erro ao inativar cliente!",
+      });
     }
+  }
+
+  async mostrarFormulario() {
+    this.limparCamposFormulario();
+
+    // Começa com PF por padrão ao abrir novo cadastro
+    this.tipoPessoa = "PF";
+    this.mostrarFormCadastroPF = true;
+    this.mostrarFormCadastroPJ = false;
 
     if (!this.editandoId) {
-        try {
-            this.codigo = await clienteService.proximoCodigo()
-        } catch (err) {
-            this.$q.notify({ type: 'negative', message: 'Erro ao gerar código do cliente' })
-        }
+      try {
+        this.codigo = await clienteService.proximoCodigo();
+      } catch (err) {
+        this.$q.notify({
+          type: "negative",
+          message: "Erro ao gerar código do cliente",
+        });
+      }
     }
+  }
 
-    this.mostrarFormCadastroPF = this.tipoPessoa === 'PF'
-    this.mostrarFormCadastroPJ = this.tipoPessoa === 'PJ'
-}
+  mudarTipoPessoaNoForm(tipo: string) {
+    this.tipoPessoa = tipo;
+    this.mostrarFormCadastroPF = tipo === "PF";
+    this.mostrarFormCadastroPJ = tipo === "PJ";
+  }
+
   confirmarCancelamento() {
-    this.dialogCancelar = false
-    this.mostrarFormCadastroPF = false
-    this.mostrarFormCadastroPJ = false
-    ;(this.$refs.selectTipoPessoa as any).resetValidation()
+    this.dialogCancelar = false;
+    this.mostrarFormCadastroPF = false;
+    this.mostrarFormCadastroPJ = false;
     this.$nextTick(() => {
-      const form = this.$refs.formCadastro as any
-      if (form) form.resetValidation()
-    })
-    this.limparCampos()
+      const form = this.$refs.formCadastro as any;
+      if (form) form.resetValidation();
+    });
+    this.limparCamposFormulario();
   }
 
-  limparCampos() {
-    this.editandoId = null
-    this.tipoPessoa = null
-    this.nome = ''
-    this.documento = ''
-    this.codigo = ''
-    this.dtaNascimento = ''
-    this.nmeSocial = ''
-    this.razaoSocial = ''
-    this.nomeResponsavel = ''
-    this.ativoInativo = 'Ativo'
-    this.telefone1 = ''
-    this.telefone2 = ''
-    this.telefone_fixo = ''
-    this.email = ''
-    this.cep = ''
-    this.endereco = ''
-    this.numero = ''
-    this.bairro = ''
-    this.cidade = ''
-    this.ufSelect = 'DF'
-    this.observacoes = ''
+  limparCamposFormulario() {
+    this.editandoId = null;
+    this.tipoPessoa = null;
+    this.nome = "";
+    this.documento = "";
+    this.codigo = "";
+    this.dtaNascimento = "";
+    this.nmeSocial = "";
+    this.razaoSocial = "";
+    this.nomeResponsavel = "";
+    this.ativoInativo = "Ativo";
+    this.telefone1 = "";
+    this.telefone2 = "";
+    this.telefone_fixo = "";
+    this.email = "";
+    this.cep = "";
+    this.endereco = "";
+    this.numero = "";
+    this.bairro = "";
+    this.cidade = "";
+    this.ufSelect = "DF";
+    this.observacoes = "";
   }
 
-  refreshTable() {
-    this.limparCampos()
-    ;(this.$refs.selectTipoPessoa as any).resetValidation()
+aplicarFiltro() {
+  this.filtroAplicadoTipoPessoa = this.filtroTipoPessoa;
+  this.filtroAplicadoNome = this.filtroNome;
+  this.filtroAplicadoDocumento = this.filtroDocumento;
+  this.filtroAplicadoCodigo = this.filtroCodigo;
+}
+
+refreshTable() {
+  // Limpa os campos
+  this.filtroTipoPessoa = null;
+  this.filtroNome = "";
+  this.filtroDocumento = "";
+  this.filtroCodigo = "";
+
+  // Remove os filtros aplicados
+  this.filtroAplicadoTipoPessoa = null;
+  this.filtroAplicadoNome = "";
+  this.filtroAplicadoDocumento = "";
+  this.filtroAplicadoCodigo = "";
+
+  if (this.$refs.selectTipoPessoa) {
+    (this.$refs.selectTipoPessoa as any).resetValidation();
   }
+}
+
+get filtroDocumentoFormatado() {
+  const numeros = this.filtroDocumento;
+
+  if (numeros.length <= 11) {
+    return numeros
+      .replace(/^(\d{3})(\d)/, "$1.$2")
+      .replace(/^(\d{3})\.(\d{3})(\d)/, "$1.$2.$3")
+      .replace(/^(\d{3})\.(\d{3})\.(\d{3})(\d)/, "$1.$2.$3-$4");
+  }
+
+  return numeros
+    .replace(/^(\d{2})(\d)/, "$1.$2")
+    .replace(/^(\d{2})\.(\d{3})(\d)/, "$1.$2.$3")
+    .replace(/^(\d{2})\.(\d{3})\.(\d{3})(\d)/, "$1.$2.$3/$4")
+    .replace(
+      /^(\d{2})\.(\d{3})\.(\d{3})\/(\d{4})(\d)/,
+      "$1.$2.$3/$4-$5"
+    );
+}
+
+atualizarFiltroDocumento(valor: string) {
+  this.filtroDocumento = valor
+    .replace(/\D/g, "")
+    .substring(0, 14);
+}
 }
 </script>
 
@@ -784,5 +970,53 @@ async mostrarFormulario() {
 }
 .b-r-10 {
   border-radius: 10px;
+}
+
+.b-r-6{
+  border-radius: 6px;
+}
+
+.card-filtro {
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.pessoas-btn-filtrar,
+.pessoas-btn-limpar {
+  border-radius: 6px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.pessoas-tabela-clientes {
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.pessoas-tabela-clientes th {
+  font-weight: 700 !important;
+  color: #1f2937 !important;
+}
+
+:deep(.pessoas-select-tipo .q-field__control:before),
+:deep(.pessoas-input-nome .q-field__control:before),
+:deep(.pessoas-input-documento .q-field__control:before),
+:deep(.pessoas-input-codigo .q-field__control:before) {
+  border-color: #d8dee5 !important;
+}
+
+/* Borda no hover (mouse em cima, sem estar focado) */
+:deep(.pessoas-select-tipo .q-field--outlined:hover .q-field__control:before),
+:deep(.pessoas-input-nome .q-field--outlined:hover .q-field__control:before),
+:deep(
+  .pessoas-input-documento .q-field--outlined:hover .q-field__control:before
+),
+:deep(.pessoas-input-codigo .q-field--outlined:hover .q-field__control:before) {
+  border-color: #c4ccd6 !important;
+}
+
+/* Borda quando o campo está focado (clicado) */
+:deep(.pessoas-select-tipo.q-field--focused .q-field__control:after),
+:deep(.pessoas-input-nome.q-field--focused .q-field__control:after),
+:deep(.pessoas-input-documento.q-field--focused .q-field__control:after),
+:deep(.pessoas-input-codigo.q-field--focused .q-field__control:after) {
+  border-color: #1976d2 !important;
 }
 </style>
